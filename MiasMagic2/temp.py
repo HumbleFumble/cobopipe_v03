@@ -21,7 +21,7 @@ def createIngest(info):
             superRoot = referenced_node
 
     cmds.xform(superRoot, matrix=info['xform'])
-    for attribute, value in info['customAttributes'].iteritems():
+    for attribute, value in info['customAttributes'].items():
         cmds.setAttr(superRoot + '.' + attribute, value)
     if info['parent']:
         if cmds.objExists(info['parent']):
@@ -41,7 +41,7 @@ def createProxy(info):
             proxyNode = referenced_node
 
     cmds.xform(proxyNode, matrix=info['xform'])
-    for attribute, value in info['customAttributes'].iteritems():
+    for attribute, value in info['customAttributes'].items():
         cmds.setAttr(proxyNode + '.' + attribute, value)
     if info['parent']:
         cmds.parent(proxyNode, info['parent'])
@@ -161,7 +161,7 @@ def referenceSortByType(nodes, dict={}):
                     dict[type].append(node)
             elif not type and cmds.nodeType(node) == 'transform' and not cmds.listRelatives(node, shapes=True):
                 output = referenceSortByType(cmds.listRelatives(node, children=True, fullPath=True), dict)
-                for _type, _nodes in output.iteritems():
+                for _type, _nodes in output.items():
                     if _type not in dict:
                         dict[_type] = []
                     for _node in _nodes:
@@ -178,7 +178,7 @@ def removeReferences():
         for node in sorted['Instance']:
             print('Attempting to delete: ' + str(node))
             removeReference(node)
-    for type, nodes in sorted.iteritems():
+    for type, nodes in sorted.items():
         if type != 'Instance':
             for node in nodes:
                 print('Attempting to delete: ' + str(node))

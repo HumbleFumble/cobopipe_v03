@@ -340,7 +340,7 @@ def getInstanceSources():
 #
 #     # Gets all the information needed to instance all references
 #     assets = []
-#     for path, nodes in ref_dict.iteritems():
+#     for path, nodes in ref_dict.items():
 #         unsorted = []
 #         for node in nodes:
 #             asset = {'ref_node': node}
@@ -377,7 +377,7 @@ def getInstanceSources():
 #             if 'customAttributes' in unsorted[0].keys():
 #                 sortedOriginals = sortDictionary(unsortedOriginals, 'customAttributes', 'ref_node')
 #
-#             for key, nodes in sorted.iteritems():
+#             for key, nodes in sorted.items():
 #                 proxies = []
 #                 targetNode = None
 #                 for node in nodes:
@@ -642,9 +642,9 @@ def instanceScene():
 
         # assets[info['asset_name']][str(info['customAttributes'])]['node'] = proxyNode
 
-    for key, asset in assets.iteritems():
+    for key, asset in assets.items():
 
-        for key, attrGroup in asset.iteritems():
+        for key, attrGroup in asset.items():
             if len(attrGroup) > 1:
                 # Add first in list as target for every proxy node in list
                 for i, info in enumerate(attrGroup):
@@ -683,7 +683,7 @@ def createIngest(info):
     print('xform: ' + str(info['xform']) + '\n')
     cmds.xform(superRoot, matrix=info['xform'])
     if 'customAttributes' in info.keys():
-        for attribute, value in info['customAttributes'].iteritems():
+        for attribute, value in info['customAttributes'].items():
             if not cmds.getAttr(superRoot + '.' + attribute, lock=True):
                 try:
                     cmds.setAttr(superRoot + '.' + attribute, value)
@@ -717,7 +717,7 @@ def createProxy(info):
             proxyNode = referenced_node
 
     cmds.xform(proxyNode, matrix=info['xform'])
-    for attribute, value in info['customAttributes'].iteritems():
+    for attribute, value in info['customAttributes'].items():
         if not cmds.getAttr(proxyNode + '.' + attribute, lock=True):
             try:
                 cmds.setAttr(proxyNode + '.' + attribute, value)
@@ -759,7 +759,7 @@ def createRender(info):
         cmds.xform(super_root, ws=True, matrix=info['xform'])
         if 'customAttributes' in info.keys():
             if info['customAttributes']:
-                for attribute, value in info['customAttributes'].iteritems():
+                for attribute, value in info['customAttributes'].items():
                     if cmds.attributeQuery(attribute, node=super_root, keyable=True):
                         cmds.setAttr(super_root + '.' + attribute, value)
         return super_root
@@ -780,7 +780,7 @@ def createRender(info):
     #         proxyNode = referenced_node
     #
     # cmds.xform(proxyNode, matrix=info['xform'])
-    # for attribute, value in info['customAttributes'].iteritems():
+    # for attribute, value in info['customAttributes'].items():
     #     cmds.setAttr(proxyNode + '.' + attribute, value)
     # if info['parent']:
     #     cmds.parent(proxyNode, info['parent'])
@@ -819,7 +819,7 @@ def referenceSortByType(nodes, dict={}):
                     dict[type].append(node)
             elif not type and cmds.nodeType(node) == 'transform' and not cmds.listRelatives(node, shapes=True):
                 output = referenceSortByType(cmds.listRelatives(node, children=True, fullPath=True), dict)
-                for _type, _nodes in output.iteritems():
+                for _type, _nodes in output.items():
                     if _type not in dict:
                         dict[_type] = []
                     for _node in _nodes:
@@ -854,7 +854,7 @@ def removeReferences():
             if cmds.objExists(node):
                 removeReference(node)
 
-    for type, nodes in sorted.iteritems():
+    for type, nodes in sorted.items():
         if type != 'Instance':
             for node in nodes:
                 if cmds.objExists(node):

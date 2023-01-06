@@ -51,7 +51,7 @@ class Startup:
                     "name": "firstIdle",
                     "callback": "idleVeryLow",
                     "function": self.firstIdle
-                }
+                },
             ]
 
             self.callbacks = {}
@@ -69,7 +69,7 @@ class Startup:
 
 
     def removeCallbacks(self): # Removing all callbacks created in this class
-        for name, callback in self.callbacks.iteritems():
+        for name, callback in self.callbacks.items():
             callback.remove()
 
 

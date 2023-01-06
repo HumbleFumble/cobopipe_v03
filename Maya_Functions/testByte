@@ -18,7 +18,7 @@ json_data = file_util.loadJson(aov_path)
 #     aov_type = aov_object[aov_fullname][aov_fullname + ".type"]
 #     aov_classobject = aovs.AOVInterface().addAOV(aov_name, aovType=aov_type)
 #     aov_node = aov_classobject.node
-#     for attribute, value in aov_object[aov_fullname].iteritems():
+#     for attribute, value in aov_object[aov_fullname].items():
 #         # print(attribute + " " + str(value))
 #         attribute_name = attribute.split(".")[-1]
 #         # print(attribute_name)
