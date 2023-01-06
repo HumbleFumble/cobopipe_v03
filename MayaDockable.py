@@ -20,13 +20,13 @@ import reloadModules as rm
 def getMayaWindow():
     pointer = MQtUtil.mainWindow()
     if pointer:
-        return wrapInstance(long(pointer), QWidget)
+        return wrapInstance(int(pointer), QWidget)
 
 
 def getWindowInMaya(name):
     pointer = MQtUtil.findWindow(name)
     if pointer:
-        return wrapInstance(long(pointer), QWidget)
+        return wrapInstance(int(pointer), QWidget)
 
 
 class MayaDockable(MayaQWidgetDockableMixin, QMainWindow):
