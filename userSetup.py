@@ -30,6 +30,7 @@ def setProjectSettings():
                 if settings['cmViewTransform'] in cmds.colorManagementPrefs(q=True, viewNames=True):
                     cmds.colorManagementPrefs(edit=True, viewTransformName=settings['cmViewTransform'])
                     logger.info('Color Management View Transform has been set to ' + settings['cmViewTransform'])
+
         if 'cmRenderingSpaceName' in settings.keys():
             if settings['cmRenderingSpaceName']:
                 if settings['cmRenderingSpaceName'] in cmds.colorManagementPrefs(q=True, renderingSpaceNames=True):
