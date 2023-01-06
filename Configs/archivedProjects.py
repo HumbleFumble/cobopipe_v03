@@ -1,0 +1,1 @@
+list_of_archived_projects = ["HOJ-Pilot","KDH-Jenny","KDH-Lis","KDH-Nina", "KDH-Else", "KDH-Asta", "KiwiStrit2", "MiasMagic", "KiwiStrit3", "MiniSjang-MinSang"]

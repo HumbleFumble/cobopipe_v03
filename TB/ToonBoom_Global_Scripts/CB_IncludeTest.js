@@ -1,0 +1,1 @@
+include('CB_ToonBoom_Include_SetRenderNode.js');SetupRenderInfo_Pathless('TGA');

@@ -1,0 +1,720 @@
+{
+    "A010":
+    {
+        "label": "ShelfUpdate",
+        "tool_tip": "Update the current shelf",
+        "type": "bttn",
+        "icon": "",
+        "cmd": "",
+        "dcmd": "",
+        "children":
+        {
+            "M010":
+            {
+                "label": "Preserve User Buttons",
+                "type": "menu_item",
+                "cmd": "import ShelfCreator as SC\nreload(SC)\nSC.run(overwrite=False)",
+                "children": {}
+            },
+
+            "M020":
+            {
+                "label": "Overwrite User Buttons",
+                "type": "menu_item",
+                "cmd": "import ShelfCreator as SC\nreload(SC)\nSC.run(overwrite=True)",
+                "children": {}
+            }
+        }
+    },
+
+    "A020":
+    {
+        "label": "LogSet",
+        "tool_tip": "Set Logger console level",
+        "type": "bttn",
+        "icon": "",
+        "cmd": "",
+        "dcmd": "",
+        "children": {
+
+            "M010":
+            {
+                "label": "Refresh Logger",
+                "tool_tip": "Set Logger console level to debug",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "from Log.CoboLoggers import refreshLogger\nrefreshLogger()",
+                "dcmd": "",
+                "children": {}
+            },
+
+            "M015":
+            {
+                "label": "Build New Log",
+                "tool_tip": "Build a new clean log file",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "from Log.CoboLoggers import getLogger, buildNewLog\nlogger = getLogger()\nbuildNewLog(logger)",
+                "dcmd": "",
+                "children": {}
+            },
+
+            "M020":
+            {
+                "label": "DEBUG",
+                "tool_tip": "Set Logger console level to debug",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "from Log.CoboLoggers import getLogger, setConsoleLevel\nlogger = getLogger()\nsetConsoleLevel(logger,10)",
+                "dcmd": "",
+                "children": {}
+            },
+
+            "M030":
+            {
+                "label": "INFO",
+                "tool_tip": "Set Logger console level to info",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "from Log.CoboLoggers import getLogger, setConsoleLevel\nlogger = getLogger()\nsetConsoleLevel(logger,20)",
+                "dcmd": "",
+                "children": {}
+            },
+
+            "M040":
+            {
+                "label": "WARNING",
+                "tool_tip": "Set Logger console level to debug",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "from Log.CoboLoggers import getLogger, setConsoleLevel\nlogger = getLogger()\nsetConsoleLevel(logger,30)",
+                "dcmd": "",
+                "children": {}
+            },
+
+            "M050":
+            {
+                "label": "ERROR",
+                "tool_tip": "Set Logger console level to error",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "from Log.CoboLoggers import getLogger, setConsoleLevel\nlogger = getLogger()\nsetConsoleLevel(logger,40)",
+                "dcmd": "",
+                "children": {}
+            },
+
+            "M060":
+            {
+                "label": "CRITICAL",
+                "tool_tip": "Set Logger console level to critical",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "from Log.CoboLoggers import getLogger, setConsoleLevel\nlogger = getLogger()\nsetConsoleLevel(logger,50)",
+                "dcmd": "",
+                "children": {}
+            },
+            "M070":
+            {
+                "label": "Test Logger",
+                "tool_tip": "Run a Test print for all levels",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "from Log.CoboLoggers import getLogger\nlogger = getLogger()\nlogger.debug('DEBUG')\nlogger.info('INFO')\nlogger.warning('WARNING')\nlogger.critical('CRITICAL')",
+                "dcmd": "",
+                "children": {}
+            }
+        }
+    },
+
+    "A999":
+    {
+        "label":"",
+        "tool_tip":"",
+        "type":"separator",
+        "icon":"",
+        "cmd":"",
+        "dcmd":"",
+        "children":{}
+    },
+
+    "B010":
+    {
+        "label":"A-Browser",
+        "tool_tip":"UI to Browser/Open/Publish/Create Assets",
+        "type":"bttn",
+        "icon":"assetBrowser_icon.png",
+        "cmd":"import AssetBrowser as KS\nreload(KS)\nKS.Run()",
+        "dcmd":"",
+        "children":{}
+    },
+
+    "B020":
+    {
+        "label": "S-Browser",
+        "tool_tip": "UI for opening shots and navigating the film",
+        "type": "bttn",
+        "icon": "",
+        "cmd": "import shotBrowser as SB\nreload(SB)\nSB.run()",
+        "dcmd": "",
+        "children": {}
+    },
+
+    "B030":
+    {
+        "label": "incSave",
+        "tool_tip": "incremental save",
+        "type": "bttn",
+        "icon": "save.png",
+        "cmd": "import IncSave as IncSave\nreload(IncSave)\nIncSave.incrementalSave()",
+        "dcmd": "",
+        "children": {}
+    },
+    "B040":
+    {
+        "label": "cleanVirus",
+        "tool_tip": "looks for and removes weird virus",
+        "type": "bttn",
+        "icon": "",
+        "cmd": "import Maya_Functions.general_util_functions as gen_util\nreload(gen_util)\ngen_util.virusCheck()",
+        "dcmd": "",
+        "children": {}
+    },
+
+    "B999":
+    {
+        "label":"",
+        "tool_tip":"",
+        "type":"separator",
+        "icon":"",
+        "cmd":"",
+        "dcmd":"",
+        "children":{}
+    },
+
+    "C010":
+    {
+        "label": "PubAnim",
+         "tool_tip": "UI for working with shots/sequences in maya. Used for Previs/Animation",
+         "type": "bttn",
+         "icon": "",
+         "cmd": "import PublishAnimScene as PAnim\nreload(PAnim)\nPAnim.Run()",
+         "dcmd": "",
+         "children": {}
+    },
+
+    "C020":
+    {
+        "label": "SeqView",
+        "tool_tip": "UI for working with shots/sequences in maya. Used for Previs/Animation",
+        "type": "bttn",
+        "icon": "",
+        "cmd": "import SequenceView as SV\nreload(SV)\nSV.Run()",
+        "dcmd": "",
+        "children": {}
+    },
+
+    "C030":
+    {
+        "label": "HookUp",
+        "tool_tip": "UI for connecting multiple playblasts/previews",
+        "type": "bttn",
+        "icon": "",
+        "cmd": "import previewHookup as HU\nreload(HU)\nHU.Run()",
+        "dcmd": "",
+        "children": {}
+    },
+
+    "C040":
+    {
+        "label": "Anim",
+        "tool_tip": "Bunch of anim functions",
+        "type": "bttn",
+        "icon": "animateSnapshot.png",
+        "cmd": "",
+        "dcmd": "",
+        "children":
+        {
+
+            "M010":
+            {
+                "label": "MirrorLimb",
+                "tool_tip": "Mirrors position from first selected to second selected",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "import Maya_Functions.anim_scripts.mirrorLimb as ml\nreload(ml)\nml.mirrorLimb()",
+                "dcmd": "",
+                "children": {}
+            },
+
+            "M020":
+            {
+                "label": "Get",
+                "tool_tip": "Gets world position from selection",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "import Maya_Functions.anim_scripts.get_and_set as getset\nreload(getset)\nanimToolPosition = getset.getPosition()",
+                "dcmd": "",
+                "children": {}
+            },
+
+            "M030":
+            {
+                "label": "Set",
+                "tool_tip": "Sets world position from selection",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "import Maya_Functions.anim_scripts.get_and_set as getset\nreload(getset)\ngetset.setPosition(animToolPosition)",
+                "dcmd": "",
+                "children": {}
+            }
+        }
+    },
+
+    "C999":
+    {
+        "label":"",
+        "tool_tip":"",
+        "type":"separator",
+        "icon":"",
+        "cmd":"",
+        "dcmd":"",
+        "children":{}
+    },
+
+    "D010":
+    {
+        "label": "RenderSubmit",
+        "tool_tip": "Render submit. Opens UI for setting render settings and passes, and then submitting to Royal Render",
+        "type": "bttn",
+        "icon": "renderGlobals.png",
+        "cmd": "import RenderSubmit as RS\nreload(RS)\nRS.Run()",
+        "dcmd": "",
+        "children": {}
+    },
+
+    "D020":
+    {
+        "label": "ImpSettings",
+        "tool_tip": "import project render settings",
+        "type": "bttn",
+        "icon": "",
+        "cmd": "import RenderSubmit as RS\nreload(RS)\nimp_settings = RS.RenderSubmitFunctions()\nimp_settings.ImportRenderSettings()",
+        "dcmd": "",
+        "children": {}
+    },
+
+    "D030":
+    {
+        "label": "YetiFuncs",
+        "tool_tip": "Yeti functions and scripts",
+        "type": "bttn",
+        "icon": "",
+        "cmd": "",
+        "dcmd": "",
+        "children": {
+            "M010": {
+                "label": "ExportGrooms",
+                "tool_tip": "export yeti grooms",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "import Maya_Functions.yeti_util_functions as YF\nreload(YF)\nYF.ExportGroomSelection()",
+                "dcmd": "",
+                "children": {}
+            },
+            "M020": {
+                "label": "ExportYetiAlembic",
+                "tool_tip": "export yeti nodes as alembic file. Used for static grooms such as grass",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "import Maya_Functions.yeti_util_functions as YF\nreload(YF)\nYF.ExportAlembicSetup()",
+                "dcmd": "",
+                "children": {}
+            },
+            "M030": {
+                "label": "Yeti Cache",
+                "tool_tip": "Cache every yeti node in the light scene",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "import Maya_Functions.yeti_util_functions as YF\nreload(YF)\nYF.CacheLightScene()",
+                "dcmd": "",
+                "children": {}
+            },
+            "M040": {
+                "label": "Yeti Cache Special",
+                "tool_tip": "Cache only from selected namespaces, and doesn't change the groom. Which allows for picking out special grooms before caching",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "import Maya_Functions.yeti_util_functions as YF\nreload(YF)\nYF.CacheLightScene(True,2,False)",
+                "dcmd": "",
+                "children": {}
+            },
+            "M050": {
+                "label": "Cache Selected YetiNode in MayaPy",
+                "tool_tip": "Cache selected yetiNode in mayapy, doesn't need a license that way",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "import Maya_Functions.yeti_util_functions as YF\nreload(YF)\nYF.MayaPy_CacheShot(file_path=cmds.file(q=True,sn=True),only_selection=True)",
+                "dcmd": "",
+                "children": {}
+            },
+            "M060": {
+                "label": "Import UnCut Grooms on selected namespace",
+                "tool_tip": "Import Uncut grooms, based on current selection. Also caches them afterwards",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "import Maya_Functions.yeti_util_functions as YF\nreload(YF)\nYF.ImportStyledGroomsFromSelection(\"Uncut\",True)",
+                "dcmd": "",
+                "children": {}
+            },
+            "M070": {
+                "label": "Import E09 Styled Nodes",
+                "tool_tip": "Import Styled hair grooms, based on current selection. Also Caches them afterwards",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "import Maya_Functions.yeti_util_functions as YF\nreload(YF)\nYF.ImportStyledGroomsFromSelection(\"Styled\",True)",
+                "dcmd": "",
+                "children": {}
+            },
+            "M080": {
+                "label": "set the pre-post render yeti calls",
+                "tool_tip": "Set yeti post and pre render scripts",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "import Maya_Functions.yeti_util_functions as YF\nreload(YF)\nYF.setYetiPrePostRenderScripts()",
+                "dcmd": "",
+                "children": {}
+            },
+        "M090":
+            {
+            "label": "Update texture/display cache for yeti",
+            "tool_tip": "Set yeti post and pre render scripts",
+            "type": "menu_item",
+            "icon": "",
+            "cmd": "import Maya_Functions.yeti_util_functions as YF\nreload(YF)\nYF.refreshTextureCache()",
+            "dcmd": "",
+            "children": {}
+            },
+        "M100":
+            {
+            "label": "Place Strits Hat and set groom",
+            "tool_tip": "Pick SplineC ctrl and Cap Adjmustment Ctrl",
+            "type": "menu_item",
+            "icon": "",
+            "cmd": "import KiwiStrit3.project_functions as PF\nreload(PF)\nPF.setStritsCapAndHair()",
+            "dcmd": "",
+            "children": {}
+            }
+        }
+    },
+    "D050":
+    {
+        "label": "VrauUpD",
+        "tool_tip": "update Vray scene. Migrates from linear workflow to SRGB colorspace",
+        "type": "bttn",
+        "icon": "",
+        "cmd": "import Maya_Functions.asset_util_functions as asset_util\nreload(asset_util)\nasset_util.UpdateVrayScene()",
+        "dcmd": "",
+        "children": {}
+    },
+
+    "D060":
+    {
+      "label": "LightHelper",
+      "tool_tip": "Helper for lighters",
+      "type": "bttn",
+      "icon": "lightFog.svg",
+      "cmd": "import LightHelper as LH\nreload(LH)\nLH.Run()",
+      "dcmd": "",
+      "children": {}
+    },
+
+    "D070":
+    {
+        "label": "LightRenderFunctions",
+        "tool_tip": "Light and render functions",
+        "type": "bttn",
+        "icon": "render_lightInfo.png",
+        "cmd": "",
+        "dcmd": "",
+        "children":
+        {
+
+            "M010":
+            {
+                "label": "Create Scene VraySphere",
+                "tool_tip": "Create a scene VraySphere, no matter what is selected",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "import Maya_Functions.vray_util_functions as VUF\nreload(VUF)\nVUF.CreateVraySphereFade(cur_name=\"SceneSphere\", cur_radius=30)",
+                "dcmd": "",
+                "children": {}
+            },
+
+            "M020":
+            {
+                "label": "VraySphere on Object",
+                "tool_tip": "Create a Sphere Render around the selected obj. If no object selected, creates a scene sphere instead",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "import Maya_Functions.vray_util_functions as VUF\nreload(VUF)\nVUF.CreateVraySphereOnObject()",
+                "dcmd": "",
+                "children": {}
+            },
+
+            "M030":
+            {
+                "label": "Add All Alembic Grass to selection",
+                "tool_tip": "Add All Alembic Grass to selection to be used in connection with light linking",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "selection =  cmds.ls(\"::*yetiAlembic*\",type=\"transform\")\ncmds.select(selection,add=True)",
+                "dcmd": "",
+                "children": {}
+            },
+
+            "M040":
+            {
+                "label": "Include in OnlyBG Render - Set",
+                "tool_tip": "Used for adding Root_Groups of objects we don't want to be turned off in Only BG render (Prop trees ect.)",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "find_list =  [\"BiggestTreeA\"]\nimport Maya_Functions.asset_util_functions as AUF\nreload(AUF)\nobject_list = AUF.FindRootByName(find_list)\nAUF.CreateOnlyBGExceptionSet(object_list)",
+                "dcmd": "",
+                "children": {}
+            },
+
+            "M050":
+            {
+                "label": "Hide in OnlyBG - Set",
+                "tool_tip": "Used for adding objects we don't want to be hidden in OnlyBG renders. Tries to set visibility to 0 on objects added when submitting",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "import Maya_Functions.set_util_functions as SUF\nreload(SUF)\nselection = cmds.ls(sl=True)\nSUF.AddToSet(\"OnlyBG_Hide\",selection)",
+                "dcmd": "",
+                "children": {}
+            },
+
+            "M060":
+            {
+                "label": "Create OID from Rules",
+                "tool_tip": "Create a OID set from rule set. Rules in file /Pipeline/OID_set_rules.json",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "import KiwiStrit3.OIDManager\nreload(OIDManager)\nOM=OIDManager.OID_Functions()\nOM.SetAssetDictFromScene()\nOM.DefineObjectsForScene()",
+                "dcmd": "",
+                "children": {}
+            },
+            "M070":
+            {
+                "label": "Create VFX Scene from opened",
+                "tool_tip": "Saves currently open light scene as a VFX scene, with the name given",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "import Maya_Functions.light_util_functions as LUF\nreload(LUF)\nLUF.createNewVFXScene()",
+                "dcmd": "",
+                "children": {}
+            },
+            "M080":
+            {
+                "label": "Create BlackHole Render Set",
+                "tool_tip": "Makes a vray-object set, that will render everything place in it, black/without alpha in render",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "import Maya_Functions.vray_util_functions as VUF\nreload(VUF)\nVUF.SetVrayObjectSetToBlackMatte(\"BlackHoleRenderSet\")",
+                "dcmd": "",
+                "children": {}
+            }
+        }
+    },
+
+    "D080":
+    {
+        "label": "L-Link",
+        "tool_tip": "",
+        "type": "bttn",
+        "icon": "spotLight.closed.svg",
+        "cmd": "",
+        "dcmd": "",
+        "children":
+        {
+
+            "M010":
+            {
+                "label": "Asset Light Link",
+                "tool_tip": "Links a light to specific assets only",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "import lightLinker\nreload(lightLinker)\nlightLinker.lightUniqueToAssetButton()",
+                "dcmd": "",
+                "children": {}
+              },
+
+            "M020":
+            {
+                "label": "Select Light Link",
+                "tool_tip": "Links a light to specific selection only",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "import lightLinker\nreload(lightLinker)\nlightLinker.lightUniqueToSelectionButton()",
+                "dcmd": "",
+                "children": {}
+              },
+
+            "M030":
+            {
+                "label": "Unlink light",
+                "tool_tip": "Resets a linked light to normal",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "import lightLinker\nreload(lightLinker)\nlightLinker.resetLightButton()",
+                "dcmd": "",
+                "children": {}
+            }
+        }
+    },
+
+    "D999":
+    {
+        "label":"",
+        "tool_tip":"",
+        "type":"separator",
+        "icon":"",
+        "cmd":"",
+        "dcmd":"",
+        "children":{}
+    },
+
+    "E010":
+    {
+        "label": "Select",
+        "tool_tip": "select options",
+        "type": "bttn",
+        "icon": "",
+        "cmd": "",
+        "dcmd": "",
+        "children": {
+
+            "M010":
+            {
+                "label": "All Ctrls",
+                "tool_tip": "select all but super root",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "import Maya_Functions.asset_util_functions as AUF\nreload(AUF)\nAUF.SelectCtrlsFromNamespace(super_root=True)",
+                "dcmd": "",
+                "children": {}
+            },
+
+            "M020":
+            {
+                "label": "Only SuperRoot",
+                "tool_tip": "select all super roots",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "import Maya_Functions.asset_util_functions as AUF\nreload(AUF)\nAUF.SelectCtrlsFromNamespace(super_root=True,only_super=True)",
+                "dcmd": "",
+                "children": {}
+            },
+
+            "M030":
+            {
+                "label": "No SuperRoot",
+                "tool_tip": "select all but super root",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "import Maya_Functions.asset_util_functions as AUF\nreload(AUF)\nAUF.SelectCtrlsFromNamespace(super_root=False)",
+                "dcmd": "",
+                "children": {}
+            }
+        }
+    },
+
+    "E020":
+    {
+        "label": "Align",
+        "tool_tip": "Pick goal first then obj thats is moving",
+        "type": "bttn",
+        "icon": "",
+        "cmd": "import Maya_Functions.general_util_functions as GUF\nreload(GUF)\nGUF.Align()",
+        "dcmd": "",
+        "children": {}
+    },
+
+    "E030":
+    {
+        "label": "ref instance",
+        "tool_tip": "instance ref or asset under same namespace",
+        "type": "bttn",
+        "icon": "",
+        "cmd": "import Maya_Functions.ref_util_functions as RF\nreload(RF)\nRF.InstanceRef()",
+        "dcmd": "",
+        "children": {}
+    },
+
+    "E040":
+    {
+        "label": "SETS",
+        "tool_tip": "",
+        "type": "bttn",
+        "icon": "",
+        "cmd": "",
+        "dcmd": "",
+        "children": {
+
+            "M010":
+            {
+                "label": "Vray SubDiv Set",
+                "tool_tip": "Creates a vray subdivision set that includes Geo_Group.",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "import Maya_Functions.asset_util_functions as AUF\nreload(AUF)\nimport Maya_Functions.vray_util_functions as VUF\nreload(VUF)\ninfo_dict = AUF.GetAssetInfoFromRoot()\nif info_dict:\n\tVUF.CreateOrAddVraySet(set_name=info_dict[\"asset_name\"])",
+                "dcmd": "",
+                "children": {}
+            },
+
+            "M020": {
+                "label": "SmoothSet",
+                "tool_tip": "Only Used for SET DRESS. Add selection to Smooth_Set. Create it first if it doesnt exists. Used for adding smooth modifier to Setdress elements at publish",
+                "type": "bttn",
+                "icon": "",
+                "cmd": "set_name = \"Smooth_Set\"\nselection = cmds.ls(sl=True)\nif not cmds.objExists(set_name):\n\tcmds.sets(n=set_name, empty=True)\ncmds.sets(selection, add=set_name)",
+                "dcmd": "",
+                "children": {}
+            }
+        }
+    },
+
+    "E050":
+    {
+        "label": "DeleteUnknown",
+        "tool_tip": "Delete unknown nodes and plugins",
+        "type": "bttn",
+        "icon": "deleteActive.png",
+        "cmd": "",
+        "dcmd": "",
+        "children": {
+
+            "M010":
+            {
+                "label": "Delete Unknown Nodes",
+                "tool_tip": "",
+                "type": "menu_item",
+                "icon": "deleteActive.png",
+                "cmd": "import Maya_Functions.delete_and_clean_up_functions as Cleaner\nreload(Cleaner)\nCleaner.DeleteUnknown()",
+                "dcmd": "",
+                "children": {}
+            },
+
+            "M020":
+            {
+                "label": "Delete Un-used Materials",
+                "tool_tip": "",
+                "type": "menu_item",
+                "icon": "",
+                "cmd": "import Maya_Functions.delete_and_clean_up_functions as Cleaner\nreload(Cleaner)\nCleaner.DeleteUnusedNodes()",
+                "dcmd": "",
+                "children": {}
+            }
+        }
+    }
+}

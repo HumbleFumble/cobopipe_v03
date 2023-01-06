@@ -1,0 +1,6 @@
+'BushE', 'FaceFlowerA', 'MushroomA', 'MushroomB', 'MushroomC', 'RockA', 'RockB', 'RockC',
+'RockY', 'StickA', 'StickB', 'TwigPileA', 'voleyballBall', 'voleyballScoreBoard',
+'WhirleyBallNetA', 'BabyCrystalA', 'SmallBluePlanet', 'SpaceBubbleA', 'BigTreeA',
+'BranchLongA', 'PineTreeU', 'ConePlantA', 'CoralPlantB', 'PlantB', 'StaggeredHills',
+'StaggeredHillsA', 'StaggeredHillsB', 'StaggeredHillsC', 'StarfishA', 'UWPlantB',
+'UWPlantBA', 'UWRockA', 'UWRockB', 'UWRockC', 'VineB'

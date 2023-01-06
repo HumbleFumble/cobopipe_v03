@@ -1,0 +1,86 @@
+body {
+	background-color: #262626;
+	font-family: "Helvetica";
+	color: #f5f5f5;
+	text-align: center; 
+}
+
+input[type=number], select, textarea {
+width: 100px;
+padding: 5px;
+color: white;
+background-color: #131313;
+border: 1px solid;
+border-radius: 4px;
+border-color: #323232;
+resize: vertical;
+}
+
+label {
+padding: 5px 5px 5px 0;
+display: inline-block;
+}
+
+button {
+	margin-top: 10px;
+	padding: 12px;
+	width: 165px;
+	font-weight: bold;
+	color: white;
+	background-color: #131313;
+	border: 0px solid;
+	border-radius: 3px;
+	border-color: #0f0f0f;
+	resize: vertical;
+	}
+
+button:hover {
+	background-color: #0883ff;
+	border-color: #379bff;
+	}
+
+.inputBoxLabel {
+	border-radius: 3px;
+	width: 40px
+}
+
+.numberInput:focus {
+	outline: none;
+}
+
+.float-container {
+	display: inline-block;
+    padding: 0px;
+}
+
+.float-child {
+	margin-top: 10px;
+	text-align: left;
+    float: left;
+	font-size: 13px;
+    padding: 2px;
+}
+
+.float-label {
+	margin-top: 10px;
+	text-align: left;
+    float: left;
+    padding: 2px;
+}  
+
+.float-dropdown {
+	margin-top: 10px;
+	text-align: left;
+    float: left;
+    padding: 2px;
+}
+
+.input_div {
+	margin: 0px;
+	padding: 15px;
+}
+
+.setConfigButton {
+	width: 330px;
+	margin-bottom: 15px;
+}

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<!-- This document forms the dockable panel. The button is the <input> tag below. The <style> formats the button. 
+
+		The extendscript is called through the <script type="text/javascript"> tag, which then routes it to use the adobe_cep_.evalScript to interpret that Javascript into Extendscript -->
+
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Børste Gather</title>
+		<link rel="stylesheet" href="css/style.css">
+		<script src="./lib/CSInterface.js"></script>		
+		<script type="text/javascript">
+			function getInfo(cs){
+				var episode = document.getElementById("epNum").value;
+				var sequence = document.getElementById("seqNum").value;
+				var importSoundCheck = document.getElementById("importSoundCheckbox").checked;
+				var importAnimPreviewCheck = document.getElementById("importAnimPreviewCheckbox").checked;
+				// var importFastRenderCheck = document.getElementById("importFastRenderCheckbox").checked;
+				// var importCompPreviewCheck = document.getElementById("importCompPreviewCheckbox").checked;
+				// var importCompMovCheck = document.getElementById("importCompMovCheckbox").checked;
+				// var importCompEXRCheck = document.getElementById("importCompEXRCheckbox").checked;
+				// var importHighestStepOnlyCheck = document.getElementById("importHighestStepOnlyCheckbox").checked;
+				// var createTimeCodeCheck = document.getElementById("createTimeCodeCheckbox").checked;
+
+				cs.evalScript('var episode = ' + String(episode));
+				cs.evalScript('var sequence = ' + String(sequence));
+				cs.evalScript('var importSoundCheck = ' + String(importSoundCheck));
+				cs.evalScript('var importAnimPreviewCheck = ' + String(importAnimPreviewCheck));
+				// cs.evalScript('var importFastRenderCheck = ' + String(importFastRenderCheck));
+				// cs.evalScript('var importCompPreviewCheck = ' + String(importCompPreviewCheck));
+				// cs.evalScript('var importCompMovCheck = ' + String(importCompMovCheck));
+				// cs.evalScript('var importCompEXRCheck = ' + String(importCompEXRCheck));
+				// cs.evalScript('var importHighestStepOnlyCheck = ' + String(importHighestStepOnlyCheck));
+				// cs.evalScript('var createTimeCodeCheck = ' + String(createTimeCodeCheck));
+			}
+
+
+			function importEpisode() {
+				var cs = new CSInterface;
+				getInfo(cs);
+				cs.evalScript('$.runScript.importEpisodeClicked()');
+			}
+
+			function importSequence() {
+				var cs = new CSInterface;
+				getInfo(cs);
+				cs.evalScript('$.runScript.importSequenceClicked()');
+			}
+		</script>
+	</head>
+
+	<body>
+		<div>
+			<label class="inputBoxLabel" id="epNumInputLabel" for="epNum" style="font-weight: bold;">S #</label>
+			<input type="number" id="epNum" name="epNum">
+			<label class="inputBoxLabel" for="seqNum" style="font-weight: bold; margin-left: 12px">SQ #</label>
+			<input type="number" id="seqNum" name="seqNum">
+		</div>
+		
+		<div class="float-container">
+			<div class="float-child">
+				<div>
+					<input type="checkbox" id="importSoundCheckbox" class="checkboxLabel" name="importSoundCheckbox" value="1">
+					<label id="importSoundLabel" for="importSoundCheckbox">Import Sound</label>
+				</div>
+				<div>
+					<input type="checkbox" id="importAnimPreviewCheckbox" class="checkboxLabel" name="importAnimPreviewCheckbox" value="1">
+					<label id="importAnimPreviewLabel" for="importAnimPreviewCheckbox">Import AnimPreview</label>
+				</div>
+				<!-- <div>		 -->
+					<!-- <input type="checkbox" id="importFastRenderCheckbox" class="checkboxLabel" name="importFastRenderCheckbox" value="1" Checked> -->
+					<!-- <label id="importFastRenderLabel" for="importFastRenderCheckbox">Import Fast Render</label> -->
+				<!-- </div> -->
+				<!-- <div> -->
+					<!-- <input type="checkbox" id="importCompPreviewCheckbox" class="checkboxLabel" name="importCompPreviewCheckbox" value="1" Checked> -->
+					<!-- <label id="importCompPreviewLabel" for="importCompPreviewCheckbox">Import Comp Preview</label> -->
+				<!-- </div> -->
+				<!-- <div> -->
+					<!-- <input type="checkbox" id="importCompMovCheckbox" class="checkboxLabel" name="importCompMovCheckbox" value="1" Checked> -->
+					<!-- <label id="importCompMovLabel" for="importCompMovCheckbox">Import Comp Mov</label> -->
+				<!-- </div> -->
+				<!-- <div> -->
+					<!-- <input type="checkbox" id="importCompEXRCheckbox" class="checkboxLabel" name="importCompEXRCheckbox" value="1" Checked> -->
+					<!-- <label id="importCompEXRLabel" for="importCompEXRCheckbox">Import Comp EXR</label> -->
+				<!-- </div> -->
+			</div>
+			<!-- <div class="float-child"> -->
+				<!-- <div> -->
+					<!-- <input type="checkbox" id="importHighestStepOnlyCheckbox" class="checkboxLabel" name="importHighestStepOnlyCheckbox" value="1" Checked> -->
+					<!-- <label id="importHighestStepOnlyLabel" for="importHighestStepOnlyCheckbox">Import Highest Step Only</label> -->
+				<!-- </div> -->
+				<!-- <div> -->
+					<!-- <input type="checkbox" id="createTimeCodeCheckbox" class="checkboxLabel" name="createTimeCodeCheckbox" value="1" Checked> -->
+					<!-- <label id="createTimeCodeLabel" for="createTimeCodeCheckbox">Create Timecode</label> -->
+				<!-- </div> -->
+			<!-- </div> -->
+		</div>
+
+		<div>
+			<button id="importEpisodeButton" type="run" onclick="importEpisode()">Import Episode</button>
+			<button id="importSequenceButton" type="run" onclick="importSequence()">Import Sequence</button>  
+		</div>
+	
+	</body>
+</html>

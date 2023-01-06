@@ -1,0 +1,10 @@
+/venv/
+*_local.BAT
+.idea
+*.pyc
+/.vscode/
+/BAT_files/Launch_harmony_local.BAT
+/_Temp/
+/local/
+/BAT_files/local_bat/
+Preview/harmony/color_test.py
