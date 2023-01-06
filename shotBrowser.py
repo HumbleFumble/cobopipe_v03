@@ -1771,7 +1771,7 @@ class FrontController(QtCore.QObject):
 			# pool.wait()
 			print('\n >> Rendering! <<')
 	def toonboomRenderExternallyCmd(self,scene_path):
-		cmd = r"Python T:\_Pipeline\cobopipe-v02-001\TB\ToonBoom_PythonExternal_Funcs.py %s" % scene_path
+		cmd = r"Python T:\_Pipeline\cobopipe_v02-001\TB\ToonBoom_PythonExternal_Funcs.py %s" % scene_path
 		subprocess.Popen(cmd,shell=True,universal_newlines=True,env=run_env)
 
 	def updateHarmonyPalettes(self, nodes):

@@ -47,7 +47,7 @@ class ConfigClass():
         self.contact_sheet_category_file="<base_path>/Pipeline/contact_sheet_category.json"
         self.template_asset_path="<template_path>/<asset_type>_Template_Folder/"
         self.module_path=""
-        self.python_path="T:/_Pipeline/cobopipe-v02-001/"
+        self.python_path="T:/_Pipeline/cobopipe_v02-001/"
         self.publish_report_folder="<base_path>/Pipeline/PublishReports"
         self.asset_publish_path="<publish_report_folder>/Assets"
         self.shot_publish_path="<publish_report_folder>/Film"
@@ -299,7 +299,7 @@ class ConfigClass():
 
 
     def get_python_path(self):
-        to_return = "T:/_Pipeline/cobopipe-v02-001/"
+        to_return = "T:/_Pipeline/cobopipe_v02-001/"
         return to_return
 
 

@@ -2,7 +2,7 @@
 
 // var base_project_path = "P:\\930499_Borste_02\\Production\\Film";
 // var base_project_path = "P:\\_WFH_Projekter\\930486_MiaMagicPlayground_S3-4\\4_Production\\Film";
-var sqPresetPath = "T:\\_Pipeline\\cobopipe-v02-001\\PremierePro\\sequencePresets\\1920x1080-25fps.sqpreset";
+var sqPresetPath = "T:\\_Pipeline\\cobopipe_v02-001\\PremierePro\\sequencePresets\\1920x1080-25fps.sqpreset";
 var episode = 22;
 var sequence = 20;
 var importSoundCheck = true;
@@ -16,9 +16,9 @@ var createEpisodeTimeCodeCheck = true; // Not done yet
 var createShotFrameCountCheck = true;
 var createShotNameplateCheck = true;
 
-var defaultFolder = "T:\\_Pipeline\\cobopipe-v02-001\\Configs"
+var defaultFolder = "T:\\_Pipeline\\cobopipe_v02-001\\Configs"
 var path = new File(defaultFolder).openDlg("Select .jsonx file");
-// var path = "T:\\_Pipeline\\cobopipe-v02-001\\Configs\\Config_MiasMagic2.json"
+// var path = "T:\\_Pipeline\\cobopipe_v02-001\\Configs\\Config_MiasMagic2.json"
 var configData = loadJson(path);
 var config = process_config(configData)
 // var sqPresetPath = config.project_paths.premiere_sqpreset
