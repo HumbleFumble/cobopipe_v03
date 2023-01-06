@@ -38,7 +38,7 @@
                    "contact_sheet_category_file": "<base_path>/Pipeline/contact_sheet_category.json",
                    "module_path": "",
                    "shared_files_path": "<base_path>/SharedFiles/",
-                   "python_path": "T:/_Pipeline/cobopipe_v01-001/",
+                   "python_path": "T:/_Pipeline/cobopipe_v02-001/",
                    "OCIO": "<base_path>/Pipeline/ACES/config.ocio",
                    "project_shelf_json": "<base_path>/Pipeline/Maya_Shelves/build_shelf_dict.json",
                    "publish_report_folder":"<base_path>/Pipeline/PublishReports",

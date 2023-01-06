@@ -43,7 +43,7 @@ class ConfigClass():
         self.contact_sheet_category_file="<base_path>/Pipeline/contact_sheet_category.json"
         self.module_path=""
         self.shared_files_path="<base_path>/SharedFiles/"
-        self.python_path="T:/_Pipeline/cobopipe_v01-001/"
+        self.python_path="T:/_Pipeline/cobopipe_v02-001/"
         self.OCIO="<base_path>/Pipeline/ACES/config.ocio"
         self.project_shelf_json="<base_path>/Pipeline/Maya_Shelves/build_shelf_dict.json"
         self.publish_report_folder="<base_path>/Pipeline/PublishReports"
@@ -310,7 +310,7 @@ class ConfigClass():
 
 
     def get_python_path(self):
-        to_return = "T:/_Pipeline/cobopipe_v01-001/"
+        to_return = "T:/_Pipeline/cobopipe_v02-001/"
         return to_return
 
 

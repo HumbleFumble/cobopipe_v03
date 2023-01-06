@@ -1,1 +1,1 @@
-python "T:/_Pipeline/cobopipe_v01-001/launchHandler.py" "maya" False
+python "T:/_Pipeline/cobopipe_v02-001/launchHandler.py" "maya" False

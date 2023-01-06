@@ -43,7 +43,7 @@
                  "contact_sheet_category_file":"<base_path>/Pipeline/contact_sheet_category.json",
                  "template_asset_path":"<template_path>/<asset_type>_Template_Folder/",
                  "module_path":"",
-                 "python_path": "T:/_Pipeline/cobopipe_v01-001/",
+                 "python_path": "T:/_Pipeline/cobopipe_v02-001/",
                  "publish_report_folder":"<base_path>/Pipeline/PublishReports",
                  "asset_publish_path":"<publish_report_folder>/Assets",
                  "shot_publish_path": "<publish_report_folder>/Film",

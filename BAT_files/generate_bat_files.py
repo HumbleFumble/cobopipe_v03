@@ -31,7 +31,7 @@ net use P: \\dumpap3\production""",
 net use P: \\dumpap2\projekter""",
 
 'Pull-repository.bat': r"""T:
-cd "T:/_Pipeline/cobopipe_v01-001"
+cd "T:/_Pipeline/cobopipe_v02-001"
 git pull
 pause""",
 
@@ -44,7 +44,7 @@ pause""",
 'updateFFMPEG.bat': 'python "' + repository_directory + '/software_and_hardware/updateFFMPEG.py"\nPAUSE',
 
 'update_harmony_hotbar.bat': r"""@echo off
-T:/_Executables/python/Python310/python.exe T:/_Pipeline/cobopipe_v01-001/TB/updateHotbar.py
+T:/_Executables/python/Python310/python.exe T:/_Pipeline/cobopipe_v02-001/TB/updateHotbar.py
 EXIT /B 0"""
 }
     return bat_files_info
