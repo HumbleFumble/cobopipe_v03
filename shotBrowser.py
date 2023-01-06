@@ -1748,6 +1748,7 @@ class FrontController(QtCore.QObject):
 		os.remove(save_location)
 		os.startfile(output_path)
 		return output_path
+
 	def toonboomRenderExternally(self,nodes):
 		shots = []
 		for node in nodes:
@@ -1770,6 +1771,7 @@ class FrontController(QtCore.QObject):
 			pool.run()
 			# pool.wait()
 			print('\n >> Rendering! <<')
+   
 	def toonboomRenderExternallyCmd(self,scene_path):
 		cmd = r"Python T:\_Pipeline\cobopipe_v02-001\TB\ToonBoom_PythonExternal_Funcs.py %s" % scene_path
 		subprocess.Popen(cmd,shell=True,universal_newlines=True,env=run_env)
