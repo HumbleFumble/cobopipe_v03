@@ -199,6 +199,7 @@
     "fps": "25fps",
     "cmEnabled": 1,
     "cmViewTransform": "ACES 1.0 SDR-video (sRGB)",
+    "cmRenderingSpaceName": "ACEScg",
     "tb_width": 1920,
     "tb_height": 1080,
     "tb_size_multi": 1.1,
