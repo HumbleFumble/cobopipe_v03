@@ -313,9 +313,9 @@ def applyRenderSettings(settings, whitelist=[], blacklist=[]):
 
     # Getting length of longest attribute to make readable print
     longestString = 0
-    for render, categories in settings.iteritems():
-        for category, attributes in categories.iteritems():
-            for attribute, value in attributes.iteritems():
+    for render, categories in settings.items():
+        for category, attributes in categories.items():
+            for attribute, value in attributes.items():
                 if longestString < len(attribute):
                     longestString = len(attribute)
     offset = longestString + 4
@@ -323,14 +323,14 @@ def applyRenderSettings(settings, whitelist=[], blacklist=[]):
     # Run through dictionary and set attributes
     lockedAttributes = {}
     #print(tab * 0 + '\n> Applying render settings')
-    for renderer, categories in settings.iteritems():
+    for renderer, categories in settings.items():
         # print(tab * 1 + '> ' + str(renderer))
         #logger.info(tab * 1 + '> ' + str(renderer))
-        for category, attributes in categories.iteritems():
+        for category, attributes in categories.items():
             # print(tab * 2 + '> ' + str(category))
             logger.info(tab * 2 + '> ' + str(category))
 
-            for attribute, value in attributes.iteritems():
+            for attribute, value in attributes.items():
                 applySetting = False
                 if attribute not in blacklist:
                     if whitelist:
@@ -378,7 +378,7 @@ def applyRenderSettings(settings, whitelist=[], blacklist=[]):
     if lockedAttributes.keys():
         # print(tab * 2 + '> Skipped' + tab + '(These attributes were skipped due to being connected)')
         logger.info('These attributes were skipped due to being connected or locked')
-        for attribute, value in lockedAttributes.iteritems():
+        for attribute, value in lockedAttributes.items():
             # pStr = tab * 3
             pStr = pStr + str(attribute)
             pStr = pStr + (space * (offset - len(str(attribute))))

@@ -209,7 +209,7 @@ class MainWindow(QtWidgets.QWidget):
         self.preset_layout.addWidget(self.appy_preset_button)
 
         #------------------------------------------------------------------------------------------------------------------------
-        # RENDER SETTINGS widgets
+        # RENDER SETTINGS WIDGETS
         #------------------------------------------------------------------------------------------------------------------------
         self.render_settings_layout = QtWidgets.QVBoxLayout()
         self.render_group = QtWidgets.QGroupBox("Render Settings")
@@ -223,37 +223,53 @@ class MainWindow(QtWidgets.QWidget):
 
         self.render_checkbox_layout = QtWidgets.QGridLayout()
         
-        
-        #------------------------------------------------------------------------------------------------------------------------
-        
+                
+        # VRay Render settings dictionary
         vray_render_settings =  {"Add BG Render":   {"tooltip": "Add a OnlyBg render along with the picked preset. Renders only 1 frame and only Set and SetDress showing",
+                                                    "checked": False,
                                                     "renderer": ["vray"]},
                             "Sphere Volume Render": {"tooltip": "Uses the vray volumetric override to only render the inside of volume shapes",
+                                                    "checked": False,
                                                     "renderer": ["vray"]}, 
                             "Render Layers":        {"tooltip": "Enables rendering of render layers",
+                                                    "checked": False,
                                                     "renderer": ["vray"]}, 
                             "Single Frame":         {"tooltip": "Render only the first frame",
+                                                    "checked": False,
                                                     "renderer": ["vray"]}, 
                             "Render ONLY BG":       {"tooltip": "Only submits the OnlyBG Render, solo with no color render",
+                                                    "checked": False,
                                                     "renderer": ["vray"]}, 
                             "Full-Length BG":       {"tooltip": "Render OnlyBG for the full length of the shot",
+                                                    "checked": False,
                                                     "renderer": ["vray"]}
                             }
-        vray_render_options =  {"EXR MultiPart":                                {"tooltip": "EXR MultiPart",
+        
+        # VRay Render options dictionary
+        vray_render_options =  {"EXR MultiPart":                                {"tooltip": "EXR MultiPart", 
+                                                                                "checked": True,
                                                                                 "renderer": ["vray"]},
-                            "ENV Override OFF":                                 {"tooltip": "Sets ENV override in Overrides tab, to off, when applying the render setting",
+                            "ENV Override OFF":                                 {"tooltip": "Sets ENV override in Overrides tab, to off, when applying the render setting", 
+                                                                                "checked": False,
                                                                                 "renderer": ["vray"]}, 
                             "Auto Create PropID Set":                           {"tooltip": "Auto Create PropID Set",
+                                                                                "checked": True,
                                                                                 "renderer": ["vray"]}, 
                             "Set Physical Camera Attr":                         {"tooltip": "Set Physical Camera Attr",
+                                                                                "checked": False,
                                                                                 "renderer": ["vray"]}, 
-                            "Render 10% extra to use for slight camera trucks": {"tooltip": "Render 10% extra to use for slight camera trucks",
+                            "Render 10% extra to use for slight camera tracks": {"tooltip": "Render 10% extra to use for slight camera tracks", 
+                                                                                "checked": False,
                                                                                 "renderer": ["vray"]}, 
-                            "Create CryptoMatte":                               {"tooltip": "Creates a seperate scene with cryptomatte IDs and render it in a seperate stack",
+                            "Create CryptoMatte":                               {"tooltip": "Creates a seperate scene with cryptomatte IDs and render it in a seperate stack", 
+                                                                                "checked": False,
                                                                                 "renderer": ["vray"]},
-                            "Bubble VFX":                                       {"tooltip": "Makes a bubble render based on the Bubble_FX set in the scene",
+                            "Bubble VFX":                                       {"tooltip": "Makes a bubble render based on the Bubble_FX set in the scene", 
+                                                                                "checked": False,
                                                                                 "renderer": ["vray"]}
-                            }        
+                            }
+        
+        # Arnold Render settings dictionary        
         arnold_render_settings = {"Arnold Checkbox_1": {"tooltip": "Arnold tooltip",
                                                     "renderer": ["arnold"]},
                             "Arnold Checkbox_2":    {"tooltip": "Arnold tooltip",
@@ -267,8 +283,7 @@ class MainWindow(QtWidgets.QWidget):
                             "Arnold Checkbox_6":    {"tooltip": "Arnold tooltip",
                                                     "renderer": ["arnold"]}
                             }
-        
-                
+                       
         all_render_options = {}
         
         # Check renderer
@@ -278,123 +293,66 @@ class MainWindow(QtWidgets.QWidget):
         elif render_type == 'vray':
             all_render_options.update(vray_render_settings)   
         
-        self.checkbox = ""
-        self.checkbox_dict = {}
-        
+               
+        # ----------------------------------------------------------------------------------------------------------------------------------------------------
         # Create checkboxes from the dictionary vray_render_settings
-        for i, j in zip(vray_render_settings.keys(), vray_render_settings.values()):
-            if not render_type in j["renderer"]:       # Right now the condition is "not", since the renderer is arnold, but not should be removed once done
-                self.checkbox = QtWidgets.QCheckBox(i)
-                self.checkbox.setChecked(False)
-                self.checkbox.setToolTip(j["tooltip"])
+        # ----------------------------------------------------------------------------------------------------------------------------------------------------
+        
+        self.checkbox_dict = {}
+        for keyname, valueof in zip(vray_render_settings.keys(), vray_render_settings.values()):
+            if not render_type in valueof["renderer"]:       # Right now the condition is "not", since the renderer is arnold, but not should be removed once done
+                self.checkbox = QtWidgets.QCheckBox(keyname)
+                self.checkbox.setChecked(valueof["checked"])
+                self.checkbox.setToolTip(valueof["tooltip"])
                         
                 if in_maya:
                     self.checkbox.clicked.connect(self.layerLabelUpdate)
-                self.checkbox_dict[i] = self.checkbox
+                self.checkbox_dict[keyname] = self.checkbox
                     
         # Organize the checkboxes in a grid layout
         x_value, y_value = self.GridLayout()
         for _key, _x, _y  in zip(sorted(self.checkbox_dict.keys()), x_value, y_value):
             self.render_checkbox_layout.addWidget(self.checkbox_dict[_key], _x, _y)
         
-        # self.render_checkbox_layout.addWidget(self.exr_multi_checkbox, 0,0)
-        # self.render_checkbox_layout.addWidget(self.BG_override,1,0)
-        # self.render_checkbox_layout.addWidget(self.use_physical_camera, 1, 1)
-
         self.render_settings_layout.addWidget(self.render_settings_dd)
         self.render_settings_layout.addLayout(self.render_checkbox_layout)
         self.render_settings_layout.addWidget(self.apply_render_settings)
         # self.render_settings_layout.addWidget(self.import_render_settings) #Removed on UI. Called at start up.
         
-        # # -------------------------------------------------------------------------------------------------------------------------------------------
-        # # RENDER SETTINGS OPIONS:
-        # self.exr_multi_checkbox = QtWidgets.QCheckBox("EXR MultiPart")
-        # self.exr_multi_checkbox.setChecked(True)
-        # # -------------------------------------------------------------------------------------------------------------------------------------------
-        # self.BG_override = QtWidgets.QCheckBox("ENV Override OFF")
-        # self.BG_override.setToolTip("Sets ENV override in Overrides tab, to off, when applying the render setting")
-        # self.BG_override.setChecked(False)
-        # # -------------------------------------------------------------------------------------------------------------------------------------------
-        # self.create_prop_OID_checkbox = QtWidgets.QCheckBox("Auto Create PropID Set")
-        # self.create_prop_OID_checkbox.setChecked(True)
-        # # -------------------------------------------------------------------------------------------------------------------------------------------
-        # # self.auto_apply_render_path = QtWidgets.QCheckBox("Set RenderPath")
-        # self.use_physical_camera = QtWidgets.QCheckBox("Set Physical Camera Attr")
-        # self.use_physical_camera.setChecked(False)
-        # # -------------------------------------------------------------------------------------------------------------------------------------------
-        # self.extra_render_size = QtWidgets.QCheckBox("Render 10% extra to use for slight camera trucks")
-        # self.extra_render_size.setChecked(False)
-        # # -------------------------------------------------------------------------------------------------------------------------------------------
-        # self.create_crypto_matte = QtWidgets.QCheckBox("Create CryptoMatte")
-        # self.create_crypto_matte.setToolTip("Creates a seperate scene with cryptomatte IDs and render it in a seperate stack")
-        # self.create_crypto_matte.setChecked(False)
-        # # -------------------------------------------------------------------------------------------------------------------------------------------
-        # self.bubble_render_checkbox = QtWidgets.QCheckBox("Bubble VFX")
-        # self.bubble_render_checkbox.setToolTip("Makes a bubble render based on the Bubble_FX set in the scene")
-        # self.bubble_render_checkbox.setChecked(False)
-        # # -------------------------------------------------------------------------------------------------------------------------------------------
+
+        # RENDER MENU OPTIONS
+        # ----------------------------------------------------------------------------------------------------------------------------------------------------
+        # Create checkboxes from the dictionary vray_render_options             
+        # ----------------------------------------------------------------------------------------------------------------------------------------------------
         
-        self.options = ""
+    
         self.options_dict = {}
-        
-        # Create checkboxes from the dictionary vray_render_settings
-        for i, j in zip(vray_render_options.keys(), vray_render_options.values()):
-            if not render_type in j["renderer"]:       # Right now the condition is "not", since the renderer is arnold, but not should be removed once done
-                self.options = QtWidgets.QCheckBox(i)
-                self.options.setChecked(False)
-                self.options.setToolTip(j["tooltip"])
-                        
+        for keyname, valueof in zip(vray_render_options.keys(), vray_render_options.values()):
+            if not render_type in valueof["renderer"]:       # Right now the condition is "not", since the renderer is arnold, but not should be removed once done
+                self.options = QtWidgets.QCheckBox(keyname)
+                self.options.setChecked(valueof["checked"])
+                self.options.setToolTip(valueof["tooltip"])
+                
                 if in_maya:
                     self.checkbox.clicked.connect(self.layerLabelUpdate)
-                self.options_dict[i] = self.options
-        
-        print(self.options_dict)
-        
-        # RENDER MENU OPTIONS
+                self.options_dict[keyname] = self.options
+           
         self.menu_bar = QtWidgets.QMenuBar()
         self.menu_options = QtWidgets.QMenu("Render Options", self.menu_bar)
         self.menu_options.setToolTipsVisible(True)
         
-        # -------------------------------------------------------------------------------------------------------------------------------------------
-        
+        # Add checkboxes to the render menu
         for i in self.options_dict.keys():
             self.action = QtWidgets.QWidgetAction(self.menu_bar)
             self.action.setDefaultWidget(self.options_dict[i])
             self.menu_options.addAction(self.action)
             
-        # self.exr_multi_checkbox_action = QtWidgets.QWidgetAction(self.menu_bar)
-        # self.exr_multi_checkbox_action.setDefaultWidget(self.options_dict["EXR MultiPart"])
-        # self.menu_options.addAction(self.exr_multi_checkbox_action)
-
-        # self.extra_render_size_action = QtWidgets.QWidgetAction(self.menu_bar)
-        # self.extra_render_size_action.setDefaultWidget(self.options_dict["Render 10% extra to use for slight camera trucks"])
-        # self.menu_options.addAction(self.extra_render_size_action)
-
-        # self.prop_OID_action = QtWidgets.QWidgetAction(self.menu_bar)
-        # self.prop_OID_action.setDefaultWidget(self.options_dict["Auto Create PropID Set"])
-        # self.menu_options.addAction(self.prop_OID_action)
-
-        # self.BG_override_action = QtWidgets.QWidgetAction(self.menu_bar)
-        # self.BG_override_action.setDefaultWidget(self.options_dict["ENV Override OFF"])
-        # self.menu_options.addAction(self.BG_override_action)
-
-        # self.crypto_action = QtWidgets.QWidgetAction(self.menu_bar)
-        # self.crypto_action.setDefaultWidget(self.options_dict["Create CryptoMatte"])
-        # self.menu_options.addAction(self.crypto_action)
-
-        # self.use_physical_camera_action = QtWidgets.QWidgetAction(self.menu_bar)
-        # self.use_physical_camera_action.setDefaultWidget(self.options_dict["Set Physical Camera Attr"])
-        # self.menu_options.addAction(self.use_physical_camera_action)
-
-        # self.bubble_render_action = QtWidgets.QWidgetAction(self.menu_bar)
-        # self.bubble_render_action.setDefaultWidget(self.options_dict["Bubble VFX"])
-        # self.menu_options.addAction(self.bubble_render_action)
-
-        # -------------------------------------------------------------------------------------------------------------------------------------------
         self.menu_bar.addMenu(self.menu_options)
         self.render_settings_layout.addWidget(self.menu_bar)
         self.render_group.setLayout(self.render_settings_layout)
-
+        
+        # ----------------------------------------------------------------------------------------------------------------------------------------------------
+        
         # AOV SETTINGS
         self.aov_layout = QtWidgets.QVBoxLayout()
         self.aov_group = QtWidgets.QGroupBox("AOV Settings")
@@ -516,7 +474,7 @@ class MainWindow(QtWidgets.QWidget):
 
     def closeEvent(self, event):
         if in_maya:
-            for layer, job in self.callbackJobs.iteritems():
+            for layer, job in self.callbackJobs.items():
                 om.MMessage.removeCallback(job)
         event.accept() # let the window close
 
@@ -841,7 +799,7 @@ class MainWindow(QtWidgets.QWidget):
         if "STEPPED" in self.preset_config[cur_preset].keys():
             self.stepped_int.setText(self.preset_config[cur_preset]["STEPPED"])
         if "OVERSCAN" in self.preset_config[cur_preset].keys():
-            self.options_dict["Render 10% extra to use for slight camera trucks"].setChecked(self.preset_config[cur_preset]["OVERSCAN"])
+            self.options_dict["Render 10% extra to use for slight camera tracks"].setChecked(self.preset_config[cur_preset]["OVERSCAN"])
         if "SPHERE_RENDER" in self.preset_config[cur_preset].keys():
             self.checkbox_dict["Sphere Volume Render"].setChecked(self.preset_config[cur_preset]["SPHERE_RENDER"])
         if "PROP_OID" in self.preset_config[cur_preset].keys():
@@ -886,7 +844,7 @@ class MainWindow(QtWidgets.QWidget):
         settings_dict["PHYS_CAM"] = self.options_dict["Set Physical Camera Attr"].isChecked()
         settings_dict["PRIO"] = self.priority_int.text()
         settings_dict["STEPPED"] = self.stepped_int.text()
-        settings_dict["OVERSCAN"] = self.options_dict["Render 10% extra to use for slight camera trucks"].isChecked()
+        settings_dict["OVERSCAN"] = self.options_dict["Render 10% extra to use for slight camera tracks"].isChecked()
         settings_dict["SPHERE_RENDER"] = self.checkbox_dict["Sphere Volume Render"].isChecked()
         settings_dict["PROP_OID"] = self.options_dict["Auto Create PropID Set"].isChecked()
         settings_dict["RENDER_LAYERS"] = self.checkbox_dict["Render Layers"].isChecked()
@@ -1189,7 +1147,7 @@ class MainWindow(QtWidgets.QWidget):
                                                      bg_off=self.options_dict["ENV Override OFF"].isChecked(),
                                                      phys_cam=self.options_dict["Set Physical Camera Attr"].isChecked(),
                                                      info_dict=shot_dict,
-                                                     overscan=self.options_dict["Render 10% extra to use for slight camera trucks"].isChecked(),
+                                                     overscan=self.options_dict["Render 10% extra to use for slight camera tracks"].isChecked(),
                                                      sphere_render=self.checkbox_dict["Sphere Volume Render"].isChecked(),
                                                      render_layer=self.checkbox_dict["Render Layers"].isChecked(),
                                                      crypto_render=self.options_dict["Create CryptoMatte"].isChecked(),
