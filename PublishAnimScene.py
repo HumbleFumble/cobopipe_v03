@@ -575,7 +575,7 @@ import maya.cmds as cmds
 import PublishAnimScene as PA
 cmds.file('%s', open=True,f=True)
 c = PA.PublishAnimScene()
-c.RemoveArnold()
+#c.RemoveArnold()
 cmds.file(type='%s')
 cmds.file(save=True)
 cmds.quit(f=True)

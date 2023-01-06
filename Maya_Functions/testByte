@@ -1,0 +1,43 @@
+import maya.cmds as cmds
+import Maya_Functions.file_util_functions as file_util
+from maya.app.renderSetup.model.aovs import decode
+# import mtoa.aovs as aovs
+
+# Read JSON file containing the AOV settings
+aov_path = "W:/930507_Lego_Friends/Production/Pipeline/RenderSettings_Presets/AOV_arnold_test2.json"
+json_data = file_util.loadJson(aov_path)
+
+# aov_objects = json_objects["arnold"]["aovs"]
+
+# aov_object = aov_objects[0]
+
+
+# for aov_object in aov_objects:
+#     aov_fullname = aov_object.keys()[0]
+#     aov_name = aov_fullname.replace("aiAOV_", "")
+#     aov_type = aov_object[aov_fullname][aov_fullname + ".type"]
+#     aov_classobject = aovs.AOVInterface().addAOV(aov_name, aovType=aov_type)
+#     aov_node = aov_classobject.node
+#     for attribute, value in aov_object[aov_fullname].iteritems():
+#         # print(attribute + " " + str(value))
+#         attribute_name = attribute.split(".")[-1]
+#         # print(attribute_name)
+#         attribute_type = cmds.getAttr(aov_node + "." + attribute_name, type=True)
+#         print(attribute_type)
+#         #cmds.setAttr(aov_node + "." + attribute_name, value)
+        
+#         if attribute_type in ['string']: # Need to input type for these
+#             cmds.setAttr(attribute, value, type=attribute_type)
+#         elif attribute_type in ['float3']: # Need to unpack list for these
+#             cmds.setAttr(attribute, *value)
+#         elif attribute_type in ['message']:
+#             pass # Skip message because they're fucking useless
+#         else:
+#             cmds.setAttr(attribute, value)
+
+# Delete all Arnold AOVs
+aovs = cmds.ls(type="aiAOV")
+cmds.delete(aovs)
+
+# Built in function to decode AOV Presets from JSON data.
+decode(json_data, 0)

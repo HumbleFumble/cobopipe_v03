@@ -114,7 +114,22 @@ class MainWindow(QtWidgets.QWidget):
             self.fileCheck(auto=True)
             self.doubleSkyCheck()
             self.checkDefaultRenderLayerError()
+    
+    # This function creates grid layout from the values in grid_x and grid_y
+    def GridLayout(self):
+        
+        grid_x = 2
+        grid_y = 3
 
+        x_value = []
+        y_value = []
+        
+        for y in range(grid_x):
+            for x in range(grid_y):
+                x_value.append(x)
+                y_value.append(y)
+        return x_value, y_value
+    
     def CreateWindow(self):
         self.main_layout = QtWidgets.QVBoxLayout()
         # self.button_layout = QtWidgets.QVBoxLayout()
@@ -207,45 +222,81 @@ class MainWindow(QtWidgets.QWidget):
         self.import_render_settings.clicked.connect(self.rf.ImportRenderSettings)
 
         self.render_checkbox_layout = QtWidgets.QGridLayout()
+        
+        
         #------------------------------------------------------------------------------------------------------------------------
-        self.only_bg_checkbox = QtWidgets.QCheckBox("Add BG Render")
-        self.only_bg_checkbox.setChecked(False)
-        self.only_bg_checkbox.setToolTip(
-            "Add a OnlyBg render along with the picked preset. Renders only 1 frame and only Set and SetDress showing")
-        #------------------------------------------------------------------------------------------------------------------------
-        self.sphere_render_checkbox = QtWidgets.QCheckBox("Sphere Volume Render")
-        self.sphere_render_checkbox.setChecked(False)
-        self.sphere_render_checkbox.setToolTip(
-            "Uses the vray volumetric override to only render the inside of volume shapes")
-        #------------------------------------------------------------------------------------------------------------------------
-        self.render_layers_checkbox = QtWidgets.QCheckBox("Render Layers")
-        self.render_layers_checkbox.setChecked(False)
-        self.render_layers_checkbox.setToolTip(
-            "Enables rendering of render layers")
-        if in_maya:
-            self.render_layers_checkbox.clicked.connect(self.layerLabelUpdate)
-        #------------------------------------------------------------------------------------------------------------------------
-        self.single_frame_checkbox = QtWidgets.QCheckBox("Single Frame")
-        self.single_frame_checkbox.setChecked(False)
-        self.single_frame_checkbox.setToolTip("Render only the first frame")
-        #------------------------------------------------------------------------------------------------------------------------
-        self.solo_bg_render_checkbox = QtWidgets.QCheckBox("Render ONLY BG")
-        self.solo_bg_render_checkbox.setChecked(False)
-        self.solo_bg_render_checkbox.setToolTip("Only submits the OnlyBG Render, solo with no color render")
-        #------------------------------------------------------------------------------------------------------------------------
-        self.full_bg_render_checkbox = QtWidgets.QCheckBox("Full-Length BG")
-        self.full_bg_render_checkbox.setChecked(False)
-        self.full_bg_render_checkbox.setToolTip("Render OnlyBG for the full length of the shot")
-        #------------------------------------------------------------------------------------------------------------------------
-        self.render_checkbox_layout.addWidget(self.sphere_render_checkbox, 0, 0)
-        self.render_checkbox_layout.addWidget(self.single_frame_checkbox, 1, 0)
-        self.render_checkbox_layout.addWidget(self.render_layers_checkbox, 2, 0)
-
-        self.render_checkbox_layout.addWidget(self.only_bg_checkbox, 0, 1)
-        self.render_checkbox_layout.addWidget(self.solo_bg_render_checkbox, 1, 1)
-        self.render_checkbox_layout.addWidget(self.full_bg_render_checkbox, 2, 1)
-
-        #------------------------------------------------------------------------------------------------------------------------
+        
+        vray_render_settings =  {"Add BG Render":   {"tooltip": "Add a OnlyBg render along with the picked preset. Renders only 1 frame and only Set and SetDress showing",
+                                                    "renderer": ["vray"]},
+                            "Sphere Volume Render": {"tooltip": "Uses the vray volumetric override to only render the inside of volume shapes",
+                                                    "renderer": ["vray"]}, 
+                            "Render Layers":        {"tooltip": "Enables rendering of render layers",
+                                                    "renderer": ["vray"]}, 
+                            "Single Frame":         {"tooltip": "Render only the first frame",
+                                                    "renderer": ["vray"]}, 
+                            "Render ONLY BG":       {"tooltip": "Only submits the OnlyBG Render, solo with no color render",
+                                                    "renderer": ["vray"]}, 
+                            "Full-Length BG":       {"tooltip": "Render OnlyBG for the full length of the shot",
+                                                    "renderer": ["vray"]}
+                            }
+        vray_render_options =  {"EXR MultiPart":                                {"tooltip": "EXR MultiPart",
+                                                                                "renderer": ["vray"]},
+                            "ENV Override OFF":                                 {"tooltip": "Sets ENV override in Overrides tab, to off, when applying the render setting",
+                                                                                "renderer": ["vray"]}, 
+                            "Auto Create PropID Set":                           {"tooltip": "Auto Create PropID Set",
+                                                                                "renderer": ["vray"]}, 
+                            "Set Physical Camera Attr":                         {"tooltip": "Set Physical Camera Attr",
+                                                                                "renderer": ["vray"]}, 
+                            "Render 10% extra to use for slight camera trucks": {"tooltip": "Render 10% extra to use for slight camera trucks",
+                                                                                "renderer": ["vray"]}, 
+                            "Create CryptoMatte":                               {"tooltip": "Creates a seperate scene with cryptomatte IDs and render it in a seperate stack",
+                                                                                "renderer": ["vray"]},
+                            "Bubble VFX":                                       {"tooltip": "Makes a bubble render based on the Bubble_FX set in the scene",
+                                                                                "renderer": ["vray"]}
+                            }        
+        arnold_render_settings = {"Arnold Checkbox_1": {"tooltip": "Arnold tooltip",
+                                                    "renderer": ["arnold"]},
+                            "Arnold Checkbox_2":    {"tooltip": "Arnold tooltip",
+                                                    "renderer": ["arnold"]}, 
+                            "Arnold Checkbox_3":    {"tooltip": "Arnold tooltip",
+                                                    "renderer": ["arnold"]}, 
+                            "Arnold Checkbox_4":    {"tooltip": "Arnold tooltip",
+                                                    "renderer": ["arnold"]}, 
+                            "Arnold Checkbox_5":    {"tooltip": "Arnold tooltip",
+                                                    "renderer": ["arnold"]}, 
+                            "Arnold Checkbox_6":    {"tooltip": "Arnold tooltip",
+                                                    "renderer": ["arnold"]}
+                            }
+        
+                
+        all_render_options = {}
+        
+        # Check renderer
+        if render_type == 'arnold':
+            all_render_options.update(arnold_render_settings)
+            
+        elif render_type == 'vray':
+            all_render_options.update(vray_render_settings)   
+        
+        self.checkbox = ""
+        self.checkbox_dict = {}
+        
+        # Create checkboxes from the dictionary vray_render_settings
+        for i, j in zip(vray_render_settings.keys(), vray_render_settings.values()):
+            if not render_type in j["renderer"]:       # Right now the condition is "not", since the renderer is arnold, but not should be removed once done
+                self.checkbox = QtWidgets.QCheckBox(i)
+                self.checkbox.setChecked(False)
+                self.checkbox.setToolTip(j["tooltip"])
+                        
+                if in_maya:
+                    self.checkbox.clicked.connect(self.layerLabelUpdate)
+                self.checkbox_dict[i] = self.checkbox
+                    
+        # Organize the checkboxes in a grid layout
+        x_value, y_value = self.GridLayout()
+        for _key, _x, _y  in zip(sorted(self.checkbox_dict.keys()), x_value, y_value):
+            self.render_checkbox_layout.addWidget(self.checkbox_dict[_key], _x, _y)
+        
         # self.render_checkbox_layout.addWidget(self.exr_multi_checkbox, 0,0)
         # self.render_checkbox_layout.addWidget(self.BG_override,1,0)
         # self.render_checkbox_layout.addWidget(self.use_physical_camera, 1, 1)
@@ -254,67 +305,94 @@ class MainWindow(QtWidgets.QWidget):
         self.render_settings_layout.addLayout(self.render_checkbox_layout)
         self.render_settings_layout.addWidget(self.apply_render_settings)
         # self.render_settings_layout.addWidget(self.import_render_settings) #Removed on UI. Called at start up.
-
-        #Render Settings Options:
-        self.exr_multi_checkbox = QtWidgets.QCheckBox("EXR MultiPart")
-        self.exr_multi_checkbox.setChecked(True)
-
-        self.BG_override = QtWidgets.QCheckBox("ENV Override OFF")
-        self.BG_override.setToolTip("Sets ENV override in Overrides tab, to off, when applying the render setting")
-        self.BG_override.setChecked(False)
-
-        self.create_prop_OID_checkbox = QtWidgets.QCheckBox("Auto Create PropID Set")
-        self.create_prop_OID_checkbox.setChecked(True)
-
-        # self.auto_apply_render_path = QtWidgets.QCheckBox("Set RenderPath")
-        self.use_physical_camera = QtWidgets.QCheckBox("Set Physical Camera Attr")
-        self.use_physical_camera.setChecked(False)
-
-        self.extra_render_size = QtWidgets.QCheckBox("Render 10% extra to use for slight camera trucks")
-        self.extra_render_size.setChecked(False)
-
-        self.create_crypto_matte = QtWidgets.QCheckBox("Create CryptoMatte")
-        self.create_crypto_matte.setToolTip("Creates a seperate scene with cryptomatte IDs and render it in a seperate stack")
-        self.create_crypto_matte.setChecked(False)
-        self.bubble_render_checkbox = QtWidgets.QCheckBox("Bubble VFX")
-        self.bubble_render_checkbox.setToolTip("Makes a bubble render based on the Bubble_FX set in the scene")
-        self.bubble_render_checkbox.setChecked(False)
-
-        #RENDER MENU OPTIONS
+        
+        # # -------------------------------------------------------------------------------------------------------------------------------------------
+        # # RENDER SETTINGS OPIONS:
+        # self.exr_multi_checkbox = QtWidgets.QCheckBox("EXR MultiPart")
+        # self.exr_multi_checkbox.setChecked(True)
+        # # -------------------------------------------------------------------------------------------------------------------------------------------
+        # self.BG_override = QtWidgets.QCheckBox("ENV Override OFF")
+        # self.BG_override.setToolTip("Sets ENV override in Overrides tab, to off, when applying the render setting")
+        # self.BG_override.setChecked(False)
+        # # -------------------------------------------------------------------------------------------------------------------------------------------
+        # self.create_prop_OID_checkbox = QtWidgets.QCheckBox("Auto Create PropID Set")
+        # self.create_prop_OID_checkbox.setChecked(True)
+        # # -------------------------------------------------------------------------------------------------------------------------------------------
+        # # self.auto_apply_render_path = QtWidgets.QCheckBox("Set RenderPath")
+        # self.use_physical_camera = QtWidgets.QCheckBox("Set Physical Camera Attr")
+        # self.use_physical_camera.setChecked(False)
+        # # -------------------------------------------------------------------------------------------------------------------------------------------
+        # self.extra_render_size = QtWidgets.QCheckBox("Render 10% extra to use for slight camera trucks")
+        # self.extra_render_size.setChecked(False)
+        # # -------------------------------------------------------------------------------------------------------------------------------------------
+        # self.create_crypto_matte = QtWidgets.QCheckBox("Create CryptoMatte")
+        # self.create_crypto_matte.setToolTip("Creates a seperate scene with cryptomatte IDs and render it in a seperate stack")
+        # self.create_crypto_matte.setChecked(False)
+        # # -------------------------------------------------------------------------------------------------------------------------------------------
+        # self.bubble_render_checkbox = QtWidgets.QCheckBox("Bubble VFX")
+        # self.bubble_render_checkbox.setToolTip("Makes a bubble render based on the Bubble_FX set in the scene")
+        # self.bubble_render_checkbox.setChecked(False)
+        # # -------------------------------------------------------------------------------------------------------------------------------------------
+        
+        self.options = ""
+        self.options_dict = {}
+        
+        # Create checkboxes from the dictionary vray_render_settings
+        for i, j in zip(vray_render_options.keys(), vray_render_options.values()):
+            if not render_type in j["renderer"]:       # Right now the condition is "not", since the renderer is arnold, but not should be removed once done
+                self.options = QtWidgets.QCheckBox(i)
+                self.options.setChecked(False)
+                self.options.setToolTip(j["tooltip"])
+                        
+                if in_maya:
+                    self.checkbox.clicked.connect(self.layerLabelUpdate)
+                self.options_dict[i] = self.options
+        
+        print(self.options_dict)
+        
+        # RENDER MENU OPTIONS
         self.menu_bar = QtWidgets.QMenuBar()
         self.menu_options = QtWidgets.QMenu("Render Options", self.menu_bar)
         self.menu_options.setToolTipsVisible(True)
-        self.exr_multi_checkbox_action = QtWidgets.QWidgetAction(self.menu_bar)
-        self.exr_multi_checkbox_action.setDefaultWidget(self.exr_multi_checkbox)
-        self.menu_options.addAction(self.exr_multi_checkbox_action)
+        
+        # -------------------------------------------------------------------------------------------------------------------------------------------
+        
+        for i in self.options_dict.keys():
+            self.action = QtWidgets.QWidgetAction(self.menu_bar)
+            self.action.setDefaultWidget(self.options_dict[i])
+            self.menu_options.addAction(self.action)
+            
+        # self.exr_multi_checkbox_action = QtWidgets.QWidgetAction(self.menu_bar)
+        # self.exr_multi_checkbox_action.setDefaultWidget(self.options_dict["EXR MultiPart"])
+        # self.menu_options.addAction(self.exr_multi_checkbox_action)
 
-        self.extra_render_size_action = QtWidgets.QWidgetAction(self.menu_bar)
-        self.extra_render_size_action.setDefaultWidget(self.extra_render_size)
-        self.menu_options.addAction(self.extra_render_size_action)
+        # self.extra_render_size_action = QtWidgets.QWidgetAction(self.menu_bar)
+        # self.extra_render_size_action.setDefaultWidget(self.options_dict["Render 10% extra to use for slight camera trucks"])
+        # self.menu_options.addAction(self.extra_render_size_action)
 
-        self.prop_OID_action = QtWidgets.QWidgetAction(self.menu_bar)
-        self.prop_OID_action.setDefaultWidget(self.create_prop_OID_checkbox)
-        self.menu_options.addAction(self.prop_OID_action)
+        # self.prop_OID_action = QtWidgets.QWidgetAction(self.menu_bar)
+        # self.prop_OID_action.setDefaultWidget(self.options_dict["Auto Create PropID Set"])
+        # self.menu_options.addAction(self.prop_OID_action)
 
-        self.BG_override_action = QtWidgets.QWidgetAction(self.menu_bar)
-        self.BG_override_action.setDefaultWidget(self.BG_override)
-        self.menu_options.addAction(self.BG_override_action)
+        # self.BG_override_action = QtWidgets.QWidgetAction(self.menu_bar)
+        # self.BG_override_action.setDefaultWidget(self.options_dict["ENV Override OFF"])
+        # self.menu_options.addAction(self.BG_override_action)
 
-        self.crypto_action = QtWidgets.QWidgetAction(self.menu_bar)
-        self.crypto_action.setDefaultWidget(self.create_crypto_matte)
-        self.menu_options.addAction(self.crypto_action)
+        # self.crypto_action = QtWidgets.QWidgetAction(self.menu_bar)
+        # self.crypto_action.setDefaultWidget(self.options_dict["Create CryptoMatte"])
+        # self.menu_options.addAction(self.crypto_action)
 
-        self.use_physical_camera_action = QtWidgets.QWidgetAction(self.menu_bar)
-        self.use_physical_camera_action.setDefaultWidget(self.use_physical_camera)
-        self.menu_options.addAction(self.use_physical_camera_action)
+        # self.use_physical_camera_action = QtWidgets.QWidgetAction(self.menu_bar)
+        # self.use_physical_camera_action.setDefaultWidget(self.options_dict["Set Physical Camera Attr"])
+        # self.menu_options.addAction(self.use_physical_camera_action)
 
-        self.bubble_render_action = QtWidgets.QWidgetAction(self.menu_bar)
-        self.bubble_render_action.setDefaultWidget(self.bubble_render_checkbox)
-        self.menu_options.addAction(self.bubble_render_action)
+        # self.bubble_render_action = QtWidgets.QWidgetAction(self.menu_bar)
+        # self.bubble_render_action.setDefaultWidget(self.options_dict["Bubble VFX"])
+        # self.menu_options.addAction(self.bubble_render_action)
 
+        # -------------------------------------------------------------------------------------------------------------------------------------------
         self.menu_bar.addMenu(self.menu_options)
         self.render_settings_layout.addWidget(self.menu_bar)
-
         self.render_group.setLayout(self.render_settings_layout)
 
         # AOV SETTINGS
@@ -450,7 +528,7 @@ class MainWindow(QtWidgets.QWidget):
             for layer, job in job_list:
                 self.callbackJobs[layer] = job
 
-        if self.render_layers_checkbox.isChecked():
+        if self.checkbox_dict["Render Layers"].isChecked():
             layersToRender = self.rf.getActiveRenderLayers()
         else:
             layersToRender = ['masterLayer']
@@ -749,37 +827,37 @@ class MainWindow(QtWidgets.QWidget):
         self.updatePresetWithNewKeys()
         # check for keys not in preset
         if "EXRMULTI" in self.preset_config[cur_preset].keys():
-            self.exr_multi_checkbox.setChecked(self.preset_config[cur_preset]["EXRMULTI"])
+            self.options_dict["EXR MultiPart"].setChecked(self.preset_config[cur_preset]["EXRMULTI"])
         if "OVERWRITE" in self.preset_config[cur_preset].keys():
             self.overwrite_checkbox.setChecked(self.preset_config[cur_preset]["OVERWRITE"])
         if "BG_OVERRIDE" in self.preset_config[cur_preset].keys():
-            self.BG_override.setChecked(self.preset_config[cur_preset]["BG_OVERRIDE"])
+            self.options_dict["ENV Override OFF"].setChecked(self.preset_config[cur_preset]["BG_OVERRIDE"])
         if "BG_ONLY" in self.preset_config[cur_preset].keys():
-            self.only_bg_checkbox.setChecked(self.preset_config[cur_preset]["BG_ONLY"])
+            self.checkbox_dict["Add BG Render"].setChecked(self.preset_config[cur_preset]["BG_ONLY"])
         if "PHYS_CAM" in self.preset_config[cur_preset].keys():
-            self.use_physical_camera.setChecked(self.preset_config[cur_preset]["PHYS_CAM"])
+            self.options_dict["Set Physical Camera Attr"].setChecked(self.preset_config[cur_preset]["PHYS_CAM"])
         if "PRIO" in self.preset_config[cur_preset].keys():
             self.priority_int.setText(self.preset_config[cur_preset]["PRIO"])
         if "STEPPED" in self.preset_config[cur_preset].keys():
             self.stepped_int.setText(self.preset_config[cur_preset]["STEPPED"])
         if "OVERSCAN" in self.preset_config[cur_preset].keys():
-            self.extra_render_size.setChecked(self.preset_config[cur_preset]["OVERSCAN"])
+            self.options_dict["Render 10% extra to use for slight camera trucks"].setChecked(self.preset_config[cur_preset]["OVERSCAN"])
         if "SPHERE_RENDER" in self.preset_config[cur_preset].keys():
-            self.sphere_render_checkbox.setChecked(self.preset_config[cur_preset]["SPHERE_RENDER"])
+            self.checkbox_dict["Sphere Volume Render"].setChecked(self.preset_config[cur_preset]["SPHERE_RENDER"])
         if "PROP_OID" in self.preset_config[cur_preset].keys():
-            self.create_prop_OID_checkbox.setChecked(self.preset_config[cur_preset]["PROP_OID"])
+            self.options_dict["Auto Create PropID Set"].setChecked(self.preset_config[cur_preset]["PROP_OID"])
         if "RENDER_LAYERS" in self.preset_config[cur_preset].keys():
-            self.render_layers_checkbox.setChecked(self.preset_config[cur_preset]["RENDER_LAYERS"])
+            self.checkbox_dict["Render Layers"].setChecked(self.preset_config[cur_preset]["RENDER_LAYERS"])
         if "BG_ONLY_SOLO" in self.preset_config[cur_preset].keys():
-            self.solo_bg_render_checkbox.setChecked(self.preset_config[cur_preset]["BG_ONLY_SOLO"])
+            self.checkbox_dict["Render ONLY BG"].setChecked(self.preset_config[cur_preset]["BG_ONLY_SOLO"])
         if "SINGLE_FRAME" in self.preset_config[cur_preset].keys():
-            self.single_frame_checkbox.setChecked(self.preset_config[cur_preset]["SINGLE_FRAME"])
+            self.self.checkbox_dict["Single Frame"].setChecked(self.preset_config[cur_preset]["SINGLE_FRAME"])
         if "CRYPTO_MATTE" in self.preset_config[cur_preset].keys():
-            self.create_crypto_matte.setChecked(self.preset_config[cur_preset]["CRYPTO_MATTE"])
+            self.options_dict["Create CryptoMatte"].setChecked(self.preset_config[cur_preset]["CRYPTO_MATTE"])
         if "FULL_BG_RENDER" in self.preset_config[cur_preset].keys():
-            self.full_bg_render_checkbox.setChecked(self.preset_config[cur_preset]["FULL_BG_RENDER"])
+            self.checkbox_dict["Full-Length BG"].setChecked(self.preset_config[cur_preset]["FULL_BG_RENDER"])
         if "BUBBLE_VFX" in self.preset_config[cur_preset].keys():
-            self.bubble_render_checkbox.setChecked(self.preset_config[cur_preset]["BUBBLE_VFX"])
+            self.options_dict["Bubble VFX"].setChecked(self.preset_config[cur_preset]["BUBBLE_VFX"])
 
 
         aov_index = self.aov_dd.findText(cur_aov)
@@ -801,22 +879,22 @@ class MainWindow(QtWidgets.QWidget):
         settings_dict = {}
         settings_dict["RS"] = self.render_settings_dd.currentText()
         settings_dict["AOV"] = self.aov_dd.currentText()
-        settings_dict["EXRMULTI"] = self.exr_multi_checkbox.isChecked()
+        settings_dict["EXRMULTI"] = self.options_dict["EXR MultiPart"].isChecked()
         settings_dict["OVERWRITE"] = self.overwrite_checkbox.isChecked()
-        settings_dict["BG_OVERRIDE"] = self.BG_override.isChecked()
-        settings_dict["BG_ONLY"] = self.only_bg_checkbox.isChecked()
-        settings_dict["PHYS_CAM"] = self.use_physical_camera.isChecked()
+        settings_dict["BG_OVERRIDE"] = self.options_dict["ENV Override OFF"].isChecked()
+        settings_dict["BG_ONLY"] = self.checkbox_dict["Add BG Render"].isChecked()
+        settings_dict["PHYS_CAM"] = self.options_dict["Set Physical Camera Attr"].isChecked()
         settings_dict["PRIO"] = self.priority_int.text()
         settings_dict["STEPPED"] = self.stepped_int.text()
-        settings_dict["OVERSCAN"] = self.extra_render_size.isChecked()
-        settings_dict["SPHERE_RENDER"] = self.sphere_render_checkbox.isChecked()
-        settings_dict["PROP_OID"] = self.create_prop_OID_checkbox.isChecked()
-        settings_dict["RENDER_LAYERS"] = self.render_layers_checkbox.isChecked()
-        settings_dict["BG_ONLY_SOLO"] = self.solo_bg_render_checkbox.isChecked()
-        settings_dict["SINGLE_FRAME"] = self.single_frame_checkbox.isChecked()
-        settings_dict["CRYPTO_MATTE"] = self.create_crypto_matte.isChecked()
-        settings_dict["FULL_BG_RENDER"] = self.full_bg_render_checkbox.isChecked()
-        settings_dict["BUBBLE_VFX"] = self.bubble_render_checkbox.isChecked()
+        settings_dict["OVERSCAN"] = self.options_dict["Render 10% extra to use for slight camera trucks"].isChecked()
+        settings_dict["SPHERE_RENDER"] = self.checkbox_dict["Sphere Volume Render"].isChecked()
+        settings_dict["PROP_OID"] = self.options_dict["Auto Create PropID Set"].isChecked()
+        settings_dict["RENDER_LAYERS"] = self.checkbox_dict["Render Layers"].isChecked()
+        settings_dict["BG_ONLY_SOLO"] = self.checkbox_dict["Render ONLY BG"].isChecked()
+        settings_dict["SINGLE_FRAME"] = self.checkbox_dict["Single Frame"].isChecked()
+        settings_dict["CRYPTO_MATTE"] = self.options_dict["Create CryptoMatte"].isChecked()
+        settings_dict["FULL_BG_RENDER"] = self.checkbox_dict["Full-Length BG"].isChecked()
+        settings_dict["BUBBLE_VFX"] = self.options_dict["Bubble VFX"].isChecked()
         return settings_dict
 
     def SaveSettings(self):
@@ -912,15 +990,15 @@ class MainWindow(QtWidgets.QWidget):
                                                                "defaultArnoldRenderOptions.filterType",
                                                                "defaultArnoldRenderOptions.regionMinX",
                                                                "defaultArnoldRenderOptions.regionMinY"]
-            # self.rf.ApplyRenderSettings(rs_name=self.render_settings_dd.currentText(),exr_check=self.exr_multi_checkbox.isChecked(), bg_off=self.BG_override.isChecked(),overscan=self.extra_render_size.isChecked(),sphere_render=self.sphere_render_checkbox.isChecked(),shot=cur_shot)
-            if self.create_crypto_matte.isChecked():
+            # self.rf.ApplyRenderSettings(rs_name=self.render_settings_dd.currentText(),exr_check=self.exr_multi_checkbox.isChecked(), bg_off=self.BG_override.isChecked(),overscan=self.extra_render_size.isChecked(),sphere_render=self.checkbox_dict["Sphere Volume Render"].isChecked(),shot=cur_shot)
+            if self.options_dict["Create CryptoMatte"].isChecked():
                 self.rf.buildCryptoAttr()
-            if self.create_prop_OID_checkbox.isChecked():
+            if self.options_dict["Auto Create PropID Set"].isChecked():
                 if not self.rf.CreatePropOIDSet() and CC.project_name == "KiwiStrit3":
                     err_dia = QtWidgets.QMessageBox(self)
                     err_dia.setText("OID rules are broken! Fix before submitting any more shots")
                     err_dia.exec_()
-            if self.use_physical_camera.isChecked() and self.info_dict:
+            if self.options_dict["Set Physical Camera Attr"].isChecked() and self.info_dict:
                 self.rf.SetPhysicalAttrOnCam(self.info_dict["shot_name"])
             self.SetRenderPathCall()
 
@@ -943,7 +1021,7 @@ class MainWindow(QtWidgets.QWidget):
             # print('SetRenderPath("%s","%s","%s")' % (self.shot_path, self.shot_name, self.preset_dd.currentText()))
 
             self.rf.SetRenderPath(info_dict=self.info_dict, preset_name=self.preset_dd.currentText(),
-                                  only_bg=self.solo_bg_render_checkbox.isChecked(),render_layer=self.render_layers_checkbox.isChecked())
+                                  only_bg=self.checkbox_dict["Render ONLY BG"].isChecked(),render_layer=self.checkbox_dict["Render Layers"].isChecked())
             # print('SetRenderCam("%s")' % self.shot)
             if self.info_dict: #Check if a light scene before trying to pick camera
                 self.rf.SetRenderCam(self.info_dict["shot_name"])
@@ -970,7 +1048,7 @@ class MainWindow(QtWidgets.QWidget):
 
     def SubmitRenderCall(self):
         if in_maya:
-            if self.BG_override.isChecked(): #remove BG Texture in override env.
+            if self.options_dict["ENV Override OFF"].isChecked(): #remove BG Texture in override env.
                 self.rf.CheckOffBGOverride()
             self.submitInsideOfMayaCall()
         else:
@@ -988,17 +1066,17 @@ class MainWindow(QtWidgets.QWidget):
                 self.info_dict["publish_report_name"] = 'LightScene'
                 readyPublishReport(info_dict=self.info_dict, current_dict=content_dict, ref=True, texture=False)
                 savePublishReport(info_dict=self.info_dict, content=content_dict)
-                if self.create_crypto_matte.isChecked():
+                if self.options_dict["Create CryptoMatte"].isChecked():
                     self.rf.buildCryptoAttr()
                 cmd_list = []
 
                 #Check if we need to render only a single frame or a full length render of BG
-                if not self.full_bg_render_checkbox.isChecked() or self.single_frame_checkbox.isChecked():
+                if not self.checkbox_dict["Full-Length BG"].isChecked() or self.checkbox_dict["Single Frame"].isChecked():
                     only_bg_single = True
                 else:
                     only_bg_single = False
                 #### BG RENDER SUBMIT ####
-                if self.only_bg_checkbox.isChecked() or self.solo_bg_render_checkbox.isChecked():
+                if self.checkbox_dict["Add BG Render"].isChecked() or self.checkbox_dict["Render ONLY BG"].isChecked():
                     bg_only_cmd = self.rf.RenderSubmitInfo(c_prefix=self.preset_dd.currentText(),
                                                            onlybg=True,
                                                            user_name=self.user_dd.currentText(),
@@ -1010,12 +1088,12 @@ class MainWindow(QtWidgets.QWidget):
                                                            single_frame=only_bg_single
                                                            )
 
-                    self.rf.SaveRenderFile(True, self.preset_dd.currentText(),current_file, self.info_dict,False,self.bubble_render_checkbox.isChecked())
+                    self.rf.SaveRenderFile(True, self.preset_dd.currentText(),current_file, self.info_dict,False,self.options_dict["Bubble VFX"].isChecked())
                     cmd_list.append(bg_only_cmd)
 
                 #### BEAUTY RENDER SUBMIT ####
-                if not self.solo_bg_render_checkbox.isChecked():
-                    if self.render_layers_checkbox.isChecked():
+                if not self.checkbox_dict["Render ONLY BG"].isChecked():
+                    if self.checkbox_dict["Render Layers"].isChecked():
                         # TODO Do a seperate cmd for BG ONLY when using render layers.
                         for current_layer in self.rf.getActiveRenderLayers():
                             layer_cmd = self.rf.RenderSubmitInfo(c_prefix=self.preset_dd.currentText(),
@@ -1026,12 +1104,12 @@ class MainWindow(QtWidgets.QWidget):
                                                                  overwrite=self.overwrite_checkbox.isChecked(),
                                                                  info_dict=self.info_dict,
                                                                  render_layer=current_layer,
-                                                                 single_frame=self.single_frame_checkbox.isChecked())
+                                                                 single_frame=self.checkbox_dict["Single Frame"].isChecked())
                             cmd_list.append(layer_cmd)
-                        self.rf.SaveRenderFile(self.only_bg_checkbox.isChecked(),
+                        self.rf.SaveRenderFile(self.checkbox_dict["Add BG Render"].isChecked(),
                                                self.preset_dd.currentText(),
                                                current_file, self.info_dict,
-                                               True,self.bubble_render_checkbox.isChecked())
+                                               True,self.options_dict["Bubble VFX"].isChecked())
                     else:
                         preset_cmd = self.rf.RenderSubmitInfo(c_prefix=self.preset_dd.currentText(),
                                                               onlybg=False,
@@ -1041,17 +1119,17 @@ class MainWindow(QtWidgets.QWidget):
                                                               overwrite=self.overwrite_checkbox.isChecked(),
                                                               info_dict=self.info_dict,
                                                               render_layer=None,
-                                                              single_frame=self.single_frame_checkbox.isChecked()
+                                                              single_frame=self.checkbox_dict["Single Frame"].isChecked()
                                                               )
                         cmd_list.append(preset_cmd)
                         self.rf.SaveRenderFile(False,
                                                self.preset_dd.currentText(),
                                                current_file,
-                                               self.info_dict,False,self.bubble_render_checkbox.isChecked())
+                                               self.info_dict,False,self.options_dict["Bubble VFX"].isChecked())
 
                 #### CRYPTO RENDER SUBMIT ####
-                if self.create_crypto_matte.isChecked():
-                    if not self.solo_bg_render_checkbox.isChecked():
+                if self.options_dict["Create CryptoMatte"].isChecked():
+                    if not self.checkbox_dict["Render ONLY BG"].isChecked():
                         self.rf.runCryptoMatteSetup(self.preset_dd.currentText(), self.info_dict)
                         crypto_cmd = self.rf.RenderSubmitInfo(c_prefix="%s_Crypto" % self.preset_dd.currentText(),
                                                               onlybg=False,
@@ -1061,7 +1139,7 @@ class MainWindow(QtWidgets.QWidget):
                                                               overwrite=self.overwrite_checkbox.isChecked(),
                                                               info_dict=self.info_dict,
                                                               render_layer=None,
-                                                              single_frame=self.single_frame_checkbox.isChecked(),
+                                                              single_frame=self.checkbox_dict["Single Frame"].isChecked(),
                                                               crop_exr=0,
                                                               render_file=CC.get_shot_crypto_render_file(**self.info_dict)
                                                               )
@@ -1096,25 +1174,25 @@ class MainWindow(QtWidgets.QWidget):
             self.shot_path = CC.get_shot_path(**shot_dict)
 
             current_file = "%s/02_Light/%s_Light.ma" % (self.shot_path, self.shot_name)
-            if self.only_bg_checkbox.isChecked() or self.solo_bg_render_checkbox.isChecked(): #BG ONLY RENDER
-                if not self.full_bg_render_checkbox.isChecked() or self.single_frame_checkbox.isChecked():
+            if self.checkbox_dict["Add BG Render"].isChecked() or self.checkbox_dict["Render ONLY BG"].isChecked(): #BG ONLY RENDER
+                if not self.checkbox_dict["Full-Length BG"].isChecked() or self.checkbox_dict["Single Frame"].isChecked():
                     only_bg_single = True
                 else:
                     only_bg_single = False
                 cmd_threads.append(ThreadPool.Worker(func=self.rf.submitOutsideMaya,
                                                      current_file=current_file,
                                                      rs_name=self.render_settings_dd.currentText(),
-                                                     exr_multi=self.exr_multi_checkbox.isChecked(),
+                                                     exr_multi=self.options_dict["EXR MultiPart"].isChecked(),
                                                      only_bg=True,
                                                      aov_name=self.aov_dict[self.aov_dd.currentText()],
                                                      prefix_name=self.preset_dd.currentText(),
-                                                     bg_off=self.BG_override.isChecked(),
-                                                     phys_cam=self.use_physical_camera.isChecked(),
+                                                     bg_off=self.options_dict["ENV Override OFF"].isChecked(),
+                                                     phys_cam=self.options_dict["Set Physical Camera Attr"].isChecked(),
                                                      info_dict=shot_dict,
-                                                     overscan=self.extra_render_size.isChecked(),
-                                                     sphere_render=self.sphere_render_checkbox.isChecked(),
-                                                     render_layer=self.render_layers_checkbox.isChecked(),
-                                                     crypto_render=self.create_crypto_matte.isChecked(),
+                                                     overscan=self.options_dict["Render 10% extra to use for slight camera trucks"].isChecked(),
+                                                     sphere_render=self.checkbox_dict["Sphere Volume Render"].isChecked(),
+                                                     render_layer=self.checkbox_dict["Render Layers"].isChecked(),
+                                                     crypto_render=self.options_dict["Create CryptoMatte"].isChecked(),
                                                      overwrite=self.overwrite_checkbox.isChecked(),
                                                      project_name=CC.project_name,
                                                      r_prio=self.priority_int.text(),
@@ -1122,32 +1200,32 @@ class MainWindow(QtWidgets.QWidget):
                                                      user_name=self.user_dd.currentText(),
                                                      single_frame=only_bg_single,
                                                      submitCallID=self.submit_call_id,
-                                                     bubbles=self.bubble_render_checkbox.isChecked())
+                                                     bubbles=self.options_dict["Bubble VFX"].isChecked())
                                    )
 
-            if not self.solo_bg_render_checkbox.isChecked(): #NORMAL RENDER
+            if not self.checkbox_dict["Render ONLY BG"].isChecked(): #NORMAL RENDER
                 cmd_threads.append(ThreadPool.Worker(func=self.rf.submitOutsideMaya,
                                                      current_file=current_file,
                                                      rs_name=self.render_settings_dd.currentText(),
-                                                     exr_multi=self.exr_multi_checkbox.isChecked(),
+                                                     exr_multi=self.options_dict["EXR MultiPart"].isChecked(),
                                                      only_bg=False,
                                                      aov_name=self.aov_dict[self.aov_dd.currentText()],
                                                      prefix_name=self.preset_dd.currentText(),
-                                                     bg_off=self.BG_override.isChecked(),
-                                                     phys_cam=self.use_physical_camera.isChecked(),
+                                                     bg_off=self.options_dict["ENV Override OFF"].isChecked(),
+                                                     phys_cam=self.options_dict["Set Physical Camera Attr"].isChecked(),
                                                      info_dict=shot_dict,
-                                                     overscan=self.extra_render_size.isChecked(),
-                                                     sphere_render=self.sphere_render_checkbox.isChecked(),
-                                                     render_layer=self.render_layers_checkbox.isChecked(),
-                                                     crypto_render=self.create_crypto_matte.isChecked(),
+                                                     overscan=self.options_dict["Render 10% extra to use for slight camera trucks"].isChecked(),
+                                                     sphere_render=self.checkbox_dict["Sphere Volume Render"].isChecked(),
+                                                     render_layer=self.checkbox_dict["Render Layers"].isChecked(),
+                                                     crypto_render=self.options_dict["Create CryptoMatte"].isChecked(),
                                                      overwrite=self.overwrite_checkbox.isChecked(),
                                                      project_name=CC.project_name,
                                                      r_prio=self.priority_int.text(),
                                                      stepped=self.stepped_int.text(),
                                                      user_name=self.user_dd.currentText(),
-                                                     single_frame=self.single_frame_checkbox.isChecked(),
+                                                     single_frame=self.checkbox_dict["Single Frame"].isChecked(),
                                                      submitCallID=self.submit_call_id,
-                                                     bubbles=self.bubble_render_checkbox.isChecked())
+                                                     bubbles=self.options_dict["Bubble VFX"].isChecked())
                                    )
 
         logger.info('Number of Threads: %s' % len(cmd_threads))
@@ -1332,7 +1410,7 @@ class RenderSubmitFunctions():
 
 
     def renderableCallback(self, message_type, plug, other_plug, client_data):
-        if self.ui_widget.render_layers_checkbox.isChecked():
+        if self.ui_widget.checkbox_dict["Render Layers"].isChecked():
             if not message_type & om.MNodeMessage.kAttributeSet:
                 return
 
@@ -1341,7 +1419,7 @@ class RenderSubmitFunctions():
                     self.ui_widget.layerLabelUpdate()
 
     def updateRenderableCallbacks(self, callbackJobs):
-        if self.ui_widget.render_layers_checkbox.isChecked():
+        if self.ui_widget.checkbox_dict["Render Layers"].isChecked():
             return_list = []
             layers = self.getActiveRenderLayers()
             for layer in layers:
