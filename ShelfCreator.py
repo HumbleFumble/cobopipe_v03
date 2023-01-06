@@ -181,6 +181,6 @@ def run(overwrite=True):
             name=shelf_name,
             build_dict=build_dict,
             overwrite=overwrite,
-            iconPath="T:/_Pipeline/cobopipe_v01-001/icon/Maya/")
+            iconPath="T:/_Pipeline/cobopipe-v02-001/icon/Maya/")
     else:
         pass

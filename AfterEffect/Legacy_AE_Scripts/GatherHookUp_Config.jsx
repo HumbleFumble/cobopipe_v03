@@ -490,8 +490,8 @@ function my_UI_init(winRef, current_call_name){
 function getPipePath(){
     var path = $.getenv("BOM_PIPE_PATH")
     if(!path){
-        //path = "C:/Users/cg/PycharmProjects/cobopipe_v01-001" // T:/_Pipeline/cobopipe_v01-001/
-        path = "T:/_Pipeline/cobopipe_v01-001"
+        //path = "C:/Users/cg/PycharmProjects/cobopipe-v02-001" // T:/_Pipeline/cobopipe-v02-001/
+        path = "T:/_Pipeline/cobopipe-v02-001"
         }
 
     return path
@@ -509,7 +509,7 @@ function GetProject(){
 
 function loadConfigJson(){
     var project_name = GetProject()
-    var pipe_path = getPipePath()//"C:/Users/cg/PycharmProjects/cobopipe_v01-001" //System.getenv("BOM_PIPE_PATH")
+    var pipe_path = getPipePath()//"C:/Users/cg/PycharmProjects/cobopipe-v02-001" //System.getenv("BOM_PIPE_PATH")
     var config_file = pipe_path + "/Configs/Config_" + project_name + ".json";
     var myFile = new File(config_file);
     myFile.open('r');

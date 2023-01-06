@@ -1,4 +1,4 @@
-include("T:/_Pipeline/cobopipe_v01-001/TB/ToonBoom_Global_Scripts/CB_CustomSaveAs.js")
+include("T:/_Pipeline/cobopipe-v02-001/TB/ToonBoom_Global_Scripts/CB_CustomSaveAs.js")
 
 
 function isScenePaletteList(paletteList){
