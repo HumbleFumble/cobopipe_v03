@@ -152,7 +152,7 @@ $.runScript = {
 
 ///////////// CONFIG FUNCTIONS ////////////////
 function setConfig(){
-    config_path = "T:\\_Pipeline\\cobopipe_v01-001\\Configs\\Config_Hoj.json" // Hardcoded for Høj
+    config_path = "T:\\_Pipeline\\cobopipe-v02-001\\Configs\\Config_Hoj.json" // Hardcoded for Høj
     var configData = loadJson(config_path);
     config = process_config(configData);
     episode_prefix_padding = decipher_regex(config.regex_strings.episode_regex);

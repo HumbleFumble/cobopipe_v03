@@ -71,7 +71,7 @@ function buildUI(thisObj){
 	var win = (thisObj instanceof Panel) ? thisObj : new Window("palette", "Run Scripts UI", undefined,{resizeable:true});
 	if(win != null){
 		var window_text = "Group{orientation:'column',alignment:['fill','fill'],\
-		folder_group: Group {orientation: 'row', et_folder: EditText{text: 'T:/_Pipeline/cobopipe_v01-001/AfterEffect/AE_Scripts', preferredSize: ['175','20']}, pick_folder_button: Button{text:'Pick Folder'} }\
+		folder_group: Group {orientation: 'row', et_folder: EditText{text: 'T:/_Pipeline/cobopipe-v02-001/AfterEffect/AE_Scripts', preferredSize: ['175','20']}, pick_folder_button: Button{text:'Pick Folder'} }\
 		script_group: Group{orientation: 'row', script_list: ListBox{text: 'testing', preferredSize:['250','350'],} }, \
 		button_group: Group {orientation: 'row', run_button: Button{text:'Run'}, import_button: Button{text: 'Refresh'} }\
 		}";

@@ -50,7 +50,7 @@ class ConfigClass():
         self.contact_sheet_category_file="<base_path>/Pipeline/contact_sheet_category.json"
         self.template_asset_path="<template_path>/<asset_type>_Template_Folder/"
         self.module_path=""
-        self.python_path="T:/_Pipeline/cobopipe_v01-001/"
+        self.python_path="T:/_Pipeline/cobopipe-v02-001/"
         self.publish_report_folder="<base_path>/Pipeline/PublishReports"
         self.asset_publish_path="<publish_report_folder>/Assets"
         self.shot_publish_path="<publish_report_folder>/Film"
@@ -61,7 +61,7 @@ class ConfigClass():
         self.episode_info_file="<episode_path>/<episode_name>_BrowserInfo.json"
         self.python3="T:/_Executables/python/Python310/python.exe"
         self.ftp_path="\\\\archivesrv/ftpprod/HOJ_FTP"
-        self.premiere_sqpreset="T:/_Pipeline/cobopipe_v01-001/PremierePro/sequencePresets/1920x1080-25fps.sqpreset"
+        self.premiere_sqpreset="T:/_Pipeline/cobopipe-v02-001/PremierePro/sequencePresets/1920x1080-25fps.sqpreset"
         
         
         self.episode_regex="^(s)\d{3}"
@@ -301,7 +301,7 @@ class ConfigClass():
 
 
     def get_premiere_sqpreset(self):
-        to_return = "T:/_Pipeline/cobopipe_v01-001/PremierePro/sequencePresets/1920x1080-25fps.sqpreset"
+        to_return = "T:/_Pipeline/cobopipe-v02-001/PremierePro/sequencePresets/1920x1080-25fps.sqpreset"
         return to_return
 
 
@@ -321,7 +321,7 @@ class ConfigClass():
 
 
     def get_python_path(self):
-        to_return = "T:/_Pipeline/cobopipe_v01-001/"
+        to_return = "T:/_Pipeline/cobopipe-v02-001/"
         return to_return
 
 

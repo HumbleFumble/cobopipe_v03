@@ -1,1 +1,1 @@
-python T:/_Pipeline/cobopipe_v01-001/ShotBrowser.py
+python T:/_Pipeline/cobopipe-v02-001/ShotBrowser.py

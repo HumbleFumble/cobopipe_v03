@@ -1,6 +1,6 @@
  #include "json2.js";
 
-var defaultFolder = "T:\\_Pipeline\\cobopipe_v01-001\\Configs";
+var defaultFolder = "T:\\_Pipeline\\cobopipe-v02-001\\Configs";
 var config_path;
 var config;
 var episode_prefix_padding;
