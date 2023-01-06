@@ -516,7 +516,7 @@ class MainWindow(QtWidgets.QWidget):
 
     def closeEvent(self, event):
         if in_maya:
-            for layer, job in self.callbackJobs.iteritems():
+            for layer, job in self.callbackJobs.items():
                 om.MMessage.removeCallback(job)
         event.accept() # let the window close
 

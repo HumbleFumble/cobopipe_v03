@@ -20,7 +20,7 @@ def resetSession(userPath=None, ignore=[]):
 
     modulesToDelete = []
     # Iterate over all the modules that are currently loaded
-    for key, module in sys.modules.iteritems():
+    for key, module in sys.modules.items():
         # There's a few modules that are going to complain if you try to query them
         # so I've popped this into a try/except to keep it safe
         try:

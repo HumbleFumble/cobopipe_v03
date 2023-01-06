@@ -84,7 +84,7 @@ def addAttribute(node, attribute, value):
     userAttributes = getUserAttributes(node)
     userAttributes[attribute] = str(value)
     userAttributesString = ''
-    for userAttribute, value in userAttributes.iteritems():
+    for userAttribute, value in userAttributes.items():
         userAttributesString = userAttributesString + userAttribute + '=' + str(value) + ';'
     if userAttributesString:
         userAttributesString = userAttributesString[:-1]
@@ -95,7 +95,7 @@ def removeAttribute(node, attribute):
     userAttributes = getUserAttributes(node)
     if attribute in userAttributes.keys():
         userAttributesString = ''
-        for userAttribute, value in userAttributes.iteritems():
+        for userAttribute, value in userAttributes.items():
             if not userAttribute == attribute:
                 userAttributesString = userAttributesString + userAttribute + '=' + value + ';'
         if userAttributesString:
