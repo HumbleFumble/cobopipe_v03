@@ -32,3 +32,4 @@ def externalRendering(scene_file):
 
 if __name__ == "__main__":
     externalRendering(sys.argv[1])
+# harmony.open_project( r"P:\930462_HOJ_Project\Production\Film\S104\S104_SQ010\S104_SQ010_SH010\S104_SQ010_SH010\S104_SQ010_SH010_V007.xstage" )
