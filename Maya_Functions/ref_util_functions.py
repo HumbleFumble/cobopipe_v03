@@ -1,4 +1,8 @@
-import maya.cmds as cmds
+try:
+    import maya.cmds as cmds
+except Exception as e:
+    print(e)
+    
 import os
 from Log.CoboLoggers import getLogger
 logger = getLogger()
