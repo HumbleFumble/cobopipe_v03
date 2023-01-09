@@ -13,7 +13,7 @@
             {
                 "label": "Overwrite user defined buttons",
                 "type": "menu_item",
-                "cmd": "import ShelfCreator as SC\nSC.run(overwrite=True)",
+                "cmd": "import ShelfCreator as SC\nfrom importlib import reload\nreload(SC)\nSC.run(overwrite=True)",
                 "children": {}
             },
 
@@ -21,7 +21,7 @@
             {
                 "label": "Keep user defined buttons",
                 "type": "menu_item",
-                "cmd": "import ShelfCreator as SC\nSC.run(overwrite=False)",
+                "cmd": "import ShelfCreator as SC\nfrom importlib import reload\nreload(SC)\nSC.run(overwrite=False)",
                 "children": {}
             }
         }
@@ -43,7 +43,7 @@
                 "tool_tip": "Set Logger console level to debug",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "from Log.CoboLoggers import refreshLogger\nrefreshLogger()",
+                "cmd": "from Log.CoboLoggers import refreshLogger\nfrom importlib import reload\nreload(refreshLogger)\nrefreshLogger()",
                 "dcmd": "",
                 "children": {}
             },
@@ -54,7 +54,7 @@
                 "tool_tip": "Build a new clean log file",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "from Log.CoboLoggers import getLogger, buildNewLog\nlogger = getLogger()\nbuildNewLog(logger)",
+                "cmd": "from Log.CoboLoggers import getLogger, buildNewLog\nfrom importlib import reload\nreload(getLogger)\nlogger = getLogger()\nbuildNewLog(logger)",
                 "dcmd": "",
                 "children": {}
             },
@@ -65,7 +65,7 @@
                 "tool_tip": "Set Logger console level to debug",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "from Log.CoboLoggers import getLogger, setConsoleLevel\nlogger = getLogger()\nsetConsoleLevel(logger,10)",
+                "cmd": "from Log.CoboLoggers import getLogger, setConsoleLevel\nfrom importlib import reload\nreload(getLogger)\nlogger = getLogger()\nsetConsoleLevel(logger,10)",
                 "dcmd": "",
                 "children": {}
             },
@@ -76,7 +76,7 @@
                 "tool_tip": "Set Logger console level to info",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "from Log.CoboLoggers import getLogger, setConsoleLevel\nlogger = getLogger()\nsetConsoleLevel(logger,20)",
+                "cmd": "from Log.CoboLoggers import getLogger, setConsoleLevel\nfrom importlib import reload\nreload(getLogger)\nlogger = getLogger()\nsetConsoleLevel(logger,20)",
                 "dcmd": "",
                 "children": {}
             },
@@ -87,7 +87,7 @@
                 "tool_tip": "Set Logger console level to debug",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "from Log.CoboLoggers import getLogger, setConsoleLevel\nlogger = getLogger()\nsetConsoleLevel(logger,30)",
+                "cmd": "from Log.CoboLoggers import getLogger, setConsoleLevel\nfrom importlib import reload\nreload(getLogger)\nlogger = getLogger()\nsetConsoleLevel(logger,30)",
                 "dcmd": "",
                 "children": {}
             },
@@ -98,7 +98,7 @@
                 "tool_tip": "Set Logger console level to error",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "from Log.CoboLoggers import getLogger, setConsoleLevel\nlogger = getLogger()\nsetConsoleLevel(logger,40)",
+                "cmd": "from Log.CoboLoggers import getLogger, setConsoleLevel\nfrom importlib import reload\nreload(getLogger)\nlogger = getLogger()\nsetConsoleLevel(logger,40)",
                 "dcmd": "",
                 "children": {}
             },
@@ -109,7 +109,7 @@
                 "tool_tip": "Set Logger console level to critical",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "from Log.CoboLoggers import getLogger, setConsoleLevel\nlogger = getLogger()\nsetConsoleLevel(logger,50)",
+                "cmd": "from Log.CoboLoggers import getLogger, setConsoleLevel\nfrom importlib import reload\nreload(getLogger)\nlogger = getLogger()\nsetConsoleLevel(logger,50)",
                 "dcmd": "",
                 "children": {}
             }
@@ -130,7 +130,7 @@
             {
                 "label": "Fix UI off-screen",
                 "type": "menu_item",
-                "cmd": "import Maya_Functions.general_util_functions as gen_util\ngen_util.fix_ui_offscreen()",
+                "cmd": "import Maya_Functions.general_util_functions as gen_util\nfrom importlib import reload\nreload(gen_util)\ngen_util.fix_ui_offscreen()",
                 "children": {}
             },
 
@@ -138,7 +138,7 @@
             {
                 "label": "Clean scene",
                 "type": "menu_item",
-                "cmd": "import Maya_Functions.delete_and_clean_up_functions as del_util\ndel_util.hardcoreClean()",
+                "cmd": "import Maya_Functions.delete_and_clean_up_functions as del_util\nfrom importlib import reload\nreload(del_util)\ndel_util.hardcoreClean()",
                 "children": {}
             },
 
@@ -146,7 +146,7 @@
             {
                 "label": "Set Copycat Render Settings On",
                 "type": "menu_item",
-                "cmd": "import Maya_Functions.asset_util_functions as ass_util\nass_util.setCopycatRenderSettings(True)",
+                "cmd": "import Maya_Functions.asset_util_functions as ass_util\nfrom importlib import reload\nreload(ass_util)\nass_util.setCopycatRenderSettings(True)",
                 "children": {}
             },
 
@@ -154,7 +154,7 @@
             {
                 "label": "Set Copycat Render Settings Off",
                 "type": "menu_item",
-                "cmd": "import Maya_Functions.asset_util_functions as ass_util\nass_util.setCopycatRenderSettings(False)",
+                "cmd": "import Maya_Functions.asset_util_functions as ass_util\nfrom importlib import reload\nreload(ass_util)\nass_util.setCopycatRenderSettings(False)",
                 "children": {}
             }
         }
@@ -166,7 +166,7 @@
         "tool_tip":"UI for AssetBrowser -> working with Assets or Reffing them into shots",
         "type":"bttn",
         "icon":"AssetBrowser.png",
-        "cmd":"import AssetBrowser as AB\nAB.Run()",
+        "cmd":"import AssetBrowser as AB\nfrom importlib import reload\nreload(AB)\nAB.Run()",
         "dcmd":"",
         "children":{}
     },
@@ -177,7 +177,7 @@
         "tool_tip":"UI for ShotBrowser -> Browser and Open Episode/Sequnces/Shots",
         "type":"bttn",
         "icon":"ShotBrowser.png",
-        "cmd":"import shotBrowser as SB\nSB.run()",
+        "cmd":"import shotBrowser as SB\nfrom importlib import reload\nreload(SB)\nSB.run()",
         "dcmd":"",
         "children":{}
     },
@@ -188,7 +188,7 @@
         "tool_tip": "UI for working with shots/sequences in maya. Used for Previs/Animation",
         "type": "bttn",
         "icon": "SequenceView.png",
-        "cmd": "import SequenceView as SV\nSV.Run()",
+        "cmd": "import SequenceView as SV\nfrom importlib import reload\nreload(SV)\nSV.Run()",
         "dcmd": "",
         "children": {}
     },
@@ -199,7 +199,7 @@
         "tool_tip": "Makes a collected movie of a sequence or a selection of shots",
         "type": "bttn",
         "icon": "SQ_Hookup.png",
-        "cmd": "import previewHookup as HU\nHU.Run()",
+        "cmd": "import previewHookup as HU\nfrom importlib import reload\nreload(HU)\nHU.Run()",
         "dcmd": "",
         "children": {}
     },
@@ -210,7 +210,7 @@
         "tool_tip": "Tool for working with light",
         "type": "bttn",
         "icon": "LightHelper.png",
-        "cmd": "import LightHelper as LH\nLH.Run()",
+        "cmd": "import LightHelper as LH\nfrom importlib import reload\nreload(LH)\nLH.Run()",
         "dcmd": "",
         "children": {}
     },
@@ -221,7 +221,7 @@
         "tool_tip": "Publishing tool for animation scenes",
         "type": "bttn",
         "icon": "AnimPublish.png",
-        "cmd": "import PublishAnimScene\nPublishAnimScene.Run()",
+        "cmd": "import PublishAnimScene\nfrom importlib import reload\nreload(PublishAnimScene)\nPublishAnimScene.Run()",
         "dcmd": "",
         "children": {}
     },
@@ -232,7 +232,7 @@
         "tool_tip": "Render submit. Opens UI for setting render settings and passes, and then submitting to Royal Render",
         "type": "bttn",
         "icon": "RenderSubmit.png",
-        "cmd": "import RenderSubmit as RS\nRS.Run()",
+        "cmd": "import RenderSubmit as RS\nfrom importlib import reload\nreload(RS)\nRS.Run()",
         "dcmd": "",
         "children": {}
     },
@@ -243,7 +243,7 @@
         "tool_tip": "select options",
         "type": "bttn",
         "icon": "selectByObject.png",
-        "cmd": "import Maya_Functions.asset_util_functions as AUF\nAUF.SelectCtrlsFromNamespace()",
+        "cmd": "import Maya_Functions.asset_util_functions as AUF\nfrom importlib import reload\nreload(AUF)\nAUF.SelectCtrlsFromNamespace()",
         "dcmd": "",
         "children":
         {
@@ -253,7 +253,7 @@
                 "tool_tip": "select all but super root",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import Maya_Functions.asset_util_functions as AUF\nAUF.SelectCtrlsFromNamespace(super_root=True)",
+                "cmd": "import Maya_Functions.asset_util_functions as AUF\nfrom importlib import reload\nreload(AUF)\nAUF.SelectCtrlsFromNamespace(super_root=True)",
                 "dcmd": "",
                 "children": {}
             },
@@ -263,7 +263,7 @@
                 "tool_tip": "select all but super root",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import Maya_Functions.asset_util_functions as AUF\nAUF.SelectCtrlsFromNamespace(super_root=False)",
+                "cmd": "import Maya_Functions.asset_util_functions as AUF\nfrom importlib import reload\nreload(AUF)\nAUF.SelectCtrlsFromNamespace(super_root=False)",
                 "dcmd": "",
                 "children": {}
             }
@@ -287,7 +287,7 @@
                 "tool_tip": "Duplicate all references in selection",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import Maya_Functions.ref_util_functions as RF\nRF.duplicateReferences()",
+                "cmd": "import Maya_Functions.ref_util_functions as RF\nfrom importlib import reload\nreload(RF)\nRF.duplicateReferences()",
                 "dcmd": "",
                 "children": {}
             },
@@ -298,7 +298,7 @@
                 "tool_tip": "Convert to an ingest reference",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import Maya_Functions.ref_util_functions as RF\nRF.convertReferences('Ingest')",
+                "cmd": "import Maya_Functions.ref_util_functions as RF\nfrom importlib import reload\nreload(RF)\nRF.convertReferences('Ingest')",
                 "dcmd": "",
                 "children": {}
             },
@@ -309,7 +309,7 @@
                 "tool_tip": "Convert to an proxy reference",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import Maya_Functions.ref_util_functions as RF\nRF.convertReferences('Proxy')",
+                "cmd": "import Maya_Functions.ref_util_functions as RF\nfrom importlib import reload\nreload(RF)\nRF.convertReferences('Proxy')",
                 "dcmd": "",
                 "children": {}
             },
@@ -320,7 +320,7 @@
                 "tool_tip": "Convert to an instance of a proxy reference",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import Maya_Functions.ref_util_functions as RF\nRF.convertReferences('Instance')",
+                "cmd": "import Maya_Functions.ref_util_functions as RF\nfrom importlib import reload\nreload(RF)\nRF.convertReferences('Instance')",
                 "dcmd": "",
                 "children": {}
             },
@@ -331,7 +331,7 @@
                 "tool_tip": "Removes reference regardless of type",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import Maya_Functions.ref_util_functions as RF\nRF.removeReferences()",
+                "cmd": "import Maya_Functions.ref_util_functions as RF\nfrom importlib import reload\nreload(RF)\nRF.removeReferences()",
                 "dcmd": "",
                 "children": {}
             }
@@ -355,7 +355,7 @@
                 "tool_tip": "Gets world position from selection",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import Maya_Functions.anim_scripts.get_and_set as getset\nanimToolPosition = getset.getPosition()",
+                "cmd": "import Maya_Functions.anim_scripts.get_and_set as getset\nfrom importlib import reload\nreload(getset)\nanimToolPosition = getset.getPosition()",
                 "dcmd": "",
                 "children": {}
             },
@@ -366,7 +366,7 @@
                 "tool_tip": "Sets world position on selection",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import Maya_Functions.anim_scripts.get_and_set as getset\ngetset.setPosition(animToolPosition)",
+                "cmd": "import Maya_Functions.anim_scripts.get_and_set as getset\nfrom importlib import reload\nreload(getset)\ngetset.setPosition(animToolPosition)",
                 "dcmd": "",
                 "children": {}
             },
@@ -377,7 +377,7 @@
                 "tool_tip": "Mirrors position from first selected to second selected",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import Maya_Functions.anim_scripts.mirrorLimb as ml\nml.mirrorLimb()",
+                "cmd": "import Maya_Functions.anim_scripts.mirrorLimb as ml\nfrom importlib import reload\nreload(ml)\nml.mirrorLimb()",
                 "dcmd": "",
                 "children": {}
             },
@@ -388,7 +388,7 @@
                 "tool_tip": "Makes the set reference unselectable.",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import Maya_Functions.ref_util_functions as refUtil\nrefUtil.lockSet(lock=True)",
+                "cmd": "import Maya_Functions.ref_util_functions as refUtil\nfrom importlib import reload\nreload(refUtil)\nrefUtil.lockSet(lock=True)",
                 "dcmd": "",
                 "children": {}
             },
@@ -399,7 +399,7 @@
                 "tool_tip": "Makes the set reference selectable.",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import Maya_Functions.ref_util_functions as refUtil\nrefUtil.lockSet(lock=False)",
+                "cmd": "import Maya_Functions.ref_util_functions as refUtil\nfrom importlib import reload\nreload(AUF)\nrefUtil.lockSet(lock=False)",
                 "dcmd": "",
                 "children": {}
             },
@@ -410,7 +410,7 @@
                 "tool_tip": "Tool to animate Calcugator's display",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import MiasMagic2.calcugatorText as calc\ncalc.run()",
+                "cmd": "import MiasMagic2.calcugatorText as calc\nfrom importlib import reload\nreload(calc)\ncalc.run()",
                 "dcmd": "",
                 "children": {}
             },
@@ -421,7 +421,7 @@
                 "tool_tip": "Tool to automatically create display layers for controllers",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import Maya_Functions.anim_scripts.createLayers as cl\ncl.createAnimLayers()",
+                "cmd": "import Maya_Functions.anim_scripts.createLayers as cl\nfrom importlib import reload\nreload(cl)\ncl.createAnimLayers()",
                 "dcmd": "",
                 "children": {}
             }
@@ -434,7 +434,7 @@
         "tool_tip": "Pick goal first then object that is moving",
         "type": "bttn",
         "icon": "alignObjects.png",
-        "cmd": "import Maya_Functions.general_util_functions as GUF\nGUF.Align()",
+        "cmd": "import Maya_Functions.general_util_functions as GUF\nfrom importlib import reload\nreload(GUF)\nGUF.Align()",
         "dcmd": "",
         "children": {}
     },
@@ -455,7 +455,7 @@
                 "tool_tip": "Creates a vray subdivision set that includes Geo_Group.",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import Maya_Functions.asset_util_functions as AUF\nimport Maya_Functions.vray_util_functions as VUF\ninfo_dict = AUF.GetAssetInfoFromRoot()\nif info_dict:\n\tVUF.CreateOrAddVraySet(set_name=info_dict[\"asset_name\"])",
+                "cmd": "import Maya_Functions.asset_util_functions as AUF\nimport Maya_Functions.vray_util_functions as VUFfrom importlib import reload\nreload(VUF)\n\ninfo_dict = AUF.GetAssetInfoFromRoot()\nif info_dict:\n\tVUF.CreateOrAddVraySet(set_name=info_dict[\"asset_name\"])",
                 "dcmd": "",
                 "children": {}
             },
@@ -488,7 +488,7 @@
                 "tool_tip": "Links a light to specific assets only",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import lightLinker\nlightLinker.lightUniqueToAssetButton()",
+                "cmd": "import lightLinker\nfrom importlib import reload\nreload(lightLinker)\nlightLinker.lightUniqueToAssetButton()",
                 "dcmd": "",
                 "children": {}
             },
@@ -498,7 +498,7 @@
                 "tool_tip": "Links a light to specific selection only",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import lightLinker\nlightLinker.lightUniqueToSelectionButton()",
+                "cmd": "import lightLinker\nfrom importlib import reload\nreload(lightLinker)\nlightLinker.lightUniqueToSelectionButton()",
                 "dcmd": "",
                 "children": {}
             },
@@ -508,7 +508,7 @@
                 "tool_tip": "Resets a linked light to normal",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import lightLinker\nlightLinker.resetLightButton()",
+                "cmd": "import lightLinker\nfrom importlib import reload\nreload(lightLinker)\nlightLinker.resetLightButton()",
                 "dcmd": "",
                 "children": {}
             }
@@ -531,7 +531,7 @@
                 "tool_tip": "Create CryptoMatte AOVs for testing",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import Maya_Functions.vray_util_functions as vuf\nvuf.createCryptoAOV()",
+                "cmd": "import Maya_Functions.vray_util_functions as vuf\nfrom importlib import reload\nreload(vuf)\nvuf.createCryptoAOV()",
                 "dcmd": "",
                 "children": {}
             },
@@ -541,7 +541,7 @@
                 "tool_tip": "Create CryptoMatte AOVs for testing",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import Maya_Functions.light_util_functions as luf\nluf.checkForSunAndSkyRefs()",
+                "cmd": "import Maya_Functions.light_util_functions as luf\nfrom importlib import reload\nreload(luf)\nluf.checkForSunAndSkyRefs()",
                 "dcmd": "",
                 "children": {}
             },
@@ -551,7 +551,7 @@
                 "tool_tip": "Select all lights in the scene",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import Maya_Functions.light_util_functions as luf\nluf.selectAllLightInScene()",
+                "cmd": "import Maya_Functions.light_util_functions as luf\nfrom importlib import reload\nreload(luf)\nluf.selectAllLightInScene()",
                 "dcmd": "",
                 "children": {}
             },
@@ -561,7 +561,7 @@
                 "tool_tip": "Used for adding objects we don't want to be hidden in OnlyBG renders. Tries to set visibility to 0 on objects added when submitting",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import Maya_Functions.set_util_functions as SUF\nselection = cmds.ls(sl=True)\nSUF.AddToSet(\"OnlyBG_Hide\",selection)",
+                "cmd": "import Maya_Functions.set_util_functions as SUF\nfrom importlib import reload\nreload(SUF)\nselection = cmds.ls(sl=True)\nSUF.AddToSet(\"OnlyBG_Hide\",selection)",
                 "dcmd": "",
                 "children": {}
             },
@@ -571,7 +571,7 @@
                 "tool_tip": "Used for adding Root_Groups of objects we don't want to be turned off in Only BG render (Prop trees ect.)",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import Maya_Functions.asset_util_functions as AUF\nAUF.CreateOnlyBGExceptionSet()",
+                "cmd": "import Maya_Functions.asset_util_functions as AUF\nfrom importlib import reload\nreload(AUF)\nAUF.CreateOnlyBGExceptionSet()",
                 "dcmd": "",
                 "children": {}
             },
@@ -581,7 +581,7 @@
                 "tool_tip": "Saves currently open light scene as a VFX scene, with the name given",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import Maya_Functions.light_util_functions as LUF\nLUF.createNewVFXScene()",
+                "cmd": "import Maya_Functions.light_util_functions as LUF\nfrom importlib import reload\nreload(LUF)\nLUF.createNewVFXScene()",
                 "dcmd": "",
                 "children": {}
             },
@@ -591,7 +591,7 @@
                 "tool_tip": "Makes a vray-object set, that will render everything place in it, black/without alpha in render",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import Maya_Functions.vray_util_functions as VUF\nVUF.createBubbleVFXSet()",
+                "cmd": "import Maya_Functions.vray_util_functions as VUF\nfrom importlib import reload\nreload(VUF)\nVUF.createBubbleVFXSet()",
                 "dcmd": "",
                 "children": {}
             },
@@ -601,7 +601,7 @@
                 "tool_tip": "Makes a vray-object set, that will render everything place in it, black/without alpha in render",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import Maya_Functions.vray_util_functions as VUF\nVUF.SetVrayObjectSetToBlackMatte(\"BlackHoleRenderSet\")",
+                "cmd": "import Maya_Functions.vray_util_functions as VUF\nfrom importlib import reload\nreload(VUF)\nVUF.SetVrayObjectSetToBlackMatte(\"BlackHoleRenderSet\")",
                 "dcmd": "",
                 "children": {}
             },
@@ -611,7 +611,7 @@
                 "tool_tip": "Exports the most Purple cloud as an alembic cache",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import Maya_Functions.publish_util_functions as PUF\nPUF.exportPurpleCloudAlembicCache()",
+                "cmd": "import Maya_Functions.publish_util_functions as PUF\nfrom importlib import reload\nreload(PUF)\nPUF.exportPurpleCloudAlembicCache()",
                 "dcmd": "",
                 "children": {}
             },
@@ -621,7 +621,7 @@
                 "tool_tip": "Exports the Copycat Mirror as an alembic cache",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import Maya_Functions.publish_util_functions as PUF\nPUF.exportCopycatMirrorAlembicCache()",
+                "cmd": "import Maya_Functions.publish_util_functions as PUF\nfrom importlib import reload\nreload(PUF)\nPUF.exportCopycatMirrorAlembicCache()",
                 "dcmd": "",
                 "children": {}
             },
@@ -631,7 +631,7 @@
                 "tool_tip": "Sets Big Asteroid OID to 195",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import Maya_Functions.attr_util_functions as AUF\nAUF.setBigAsteroidOID()",
+                "cmd": "import Maya_Functions.attr_util_functions as AUF\nfrom importlib import reload\nreload(AUF)\nAUF.setBigAsteroidOID()",
                 "dcmd": "",
                 "children": {}
             },
@@ -641,7 +641,7 @@
                 "tool_tip": "create ForLight_Sphere with SkyMtl on",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import Maya_Functions.vray_util_functions as VUF\nVUF.createFastRenderSkySetup()",
+                "cmd": "import Maya_Functions.vray_util_functions as VUF\nfrom importlib import reload\nreload(VUF)\nVUF.createFastRenderSkySetup()",
                 "dcmd": "",
                 "children": {}
             }
@@ -664,7 +664,7 @@
                 "tool_tip": "",
                 "type": "menu_item",
                 "icon": "deleteActive.png",
-                "cmd": "import Maya_Functions.delete_and_clean_up_functions as Cleaner\nCleaner.DeleteUnknown()",
+                "cmd": "import Maya_Functions.delete_and_clean_up_functions as Cleaner\nfrom importlib import reload\nreload(Cleaner)\nCleaner.DeleteUnknown()",
                 "dcmd": "",
                 "children": {}
             },
@@ -674,7 +674,7 @@
                 "tool_tip": "",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import Maya_Functions.delete_and_clean_up_functions as Cleaner\nCleaner.DeleteUnusedNodes()",
+                "cmd": "import Maya_Functions.delete_and_clean_up_functions as Cleaner\nfrom importlib import reload\nreload(Cleaner)\nCleaner.DeleteUnusedNodes()",
                 "dcmd": "",
                 "children": {}
             },
@@ -684,7 +684,7 @@
                 "tool_tip": "",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "import Maya_Functions.delete_and_clean_up_functions as delete_util\ndelete_util.DeleteUnusedKeyframes()",
+                "cmd": "import Maya_Functions.delete_and_clean_up_functions as delete_util\nfrom importlib import reload\nreload(delete_util)\ndelete_util.DeleteUnusedKeyframes()",
                 "dcmd": "",
                 "children": {}
             }
