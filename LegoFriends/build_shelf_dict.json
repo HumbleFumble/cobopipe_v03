@@ -140,22 +140,6 @@
                 "type": "menu_item",
                 "cmd": "import Maya_Functions.delete_and_clean_up_functions as del_util\nfrom importlib import reload\nreload(del_util)\ndel_util.hardcoreClean()",
                 "children": {}
-            },
-
-            "M030":
-            {
-                "label": "Set Copycat Render Settings On",
-                "type": "menu_item",
-                "cmd": "import Maya_Functions.asset_util_functions as ass_util\nfrom importlib import reload\nreload(ass_util)\nass_util.setCopycatRenderSettings(True)",
-                "children": {}
-            },
-
-            "M040":
-            {
-                "label": "Set Copycat Render Settings Off",
-                "type": "menu_item",
-                "cmd": "import Maya_Functions.asset_util_functions as ass_util\nfrom importlib import reload\nreload(ass_util)\nass_util.setCopycatRenderSettings(False)",
-                "children": {}
             }
         }
     },
