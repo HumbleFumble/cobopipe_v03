@@ -22,7 +22,7 @@ except:
 
 if in_maya:
     import maya.mel as mel
-    from Queue import Queue
+    from queue import Queue
     import MayaDockable
     import reloadModules
     try:

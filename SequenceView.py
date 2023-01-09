@@ -11,7 +11,7 @@ try:
     in_maya = True
     import maya.cmds as cmds
     import maya.mel as mel
-    from Queue import Queue
+    from queue import Queue
 
 except:
     from PySide2 import QtWidgets, QtCore, QtGui
@@ -42,6 +42,7 @@ from datetime import datetime
 from Multiplicity import ThreadPool2
 
 from multiprocessing import cpu_count
+
 if in_maya:
     import MayaDockable
     import reloadModules

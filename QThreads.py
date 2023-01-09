@@ -12,7 +12,7 @@ logger = getLogger()
 try:
     from queue import Queue
 except:
-    from Queue import Queue
+    from queue import Queue
 
 
 def ProcRun(maya_py_cmd):
