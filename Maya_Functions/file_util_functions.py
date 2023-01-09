@@ -197,7 +197,8 @@ def createFolderFromTemplate(destination=None,template_folder="3D_Shot_Template"
 
     if not os.path.exists(destination):
         if create_folder:
-            os.mkdir(destination)
+            print(f'path: {destination}')
+            #os.makedirs(destination)
         else:
             return False
 

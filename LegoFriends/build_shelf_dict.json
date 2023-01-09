@@ -43,7 +43,7 @@
                 "tool_tip": "Set Logger console level to debug",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "from Log.CoboLoggers import refreshLogger\nfrom importlib import reload\nreload(refreshLogger)\nrefreshLogger()",
+                "cmd": "from Log.CoboLoggers import refreshLogger\nrefreshLogger()",
                 "dcmd": "",
                 "children": {}
             },
@@ -54,7 +54,7 @@
                 "tool_tip": "Build a new clean log file",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "from Log.CoboLoggers import getLogger, buildNewLog\nfrom importlib import reload\nreload(getLogger)\nlogger = getLogger()\nbuildNewLog(logger)",
+                "cmd": "from Log.CoboLoggers import getLogger, buildNewLog\nlogger = getLogger()\nbuildNewLog(logger)",
                 "dcmd": "",
                 "children": {}
             },
@@ -65,7 +65,7 @@
                 "tool_tip": "Set Logger console level to debug",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "from Log.CoboLoggers import getLogger, setConsoleLevel\nfrom importlib import reload\nreload(getLogger)\nlogger = getLogger()\nsetConsoleLevel(logger,10)",
+                "cmd": "from Log.CoboLoggers import getLogger, setConsoleLevel\nlogger = getLogger()\nsetConsoleLevel(logger,10)",
                 "dcmd": "",
                 "children": {}
             },
@@ -76,7 +76,7 @@
                 "tool_tip": "Set Logger console level to info",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "from Log.CoboLoggers import getLogger, setConsoleLevel\nfrom importlib import reload\nreload(getLogger)\nlogger = getLogger()\nsetConsoleLevel(logger,20)",
+                "cmd": "from Log.CoboLoggers import getLogger, setConsoleLevel\nlogger = getLogger()\nsetConsoleLevel(logger,20)",
                 "dcmd": "",
                 "children": {}
             },
@@ -87,7 +87,7 @@
                 "tool_tip": "Set Logger console level to debug",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "from Log.CoboLoggers import getLogger, setConsoleLevel\nfrom importlib import reload\nreload(getLogger)\nlogger = getLogger()\nsetConsoleLevel(logger,30)",
+                "cmd": "from Log.CoboLoggers import getLogger, setConsoleLevel\nlogger = getLogger()\nsetConsoleLevel(logger,30)",
                 "dcmd": "",
                 "children": {}
             },
@@ -98,7 +98,7 @@
                 "tool_tip": "Set Logger console level to error",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "from Log.CoboLoggers import getLogger, setConsoleLevel\nfrom importlib import reload\nreload(getLogger)\nlogger = getLogger()\nsetConsoleLevel(logger,40)",
+                "cmd": "from Log.CoboLoggers import getLogger, setConsoleLevel\nlogger = getLogger()\nsetConsoleLevel(logger,40)",
                 "dcmd": "",
                 "children": {}
             },
@@ -109,7 +109,7 @@
                 "tool_tip": "Set Logger console level to critical",
                 "type": "menu_item",
                 "icon": "",
-                "cmd": "from Log.CoboLoggers import getLogger, setConsoleLevel\nfrom importlib import reload\nreload(getLogger)\nlogger = getLogger()\nsetConsoleLevel(logger,50)",
+                "cmd": "from Log.CoboLoggers import getLogger, setConsoleLevel\nlogger = getLogger()\nsetConsoleLevel(logger,50)",
                 "dcmd": "",
                 "children": {}
             }
