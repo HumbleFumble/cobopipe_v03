@@ -51,6 +51,7 @@ from shutil import copyfile
 import subprocess
 import re
 from maya.app.renderSetup.model.aovs import decode
+from maya.app.renderSetup.model import renderSettings
 
 # Get renderer
 if "maya_render" in CC.project_settings.keys():
@@ -119,7 +120,7 @@ class MainWindow(QtWidgets.QWidget):
     def GridLayout(self):
         
         grid_x = 2
-        grid_y = 3
+        grid_y = 7
 
         x_value = []
         y_value = []
@@ -224,8 +225,8 @@ class MainWindow(QtWidgets.QWidget):
         self.render_checkbox_layout = QtWidgets.QGridLayout()
         
                 
-        # VRay Render settings dictionary
-        vray_render_settings =  {"Add BG Render":   {"tooltip": "Add a OnlyBg render along with the picked preset. Renders only 1 frame and only Set and SetDress showing",
+        # Render settings dictionary
+        render_settings =  {"Add BG Render":   {"tooltip": "Add a OnlyBg render along with the picked preset. Renders only 1 frame and only Set and SetDress showing",
                                                     "checked": False,
                                                     "renderer": ["vray"]},
                             "Sphere Volume Render": {"tooltip": "Uses the vray volumetric override to only render the inside of volume shapes",
@@ -242,11 +243,8 @@ class MainWindow(QtWidgets.QWidget):
                                                     "renderer": ["vray"]}, 
                             "Full-Length BG":       {"tooltip": "Render OnlyBG for the full length of the shot",
                                                     "checked": False,
-                                                    "renderer": ["vray"]}
-                            }
-        
-        # VRay Render options dictionary
-        vray_render_options =  {"EXR MultiPart":                                {"tooltip": "EXR MultiPart", 
+                                                    "renderer": ["vray"]},
+                            "EXR MultiPart":                                {"tooltip": "EXR MultiPart", 
                                                                                 "checked": True,
                                                                                 "renderer": ["vray"]},
                             "ENV Override OFF":                                 {"tooltip": "Sets ENV override in Overrides tab, to off, when applying the render setting", 
@@ -268,30 +266,15 @@ class MainWindow(QtWidgets.QWidget):
                                                                                 "checked": False,
                                                                                 "renderer": ["vray"]}
                             }
-        
-        # Arnold Render settings dictionary        
-        arnold_render_settings = {"Arnold Checkbox_1": {"tooltip": "Arnold tooltip",
-                                                    "renderer": ["arnold"]},
-                            "Arnold Checkbox_2":    {"tooltip": "Arnold tooltip",
-                                                    "renderer": ["arnold"]}, 
-                            "Arnold Checkbox_3":    {"tooltip": "Arnold tooltip",
-                                                    "renderer": ["arnold"]}, 
-                            "Arnold Checkbox_4":    {"tooltip": "Arnold tooltip",
-                                                    "renderer": ["arnold"]}, 
-                            "Arnold Checkbox_5":    {"tooltip": "Arnold tooltip",
-                                                    "renderer": ["arnold"]}, 
-                            "Arnold Checkbox_6":    {"tooltip": "Arnold tooltip",
-                                                    "renderer": ["arnold"]}
-                            }
-                       
+
         all_render_options = {}
         
         # Check renderer
         if render_type == 'arnold':
-            all_render_options.update(arnold_render_settings)
+            all_render_options.update(render_settings)
             
         elif render_type == 'vray':
-            all_render_options.update(vray_render_settings)   
+            all_render_options.update(render_settings)   
         
                
         # ----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -299,7 +282,7 @@ class MainWindow(QtWidgets.QWidget):
         # ----------------------------------------------------------------------------------------------------------------------------------------------------
         
         self.checkbox_dict = {}
-        for keyname, valueof in zip(vray_render_settings.keys(), vray_render_settings.values()):
+        for keyname, valueof in zip(render_settings.keys(), render_settings.values()):
             if not render_type in valueof["renderer"]:       # Right now the condition is "not", since the renderer is arnold, but not should be removed once done
                 self.checkbox = QtWidgets.QCheckBox(keyname)
                 self.checkbox.setChecked(valueof["checked"])
@@ -326,8 +309,8 @@ class MainWindow(QtWidgets.QWidget):
         # ----------------------------------------------------------------------------------------------------------------------------------------------------
         
     
-        self.options_dict = {}
-        for keyname, valueof in zip(vray_render_options.keys(), vray_render_options.values()):
+        self.checkbox_dict = {}
+        for keyname, valueof in zip(render_settings.keys(), render_settings.values()):
             if not render_type in valueof["renderer"]:       # Right now the condition is "not", since the renderer is arnold, but not should be removed once done
                 self.options = QtWidgets.QCheckBox(keyname)
                 self.options.setChecked(valueof["checked"])
@@ -335,16 +318,16 @@ class MainWindow(QtWidgets.QWidget):
                 
                 if in_maya:
                     self.checkbox.clicked.connect(self.layerLabelUpdate)
-                self.options_dict[keyname] = self.options
+                self.checkbox_dict[keyname] = self.options
            
         self.menu_bar = QtWidgets.QMenuBar()
         self.menu_options = QtWidgets.QMenu("Render Options", self.menu_bar)
         self.menu_options.setToolTipsVisible(True)
         
         # Add checkboxes to the render menu
-        for i in self.options_dict.keys():
+        for i in self.checkbox_dict.keys():
             self.action = QtWidgets.QWidgetAction(self.menu_bar)
-            self.action.setDefaultWidget(self.options_dict[i])
+            self.action.setDefaultWidget(self.checkbox_dict[i])
             self.menu_options.addAction(self.action)
             
         self.menu_bar.addMenu(self.menu_options)
@@ -784,39 +767,12 @@ class MainWindow(QtWidgets.QWidget):
         cur_aov = self.preset_config[cur_preset]["AOV"]
         self.updatePresetWithNewKeys()
         # check for keys not in preset
-        if "EXRMULTI" in self.preset_config[cur_preset].keys():
-            self.options_dict["EXR MultiPart"].setChecked(self.preset_config[cur_preset]["EXRMULTI"])
-        if "OVERWRITE" in self.preset_config[cur_preset].keys():
-            self.overwrite_checkbox.setChecked(self.preset_config[cur_preset]["OVERWRITE"])
-        if "BG_OVERRIDE" in self.preset_config[cur_preset].keys():
-            self.options_dict["ENV Override OFF"].setChecked(self.preset_config[cur_preset]["BG_OVERRIDE"])
-        if "BG_ONLY" in self.preset_config[cur_preset].keys():
-            self.checkbox_dict["Add BG Render"].setChecked(self.preset_config[cur_preset]["BG_ONLY"])
-        if "PHYS_CAM" in self.preset_config[cur_preset].keys():
-            self.options_dict["Set Physical Camera Attr"].setChecked(self.preset_config[cur_preset]["PHYS_CAM"])
-        if "PRIO" in self.preset_config[cur_preset].keys():
-            self.priority_int.setText(self.preset_config[cur_preset]["PRIO"])
-        if "STEPPED" in self.preset_config[cur_preset].keys():
-            self.stepped_int.setText(self.preset_config[cur_preset]["STEPPED"])
-        if "OVERSCAN" in self.preset_config[cur_preset].keys():
-            self.options_dict["Render 10% extra to use for slight camera tracks"].setChecked(self.preset_config[cur_preset]["OVERSCAN"])
-        if "SPHERE_RENDER" in self.preset_config[cur_preset].keys():
-            self.checkbox_dict["Sphere Volume Render"].setChecked(self.preset_config[cur_preset]["SPHERE_RENDER"])
-        if "PROP_OID" in self.preset_config[cur_preset].keys():
-            self.options_dict["Auto Create PropID Set"].setChecked(self.preset_config[cur_preset]["PROP_OID"])
-        if "RENDER_LAYERS" in self.preset_config[cur_preset].keys():
-            self.checkbox_dict["Render Layers"].setChecked(self.preset_config[cur_preset]["RENDER_LAYERS"])
-        if "BG_ONLY_SOLO" in self.preset_config[cur_preset].keys():
-            self.checkbox_dict["Render ONLY BG"].setChecked(self.preset_config[cur_preset]["BG_ONLY_SOLO"])
-        if "SINGLE_FRAME" in self.preset_config[cur_preset].keys():
-            self.self.checkbox_dict["Single Frame"].setChecked(self.preset_config[cur_preset]["SINGLE_FRAME"])
-        if "CRYPTO_MATTE" in self.preset_config[cur_preset].keys():
-            self.options_dict["Create CryptoMatte"].setChecked(self.preset_config[cur_preset]["CRYPTO_MATTE"])
-        if "FULL_BG_RENDER" in self.preset_config[cur_preset].keys():
-            self.checkbox_dict["Full-Length BG"].setChecked(self.preset_config[cur_preset]["FULL_BG_RENDER"])
-        if "BUBBLE_VFX" in self.preset_config[cur_preset].keys():
-            self.options_dict["Bubble VFX"].setChecked(self.preset_config[cur_preset]["BUBBLE_VFX"])
-
+        for key in self.preset_config[cur_preset].keys():
+            if key in self.checkbox_dict.keys():
+                self.checkbox_dict[key].setChecked(self.preset_config[cur_preset][key])
+            if key in self.checkbox_dict.keys():
+                self.checkbox_dict[key].setChecked(self.preset_config[cur_preset][key])
+            
 
         aov_index = self.aov_dd.findText(cur_aov)
         rs_index = self.render_settings_dd.findText(cur_rs)
@@ -835,24 +791,17 @@ class MainWindow(QtWidgets.QWidget):
 
     def CollectToSaveSettings(self):
         settings_dict = {}
+        for key in self.checkbox_dict.keys():
+            settings_dict[key] = self.checkbox_dict[key].isChecked()
+
+            
         settings_dict["RS"] = self.render_settings_dd.currentText()
         settings_dict["AOV"] = self.aov_dd.currentText()
-        settings_dict["EXRMULTI"] = self.options_dict["EXR MultiPart"].isChecked()
         settings_dict["OVERWRITE"] = self.overwrite_checkbox.isChecked()
-        settings_dict["BG_OVERRIDE"] = self.options_dict["ENV Override OFF"].isChecked()
-        settings_dict["BG_ONLY"] = self.checkbox_dict["Add BG Render"].isChecked()
-        settings_dict["PHYS_CAM"] = self.options_dict["Set Physical Camera Attr"].isChecked()
+
         settings_dict["PRIO"] = self.priority_int.text()
         settings_dict["STEPPED"] = self.stepped_int.text()
-        settings_dict["OVERSCAN"] = self.options_dict["Render 10% extra to use for slight camera tracks"].isChecked()
-        settings_dict["SPHERE_RENDER"] = self.checkbox_dict["Sphere Volume Render"].isChecked()
-        settings_dict["PROP_OID"] = self.options_dict["Auto Create PropID Set"].isChecked()
-        settings_dict["RENDER_LAYERS"] = self.checkbox_dict["Render Layers"].isChecked()
-        settings_dict["BG_ONLY_SOLO"] = self.checkbox_dict["Render ONLY BG"].isChecked()
-        settings_dict["SINGLE_FRAME"] = self.checkbox_dict["Single Frame"].isChecked()
-        settings_dict["CRYPTO_MATTE"] = self.options_dict["Create CryptoMatte"].isChecked()
-        settings_dict["FULL_BG_RENDER"] = self.checkbox_dict["Full-Length BG"].isChecked()
-        settings_dict["BUBBLE_VFX"] = self.options_dict["Bubble VFX"].isChecked()
+
         return settings_dict
 
     def SaveSettings(self):
@@ -886,77 +835,24 @@ class MainWindow(QtWidgets.QWidget):
             if self.info_dict:
                 cur_shot = self.info_dict["shot_name"]
             self.rf.loadUnloadedChildren() #load unloaded child refs from anim-ref.
-            settings = file_util.loadJson(CC.get_render_presets() + self.render_settings_dd.currentText())
-            vray_util.applyRenderSettings(settings)
-            blacklist=["defaultArnoldRenderOptions.standinDrawOverride",
-                                                               "defaultArnoldRenderOptions.ignoreAtmosphere",
-                                                               "defaultArnoldDriver.preserveLayerName",
-                                                               "defaultArnoldFilter.scalarMode",
-                                                               "defaultArnoldRenderOptions.textureAutotile",
-                                                               "defaultArnoldRenderOptions.aovMode",
-                                                               "defaultArnoldRenderOptions.manual_gpu_devices",
-                                                               "defaultArnoldFilter.frozen",
-                                                               "defaultArnoldRenderOptions.output_ass_mask",
-                                                               "defaultArnoldRenderOptions.IPRStepFinished",
-                                                               "defaultArnoldRenderOptions.subdivFrustumPadding",
-                                                               "defaultArnoldRenderOptions.GITransmissionSamples",
-                                                               "defaultArnoldFilter.nodeState",
-                                                               "defaultArnoldRenderOptions.ignoreShaders",
-                                                               "defaultArnoldRenderOptions.referenceTime",
-                                                               "defaultArnoldRenderOptions.AASamples",
-                                                               "defaultArnoldRenderOptions.log_max_warnings",
-                                                               "defaultArnoldDriver.depthHalfPrecision",
-                                                               "defaultArnoldRenderOptions.ignoreBump",
-                                                               "defaultArnoldRenderOptions.threads",
-                                                               "defaultArnoldRenderOptions.IPRRefinementStarted",
-                                                               "defaultArnoldRenderOptions.log_to_file",
-                                                               "defaultArnoldFilter.aiWidth",
-                                                               "defaultArnoldRenderOptions.IPRRefinementFinished",
-                                                               "defaultArnoldRenderOptions.exportShadingEngine",
-                                                               "defaultArnoldRenderOptions.output_ass_compressed",
-                                                               "defaultArnoldRenderOptions.kickRenderFlags",
-                                                               "defaultArnoldRenderOptions.progressive_rendering",
-                                                               "defaultArnoldFilter.caching",
-                                                               "defaultArnoldRenderOptions.ignoreOperators",
-                                                               "defaultArnoldRenderOptions.gpu_max_texture_resolution",
-                                                               "defaultArnoldDriver.binMembership",
-                                                               "defaultArnoldFilter.width",
-                                                               "defaultArnoldRenderOptions.plugin_searchpath",
-                                                               "defaultArnoldRenderOptions.motion_blur_enable",
-                                                               "defaultArnoldRenderOptions.ignoreMotionBlur",
-                                                               "defaultArnoldRenderOptions.ignoreSubdivision",
-                                                               "defaultArnoldRenderOptions.use_sample_clamp",
-                                                               "defaultArnoldRenderOptions.enable_swatch_render",
-                                                               "defaultArnoldRenderOptions.abortOnLicenseFail",
-                                                               "defaultArnoldRenderOptions.use_existing_tiled_textures",
-                                                               "defaultArnoldRenderOptions.ignoreTextures",
-                                                               "defaultArnoldFilter.aiTranslator",
-                                                               "defaultArnoldDriver.autocrop",
-                                                               "defaultArnoldDriver.message",
-                                                               "defaultArnoldDriver.tiffCompression",
-                                                               "defaultArnoldRenderOptions.caching",
-                                                               "defaultArnoldRenderOptions.lock_sampling_noise",
-                                                               "defaultArnoldRenderOptions.message",
-                                                               "defaultArnoldRenderOptions.ignoreSmoothing",
-                                                               "defaultArnoldRenderOptions.PostTranslation",
-                                                               "defaultArnoldRenderOptions.abortOnError",
-                                                               "defaultArnoldRenderOptions.GIVolumeDepth",
-                                                               "defaultArnoldFilter.aiUserOptions",
-                                                               "defaultArnoldRenderOptions.filter",
-                                                               "defaultArnoldRenderOptions.sssUseAutobump",
-                                                               "defaultArnoldDriver.pngFormat",
-                                                               "defaultArnoldRenderOptions.filterType",
-                                                               "defaultArnoldRenderOptions.regionMinX",
-                                                               "defaultArnoldRenderOptions.regionMinY"]
+            
+            if render_type == 'vray':
+                settings = file_util.loadJson(CC.get_render_presets() + self.render_settings_dd.currentText())
+                vray_util.applyRenderSettings(settings)
+            elif render_type == 'arnold':
+                settings = file_util.loadJson(CC.get_render_presets() + self.render_settings_dd.currentText())
+                renderSettings.decode(settings)
+                
+
             # self.rf.ApplyRenderSettings(rs_name=self.render_settings_dd.currentText(),exr_check=self.exr_multi_checkbox.isChecked(), bg_off=self.BG_override.isChecked(),overscan=self.extra_render_size.isChecked(),sphere_render=self.checkbox_dict["Sphere Volume Render"].isChecked(),shot=cur_shot)
-            if self.options_dict["Create CryptoMatte"].isChecked():
+            if self.checkbox_dict["Create CryptoMatte"].isChecked():
                 self.rf.buildCryptoAttr()
-            if self.options_dict["Auto Create PropID Set"].isChecked():
+            if self.checkbox_dict["Auto Create PropID Set"].isChecked():
                 if not self.rf.CreatePropOIDSet() and CC.project_name == "KiwiStrit3":
                     err_dia = QtWidgets.QMessageBox(self)
                     err_dia.setText("OID rules are broken! Fix before submitting any more shots")
                     err_dia.exec_()
-            if self.options_dict["Set Physical Camera Attr"].isChecked() and self.info_dict:
+            if self.checkbox_dict["Set Physical Camera Attr"].isChecked() and self.info_dict:
                 self.rf.SetPhysicalAttrOnCam(self.info_dict["shot_name"])
             self.SetRenderPathCall()
 
@@ -1006,7 +902,7 @@ class MainWindow(QtWidgets.QWidget):
 
     def SubmitRenderCall(self):
         if in_maya:
-            if self.options_dict["ENV Override OFF"].isChecked(): #remove BG Texture in override env.
+            if self.checkbox_dict["ENV Override OFF"].isChecked(): #remove BG Texture in override env.
                 self.rf.CheckOffBGOverride()
             self.submitInsideOfMayaCall()
         else:
@@ -1024,7 +920,7 @@ class MainWindow(QtWidgets.QWidget):
                 self.info_dict["publish_report_name"] = 'LightScene'
                 readyPublishReport(info_dict=self.info_dict, current_dict=content_dict, ref=True, texture=False)
                 savePublishReport(info_dict=self.info_dict, content=content_dict)
-                if self.options_dict["Create CryptoMatte"].isChecked():
+                if self.checkbox_dict["Create CryptoMatte"].isChecked():
                     self.rf.buildCryptoAttr()
                 cmd_list = []
 
@@ -1046,7 +942,7 @@ class MainWindow(QtWidgets.QWidget):
                                                            single_frame=only_bg_single
                                                            )
 
-                    self.rf.SaveRenderFile(True, self.preset_dd.currentText(),current_file, self.info_dict,False,self.options_dict["Bubble VFX"].isChecked())
+                    self.rf.SaveRenderFile(True, self.preset_dd.currentText(),current_file, self.info_dict,False,self.checkbox_dict["Bubble VFX"].isChecked())
                     cmd_list.append(bg_only_cmd)
 
                 #### BEAUTY RENDER SUBMIT ####
@@ -1067,7 +963,7 @@ class MainWindow(QtWidgets.QWidget):
                         self.rf.SaveRenderFile(self.checkbox_dict["Add BG Render"].isChecked(),
                                                self.preset_dd.currentText(),
                                                current_file, self.info_dict,
-                                               True,self.options_dict["Bubble VFX"].isChecked())
+                                               True,self.checkbox_dict["Bubble VFX"].isChecked())
                     else:
                         preset_cmd = self.rf.RenderSubmitInfo(c_prefix=self.preset_dd.currentText(),
                                                               onlybg=False,
@@ -1083,10 +979,10 @@ class MainWindow(QtWidgets.QWidget):
                         self.rf.SaveRenderFile(False,
                                                self.preset_dd.currentText(),
                                                current_file,
-                                               self.info_dict,False,self.options_dict["Bubble VFX"].isChecked())
+                                               self.info_dict,False,self.checkbox_dict["Bubble VFX"].isChecked())
 
                 #### CRYPTO RENDER SUBMIT ####
-                if self.options_dict["Create CryptoMatte"].isChecked():
+                if self.checkbox_dict["Create CryptoMatte"].isChecked():
                     if not self.checkbox_dict["Render ONLY BG"].isChecked():
                         self.rf.runCryptoMatteSetup(self.preset_dd.currentText(), self.info_dict)
                         crypto_cmd = self.rf.RenderSubmitInfo(c_prefix="%s_Crypto" % self.preset_dd.currentText(),
@@ -1140,17 +1036,17 @@ class MainWindow(QtWidgets.QWidget):
                 cmd_threads.append(ThreadPool.Worker(func=self.rf.submitOutsideMaya,
                                                      current_file=current_file,
                                                      rs_name=self.render_settings_dd.currentText(),
-                                                     exr_multi=self.options_dict["EXR MultiPart"].isChecked(),
+                                                     exr_multi=self.checkbox_dict["EXR MultiPart"].isChecked(),
                                                      only_bg=True,
                                                      aov_name=self.aov_dict[self.aov_dd.currentText()],
                                                      prefix_name=self.preset_dd.currentText(),
-                                                     bg_off=self.options_dict["ENV Override OFF"].isChecked(),
-                                                     phys_cam=self.options_dict["Set Physical Camera Attr"].isChecked(),
+                                                     bg_off=self.checkbox_dict["ENV Override OFF"].isChecked(),
+                                                     phys_cam=self.checkbox_dict["Set Physical Camera Attr"].isChecked(),
                                                      info_dict=shot_dict,
-                                                     overscan=self.options_dict["Render 10% extra to use for slight camera tracks"].isChecked(),
+                                                     overscan=self.checkbox_dict["Render 10% extra to use for slight camera tracks"].isChecked(),
                                                      sphere_render=self.checkbox_dict["Sphere Volume Render"].isChecked(),
                                                      render_layer=self.checkbox_dict["Render Layers"].isChecked(),
-                                                     crypto_render=self.options_dict["Create CryptoMatte"].isChecked(),
+                                                     crypto_render=self.checkbox_dict["Create CryptoMatte"].isChecked(),
                                                      overwrite=self.overwrite_checkbox.isChecked(),
                                                      project_name=CC.project_name,
                                                      r_prio=self.priority_int.text(),
@@ -1158,24 +1054,24 @@ class MainWindow(QtWidgets.QWidget):
                                                      user_name=self.user_dd.currentText(),
                                                      single_frame=only_bg_single,
                                                      submitCallID=self.submit_call_id,
-                                                     bubbles=self.options_dict["Bubble VFX"].isChecked())
+                                                     bubbles=self.checkbox_dict["Bubble VFX"].isChecked())
                                    )
 
             if not self.checkbox_dict["Render ONLY BG"].isChecked(): #NORMAL RENDER
                 cmd_threads.append(ThreadPool.Worker(func=self.rf.submitOutsideMaya,
                                                      current_file=current_file,
                                                      rs_name=self.render_settings_dd.currentText(),
-                                                     exr_multi=self.options_dict["EXR MultiPart"].isChecked(),
+                                                     exr_multi=self.checkbox_dict["EXR MultiPart"].isChecked(),
                                                      only_bg=False,
                                                      aov_name=self.aov_dict[self.aov_dd.currentText()],
                                                      prefix_name=self.preset_dd.currentText(),
-                                                     bg_off=self.options_dict["ENV Override OFF"].isChecked(),
-                                                     phys_cam=self.options_dict["Set Physical Camera Attr"].isChecked(),
+                                                     bg_off=self.checkbox_dict["ENV Override OFF"].isChecked(),
+                                                     phys_cam=self.checkbox_dict["Set Physical Camera Attr"].isChecked(),
                                                      info_dict=shot_dict,
-                                                     overscan=self.options_dict["Render 10% extra to use for slight camera trucks"].isChecked(),
+                                                     overscan=self.checkbox_dict["Render 10% extra to use for slight camera trucks"].isChecked(),
                                                      sphere_render=self.checkbox_dict["Sphere Volume Render"].isChecked(),
                                                      render_layer=self.checkbox_dict["Render Layers"].isChecked(),
-                                                     crypto_render=self.options_dict["Create CryptoMatte"].isChecked(),
+                                                     crypto_render=self.checkbox_dict["Create CryptoMatte"].isChecked(),
                                                      overwrite=self.overwrite_checkbox.isChecked(),
                                                      project_name=CC.project_name,
                                                      r_prio=self.priority_int.text(),
@@ -1183,7 +1079,7 @@ class MainWindow(QtWidgets.QWidget):
                                                      user_name=self.user_dd.currentText(),
                                                      single_frame=self.checkbox_dict["Single Frame"].isChecked(),
                                                      submitCallID=self.submit_call_id,
-                                                     bubbles=self.options_dict["Bubble VFX"].isChecked())
+                                                     bubbles=self.checkbox_dict["Bubble VFX"].isChecked())
                                    )
 
         logger.info('Number of Threads: %s' % len(cmd_threads))
@@ -1473,22 +1369,39 @@ class RenderSubmitFunctions():
         if only_bg:
             preset_name = "%s_OnlyBG" % preset_name
         # destination = "%s/passes/%s/%s_%s_#" % (shot_path, preset_name, ep_seq_shot, preset_name)
-        if info_dict:
-            info_dict["render_prefix"] = preset_name
-            render_folder,render_filename = os.path.split(CC.get_shot_passes_folder(**info_dict)) #cfg_util.CreatePathFromDict(cfg.project_paths["shot_passes_folder"],info_dict)
-            if render_layer:
-                destination = "%s/<layer>/%s<layer>#" % (render_folder,render_filename)
-            else:
-                destination = "%s#" % CC.get_shot_passes_folder(**info_dict)
-            cmds.setAttr("vraySettings.fileNamePrefix", destination, type="string")
-            logger.info("Render path set to: %s" % destination)
-        cmds.setAttr("vraySettings.imageFormatStr", "exr (multichannel)", type="string")
-        cmds.setAttr("vraySettings.fileNamePadding", 5)
-        cmds.setAttr("vraySettings.dontSaveImage", 1)
-        cmds.setAttr("vraySettings.globopt_render_viewport_subdivision", 0)
-        cmds.setAttr("defaultRenderGlobals.periodInExt", 0)
+        if render_type == 'vray':
+        
+            if info_dict:
+                info_dict["render_prefix"] = preset_name
+                render_folder,render_filename = os.path.split(CC.get_shot_passes_folder(**info_dict)) #cfg_util.CreatePathFromDict(cfg.project_paths["shot_passes_folder"],info_dict)
+            
+                if render_layer:
+                    destination = "%s/<layer>/%s<layer>#" % (render_folder,render_filename)
+                else:
+                    destination = "%s#" % CC.get_shot_passes_folder(**info_dict)
+                cmds.setAttr("vraySettings.fileNamePrefix", destination, type="string")
+                logger.info("Render path set to: %s" % destination)
+            cmds.setAttr("vraySettings.imageFormatStr", "exr (multichannel)", type="string")
+            cmds.setAttr("vraySettings.fileNamePadding", 5)
+            cmds.setAttr("vraySettings.dontSaveImage", 1)
+            cmds.setAttr("vraySettings.globopt_render_viewport_subdivision", 0)
+            cmds.setAttr("defaultRenderGlobals.periodInExt", 0)
 
-
+        if render_type == 'arnold':
+            if info_dict:
+                info_dict["render_prefix"] = preset_name
+                render_folder,render_filename = os.path.split(CC.get_shot_passes_folder(**info_dict)) #cfg_util.CreatePathFromDict(cfg.project_paths["shot_passes_folder"],info_dict)
+            
+                if render_layer:
+                    destination = "%s/<layer>/%s<layer>#" % (render_folder,render_filename)
+                else:
+                    destination = "%s#" % CC.get_shot_passes_folder(**info_dict)
+                cmds.setAttr("defaultRenderGlobals.imageFilePrefix", destination, type="string")
+                logger.info("Render path set to: %s" % destination)
+                cmds.setAttr("defaultArnoldDriver.multipart", 1)
+                cmds.setAttr("defaultArnoldDriver.mergeAOVs", 1)
+                cmds.setAttr("defaultArnoldDriver.preserveLayerName", 1)
+                    
     def SetRenderCam(self, shot):
         if shot != "":
             camera_name = "Anim:%s_Cam" % shot
@@ -2266,9 +2179,6 @@ class Popup(QtWidgets.QDialog):
         flags = self.windowFlags() & ~QtCore.Qt.WindowContextHelpButtonHint
         flags = flags | QtCore.Qt.WindowStaysOnTopHint
         self.setWindowFlags(flags)
-
-
-
 
 
 if not in_maya:
