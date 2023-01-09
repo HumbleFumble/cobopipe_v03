@@ -92,40 +92,40 @@ class ReadyPublish:
     def StartPublish(self):
         if self.asset_info:
             if self.asset_info["asset_type"] == "Prop":
-                import PublishProp
+                import PublishAssets.PublishProp as PublishProp
                 self.asset_info["asset_output"] = self.GetOutputTypes()
                 if self.asset_info["asset_output"]:
                     asset_class = PublishProp.PublishPropClass(self.asset_info, self.lock_geo)
                     return asset_class.runPublish()
 
             if self.asset_info["asset_type"] == "Setdress":
-                import PublishSetdress
+                import PublishAssets.PublishSetdress as PublishSetdress
                 self.asset_info["asset_output"] = self.GetOutputTypes()
                 if self.asset_info["asset_output"]:
                     asset_class = PublishSetdress.PublishSetdressClass(self.asset_info, self.lock_geo)
                     return asset_class.runPublish()
             if self.asset_info["asset_type"] == "Set":
-                import PublishSet
+                import PublishAssets.PublishSet as PublishSet
                 self.asset_info["asset_output"] = self.GetOutputTypes()
                 if self.asset_info["asset_output"]:
                     asset_class = PublishSet.PublishSetClass(self.asset_info, self.lock_geo)
                     return asset_class.runPublish()
             if self.asset_info["asset_type"] == "Char":
-                import PublishChar
+                import PublishAssets.PublishChar as PublishChar
                 self.asset_info["asset_output"] = self.GetOutputTypes()
                 print(self.asset_info["asset_output"])
                 if self.asset_info["asset_output"]:
                     asset_class = PublishChar.PublishCharClass(self.asset_info, self.lock_geo)
                     return asset_class.runPublish()
             if self.asset_info["asset_type"] == "RigModule":
-                import PublishRigModule
+                import PublishAssets.PublishRigModule as PublishRigModule
                 self.asset_info["asset_output"] = self.GetOutputTypes()
                 print("Output_list=%s" % self.asset_info["asset_output"])
                 if self.asset_info["asset_output"]:
                     asset_class = PublishRigModule.PublishRigModule(self.asset_info, self.lock_geo)
                     return asset_class.runPublish()
             if self.asset_info["asset_type"] == "FX":
-                import PublishFX
+                import PublishAssets.PublishFX as PublishFX
                 self.asset_info["asset_output"] = self.GetOutputTypes()
                 if self.asset_info["asset_output"]:
                     asset_class = PublishFX.PublishFXClass(self.asset_info, self.lock_geo)

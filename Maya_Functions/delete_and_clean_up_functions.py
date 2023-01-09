@@ -1,5 +1,8 @@
-import maya.cmds as cmds
-import maya.mel as mel
+try:
+    import maya.cmds as cmds
+    import maya.mel as mel
+except Exception as e:
+    print(e)
 
 from getConfig import getConfigClass
 CC = getConfigClass()

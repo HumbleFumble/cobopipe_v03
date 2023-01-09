@@ -3,6 +3,7 @@ import sys
 import subprocess
 #Extend the environment's path, in order to find the installed Harmony Python module
 sys.path.append( r"C:\Program Files (x86)\Toon Boom Animation\Toon Boom Harmony 22 Premium\win64\bin\python-packages" )
+import TB.CB_SetupRenderInfo_Python as rs
 
 def externalRendering(scene_file):
     from ToonBoom import harmony
@@ -11,12 +12,15 @@ def externalRendering(scene_file):
     current_session = harmony.session()                                   #Fetch the currently active session of Harmony
     project = current_session.project                                     #The project that is already loaded.
     print( "Current Project: %s" % (project.project_path) )
+    passes_folder = rs.findPassesFolder()
     write_nodes = []
     for node in project.scene.nodes:
       if(node.type == "WRITE" and "RENDER_" in node.name):
+          rs.setRenderNodePaths(node,passes_folder)
           write_nodes.append(node)
 
     if write_nodes:
+        project.save_all()
         render_handler = project.create_render_handler()
         render_handler.blocking = True
         for cur in write_nodes:
