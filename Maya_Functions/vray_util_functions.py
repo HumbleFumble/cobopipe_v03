@@ -357,6 +357,8 @@ def applyRenderSettings(settings, whitelist=[], blacklist=[]):
                             locked = True
                             lockedAttributes[attribute] = value
 
+
+                        
                         # If the attribute exist, set the value dictated by the dictionary
                         if cmds.attributeQuery(attribute.split('.')[-1], node=attribute.split('.')[0], exists=True):
                             if not locked:
@@ -365,14 +367,18 @@ def applyRenderSettings(settings, whitelist=[], blacklist=[]):
                                 elif type in ['float3']: # Need to unpack list for these
                                     cmds.setAttr(attribute, *value)
                                 elif type in ['byte']:
-                                    print('Skipping because byte. WTF??')
+                                    try:
+                                        cmds.setAttr(attribute, value)
+                                    except Exception as e:
+                                        print(e)
+                                        print("value: " + value)
+                                        
                                 else:
                                     try:
                                         cmds.setAttr(attribute, value)
                                     except Exception as e:
                                         print(e)
                                         print("value: " + value)
-
 
     # Just printing out the attributes that were skipped
     if lockedAttributes.keys():
