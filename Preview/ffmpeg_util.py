@@ -121,18 +121,20 @@ def concat(input_path_list,output_path,w=1920,h=1080, force_h264=False):
 
 
 def createSlate(video, title=None, frameCount=True, timecode=False, date=True,user=None):
+    font = '/Windows/Fonts/Arial.ttf'
+    
     if title:
-        video = ffmpeg.drawtext(video, text=title, fontfile='Arial', x='w-(text_w+20)', y='20', fontsize='24', fontcolor='white', shadowcolor='black', shadowx=2, shadowy=2)
+        video = ffmpeg.drawtext(video, text=title, fontfile=font, x='w-(text_w+20)', y='20', fontsize='24', fontcolor='white', shadowcolor='black', shadowx=2, shadowy=2)
     if user:
-        video = ffmpeg.drawtext(video, text='Made by: %s' % user, fontfile='Arial', x='20', y='20', fontsize='24',
+        video = ffmpeg.drawtext(video, text='Made by: %s' % user, fontfile=font, x='20', y='20', fontsize='24',
                                 fontcolor='white', shadowcolor='black', shadowx=2, shadowy=2)
     if frameCount:
-        video = ffmpeg.drawtext(video, '%{eif:n:d:5}', start_number=1,fontfile='Arial', x='w-(text_w+20)', y='50', fontsize='24', fontcolor='white', escape_text=False, shadowcolor='black', shadowx=1.5, shadowy=1.5)
+        video = ffmpeg.drawtext(video, '%{eif:n:d:5}', start_number=1,fontfile=font, x='w-(text_w+20)', y='50', fontsize='24', fontcolor='white', escape_text=False, shadowcolor='black', shadowx=1.5, shadowy=1.5)
     if timecode:
-        video = ffmpeg.drawtext(video, timecode='00:00:00:00', timecode_rate=25, start_number=0, fontfile='Arial', x='20', y='h-(text_h+20)', fontsize='24', fontcolor='white', shadowcolor='black', shadowx=2, shadowy=2)
+        video = ffmpeg.drawtext(video, timecode='00:00:00:00', timecode_rate=25, start_number=0, fontfile=font, x='20', y='h-(text_h+20)', fontsize='24', fontcolor='white', shadowcolor='black', shadowx=2, shadowy=2)
     if date:
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M")
-        video = ffmpeg.drawtext(video, text=timestamp, fontfile='Arial', x='w-(text_w+20)', y='h-(text_h+20)', fontsize='24', fontcolor='white', shadowcolor='black', shadowx=2, shadowy=2)
+        video = ffmpeg.drawtext(video, text=timestamp, fontfile=font, x='w-(text_w+20)', y='h-(text_h+20)', fontsize='24', fontcolor='white', shadowcolor='black', shadowx=2, shadowy=2)
     return video
 
 
