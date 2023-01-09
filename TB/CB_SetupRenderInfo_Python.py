@@ -1,0 +1,43 @@
+import sys
+import os
+import subprocess
+#Extend the environment's path, in order to find the installed Harmony Python module
+sys.path.append( r"C:\Program Files (x86)\Toon Boom Animation\Toon Boom Harmony 22 Premium\win64\bin\python-packages" )
+
+from ToonBoom import harmony
+
+current_session = harmony.session()                                   #Fetch the currently active session of Harmony
+project = current_session.project
+from getConfig import getConfigClass
+CC = getConfigClass()
+
+def log(message):
+    sess = harmony.session()
+    sess.log(str(message))
+
+def run():
+    passes_folder = findPassesFolder()
+    setRenderNodePaths(passes_folder)
+
+def setRenderNodePaths(passes_folder):
+    for node in project.scene.nodes:
+        if(node.type == "WRITE" and "RENDER_" in node.name):
+            subfix = node.name.split("RENDER_")[1]
+            full_name = "%s/%s_" % (passes_folder,subfix)
+            log(full_name)
+            node.attributes["DRAWING_NAME"].set_text_value(1,full_name)
+            if "tb_number_padding" in CC.project_settings:
+                node.attributes["LEADING_ZEROS"].set_text_value(1, CC.project_settings["tb_number_padding"])
+            if "tb_output_format" in CC.project_settings:
+                node.attributes["DRAWING_TYPE"].set_text_value(1, CC.project_settings["tb_output_format"])
+
+
+def findPassesFolder():
+    sess = harmony.session()  # Fetch the currently active session of Harmony
+    project = sess.project  # The project that is already loaded.
+    scene_dir = project.project_path
+    passes_dir = "%s/Passes/" % "/".join(scene_dir.split("/")[0:-1])
+    log(passes_dir)
+    if not os.path.exists(passes_dir):
+        os.mkdir(passes_dir)
+    return passes_dir
