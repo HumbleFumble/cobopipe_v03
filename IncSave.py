@@ -29,20 +29,17 @@ def getMayaAsciiOrBinary(file_path=None):
     file_type = None
     
     if os.path.exists(file_path):
-        f = open(file_path, "rb")
-              
-        bytes = f.read(3)
-        if bytes == "FOR":
+        with open(file_path, "rb") as f:
+            data = f.read().decode("utf-8")
+        f.close()
+                
+        if data.startswith("FOR"):
             file_type = "mb"
         
-        if bytes == "//M":
+        if data.startswith("//M"):
             file_type = "ma"
-
-        f.close()        
-    print(file_type)
-    # if not file_type:
-
-    return file_type
+            
+        return file_type
 
 def fixMayaExtension(file_path):
     ''''''
@@ -212,24 +209,22 @@ def incrementalSave(comment=None, zero_pad=3):
                     
                 cmds.file(modified=False)
             except:
-                print("Error")
-
-                
+                print("Error 1")
             if os.path.exists(temp_filename):
                 try:
                     shutil.copy2(file_path, history_filename)
                     #Debug.write("Backed up %s -> %s" % (file_path, history_filename),  Debug.INFO, "incrementalSave")
                 except:
-                    print("Error")
+                    print("Error 2")
                 
                 try:
                     shutil.move(temp_filename, file_path)
                     #Debug.write("Moved %s -> %s" % (temp_filename, file_path),  Debug.INFO, "incrementalSave")
                 except:
-                    print("Error")
+                    print("Error 3")
                     
             else:
-                print("Error")
+                print("Error 4")
  
         else:
             mel.eval("SaveSceneAs;")
