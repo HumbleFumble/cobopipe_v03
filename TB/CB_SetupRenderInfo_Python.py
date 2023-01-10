@@ -3,7 +3,7 @@ import os
 import subprocess
 #Extend the environment's path, in order to find the installed Harmony Python module
 sys.path.append( r"C:/Program Files (x86)/Toon Boom Animation/Toon Boom Harmony 22 Premium/win64/bin/python-packages" )
-sys.path.append( "C:/Users/cg/PycharmProjects/cobopipe_v02-001/" )
+# sys.path.append( "C:/Users/cg/PycharmProjects/cobopipe_v02-001/" )
 
 from ToonBoom import harmony
 
