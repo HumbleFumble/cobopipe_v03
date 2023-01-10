@@ -1,6 +1,5 @@
 
 import sys
-import subprocess
 #Extend the environment's path, in order to find the installed Harmony Python module
 sys.path.append( r"C:\Program Files (x86)\Toon Boom Animation\Toon Boom Harmony 22 Premium\win64\bin\python-packages" )
 import TB.CB_SetupRenderInfo_Python as rs
