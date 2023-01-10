@@ -10,7 +10,12 @@ from config import REPOSITORY_DIRECTORY, VERSION
 def generate_shortcut_dict(local=False):
     directory = os.path.abspath(os.path.join(__file__, '../../')).replace(os.sep, '/')
     bat_files_path = os.path.abspath(os.path.join(directory, 'BAT_files')).replace(os.sep, '/')
-    icons_path = os.path.abspath(os.path.join(bat_files_path, 'icons')).replace(os.sep, '/')
+
+    if local:
+        icons_path = os.path.abspath(os.path.join(bat_files_path, 'icons')).replace(os.sep, '/')
+    else:
+        icons_path = os.path.abspath(os.path.join("%s/BAT_Files/" % REPOSITORY_DIRECTORY, 'icons')).replace(os.sep, '/')
+    # print(icons_path)
     if local:
         source = os.path.abspath(os.path.join(directory, 'local/BAT_files')).replace(os.sep, '/')
     else:
@@ -21,7 +26,9 @@ def generate_shortcut_dict(local=False):
         os.makedirs(destination)
 
     icon_dict = {'Launch_maya': 'maya_logo.ico',
-                 'Launch_harmony': 'HarmonyPremium.ico'}
+                 'Launch_harmony': 'HarmonyPremium.ico',
+                 'Launch_aftereffects':'AE_Icon_CPHBOM.ico',
+                 'ShotBrowser':'shot_browser_V001.ico'}
 
     shortcuts_dicts = []
     for item in os.listdir(source):
@@ -34,6 +41,7 @@ def generate_shortcut_dict(local=False):
             shortcut_name = '_'.join([base_name, VERSION])
             if base_name in icon_dict.keys():
                 icon_path = os.path.abspath(os.path.join(icons_path, icon_dict[base_name]))
+                print(icon_path)
             else:
                 icon_path = ''
 

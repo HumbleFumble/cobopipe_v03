@@ -1,5 +1,5 @@
 {
-  "project_paths":{"base_path":"P:/930496_KenderDuHende/Produktion_Nina",
+  "project_paths":{"base_path":"P:/930496_KenderDuHende/Production_Nina",
                    "asset_top_path": "<base_path>/Asset/",
                    "asset_base_path":"<asset_top_path>/<asset_type>/<asset_category>/<asset_name>",
                    "asset_work_folder":"<asset_base_path>/01_Work/Maya",
