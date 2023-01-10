@@ -21,7 +21,9 @@ def generate_shortcut_dict(local=False):
         os.makedirs(destination)
 
     icon_dict = {'Launch_maya': 'maya_logo.ico',
-                 'Launch_harmony': 'HarmonyPremium.ico'}
+                 'Launch_harmony': 'HarmonyPremium.ico',
+                 'Launch_aftereffects':'AE_Icon_CPHBOM.ico',
+                 'ShotBrowser':'shot_browser_V001.ico'}
 
     shortcuts_dicts = []
     for item in os.listdir(source):
