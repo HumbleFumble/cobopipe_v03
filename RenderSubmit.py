@@ -52,6 +52,7 @@ import subprocess
 import re
 from maya.app.renderSetup.model.aovs import decode
 from maya.app.renderSetup.model import renderSettings
+import maya.mel as mel
 
 # Get renderer
 if "maya_render" in CC.project_settings.keys():
@@ -1385,6 +1386,7 @@ class RenderSubmitFunctions():
             print(render_type)
             if info_dict:
                 info_dict["render_prefix"] = preset_name
+                print(preset_name)
                 render_folder,render_filename = os.path.split(CC.get_shot_passes_folder(**info_dict)) #cfg_util.CreatePathFromDict(cfg.project_paths["shot_passes_folder"],info_dict)
             
                 if render_layer:
@@ -1418,13 +1420,16 @@ class RenderSubmitFunctions():
         # if len(cmds.sequenceManager(lsh=True)) = 1:
             # range_start = cmds.shot(cmds.sequenceManager(lsh=True)[0], st=True)
             # range_end = cmds.shot(cmds.sequenceManager(lsh=True)[0], et=True)
-
-        cmds.setAttr("vraySettings.animType", 1)
-        cmds.setAttr("vraySettings.animBatchOnly", 1)
-        cmds.setAttr("vraySettings.animFrames", "", type="string")
-
+        if render_type == 'vray':
+            cmds.setAttr("vraySettings.animType", 1)
+            cmds.setAttr("vraySettings.animBatchOnly", 1)
+            cmds.setAttr("vraySettings.animFrames", "", type="string")
+        elif render_type == 'arnold':
+            mel.eval('setMayaSoftwareFrameExt(3,0)') # Choose naming convention (set "Frame/Animation ext")
+        
         cmds.setAttr("defaultRenderGlobals.startFrame", range_start)
         cmds.setAttr("defaultRenderGlobals.endFrame", range_end)
+        
 
     def ClearAOVs(self):
         aovs = cmds.ls(type="VRayRenderElement")
@@ -1450,16 +1455,67 @@ class RenderSubmitFunctions():
         aovs = cmds.ls(type="aiAOV")
         cmds.delete(aovs)
         
+        self.defaultArnoldDriver_state = {
+        "defaultArnoldDriver.aiTranslator": None, 
+        "defaultArnoldDriver.aiUserOptions": None, 
+        "defaultArnoldDriver.alphaHalfPrecision": None, 
+        "defaultArnoldDriver.alphaTolerance": None, 
+        "defaultArnoldDriver.append": None, 
+        "defaultArnoldDriver.autocrop": None, 
+        "defaultArnoldDriver.binMembership": None, 
+        "defaultArnoldDriver.caching": None, 
+        "defaultArnoldDriver.colorManagement": None, 
+        "defaultArnoldDriver.deepexrTiled": None, 
+        "defaultArnoldDriver.depthHalfPrecision": None, 
+        "defaultArnoldDriver.depthTolerance": None, 
+        "defaultArnoldDriver.dither": None, 
+        "defaultArnoldDriver.exrCompression": None, 
+        "defaultArnoldDriver.exrTiled": None, 
+        "defaultArnoldDriver.frozen": None, 
+        "defaultArnoldDriver.halfPrecision": None, 
+        "defaultArnoldDriver.isHistoricallyInteresting": None, 
+        "defaultArnoldDriver.mergeAOVs": None,
+        "defaultArnoldDriver.nodeState": None, 
+        "defaultArnoldDriver.outputMode": None, 
+        "defaultArnoldDriver.outputPadded": None, 
+        "defaultArnoldDriver.pngFormat": None, 
+        "defaultArnoldDriver.prefix": None, 
+        "defaultArnoldDriver.preserveLayerName": None, 
+        "defaultArnoldDriver.quality": None, 
+        "defaultArnoldDriver.skipAlpha": None, 
+        "defaultArnoldDriver.subpixelMerge": None, 
+        "defaultArnoldDriver.tiffCompression": None, 
+        "defaultArnoldDriver.tiffFormat": None, 
+        "defaultArnoldDriver.tiffTiled": None, 
+        "defaultArnoldDriver.unpremultAlpha": None, 
+        "defaultArnoldDriver.useRGBOpacity": None
+        }
+        
         if not aov_file == "None":
             if os.path.exists(aov_file):
                 print("Found it! %s" % aov_file)
-            with open(aov_file, 'r') as aov_file:
-                aovs = json.load(aov_file)
-
-        # Built in function to decode AOV Presets from JSON data.
-        decode(aovs, 0)
-        
-        
+                with open(aov_file, 'r') as aov_file:
+                    aovs = json.load(aov_file)
+                self.arnoldDriverCheck()
+                # Built in function to decode AOV Presets from JSON data.
+                decode(aovs, 0)
+                self.arnoldDriverCheck(False)
+                
+    def arnoldDriverCheck(self,check_state=True):
+        for cur_key in self.defaultArnoldDriver_state.keys():
+            if check_state:
+                self.defaultArnoldDriver_state[cur_key] = cmds.getAttr(cur_key)
+                
+            else:
+                if self.defaultArnoldDriver_state[cur_key]:
+                    print(cur_key)
+                    print(self.defaultArnoldDriver_state[cur_key])
+                    if type(self.defaultArnoldDriver_state[cur_key]) is str:
+                        print("%s is string!" % cur_key)
+                        cmds.setAttr(cur_key,self.defaultArnoldDriver_state[cur_key],type="string")
+                    else:
+                        cmds.setAttr(cur_key,self.defaultArnoldDriver_state[cur_key])
+            
     # def CheckForMissingOIDAOV(self):
     #     list_of_numbers = [] #Make list of the OIDs needed
     #     for e in cmds.ls(type="VRayObjectProperties"):
