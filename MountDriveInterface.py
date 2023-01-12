@@ -9,7 +9,7 @@ user = r"CPHBOM\freelance"
 password = "freelance"
 
 
-def mapDrive(path="",letter="",user="freelance",password="freelance", force=True):
+def mapDrive(path="",letter="",user=None,password=None, force=True):
 
     # Disconnect anything on letter
     if force:
@@ -18,8 +18,10 @@ def mapDrive(path="",letter="",user="freelance",password="freelance", force=True
         subprocess.call('net use %s: /del' % letter, shell=True)
 
     # Connect to shared drive, use drive letter given
-    subprocess.call('net use %s: %s /user:%s %s' % (letter, path, user,password), shell=True)
-    # subprocess.call('net use %s: %s' % (letter, path), shell=True)
+    if user and password:
+        subprocess.call('net use %s: %s /user:%s %s' % (letter, path, user,password), shell=True)
+    else:
+        subprocess.call('net use %s: %s' % (letter, path), shell=True)
 
 #mapDrive(path, letter,user,password)
 
@@ -51,35 +53,13 @@ class DriveDialog(QtWidgets.QDialog):
         self.populate()
 
     def askForUserPass(self):
-        self.askDialog = QtWidgets.QInputDialog(self)
+        self.d = LoginForm()
+        if self.d.exec_():
+            print("yeah")
+        else:
+            print("nay")
 
-        # class LoginForm(QtWidgets.QWidget):
-        #     def __init__(self):
-        #         super(LoginForm, self).__init__()
-        #         self.init_ui()
-        #
-        #     def init_ui(self):
-        #         self.setWindowTitle("Login Form")
-        #         self.setGeometry(50, 50, 500, 300)
-        #
-        #         # Create text boxes
-        #         self.username_textbox = QtWidgets.QLineEdit()
-        #         self.password_textbox = QtWidgets.QLineEdit()
-        #         self.password_textbox.setEchoMode(QtWidgets.QLineEdit.Password)
-        #
-        #         # Create labels
-        #         self.username_label = QtWidgets.QLabel("Username:")
-        #         self.password_label = QtWidgets.QLabel("Password:")
-        #
-        #         # Create layout
-        #         self.layout = QtWidgets.QFormLayout()
-        #         self.layout.addRow(self.username_label, self.username_textbox)
-        #         self.layout.addRow(self.password_label, self.password_textbox)
-        #         self.setLayout(self.layout)
-        #
-        #         # Show window
-        #         self.show()
-        pass
+
     def populate(self):
         self.preset_combo.addItems(sorted(self.drive_dict.keys()))
         for s in string.ascii_uppercase:
@@ -93,8 +73,11 @@ class DriveDialog(QtWidgets.QDialog):
         self.user_lay = QtWidgets.QHBoxLayout()
         self.user_label_info = QtWidgets.QLabel("User: ")
         self.user_label = QtWidgets.QLabel(self.user)
+        self.user_checkbox = QtWidgets.QCheckBox("Use current")
+        self.user_checkbox.setChecked(True)
         self.user_lay.addWidget(self.user_label_info)
         self.user_lay.addWidget(self.user_label)
+        self.user_lay.addWidget(self.user_checkbox)
         self.layout_top.addLayout(self.user_lay)
 
 
@@ -142,7 +125,35 @@ class DriveDialog(QtWidgets.QDialog):
 
         result = mapDrive(letter=letter,path=path)
 
+class LoginForm(QtWidgets.QDialog):
+    def __init__(self):
+        super(LoginForm, self).__init__()
+        self.init_ui()
 
+    def init_ui(self):
+        self.setWindowTitle("Login Form")
+        self.setGeometry(50, 50, 500, 300)
+        self.btn = QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel
+        # Create text boxes
+        self.username_textbox = QtWidgets.QLineEdit()
+        self.password_textbox = QtWidgets.QLineEdit()
+        self.password_textbox.setEchoMode(QtWidgets.QLineEdit.Password)
+
+        # # Create labels
+        # self.username_label = QtWidgets.QLabel("Username:")
+        # self.password_label = QtWidgets.QLabel("Password:")
+
+        # Create layout
+        self.f_layout = QtWidgets.QFormLayout()
+        # self.layout.addRow(self.username_label, self.username_textbox)
+        # self.layout.addRow(self.password_label, self.password_textbox)
+        self.f_layout.addRow("Username", self.username_textbox)
+        self.f_layout.addRow("Password", self.password_textbox)
+        self.setLayout(self.f_layout)
+
+        # Show window
+        self.btn_group = QtWidgets.QDialogButtonBox(self.btn)
+        self.f_layout.addWidget(self.btn_group)
 
 
 if __name__ == "__main__":
