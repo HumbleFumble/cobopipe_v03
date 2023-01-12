@@ -55,9 +55,14 @@ class DriveDialog(QtWidgets.QDialog):
     def askForUserPass(self):
         self.d = LoginForm()
         if self.d.exec_():
-            print("yeah")
+            self.user = self.d.username_textbox.text()
+            self.password = self.d.password_textbox.text()
+            if self.d.domain_check.isChecked():
+                self.user = "CPHBOM\\%s" % (self.user)
+            return True
         else:
             print("nay")
+            return False
 
 
     def populate(self):
@@ -67,6 +72,7 @@ class DriveDialog(QtWidgets.QDialog):
             # print("%s:" % s)
         self.preset_combo.currentTextChanged.connect(self.setPreset)
         self.setPreset()
+
     def createWindow(self):
         self.layout_top = QtWidgets.QVBoxLayout(self)
 
@@ -123,7 +129,11 @@ class DriveDialog(QtWidgets.QDialog):
         letter = self.letter_edit.currentText()[0]
         path = self.path_edit.text()
 
-        result = mapDrive(letter=letter,path=path)
+        if self.user_checkbox.isChecked():
+            result = mapDrive(letter=letter, path=path)
+        else:
+            if self.askForUserPass():
+                result = mapDrive(letter=letter, path=path, user=self.user, password=self.password)
 
 class LoginForm(QtWidgets.QDialog):
     def __init__(self):
@@ -131,28 +141,29 @@ class LoginForm(QtWidgets.QDialog):
         self.init_ui()
 
     def init_ui(self):
-        self.setWindowTitle("Login Form")
-        self.setGeometry(50, 50, 500, 300)
+        self.setWindowTitle("Set username and password")
+        # self.setGeometry(50, 50, 500, 300)
         self.btn = QtWidgets.QDialogButtonBox.Ok | QtWidgets.QDialogButtonBox.Cancel
+
         # Create text boxes
         self.username_textbox = QtWidgets.QLineEdit()
         self.password_textbox = QtWidgets.QLineEdit()
         self.password_textbox.setEchoMode(QtWidgets.QLineEdit.Password)
-
-        # # Create labels
-        # self.username_label = QtWidgets.QLabel("Username:")
-        # self.password_label = QtWidgets.QLabel("Password:")
+        self.domain_check = QtWidgets.QCheckBox("Add domain (CPHBOM\)")
 
         # Create layout
         self.f_layout = QtWidgets.QFormLayout()
-        # self.layout.addRow(self.username_label, self.username_textbox)
-        # self.layout.addRow(self.password_label, self.password_textbox)
+
         self.f_layout.addRow("Username", self.username_textbox)
         self.f_layout.addRow("Password", self.password_textbox)
+        self.f_layout.addWidget()
         self.setLayout(self.f_layout)
 
         # Show window
         self.btn_group = QtWidgets.QDialogButtonBox(self.btn)
+
+        self.btn_group.accepted.connect(self.accept)
+        self.btn_group.rejected.connect(self.reject)
         self.f_layout.addWidget(self.btn_group)
 
 
@@ -164,5 +175,6 @@ if __name__ == "__main__":
         app = QtWidgets.QApplication.instance()
     win = DriveDialog()
     win.show()
+
 
     app.exec_()
