@@ -37,7 +37,7 @@ class DriveDialog(QtWidgets.QDialog):
         Check for os type?
         """
         self.user = os.getlogin()
-        self.password = ""
+        self.password = None
         self.drive_dict = {}
         self.drive_dict["production"] = {"letter":"p","win_path":r"\\192.168.0.225\production",
                                          "info":"The production drive on our new server"}
@@ -64,6 +64,7 @@ class DriveDialog(QtWidgets.QDialog):
             self.password = self.d.password_textbox.text()
             if self.d.domain_check.isChecked():
                 self.user = "CPHBOM\\%s" % (self.user)
+            self.user_label.setText(self.user)
             return True
         else:
             print("nay")
@@ -140,7 +141,10 @@ class DriveDialog(QtWidgets.QDialog):
         path = self.path_edit.text()
 
         if self.user_checkbox.isChecked():
-            result = mapDrive(letter=letter, path=path)
+            if not self.password:
+                result = mapDrive(letter=letter, path=path)
+            else:
+                result = mapDrive(letter=letter, path=path, user=self.user, password=self.password)
         else:
             if self.askForUserPass():
                 result = mapDrive(letter=letter, path=path, user=self.user, password=self.password)
@@ -166,7 +170,7 @@ class LoginForm(QtWidgets.QDialog):
 
         self.f_layout.addRow("Username", self.username_textbox)
         self.f_layout.addRow("Password", self.password_textbox)
-        self.f_layout.addWidget()
+        self.f_layout.addWidget(self.domain_check)
         self.setLayout(self.f_layout)
 
         # Show window
