@@ -84,6 +84,7 @@ class DriveDialog(QtWidgets.QDialog):
         self.preset_combo_layout = QtWidgets.QHBoxLayout()
         self.preset_combo = QtWidgets.QComboBox()
         self.preset_combo_layout.addWidget(self.preset_combo)
+        self.tooltip_label = QtWidgets.QLabel()
 
         self.label_lay = QtWidgets.QHBoxLayout()
         self.input_lay = QtWidgets.QHBoxLayout()
@@ -108,6 +109,8 @@ class DriveDialog(QtWidgets.QDialog):
         self.label_lay.addWidget(self.path_label)
         
         self.layout_top.addLayout(self.preset_combo_layout)
+        self.layout_top.addWidget(self.tooltip_label)
+
         self.layout_top.addLayout(self.label_lay)
         self.layout_top.addLayout(self.input_lay)
 
