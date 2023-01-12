@@ -49,6 +49,11 @@ class DriveDialog(QtWidgets.QDialog):
                                          "info":"Work for Hire projects, access is limited for each project"}
         self.drive_dict["udvikling"] = {"letter": "u", "win_path": r"\\192.168.0.225\udvikling",
                                   "info": "The place for everything not ready for production"}
+        self.drive_dict["archive"] = {"letter": "y", "win_path": r"\\192.168.0.227\archive",
+                                  "info": "A drive for finished productions"}
+        self.drive_dict["finals"] = {"letter": "z", "win_path": r"\\192.168.0.227\finals",
+                                  "info": "A drive that contains only the delivery and PR files for each finished project"}
+
         self.createWindow()
         self.populate()
 
@@ -91,6 +96,8 @@ class DriveDialog(QtWidgets.QDialog):
         self.preset_combo = QtWidgets.QComboBox()
         self.preset_combo_layout.addWidget(self.preset_combo)
 
+        self.tooltip_label = QtWidgets.QLabel()
+
         self.label_lay = QtWidgets.QHBoxLayout()
         self.input_lay = QtWidgets.QHBoxLayout()
 
@@ -114,6 +121,8 @@ class DriveDialog(QtWidgets.QDialog):
         self.label_lay.addWidget(self.path_label)
         
         self.layout_top.addLayout(self.preset_combo_layout)
+        self.layout_top.addWidget(self.tooltip_label)
+        self.layout_top.addSpacing(10)
         self.layout_top.addLayout(self.label_lay)
         self.layout_top.addLayout(self.input_lay)
 
@@ -124,6 +133,7 @@ class DriveDialog(QtWidgets.QDialog):
         current = self.preset_combo.currentText()
         self.letter_edit.setCurrentText("%s:" % self.drive_dict[current]["letter"].upper())
         self.path_edit.setText(self.drive_dict[current]["win_path"])
+        self.tooltip_label.setText(self.drive_dict[current]["info"])
 
     def connectDrive(self):
         letter = self.letter_edit.currentText()[0]
