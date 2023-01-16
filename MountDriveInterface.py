@@ -3,25 +3,33 @@ import string
 from PySide2 import QtWidgets, QtCore, QtGui
 import subprocess
 import os
-path = r"\\192.168.0.235\projekter"
-letter = "p"
-user = r"CPHBOM\freelance"
-password = "freelance"
+# path = r"\\192.168.0.235\projekter"
+# letter = "p"
+# user = r"CPHBOM\freelance"
+# password = "freelance"
 
 
 def mapDrive(path="",letter="",user=None,password=None, force=True):
 
     # Disconnect anything on letter
     if force:
-        subprocess.call('net use %s: /del /Y' % letter, shell=True)
-    else:
-        subprocess.call('net use %s: /del' % letter, shell=True)
+        disconn = subprocess.call('net use %s: /del /Y' % letter, shell=True)
 
+    else:
+        disconn = subprocess.call('net use %s: /del' % letter, shell=True)
+    if disconn >0:
+        print("FAILED at disconnected %s drive!" % letter)
+    else:
+        print("Disconnected successfully")
     # Connect to shared drive, use drive letter given
     if user and password:
-        subprocess.call('net use %s: %s /user:%s %s' % (letter, path, user,password), shell=True)
+        conn = subprocess.call('net use %s: %s /user:%s %s' % (letter, path, user,password), shell=True)
     else:
-        subprocess.call('net use %s: %s' % (letter, path), shell=True)
+        conn = subprocess.call('net use %s: %s' % (letter, path), shell=True)
+    if conn >0:
+        print("FAILED at connecting to the drive")
+    else:
+        print("Connected to %s succesfully" % path)
 
 #mapDrive(path, letter,user,password)
 
@@ -38,12 +46,13 @@ class DriveDialog(QtWidgets.QDialog):
         """
         self.user = os.getlogin()
         self.password = None
+        self.domain = None
         self.drive_dict = {}
         self.drive_dict["production"] = {"letter":"p","win_path":r"\\192.168.0.225\production",
                                          "info":"The production drive on our new server"}
         self.drive_dict["projekter"] = {"letter":"p","win_path":r"\\192.168.0.235\projekter",
                                          "info":"The old 'p-drive', home of all our old productions"}
-        self.drive_dict["ftp-prod"] = {"letter":"v","win_path":r"\\192.168.0.225\ftpprod",
+        self.drive_dict["ftp-prod"] = {"letter":"v","win_path":r"\\192.168.0.227\ftpprod",
                                          "info":"The production drive on our new server"}
         self.drive_dict["WFH"] = {"letter":"w","win_path":r"\\192.168.0.225\WFH",
                                          "info":"Work for Hire projects, access is limited for each project"}
@@ -51,19 +60,24 @@ class DriveDialog(QtWidgets.QDialog):
                                   "info": "The place for everything not ready for production"}
         self.drive_dict["archive"] = {"letter": "y", "win_path": r"\\192.168.0.227\archive",
                                   "info": "A drive for finished productions"}
-        self.drive_dict["finals"] = {"letter": "z", "win_path": r"\\192.168.0.227\finals",
+        self.drive_dict["finals"] = {"letter": "z", "win_path": r"\\192.168.0.225\finals",
                                   "info": "A drive that contains only the delivery and PR files for each finished project"}
 
         self.createWindow()
         self.populate()
 
     def askForUserPass(self):
-        self.d = LoginForm()
+        self.d = LoginForm(self.domain)
         if self.d.exec_():
             self.user = self.d.username_textbox.text()
             self.password = self.d.password_textbox.text()
             if self.d.domain_check.isChecked():
-                self.user = "CPHBOM\\%s" % (self.user)
+                self.domain = "CPHBOM\\"
+
+            else:
+                self.domain =None
+            if self.domain:
+                self.user = "%s%s" % (self.domain,self.user)
             self.user_label.setText(self.user)
             return True
         else:
@@ -150,8 +164,10 @@ class DriveDialog(QtWidgets.QDialog):
                 result = mapDrive(letter=letter, path=path, user=self.user, password=self.password)
 
 class LoginForm(QtWidgets.QDialog):
-    def __init__(self):
+    def __init__(self,domain=None):
         super(LoginForm, self).__init__()
+        self.domain = domain
+
         self.init_ui()
 
     def init_ui(self):
@@ -164,6 +180,8 @@ class LoginForm(QtWidgets.QDialog):
         self.password_textbox = QtWidgets.QLineEdit()
         self.password_textbox.setEchoMode(QtWidgets.QLineEdit.Password)
         self.domain_check = QtWidgets.QCheckBox("Add domain (CPHBOM\)")
+        if self.domain:
+            self.domain_check.setChecked(True)
 
         # Create layout
         self.f_layout = QtWidgets.QFormLayout()
