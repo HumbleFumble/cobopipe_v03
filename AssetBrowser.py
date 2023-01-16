@@ -196,7 +196,8 @@ class MainWindow(QtWidgets.QWidget):
 			#
 			if self.proxyModel.rowCount(cur_index) > 0:
 				self.iterateOverProxyModelAndExpandAllMatches(name_list, selected, cur_index)
-
+	def findNodeByName(self,):
+		pass
 	# @QtCore.pyqtSlot(str) # <--Not sure if this is needed
 	def ProxyUpdate(self,text):
 		my_pattern = QtCore.QRegularExpression()
@@ -446,8 +447,8 @@ class MainWindow(QtWidgets.QWidget):
 		self.tab3AddTypeFolderButton.setFixedSize(22, 22)
 		self.tab3AddCategoryFolderButton.setFixedSize(22, 22)
 
-		# self.tab3AddTypeFolderButton.clicked.connect(self.CreateNewTypeFolder)
-		# self.tab3AddCategoryFolderButton.clicked.connect(self.CreateNewCategoryFolder)
+		self.tab3AddTypeFolderButton.clicked.connect(self.CreateNewTypeFolder)
+		self.tab3AddCategoryFolderButton.clicked.connect(self.CreateNewCategoryFolder)
 
 		self.tab3OpenAfterCheckbox = QtWidgets.QCheckBox("Open file in Maya after creation")
 		self.tab3OpenAfterRadioButtonHolder = QtWidgets.QGroupBox()
@@ -1365,10 +1366,7 @@ class MainWindow(QtWidgets.QWidget):
 	def createFolderPopup(self, path, isType=True):
 		folder_name = QtWidgets.QInputDialog.getText(self, "Folder Creation", "Please input new folder name:")
 		if folder_name[1] == True:
-			if isType == False:
-				full_path = "%s/%s" % (path, folder_name[0])
-			else:
-				full_path = "%s%s" % (path, folder_name[0])
+			full_path = "%s/%s" % (path, folder_name[0])
 			try:
 				return full_path
 			# beginInsertRows() and endInsertRows() into model
@@ -1377,16 +1375,17 @@ class MainWindow(QtWidgets.QWidget):
 		else:
 			return True
 
-	# def CreateNewTypeFolder(self): #Currently not used
-	# 	full_path = self.createFolderPopup(self.base_path)
-	# 	os.mkdir(full_path)
-	# 	self.insertNewNode(full_path.split("/")[-1], full_path, 1, "type")
+	def CreateNewTypeFolder(self): #Currently not used
+		full_path = self.createFolderPopup(self.base_path)
+		os.mkdir(full_path)
+		self.insertNewNode(full_path.split("/")[-1],full_path,"type",parent=self.tree_model._root)
+		# self.insertNewNode(full_path.split("/")[-1], full_path, 1, "type")
 	#
-	# def CreateNewCategoryFolder(self): #Currently not used
-	# 	mid_path = "%s/%s" % (self.base_path, self.tab3TypeDropdown.currentText())
-	# 	full_path = self.createFolderPopup(mid_path, False)
-	# 	os.mkdir(full_path)
-	# 	self.insertNewNode(full_path.split("/")[-1], full_path, 2, "category")
+	def CreateNewCategoryFolder(self): #Currently not used
+		mid_path = "%s/%s" % (self.base_path, self.tab3TypeDropdown.currentText())
+		full_path = self.createFolderPopup(mid_path, False)
+		os.mkdir(full_path)
+		# self.insertNewNode(full_path.split("/")[-1], full_path, "category")
 
 	def Tab3CreateAsset(self):
 
