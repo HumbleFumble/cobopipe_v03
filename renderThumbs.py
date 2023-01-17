@@ -1,33 +1,111 @@
+import sys
 import maya.cmds as cmds
 import json
 import maya.app.renderSetup.views.renderSetupPreferences as prefs
 import maya.app.renderSetup.views.renderSetupWindow as rs_wind
 
-ttt = prefs.getUserPresets("arnold")
-# Import render settings from json
-prefs.loadUserPreset("renderThumbs")
 
-# Create new camera. This function renames the newly created camera. Since by default Maya adds '1' to the name,
-# this function will create and rename camera with the intended name (without '1' at the end) 
-#---------------------------------------------------------------------------------------------------------------
+from PySide2.QtWidgets import QMainWindow, QPushButton, QWidget, QGroupBox, QVBoxLayout, QComboBox, QGridLayout, QLineEdit, QHBoxLayout
 
-def makeCamera(cameraName):
-    cmds.camera(name = cameraName)
-    cmds.rename(cameraName + '1', cameraName)
 
-# Get list of all cameras in the scene and determine which one is selected as renderable in the render settings.
-# This is useful if the camera is the desired for rendering the thumbnails
-#---------------------------------------------------------------------------------------------------------------
+class MainWindow(QMainWindow):
+    # Get list with all json presets in "C:\Users\plp\Documents\maya\Presets"
+    # presets = prefs.getUserPresets("arnold")
 
-def getRenderableCamera():
+    # Import render settings from json
 
-    cameras_list = cmds.listCameras()
-    camera = ""
+    def __init__(self):
+        super().__init__()
 
-    for i in cameras_list:
-        if cmds.getAttr(i + '.renderable') == True:
-            camera = i
-    return camera
+        self.setWindowTitle("Render Thumbnails")
+        self.cam = 'myCam'
+
+        # Cameras groupbox
+        # -----------------------------------------------------------------------------------------------------------
+        self.cg_box = QGroupBox("Choose Camera")
+        self.cg_box_layout = QVBoxLayout()
+        self.cg_combo_box = QComboBox()
+
+        self.cg_box_layout.addWidget(self.cg_combo_box)
+
+        self.cg_box.setLayout(self.cg_box_layout)
+        self.cg_combo_box.addItems(cmds.listCameras())
+        self.cg_combo_box.currentText()
+
+        # Camera name textbox
+        # -----------------------------------------------------------------------------------------------------------
+        self.camera_name_textbox = QLineEdit()
+        self.camera_name_textbox.setMaximumWidth(100)
+
+        # "Make Camera" button widget
+        # -----------------------------------------------------------------------------------------------------------
+        self.make_cam_button = QPushButton("Make Camera")
+        self.make_cam_button.setCheckable(False)
+        self.make_cam_button.clicked.connect(lambda: self.MakeCamera(self.cam))
+
+        # Make camera groupbox
+        # -----------------------------------------------------------------------------------------------------------
+        self.mc_cam = QGroupBox("Make Camera")
+        self.mc_cam_layout = QHBoxLayout()
+        self.mc_cam_layout.addWidget(self.camera_name_textbox, 0,0, Qt.AlignCenter())
+        self.mc_cam_layout.addWidget(self.make_cam_button, 0,1, Qt.AlignCenterP())
+
+
+        # "Make Renderable" button widget
+        # -----------------------------------------------------------------------------------------------------------
+        self.make_rend_button = QPushButton("Make Renderable")
+        self.make_rend_button.setCheckable(False)
+        self.make_rend_button.clicked.connect(lambda: self.makeCamera(self.cam))
+
+        # Create main layout and add wdgets to it
+        # -----------------------------------------------------------------------------------------------------------
+        self.main_layout = QGridLayout()
+        self.main_layout.addWidget(self.cg_box, 0, 0)
+        self.main_layout.addWidget(self.mc_cam_layout, 1,0)
+
+        # Add the main layout to window
+        # -----------------------------------------------------------------------------------------------------------
+        widget = QWidget()
+        widget.setLayout(self.main_layout)
+        self.setCentralWidget(widget)
+
+    # Create new camera. This function renames the newly created camera. Since by default Maya adds '1' to the name,
+    # this function will create and rename camera with the intended name (without '1' at the end)
+    # ---------------------------------------------------------------------------------------------------------------
+
+    def makeCamera(self, camera_name):
+        cmds.camera(name=camera_name)
+        cmds.rename(camera_name + '1', camera_name)
+
+    # Get list of all cameras in the scene and determine which one is selected as renderable in the render settings.
+    # This is useful if the camera is the desired for rendering the thumbnails
+    # ---------------------------------------------------------------------------------------------------------------
+
+    def getRenderableCamera(self):
+
+        cameras_list = cmds.listCameras()
+        camera = ""
+
+        for i in cameras_list:
+            if cmds.getAttr(i + '.renderable') == True:
+                camera = i
+        return camera
+
+    def makeCameraRenderable(self, myCamName):
+        current_cam = self.getRenderableCamera()
+        if myCamName != "":
+            self.makeCamera(myCamName)
+            cmds.setAttr(current_cam + '.renderable', False)
+            cmds.setAttr(myCamName + '.renderable', True)
+            print("Current renderable camera is " + myCamName)
+        elif current_cam != '':
+            print("Current renderable camera is " + current_cam)
+        else:
+            print('No renderable camera is currently selected')
+
+
+mainWin = MainWindow()
+mainWin.show()
 
 
 # Perhaps add a choice for rendering multiple cameras?
@@ -35,8 +113,8 @@ def getRenderableCamera():
 #---------------------------------------------------------------------------------------------------------------
 # Set the new camera as renderable and remove the currently assigned
 
+myCamName = ''
 current_cam = getRenderableCamera()
-myCamName = 'myCam'
 
 if myCamName == '':
     if current_cam == '':
