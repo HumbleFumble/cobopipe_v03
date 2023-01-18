@@ -5,10 +5,11 @@ import maya.app.renderSetup.views.renderSetupPreferences as prefs
 import maya.app.renderSetup.views.renderSetupWindow as rs_wind
 
 
+
 import maya.cmds as cmds
 
-from PySide2.QtWidgets import QMainWindow, QPushButton, QWidget, QGroupBox, QVBoxLayout, QComboBox, QGridLayout, \
-    QLineEdit, QLabel
+from PySide2.QtWidgets import QMainWindow, QPushButton, QWidget, QGroupBox, QVBoxLayout, QHBoxLayout, QComboBox, QGridLayout, \
+    QLineEdit, QLabel, QFileDialog
 from PySide2.QtCore import Qt
 
 
@@ -23,11 +24,12 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("Render Thumbnails")
         self.cam = 'myCam'
+
         # -----------------------------------------------------------------------------------------------------------
         # Cameras groupbox
         # -----------------------------------------------------------------------------------------------------------
         self.cg_box = QGroupBox("Choose Camera")                        # Create groupbox
-        self.cg_box_layout = QVBoxLayout()                              # Create layout (necessary to display the elements in the groupbox)
+        self.cg_box_layout = QHBoxLayout()                              # Create layout (necessary to display the elements in the groupbox)
         self.cg_combo_box = QComboBox()                                 # Create combobox (dropdown)
         self.cg_box.setLayout(self.cg_box_layout)                       # Set layout to the groupbox
 
@@ -45,11 +47,12 @@ class MainWindow(QMainWindow):
         self.cg_box_layout.addWidget(self.cg_combo_box)                 # Add the combobox to the layout
         self.cg_box_layout.addWidget(self.make_cam_button)              # Add the button to the layout
 
+
         # -----------------------------------------------------------------------------------------------------------
         # Make new camera groupbox
         # -----------------------------------------------------------------------------------------------------------
         self.mnc_box = QGroupBox("Make New Camera")
-        self.mnc_box_layout = QVBoxLayout()
+        self.mnc_box_layout = QHBoxLayout()
         self.mnc_box.setLayout(self.mnc_box_layout)
 
         # Camera name textbox
@@ -67,14 +70,14 @@ class MainWindow(QMainWindow):
 
         self.mnc_box_layout.addWidget(self.camera_name_textbox)
         self.mnc_box_layout.addWidget(self.make_cam_button)
-        # -----------------------------------------------------------------------------------------------------------
+
 
         # -----------------------------------------------------------------------------------------------------------
         # Image format groupbox
         # -----------------------------------------------------------------------------------------------------------
         image_format = ['jpeg', 'png', 'tif', 'exr']
 
-        self.if_box = QGroupBox("Image format")
+        self.if_box = QGroupBox("Image Format")
         self.if_box_layout = QVBoxLayout()
         self.if_combo_box = QComboBox()
         self.if_box.setLayout(self.if_box_layout)
@@ -82,6 +85,60 @@ class MainWindow(QMainWindow):
         self.if_box_layout.addWidget(self.if_combo_box)
         self.if_combo_box.addItems(image_format)
 
+        # -----------------------------------------------------------------------------------------------------------
+        # Resolution groupbox
+        # -----------------------------------------------------------------------------------------------------------
+
+        self.res_box = QGroupBox("Resolution")
+        self.res_box_layout = QHBoxLayout()
+        self.res_box.setLayout(self.res_box_layout)
+
+        self.width_textbox = QLineEdit()
+        self.width_textbox.setMaximumWidth(50)
+
+        self.width_label = QLabel("width")
+
+        self.height_textbox = QLineEdit()
+        self.height_textbox.setMaximumWidth(50)
+
+        self.height_label = QLabel("height")
+
+
+        self.res_box_layout.addWidget(self.width_textbox)
+        self.res_box_layout.addWidget(self.width_label)
+        self.res_box_layout.addWidget(self.height_textbox)
+        self.res_box_layout.addWidget(self.height_label)
+
+        # -----------------------------------------------------------------------------------------------------------
+        # Set Directory groupbox
+        # -----------------------------------------------------------------------------------------------------------
+
+        self.fd_box = QGroupBox("Render Directory")
+        self.fd_box_layout = QHBoxLayout()
+        self.fd_box.setLayout(self.fd_box_layout)
+
+        self.fd_button = QPushButton("Browse")
+        self.fd_button.setCheckable(False)
+        self.fd_button.clicked.connect(lambda: self.setRenderDirectory())
+
+        self.fd_textbox = QLabel()
+
+        self.fd_box_layout.addWidget(self.fd_textbox)
+        self.fd_box_layout.addWidget(self.fd_button)
+
+        # -----------------------------------------------------------------------------------------------------------
+        # Render button
+        # -----------------------------------------------------------------------------------------------------------
+
+        self.rb_box = QGroupBox()
+        self.rb_box_layout = QHBoxLayout()
+        self.rb_box.setLayout(self.rb_box_layout)
+
+        self.rb_button = QPushButton("Render")
+        self.rb_button.setCheckable(False)
+        self.rb_button.clicked.connect(lambda: self.renderThumbs())
+
+        self.rb_box_layout.addWidget(self.rb_button)
 
         # Create main layout and add widgets to it
         # -----------------------------------------------------------------------------------------------------------
@@ -89,7 +146,9 @@ class MainWindow(QMainWindow):
         self.main_layout.addWidget(self.cg_box, 0, 0)
         self.main_layout.addWidget(self.mnc_box, 1, 0)
         self.main_layout.addWidget(self.if_box, 2, 0)
-        
+        self.main_layout.addWidget(self.res_box, 3, 0)
+        self.main_layout.addWidget(self.fd_box, 4, 0)
+        self.main_layout.addWidget(self.rb_box, 5, 0)
 
         # Add the main layout to window
         # -----------------------------------------------------------------------------------------------------------
@@ -106,7 +165,11 @@ class MainWindow(QMainWindow):
         for i in cameras_list:
             if cmds.getAttr(i + '.renderable') == True:
                 camera = i
-        return camera
+        if camera == "":
+            camera = cameras_list[0]
+            return camera
+        else:
+            return camera
 
     def setRenderCamera(self):
 
@@ -128,33 +191,31 @@ class MainWindow(QMainWindow):
 
         cmds.setAttr("defaultArnoldDriver.aiTranslator", self.if_combo_box.currentText(), type="string")
 
+    def setRenderDirectory(self):
+
+        directory = str(QFileDialog.getExistingDirectory(self, "Select Directory")) + "/test"
+        cmds.setAttr('defaultRenderGlobals.imageFilePrefix', directory, type="string")
+        self.fd_textbox.setText(directory)
+
+    def renderThumbs(self):
+
+        current_width = cmds.getAttr('defaultResolution.width')
+        current_height = cmds.getAttr('defaultResolution.height')
+        
+        width = int(self.width_textbox.text())
+        height = int(self.height_textbox.text())
+
+        cmds.setAttr("defaultResolution.width", width)
+        cmds.setAttr("defaultResolution.height", height)
+
+        cmds.arnoldRender(cam=self.getRenderCamera(), width=width, height=height, seq=None)
+
+        cmds.setAttr("defaultResolution.width", current_width)
+        cmds.setAttr("defaultResolution.height", current_height)
+
 mainWin = MainWindow()
 mainWin.show()
 
-
-# # Perhaps add a choice for rendering multiple cameras?
-  
-
-# # Get the currently set resolution, so it can be reset later. This is necessary, since when rendering jpeg or png, if the
-# # desired resolution is set to different number than the current resolution, arnold will render the first image in the
-# # originally set resolution, instead of the desired one
-
-# current_width = cmds.getAttr('defaultResolution.width')
-# current_height = cmds.getAttr('defaultResolution.height')
-
-# width = 320
-# height = 180
-
-# # Set desired resolution and image format
-# cmds.setAttr("defaultResolution.width", width)
-# cmds.setAttr("defaultResolution.height", height)
-
-# # Render sequence
-# cmds.arnoldRender(cam=current_cam, width=width, height=height, seq=None)
-
-# # Set back to the original resolution
-# cmds.setAttr("defaultResolution.width", current_width)
-# cmds.setAttr("defaultResolution.height", current_height)
 
 
 # # To do:
