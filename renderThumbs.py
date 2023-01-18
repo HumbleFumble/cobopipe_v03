@@ -5,7 +5,11 @@ import maya.app.renderSetup.views.renderSetupPreferences as prefs
 import maya.app.renderSetup.views.renderSetupWindow as rs_wind
 
 
-from PySide2.QtWidgets import QMainWindow, QPushButton, QWidget, QGroupBox, QVBoxLayout, QComboBox, QGridLayout, QLineEdit, QHBoxLayout
+import maya.cmds as cmds
+
+from PySide2.QtWidgets import QMainWindow, QPushButton, QWidget, QGroupBox, QVBoxLayout, QComboBox, QGridLayout, \
+    QLineEdit, QLabel
+from PySide2.QtCore import Qt
 
 
 class MainWindow(QMainWindow):
@@ -19,49 +23,73 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("Render Thumbnails")
         self.cam = 'myCam'
-
+        # -----------------------------------------------------------------------------------------------------------
         # Cameras groupbox
         # -----------------------------------------------------------------------------------------------------------
-        self.cg_box = QGroupBox("Choose Camera")
-        self.cg_box_layout = QVBoxLayout()
-        self.cg_combo_box = QComboBox()
+        self.cg_box = QGroupBox("Choose Camera")                        # Create groupbox
+        self.cg_box_layout = QVBoxLayout()                              # Create layout (necessary to display the elements in the groupbox)
+        self.cg_combo_box = QComboBox()                                 # Create combobox (dropdown)
+        self.cg_box.setLayout(self.cg_box_layout)                       # Set layout to the groupbox
 
-        self.cg_box_layout.addWidget(self.cg_combo_box)
+        self.cg_combo_box.addItems(cmds.listCameras())                  # Create list to display in the combobox
+        self.cg_combo_box.setCurrentText(self.getRenderCamera())        # Set the currently displayed camera to the renderable camera
 
-        self.cg_box.setLayout(self.cg_box_layout)
-        self.cg_combo_box.addItems(cmds.listCameras())
-        self.cg_combo_box.currentText()
+        # "Make renderable" button
+        # -----------------------------------------------------------------------------------------------------------
+        self.make_cam_button = QPushButton("Set As Renderable")
+        self.make_cam_button.setCheckable(False)
+        self.make_cam_button.clicked.connect(lambda: self.setRenderCamera())
+
+        # Add dropdown and button to the layout
+        # -----------------------------------------------------------------------------------------------------------
+        self.cg_box_layout.addWidget(self.cg_combo_box)                 # Add the combobox to the layout
+        self.cg_box_layout.addWidget(self.make_cam_button)              # Add the button to the layout
+
+        # -----------------------------------------------------------------------------------------------------------
+        # Make new camera groupbox
+        # -----------------------------------------------------------------------------------------------------------
+        self.mnc_box = QGroupBox("Make New Camera")
+        self.mnc_box_layout = QVBoxLayout()
+        self.mnc_box.setLayout(self.mnc_box_layout)
 
         # Camera name textbox
-        # -----------------------------------------------------------------------------------------------------------
+        # --------------------------------------------------------------------
         self.camera_name_textbox = QLineEdit()
-        self.camera_name_textbox.setMaximumWidth(100)
+        self.camera_name_textbox.setMaximumWidth(150)
+        self.camera_name_textbox.setAlignment(Qt.AlignLeft)
 
-        # "Make Camera" button widget
-        # -----------------------------------------------------------------------------------------------------------
+
+        # "Make Camera" button
+        # --------------------------------------------------------------------
         self.make_cam_button = QPushButton("Make Camera")
         self.make_cam_button.setCheckable(False)
-        self.make_cam_button.clicked.connect(lambda: self.MakeCamera(self.cam))
+        self.make_cam_button.clicked.connect(lambda: self.MakeCamera(self.camera_name_textbox.text()))
 
-        # Make camera groupbox
+        self.mnc_box_layout.addWidget(self.camera_name_textbox)
+        self.mnc_box_layout.addWidget(self.make_cam_button)
         # -----------------------------------------------------------------------------------------------------------
-        self.mc_cam = QGroupBox("Make Camera")
-        self.mc_cam_layout = QHBoxLayout()
-        self.mc_cam_layout.addWidget(self.camera_name_textbox, 0,0, Qt.AlignCenter())
-        self.mc_cam_layout.addWidget(self.make_cam_button, 0,1, Qt.AlignCenterP())
 
-
-        # "Make Renderable" button widget
         # -----------------------------------------------------------------------------------------------------------
-        self.make_rend_button = QPushButton("Make Renderable")
-        self.make_rend_button.setCheckable(False)
-        self.make_rend_button.clicked.connect(lambda: self.makeCamera(self.cam))
+        # Image format groupbox
+        # -----------------------------------------------------------------------------------------------------------
+        image_format = ['jpeg', 'png', 'tif', 'exr']
 
-        # Create main layout and add wdgets to it
+        self.if_box = QGroupBox("Image format")
+        self.if_box_layout = QVBoxLayout()
+        self.if_combo_box = QComboBox()
+        self.if_box.setLayout(self.if_box_layout)
+        self.if_combo_box.activated.connect(lambda: self.setImageFormat())
+        self.if_box_layout.addWidget(self.if_combo_box)
+        self.if_combo_box.addItems(image_format)
+
+
+        # Create main layout and add widgets to it
         # -----------------------------------------------------------------------------------------------------------
         self.main_layout = QGridLayout()
         self.main_layout.addWidget(self.cg_box, 0, 0)
-        self.main_layout.addWidget(self.mc_cam_layout, 1,0)
+        self.main_layout.addWidget(self.mnc_box, 1, 0)
+        self.main_layout.addWidget(self.if_box, 2, 0)
+        
 
         # Add the main layout to window
         # -----------------------------------------------------------------------------------------------------------
@@ -69,19 +97,8 @@ class MainWindow(QMainWindow):
         widget.setLayout(self.main_layout)
         self.setCentralWidget(widget)
 
-    # Create new camera. This function renames the newly created camera. Since by default Maya adds '1' to the name,
-    # this function will create and rename camera with the intended name (without '1' at the end)
-    # ---------------------------------------------------------------------------------------------------------------
 
-    def makeCamera(self, camera_name):
-        cmds.camera(name=camera_name)
-        cmds.rename(camera_name + '1', camera_name)
-
-    # Get list of all cameras in the scene and determine which one is selected as renderable in the render settings.
-    # This is useful if the camera is the desired for rendering the thumbnails
-    # ---------------------------------------------------------------------------------------------------------------
-
-    def getRenderableCamera(self):
+    def getRenderCamera(self):
 
         cameras_list = cmds.listCameras()
         camera = ""
@@ -91,70 +108,58 @@ class MainWindow(QMainWindow):
                 camera = i
         return camera
 
-    def makeCameraRenderable(self, myCamName):
-        current_cam = self.getRenderableCamera()
-        if myCamName != "":
-            self.makeCamera(myCamName)
-            cmds.setAttr(current_cam + '.renderable', False)
-            cmds.setAttr(myCamName + '.renderable', True)
-            print("Current renderable camera is " + myCamName)
-        elif current_cam != '':
-            print("Current renderable camera is " + current_cam)
-        else:
-            print('No renderable camera is currently selected')
+    def setRenderCamera(self):
 
+        textbox_cam = self.camera_name_textbox.text()
+        dropdown_cam = self.cg_combo_box.currentText()
+
+        if textbox_cam != "":
+            cmds.setAttr(self.getRenderCamera() + '.renderable', False)
+            cmds.setAttr(textbox_cam + '.renderable', True)
+        else:
+            cmds.setAttr(self.getRenderCamera() + '.renderable', False)
+            cmds.setAttr(dropdown_cam + '.renderable', True)
+
+    def MakeCamera(self, camera_name):
+        cmds.camera(name=camera_name)
+        cmds.rename(camera_name + '1', camera_name)
+
+    def setImageFormat(self):
+
+        cmds.setAttr("defaultArnoldDriver.aiTranslator", self.if_combo_box.currentText(), type="string")
 
 mainWin = MainWindow()
 mainWin.show()
 
 
-# Perhaps add a choice for rendering multiple cameras?
+# # Perhaps add a choice for rendering multiple cameras?
+  
 
-#---------------------------------------------------------------------------------------------------------------
-# Set the new camera as renderable and remove the currently assigned
+# # Get the currently set resolution, so it can be reset later. This is necessary, since when rendering jpeg or png, if the
+# # desired resolution is set to different number than the current resolution, arnold will render the first image in the
+# # originally set resolution, instead of the desired one
 
-myCamName = ''
-current_cam = getRenderableCamera()
+# current_width = cmds.getAttr('defaultResolution.width')
+# current_height = cmds.getAttr('defaultResolution.height')
 
-if myCamName == '':
-    if current_cam == '':
-        print("Warning! No renderable camera is currently selected! Please set renderable camera in render settings!")
-        
-    else:
-        print("Current renderable camera is " + current_cam)    
-else:
-    cmds.setAttr(current_cam + '.renderable', False)
-    current_cam = myCamName
-    makeCamera(current_cam)
-    cmds.setAttr(current_cam + '.renderable', True)
-    print("Current renderable camera is " + current_cam) 
-    
+# width = 320
+# height = 180
 
-# Get the currently set resolution, so it can be reset later. This is necessary, since when rendering jpeg or png, if the
-# desired resolution is set to different number than the current resolution, arnold will render the first image in the
-# originally set resolution, instead of the desired one
+# # Set desired resolution and image format
+# cmds.setAttr("defaultResolution.width", width)
+# cmds.setAttr("defaultResolution.height", height)
 
-current_width = cmds.getAttr('defaultResolution.width')
-current_height = cmds.getAttr('defaultResolution.height')
+# # Render sequence
+# cmds.arnoldRender(cam=current_cam, width=width, height=height, seq=None)
 
-width = 320
-height = 180
-
-# Set desired resolution and image format
-cmds.setAttr("defaultResolution.width", width)
-cmds.setAttr("defaultResolution.height", height)
-
-# Render sequence
-cmds.arnoldRender(cam=current_cam, width=width, height=height, seq=None)
-
-# Set back to the original resolution
-cmds.setAttr("defaultResolution.width", current_width)
-cmds.setAttr("defaultResolution.height", current_height)
+# # Set back to the original resolution
+# cmds.setAttr("defaultResolution.width", current_width)
+# cmds.setAttr("defaultResolution.height", current_height)
 
 
-# To do:
-# Set renderable camera - done (cameras?)
-# Choose image type
-# Choose resolution
-# File render location
-# Render settings export?
+# # To do:
+# # Set renderable camera - done (cameras?)
+# # Choose image type
+# # Choose resolution
+# # File render location
+# # Render settings export?
