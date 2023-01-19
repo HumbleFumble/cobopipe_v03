@@ -1950,8 +1950,9 @@ class RenderSubmitFunctions():
         extension = ".exr"
 
         software = "maya"
-        render_software = "vray 5"
-        software_version = "2020.4"
+        # render_software = "vray 5"
+        # software_version = "2020.4"
+        software_version = "2022.4"
 
 
         rr_submitter = '"' + os.path.abspath(os.path.join(os.environ["RR_Root"], 'bin/win64/rrSubmitterconsole.exe')).replace(os.sep, '/').replace('//', os.sep + os.sep) + '"'
@@ -1964,7 +1965,7 @@ class RenderSubmitFunctions():
 
         # SCENE INFO
         rr_cmd = "%s -S %s" % (rr_cmd, software)  # set software
-        rr_cmd = "%s -R %s" % (rr_cmd, render_software)  # set render plugin
+        # rr_cmd = "%s -R %s" % (rr_cmd, render_software)  # set render plugin
         rr_cmd = "%s -V %s" % (rr_cmd, software_version)  # set software version
 
         rr_cmd = "%s -SOS win" % (rr_cmd)  # set os
