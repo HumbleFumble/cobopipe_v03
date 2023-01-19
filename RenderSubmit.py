@@ -286,7 +286,7 @@ class MainWindow(QtWidgets.QWidget):
         # self.checkbox_dict = {"Render Settings": self.render_settings_dict, "Render Options": self.render_options_dict}
                      
         for keyname, valueof in zip(render_settings.keys(), render_settings.values()):
-            if not render_type in valueof["render_engine"]:       # Right now the condition is "not", since the renderer is arnold, but not should be removed once done
+            if render_type in valueof["render_engine"]:       # Right now the condition is "not", since the renderer is arnold, but not should be removed once done
                 self.checkbox = QtWidgets.QCheckBox(keyname)
                 self.checkbox.setChecked(valueof["default_state"])
                 self.checkbox.setToolTip(valueof["tooltip"])
