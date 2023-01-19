@@ -9,6 +9,7 @@ CC = getConfigClass()
 
 
 def setCurrentRenderer(renderer='vray'):
+    
     cmds.setAttr("defaultRenderGlobals.currentRenderer", renderer, type="string")
 
 def createFastRenderSkySetup():
