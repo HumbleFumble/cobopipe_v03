@@ -286,11 +286,11 @@ class MainWindow(QtWidgets.QWidget):
         # self.checkbox_dict = {"Render Settings": self.render_settings_dict, "Render Options": self.render_options_dict}
                      
         for keyname, valueof in zip(render_settings.keys(), render_settings.values()):
-            if render_type in valueof["render_engine"]:       # Right now the condition is "not", since the renderer is arnold, but not should be removed once done
+            if not render_type in valueof["render_engine"]:       # Right now the condition is "not", since the renderer is arnold, but not should be removed once done
                 self.checkbox = QtWidgets.QCheckBox(keyname)
                 self.checkbox.setChecked(valueof["default_state"])
                 self.checkbox.setToolTip(valueof["tooltip"])
-                        
+                print(render_type)        
                 if in_maya:
                     self.checkbox.clicked.connect(self.layerLabelUpdate)
                 
@@ -1245,6 +1245,12 @@ class MainWindow(QtWidgets.QWidget):
 
 class RenderSubmitFunctions():
     def __init__(self, ui_widget=None):
+        
+        # if "maya_render" in CC.project_settings.keys():
+	    #     render_type = CC.project_settings["maya_render"]
+        # else:
+	    #     render_type = "vray"
+        
         # self.shot_name = ""
         # self.shot_path = ""
         self.preset_name = ""
@@ -1253,7 +1259,7 @@ class RenderSubmitFunctions():
         self.ui_widget = ui_widget
         if in_maya:
             #initialize vray
-            vray_util.setCurrentRenderer()
+            vray_util.setCurrentRenderer(renderer=render_type)
 
 
     def renderableCallback(self, message_type, plug, other_plug, client_data):
