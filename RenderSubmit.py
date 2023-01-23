@@ -290,7 +290,7 @@ class MainWindow(QtWidgets.QWidget):
                 self.checkbox = QtWidgets.QCheckBox(keyname)
                 self.checkbox.setChecked(valueof["default_state"])
                 self.checkbox.setToolTip(valueof["tooltip"])
-                print(render_type)        
+                      
                 if in_maya:
                     self.checkbox.clicked.connect(self.layerLabelUpdate)
                 
@@ -1389,7 +1389,7 @@ class RenderSubmitFunctions():
             cmds.setAttr("defaultRenderGlobals.periodInExt", 0)
 
         if render_type == 'arnold':
-            print(render_type)
+            
             if info_dict:
                 info_dict["render_prefix"] = preset_name
                 print(preset_name)
