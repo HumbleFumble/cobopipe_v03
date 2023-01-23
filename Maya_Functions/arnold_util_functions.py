@@ -34,7 +34,7 @@ def build_imager(imager, index):
         attribute_name = f"{node_name}.{key}"
         if data["type"] in ["TdataCompound"]:
             continue
-        print(f"{data['type']:<10}{attribute_name:<55} {data['value']}")
+        #print(f"{data['type']:<10}{attribute_name:<55} {data['value']}")
 
         if data["value"] == None:
             continue

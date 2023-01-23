@@ -86,6 +86,8 @@ class MainWindow(QtWidgets.QWidget):
 
         self.orr_dict = {}
 
+        if render_type == 'arnold':
+            self.imager_dict = {}
         self.aov_dict = {}
         self.preset_dict = {}
         self.preset_config = {}
@@ -323,7 +325,29 @@ class MainWindow(QtWidgets.QWidget):
         self.menu_bar.addMenu(self.menu_options)
         self.render_settings_layout.addWidget(self.menu_bar)
         self.render_group.setLayout(self.render_settings_layout)
-        
+
+
+        if render_type == 'arnold':
+            # IMAGER SETTINGS
+            # ----------------------------------------------------------------------------------------------------------------------------------------------------
+
+            self.imager_settings_layout = QtWidgets.QVBoxLayout()
+            self.imager_buttons_layout = QtWidgets.QHBoxLayout()
+            self.imager_group = QtWidgets.QGroupBox("Imager Settings")
+            self.imager_settings_dd = QtWidgets.QComboBox()
+            self.imager_settings_dd.setMinimumWidth(200)
+            self.export_imager_settings = QtWidgets.QPushButton("Export Imager")
+            self.apply_imager_settings = QtWidgets.QPushButton("Import Imager")
+            self.export_imager_settings.clicked.connect(self.save_imager)
+            self.apply_imager_settings.clicked.connect(self.import_imager)
+            # self.apply_imager_settings.clicked.connect(self.ApplyRenderSettingsCall)
+            self.imager_settings_layout.addWidget(self.imager_settings_dd)
+            self.imager_settings_layout.addLayout(self.imager_buttons_layout)
+            self.imager_buttons_layout.addWidget(self.export_imager_settings)
+            self.imager_buttons_layout.addWidget(self.apply_imager_settings)
+            self.imager_group.setLayout(self.imager_settings_layout)
+
+
          
         # AOV SETTINGS
         # ----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -389,6 +413,8 @@ class MainWindow(QtWidgets.QWidget):
         self.main_layout.addWidget(self.user_group)
         self.main_layout.addWidget(self.preset_group)
         self.main_layout.addWidget(self.render_group)
+        if render_type == 'arnold':
+            self.main_layout.addWidget(self.imager_group)
         self.main_layout.addWidget(self.aov_group)
         self.main_layout.addWidget(self.rr_group)
         self.main_layout.addWidget(self.scene_group)
@@ -637,6 +663,18 @@ class MainWindow(QtWidgets.QWidget):
         self.preset_dd.setCurrentIndex(name_index)
         self.SavePresetCall()
 
+    def save_imager(self):
+        import Maya_Functions.arnold_util_functions as arnold_util
+        name = self.GetPresetInput()
+        path = os.path.abspath(os.path.join(CC.get_render_presets(), f"Imager_{name}.json")).replace(os.sep, '/')
+        arnold_util.save_imager_preset(path)
+        self.GetPresetsAndAOVs()
+
+    def import_imager(self):
+        import Maya_Functions.arnold_util_functions as arnold_util
+        path = os.path.abspath(os.path.join(CC.get_render_presets(), f"{self.imager_settings_dd.currentText()}")).replace(os.sep, '/')
+        arnold_util.load_imager_preset(path)
+
     def GetPresetInput(self):
         text, okPressed = QtWidgets.QInputDialog.getText(self, "New Preset Name", "Preset Name:",
                                                          QtWidgets.QLineEdit.Normal, "")
@@ -721,13 +759,18 @@ class MainWindow(QtWidgets.QWidget):
             if con.endswith(".json"):
                 if con.startswith("AOV_"):
                     self.aov_dict[con] = con_path
+                elif con.startswith("Imager_"):
+                    self.imager_dict[con] = con_path
                 else:
                     self.preset_dict[con] = con_path
         self.aov_dict['None'] = 'None'  # Adding None as an option for not using AOVs at all
+        self.imager_dict['None'] = 'None'
         self.UpdateDD()
 
     def UpdateDD(self):
         # clear dropdowns
+        if render_type == 'arnold':
+            self.imager_settings_dd.clear()
         self.aov_dd.clear()
         self.render_settings_dd.clear()
         self.preset_dd.setDisabled(True)
@@ -735,7 +778,10 @@ class MainWindow(QtWidgets.QWidget):
         self.preset_dd.addItems(sorted(self.preset_config.keys()))
         self.preset_dd.setEnabled(True)
         aov_list = list(self.aov_dict.keys())
+        imager_list = list(self.imager_dict.keys())
         # aov_list.append("None")
+        if render_type == 'arnold':
+            self.imager_settings_dd.addItems(sorted(imager_list))
         self.aov_dd.addItems(sorted(aov_list))
         self.render_settings_dd.addItems(sorted(self.preset_dict.keys()))
 
