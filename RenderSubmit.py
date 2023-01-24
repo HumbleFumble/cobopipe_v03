@@ -50,8 +50,8 @@ import getpass
 from shutil import copyfile
 import subprocess
 import re
-from maya.app.renderSetup.model.aovs import decode
-from maya.app.renderSetup.model import renderSettings
+import maya.app.renderSetup.model.aovs as arnold_aovs
+import maya.app.renderSetup.model.renderSettings as arnold_renderSettings
 import maya.mel as mel
 
 # Get renderer
@@ -86,6 +86,8 @@ class MainWindow(QtWidgets.QWidget):
 
         self.orr_dict = {}
 
+        if render_type == 'arnold':
+            self.imager_dict = {}
         self.aov_dict = {}
         self.preset_dict = {}
         self.preset_config = {}
@@ -290,7 +292,7 @@ class MainWindow(QtWidgets.QWidget):
                 self.checkbox = QtWidgets.QCheckBox(keyname)
                 self.checkbox.setChecked(valueof["default_state"])
                 self.checkbox.setToolTip(valueof["tooltip"])
-                        
+                      
                 if in_maya:
                     self.checkbox.clicked.connect(self.layerLabelUpdate)
                 
@@ -323,7 +325,29 @@ class MainWindow(QtWidgets.QWidget):
         self.menu_bar.addMenu(self.menu_options)
         self.render_settings_layout.addWidget(self.menu_bar)
         self.render_group.setLayout(self.render_settings_layout)
-        
+
+
+        if render_type == 'arnold':
+            # IMAGER SETTINGS
+            # ----------------------------------------------------------------------------------------------------------------------------------------------------
+
+            self.imager_settings_layout = QtWidgets.QVBoxLayout()
+            self.imager_buttons_layout = QtWidgets.QHBoxLayout()
+            self.imager_group = QtWidgets.QGroupBox("Imager Settings")
+            self.imager_settings_dd = QtWidgets.QComboBox()
+            self.imager_settings_dd.setMinimumWidth(200)
+            self.export_imager_settings = QtWidgets.QPushButton("Export Imager")
+            self.apply_imager_settings = QtWidgets.QPushButton("Import Imager")
+            self.export_imager_settings.clicked.connect(self.save_imager)
+            self.apply_imager_settings.clicked.connect(self.import_imager)
+            # self.apply_imager_settings.clicked.connect(self.ApplyRenderSettingsCall)
+            self.imager_settings_layout.addWidget(self.imager_settings_dd)
+            self.imager_settings_layout.addLayout(self.imager_buttons_layout)
+            self.imager_buttons_layout.addWidget(self.export_imager_settings)
+            self.imager_buttons_layout.addWidget(self.apply_imager_settings)
+            self.imager_group.setLayout(self.imager_settings_layout)
+
+
          
         # AOV SETTINGS
         # ----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -389,6 +413,8 @@ class MainWindow(QtWidgets.QWidget):
         self.main_layout.addWidget(self.user_group)
         self.main_layout.addWidget(self.preset_group)
         self.main_layout.addWidget(self.render_group)
+        if render_type == 'arnold':
+            self.main_layout.addWidget(self.imager_group)
         self.main_layout.addWidget(self.aov_group)
         self.main_layout.addWidget(self.rr_group)
         self.main_layout.addWidget(self.scene_group)
@@ -637,6 +663,18 @@ class MainWindow(QtWidgets.QWidget):
         self.preset_dd.setCurrentIndex(name_index)
         self.SavePresetCall()
 
+    def save_imager(self):
+        import Maya_Functions.arnold_util_functions as arnold_util
+        name = self.GetPresetInput()
+        path = os.path.abspath(os.path.join(CC.get_render_presets(), f"Imager_{name}.json")).replace(os.sep, '/')
+        arnold_util.save_imager_preset(path)
+        self.GetPresetsAndAOVs()
+
+    def import_imager(self):
+        import Maya_Functions.arnold_util_functions as arnold_util
+        path = os.path.abspath(os.path.join(CC.get_render_presets(), f"{self.imager_settings_dd.currentText()}")).replace(os.sep, '/')
+        arnold_util.load_imager_preset(path)
+
     def GetPresetInput(self):
         text, okPressed = QtWidgets.QInputDialog.getText(self, "New Preset Name", "Preset Name:",
                                                          QtWidgets.QLineEdit.Normal, "")
@@ -721,13 +759,18 @@ class MainWindow(QtWidgets.QWidget):
             if con.endswith(".json"):
                 if con.startswith("AOV_"):
                     self.aov_dict[con] = con_path
+                elif con.startswith("Imager_"):
+                    self.imager_dict[con] = con_path
                 else:
                     self.preset_dict[con] = con_path
         self.aov_dict['None'] = 'None'  # Adding None as an option for not using AOVs at all
+        self.imager_dict['None'] = 'None'
         self.UpdateDD()
 
     def UpdateDD(self):
         # clear dropdowns
+        if render_type == 'arnold':
+            self.imager_settings_dd.clear()
         self.aov_dd.clear()
         self.render_settings_dd.clear()
         self.preset_dd.setDisabled(True)
@@ -735,7 +778,10 @@ class MainWindow(QtWidgets.QWidget):
         self.preset_dd.addItems(sorted(self.preset_config.keys()))
         self.preset_dd.setEnabled(True)
         aov_list = list(self.aov_dict.keys())
+        imager_list = list(self.imager_dict.keys())
         # aov_list.append("None")
+        if render_type == 'arnold':
+            self.imager_settings_dd.addItems(sorted(imager_list))
         self.aov_dd.addItems(sorted(aov_list))
         self.render_settings_dd.addItems(sorted(self.preset_dict.keys()))
 
@@ -834,7 +880,7 @@ class MainWindow(QtWidgets.QWidget):
                 vray_util.applyRenderSettings(settings)
             elif render_type == 'arnold':
                 settings = file_util.loadJson(CC.get_render_presets() + self.render_settings_dd.currentText())
-                renderSettings.decode(settings)
+                arnold_renderSettings.decode(settings)
                 
 
             # self.rf.ApplyRenderSettings(rs_name=self.render_settings_dd.currentText(),exr_check=self.exr_multi_checkbox.isChecked(), bg_off=self.BG_override.isChecked(),overscan=self.extra_render_size.isChecked(),sphere_render=self.checkbox_dict["Sphere Volume Render"].isChecked(),shot=cur_shot)
@@ -853,15 +899,21 @@ class MainWindow(QtWidgets.QWidget):
         if in_maya:
             if not self.aov_dd.currentText() == "None":
                 if render_type == 'arnold':
+                    import Maya_Functions.arnold_util_functions as arnold_util
                     self.rf.ImportAOVsArnold(self.aov_dict[self.aov_dd.currentText()])
+                    arnold_util.add_aovs_to_noice()
                 else:
                     cryptoAttributes.addOID(overwrite=False)
                     # print('ImportRenderSettings("%s")' % (self.aov_dict[self.aov_dd.currentText()]))
                     self.rf.ImportAOVs(self.aov_dict[self.aov_dd.currentText()])
 
+                
+
             else:
                 # print('ImportRenderSettings("None")')
                 self.rf.ImportAOVs("None")
+
+            
 
     def SetRenderPathCall(self):
         if in_maya:
@@ -1245,6 +1297,12 @@ class MainWindow(QtWidgets.QWidget):
 
 class RenderSubmitFunctions():
     def __init__(self, ui_widget=None):
+        
+        # if "maya_render" in CC.project_settings.keys():
+	    #     render_type = CC.project_settings["maya_render"]
+        # else:
+	    #     render_type = "vray"
+        
         # self.shot_name = ""
         # self.shot_path = ""
         self.preset_name = ""
@@ -1253,7 +1311,7 @@ class RenderSubmitFunctions():
         self.ui_widget = ui_widget
         if in_maya:
             #initialize vray
-            vray_util.setCurrentRenderer()
+            vray_util.setCurrentRenderer(renderer=render_type)
 
 
     def renderableCallback(self, message_type, plug, other_plug, client_data):
@@ -1383,7 +1441,7 @@ class RenderSubmitFunctions():
             cmds.setAttr("defaultRenderGlobals.periodInExt", 0)
 
         if render_type == 'arnold':
-            print(render_type)
+            
             if info_dict:
                 info_dict["render_prefix"] = preset_name
                 print(preset_name)
@@ -1454,100 +1512,10 @@ class RenderSubmitFunctions():
     def ImportAOVsArnold(self, aov_file):
         aovs = cmds.ls(type="aiAOV")
         cmds.delete(aovs)
-        
-        self.defaultArnoldDriver_state = {
-        "defaultArnoldDriver.aiTranslator": None, 
-        "defaultArnoldDriver.aiUserOptions": None, 
-        "defaultArnoldDriver.alphaHalfPrecision": None, 
-        "defaultArnoldDriver.alphaTolerance": None, 
-        "defaultArnoldDriver.append": None, 
-        "defaultArnoldDriver.autocrop": None, 
-        "defaultArnoldDriver.binMembership": None, 
-        "defaultArnoldDriver.caching": None, 
-        "defaultArnoldDriver.colorManagement": None, 
-        "defaultArnoldDriver.deepexrTiled": None, 
-        "defaultArnoldDriver.depthHalfPrecision": None, 
-        "defaultArnoldDriver.depthTolerance": None, 
-        "defaultArnoldDriver.dither": None, 
-        "defaultArnoldDriver.exrCompression": None, 
-        "defaultArnoldDriver.exrTiled": None, 
-        "defaultArnoldDriver.frozen": None, 
-        "defaultArnoldDriver.halfPrecision": None, 
-        "defaultArnoldDriver.isHistoricallyInteresting": None, 
-        "defaultArnoldDriver.mergeAOVs": None,
-        "defaultArnoldDriver.nodeState": None, 
-        "defaultArnoldDriver.outputMode": None, 
-        "defaultArnoldDriver.outputPadded": None, 
-        "defaultArnoldDriver.pngFormat": None, 
-        "defaultArnoldDriver.prefix": None, 
-        "defaultArnoldDriver.preserveLayerName": None, 
-        "defaultArnoldDriver.quality": None, 
-        "defaultArnoldDriver.skipAlpha": None, 
-        "defaultArnoldDriver.subpixelMerge": None, 
-        "defaultArnoldDriver.tiffCompression": None, 
-        "defaultArnoldDriver.tiffFormat": None, 
-        "defaultArnoldDriver.tiffTiled": None, 
-        "defaultArnoldDriver.unpremultAlpha": None, 
-        "defaultArnoldDriver.useRGBOpacity": None
-        }
-        
-        if not aov_file == "None":
-            if os.path.exists(aov_file):
-                print("Found it! %s" % aov_file)
-                with open(aov_file, 'r') as aov_file:
-                    aovs = json.load(aov_file)
-                self.arnoldDriverCheck()
-                # Built in function to decode AOV Presets from JSON data.
-                decode(aovs, 0)
-                self.arnoldDriverCheck(False)
-                
-    def arnoldDriverCheck(self,check_state=True):
-        for cur_key in self.defaultArnoldDriver_state.keys():
-            if check_state:
-                self.defaultArnoldDriver_state[cur_key] = cmds.getAttr(cur_key)
-                
-            else:
-                if self.defaultArnoldDriver_state[cur_key]:
-                    print(cur_key)
-                    print(self.defaultArnoldDriver_state[cur_key])
-                    if type(self.defaultArnoldDriver_state[cur_key]) is str:
-                        print("%s is string!" % cur_key)
-                        cmds.setAttr(cur_key,self.defaultArnoldDriver_state[cur_key],type="string")
-                    else:
-                        cmds.setAttr(cur_key,self.defaultArnoldDriver_state[cur_key])
-            
-    # def CheckForMissingOIDAOV(self):
-    #     list_of_numbers = [] #Make list of the OIDs needed
-    #     for e in cmds.ls(type="VRayObjectProperties"):
-    #         if e.startswith("SpecialOID"):
-    #             number = e[-2:]
-    #             list_of_numbers.append(int(number))
-    #     #find all render AOV
-    #     cur_els = cmds.ls(type="VRayRenderElement")
-    #     for l in list_of_numbers: #Check if they match the OIDs we have
-    #
-    #         mul = (l - 28) / 3
-    #         start = 28 + 3 * mul
-    #         end = start + 2
-    #         # print("%s : makes %s -%s." % (l,start,end))
-    #         oid_name = "OID_%s_%s" % (start, end)
-    #         if not oid_name in cur_els: #If not buiild extra
-    #             logger.debug("Building %s" % oid_name)
-    #             vray_util.buildMultiMatte(mm_name=oid_name,start=start)
-    #             # self.BuildMissingAOV(oid_name=oid_name,start=start)
-    #             cur_els.append(oid_name)
-    #         else:
-    #             logger.debug("Already FOUND %s" % oid_name)
-
-
-    # def BuildMissingAOV(self,oid_name,start):
-    #     import maya.mel as mel
-    #     obj = mel.eval("vrayAddRenderElement %s" % "MultiMatteElement")
-    #     cmds.setAttr("%s.vray_name_multimatte" % obj, oid_name, type="string")
-    #     cmds.setAttr("%s.vray_redid_multimatte" % obj, start)
-    #     cmds.setAttr("%s.vray_greenid_multimatte" % obj, start + 1)
-    #     cmds.setAttr("%s.vray_blueid_multimatte" % obj, start + 2)
-    #     cmds.rename(obj, oid_name)
+        data = file_util.loadJson(aov_file)
+        for key in ('drivers', 'filters'):
+            data['arnold'][key] = []
+        arnold_aovs.decode(data, 0)
 
     def CreateVRayDirt(self, AOV_name): # Create DirtTexture and connect it to AO if possible.
         if not cmds.objExists("AO_VRayDirt"):
@@ -1950,8 +1918,9 @@ class RenderSubmitFunctions():
         extension = ".exr"
 
         software = "maya"
-        render_software = "vray 5"
-        software_version = "2020.4"
+        # render_software = "vray 5"
+        # software_version = "2020.4"
+        software_version = "2022.4"
 
 
         rr_submitter = '"' + os.path.abspath(os.path.join(os.environ["RR_Root"], 'bin/win64/rrSubmitterconsole.exe')).replace(os.sep, '/').replace('//', os.sep + os.sep) + '"'
@@ -1964,7 +1933,7 @@ class RenderSubmitFunctions():
 
         # SCENE INFO
         rr_cmd = "%s -S %s" % (rr_cmd, software)  # set software
-        rr_cmd = "%s -R %s" % (rr_cmd, render_software)  # set render plugin
+        # rr_cmd = "%s -R %s" % (rr_cmd, render_software)  # set render plugin
         rr_cmd = "%s -V %s" % (rr_cmd, software_version)  # set software version
 
         rr_cmd = "%s -SOS win" % (rr_cmd)  # set os
