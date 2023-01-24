@@ -26,24 +26,33 @@ if ((Get-NetFirewallRule -DisplayGroup "File and printer sharing").Disabled){
 }
 
 # Hashtable containing applications intended for instalation and the respective command
-$apps = @{firefox = @{firefox.exe = "/S"}}
+$apps = @{
+    "firefox" = @{
+        "path" = "firefox.exe" 
+        "args" = "/S"
+        }
+    "maya" = @{
+        "path" = "MayaExtracted\Setup.exe" 
+        "args" = "--silent"
+        }
+    }
 
 # Installing application. It appears that the application must have option for silent install to be installed remotely.
 $creds = Get-Credential -UserName "network\admin"
-$drive_root = "\\driveroot\folder"
-$drive_name = "drive letter"
-$computer_name = 'computer name'
-$appName = '\' + $apps['firefox'].Keys
-$install_app = $drive_root + $appName
-$appArgs = $apps['firefox'].Values
+$driveRoot = "\\driveroot\folder"
+$driveName = "drive letter"
+$computerName = 'computer name'
+$appRelativePath = '\' + $apps['firefox']['path']
+$installApp = $driveRoot + $appRelativePath
+$appArgs = $apps['firefox']['args']
 
-Invoke-Command -ComputerName $computer_name -ScriptBlock {
+Invoke-Command -ComputerName $computerName -ScriptBlock {
     # Map the network share within PowerShell
-    New-PSDrive -Name $using:drive_name -Root $using:drive_root -PSProvider "FileSystem" -Credential $using:creds -Persist
+    New-PSDrive -Name $using:driveName -Root $using:driveRoot -PSProvider "FileSystem" -Credential $using:creds -Persist
     # The arguments for launching the application are app-specific 
-    Start-Process -FilePath $using:install_app -ArgumentList "/S" -Wait
+    Start-Process -FilePath $using:installApp -ArgumentList $using:appArgs -Wait
     # Remove the share
-    Remove-PSDrive $using:drive_name -Force
+    Remove-PSDrive $using:driveName -Force
 }
 
 
