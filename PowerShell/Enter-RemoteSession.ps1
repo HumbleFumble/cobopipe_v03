@@ -5,10 +5,20 @@ function Enter-RemoteSession {
     [Parameter(Mandatory=$true)][string]$UserName,
     [Parameter(Mandatory=$true)][string]$ComputerName
     )
-    
-    $sessionName = $ComputerName + " RS"
+    # Get credentials
     $creds = Get-Credential -UserName $username
-    $session = New-PSSession -Name $sessionName -ComputerName $computername -Credential $creds
+    $prefix = ((Get-PSSession).ComputerName.count + 1)
+    $index = 0
+    $session = $null
+    do {
+        Start-Sleep -Milliseconds 300
+        Write-Host "Connecting..."
+        $session = New-PSSession -Name ($ComputerName + "RS" + $prefix) -ComputerName $computername -Credential $creds
+        $index += 1
+    }until (
+        Get-PSSession
+    )
+    
     if ($?){
         Write-Host "Successfully connected to $ComputerName!`n"
         $readhost = Read-Host "Enter session? [y/n]"
