@@ -6,7 +6,7 @@
 # Get network profile
 (Get-NetConnectionProfile).NetworkCategory
 # Set network profile
-Set-NetConnectionProfile -NetworkCategory "Private"
+Set-NetConnectionProfile -NetworkCategory "Domain"
 
 # Enabling / disabling "File And Printer Sharing" and "Network Discovery"
 # ----------------------------------------------------------------------------------------------------------------------
