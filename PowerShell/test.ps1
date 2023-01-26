@@ -1,6 +1,6 @@
 # Install VRay
 # ! From elevated prompt ! ("start pwsh -Credential "")
-
+# It seems with open session from elevated propt installations go as anticipated
 
 $creds = Get-Credential -UserName "cphbom\administrator"
 $session = New-PSSession -ComputerName vm1 -Credential $creds
@@ -35,6 +35,8 @@ $creds = Get-Credential -UserName "network\admin"
 $driveRoot = "\\driveroot\folder"
 $driveName = "drive letter"
 $computerName = 'computer name'
+# Perhaps a loop here that iterates over a list of desired apps and sets the variables below
+
 $appRelativePath = '\' + $apps['firefox']['path']
 $installApp = $driveRoot + $appRelativePath
 $appArgs = $apps['firefox']['args']
