@@ -1297,18 +1297,29 @@ function createUI(thisObj){
             //Create text string for exel sheet or shottrack list
             tab_setup.children[1].text_panel.getGoogleString.onClick = function() {
                 var string = getShottrackText("column");
-                    var dlg = new Window('dialog', 'Shottrack Add Folder Strong',undefined,{resizeable:'true'});
-                   dlg.frameLocation = [600,200];
-                    dlg.msgPnl = dlg.add('panel',[25,15,250,400], 'Paste This Into A Exel-Style Sheet');
-                    dlg.msgPnl.et = dlg.msgPnl.add('EditText',undefined,string, {multiline:"true"});
-                    dlg.show();
+                var dlg = new Window('dialog', 'Shottrack Add Folder Strong',undefined,{resizeable:'true'});
+                dlg.frameLocation = [600,200];
+                //dlg.alignment = ["fill","top"]
+                //dlg.layout = new AutoLayoutManager(dlg)
+                /*
+                dlg.msgPnl = dlg.add('panel',[0,0,250,700], 'Paste This Into A Exel-Style Sheet');
+                dlg.msgPnl.alignment = "fill"
+                dlg.msgPnl.minimumSize = [250,500]
+
+                dlg.msgPnl.et = dlg.msgPnl.add('EditText',undefined,string, {multiline:"true"});
+                dlg.msgPnl.et.location = [25,15]
+                */
+                dlg.et = dlg.add('EditText',[15,25,250,900],string, {multiline:"true"});
+                dlg.et.alignment = ["fill","top"]
+                //dlg.et.preferredSize = [250,700]
+                dlg.show();
             }
             tab_setup.children[1].text_panel.getPrevisString.onClick = function() {
                 var string = getShottrackText("previs");
                     var dlg = new Window('dialog', 'Shottrack Add Folder Strong');
                    dlg.frameLocation = [600,200];
                     dlg.msgPnl = dlg.add('panel',[25,15,250,400], 'Paste This Into A Exel-Style Sheet');
-                    dlg.msgPnl.et = dlg.msgPnl.add('EditText',[2,10,250,400],string, {multiline:"true"}) ;
+                    dlg.msgPnl.et = dlg.msgPnl.add('EditText',[2,10,250,400],string, {multiline:"true"});
                     dlg.show();
             }
         
