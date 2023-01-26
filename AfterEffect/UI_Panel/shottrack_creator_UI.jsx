@@ -416,8 +416,8 @@ function createUI(thisObj){
 	
 		function getShottrackText(text_type){	
 			var cur_comp = comp_get();
-                var epName = epName_get();
-                var seqName = seqName_get();
+            var epName = epName_get();
+            var seqName = seqName_get();
 			var theString=false;
 			var joiner = ":";
 			var parter = ";";
@@ -471,18 +471,18 @@ function createUI(thisObj){
 				}
 				
 			}
-                  if(text_type == "previs"){
+              if(text_type == "previs"){
 
-                        var prod = produktionFolder_get();
-                        prod = prod.toString();
-                        var c_path = prod + "/" + epName + "/" + epName + "_PREVIS/03_Output/" + epName + "_"+ seqName +".txt";
+                    var prod = produktionFolder_get();
+                    prod = prod.toString();
+                    var c_path = prod + "/" + epName + "/" + epName + "_PREVIS/03_Output/" + epName + "_"+ seqName +".txt";
 
-                        var statusfile = new File(c_path);
-                        statusfile.open("w");
-                        statusfile.write(theString);
-                        statusfile.close();
-                        
-                      }
+                    var statusfile = new File(c_path);
+                    statusfile.open("w");
+                    statusfile.write(theString);
+                    statusfile.close();
+
+                  }
 				return theString;
 		}
 	
@@ -1297,10 +1297,10 @@ function createUI(thisObj){
             //Create text string for exel sheet or shottrack list
             tab_setup.children[1].text_panel.getGoogleString.onClick = function() {
                 var string = getShottrackText("column");
-                    var dlg = new Window('dialog', 'Shottrack Add Folder Strong');
+                    var dlg = new Window('dialog', 'Shottrack Add Folder Strong',undefined,{resizeable:'true'});
                    dlg.frameLocation = [600,200];
                     dlg.msgPnl = dlg.add('panel',[25,15,250,400], 'Paste This Into A Exel-Style Sheet');
-                    dlg.msgPnl.et = dlg.msgPnl.add('EditText',[2,10,250,400],string, {multiline:"true"}) ;
+                    dlg.msgPnl.et = dlg.msgPnl.add('EditText',undefined,string, {multiline:"true"});
                     dlg.show();
             }
             tab_setup.children[1].text_panel.getPrevisString.onClick = function() {
