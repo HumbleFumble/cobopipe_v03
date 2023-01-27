@@ -26,16 +26,11 @@ if ((Get-NetFirewallRule -DisplayGroup "File and printer sharing").Disabled){
 }
 
 # Hashtable containing applications intended for instalation and the respective command
-$apps = @{
-    "firefox" = @{
-        "path" = "firefox.exe" 
-        "args" = "/S"
-        }
-    "maya" = @{
-        "path" = "MayaExtracted\Setup.exe" 
-        "args" = "--silent"
-        }
-    }
+$apps = @(
+    [pscustomobject]@{Name = "Maya 2022"; Path = "\\wsx3\shared\Maya2022extracted\Setup.exe"; Arguments = "--silent"}
+    [pscustomobject]@{Name = "V-Ray"; Path = "\\WSX3\shared\VRay\installVray.cmd"; Arguments = ""}
+
+)
 
 # Installing application. It appears that the application must have option for silent install to be installed remotely.
 $creds = Get-Credential -UserName "network\admin"

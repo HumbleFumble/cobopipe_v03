@@ -15,20 +15,7 @@ Invoke-Command -Session $session -ScriptBlock {
     Set-ExecutionPolicy Restricted
 } 
 
-$apps = @{
-    "firefox" = @{
-        "path" = "firefox.exe" 
-        "args" = "/S"
-        }
-    "maya" = @{
-        "path" = "MayaExtracted\Setup.exe" 
-        "args" = "--silent"
-        }
-    "vray" = @{
-        "path" = "VRay\installVray.cmd" 
-        "args" = ""
-        }    
-    }
+
 
 # Installing application. It appears that the application must have option for silent install to be installed remotely.
 $creds = Get-Credential -UserName "network\admin"
@@ -64,6 +51,55 @@ Invoke-Command -Session $session -ScriptBlock {
     Set-ExecutionPolicy Bypass
     Start-Process -FilePath "\\WSX3\shared\Maya2022extracted\Setup.exe" -ArgumentList "--silent" -Wait
     Start-Sleep 3
-    Start-Process -FilePath "\\WSX3\shared\VRay\installVray.cmd" -Wait
+    Start-Process -FilePath "\\WSX3\shared\VRay\installVray.cmd" -ArgumentList "" -Wait
     Remove-PSDrive -Name "W"
 } 
+
+# Open session to remote computer and install applications from custom object
+
+$computerName = 'vm1'
+$driveRoot = "\\wsx3\shared"
+$driveName = "W"
+
+$creds = Get-Credential -UserName "cphbom\administrator"
+$session = New-PSSession -ComputerName $computerName -Credential $creds
+
+Invoke-Command -Session $session -ScriptBlock {
+
+    New-PSDrive -Name $using:driveName -Root $using:driveRoot -PSProvider "FileSystem" -Credential $using:creds -Persist
+    Set-ExecutionPolicy Bypass
+    # Installing applications from custom object
+    # This function installs a program with the parameters in a pscustomobject
+    function Install-App {
+        [CmdletBinding()]
+        param ([PSCustomObject]$parameters)
+    
+        if (!($parameters.arguments)){
+            Start-Process $parameters.path -Wait
+        }
+        else {
+            Start-Process $parameters.path -ArgumentList $parameters.arguments -Wait
+        }    
+    }
+
+    # Array of custom objects containing the application name, path to it and the arguments it should be run with, if any
+    $apps = @(
+        [pscustomobject]@{Name = "Maya 2022"; Path = "\\wsx3\shared\Maya2022extracted\Setup.exe"; Arguments = "--silent"}
+        [pscustomobject]@{Name = "V-Ray"; Path = "\\wsx3\shared\VRay\installVray.cmd"; Arguments = ""}
+    )
+
+    # Loop over the array of custom objects
+    foreach ($i in $apps){
+        Install-App $i
+        Start-Sleep 3
+    }
+
+    Remove-PSDrive -Name $using:driveName
+    Set-ExecutionPolicy Restricted
+} 
+
+# Test connection to host
+$list = "wsx2", "wsx11", "wsx19", "wsx24"
+foreach ($i in $list){
+    Write-Host "$($i) $((Test-Connection $i -Count 1).status)"
+}
