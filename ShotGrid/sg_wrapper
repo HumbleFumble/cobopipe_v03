@@ -1,0 +1,261 @@
+import shotgun_api3
+
+# Creating an API instance
+def get_shotgrid(url="https://cphbom.shotgrid.autodesk.com/", script="", key=""):
+    return shotgun_api3.Shotgun(url, script_name=script, api_key=key)
+
+
+PROJECT_FIELDS = [
+    "name",
+    "id",
+    "sg_description",
+    "sg_status",
+    "users",
+    "tank_name",
+]
+
+EPISODE_FIELDS = [
+    "type",
+    "code",
+    "id",
+    "description",
+    "image",
+    "sg_status_list",
+]
+
+SEQUENCE_FIELDS = [
+    "type",
+    "code",
+    "id"
+]
+
+SHOT_FIELDS = [
+    "type",
+    "code",
+    "id"
+]
+
+sg = get_shotgrid(script="cobopipe", key="fbda0Jg$zihrnynjqhiaywhic")
+
+
+class Project:
+    def __init__(self, fields=None, **kwargs):
+        if not kwargs:
+            raise ValueError("Missing identifying keyword arguments like name or id")
+
+        self.fields = fields
+        if not self.fields:
+            self.fields = PROJECT_FIELDS
+        self.type = "Project"
+
+        for variable, value in kwargs.items():
+            if variable in self.fields:
+                exec(f"self.{variable} = {repr(value)}")
+        
+        self.update()
+        self.identity = {"type": self.type, "id": self.id}
+        self.episodes = self.get_episodes()
+        self.sequences = self.get_sequences()
+        self.shots = self.get_shots()
+
+    def update(self):
+        filters = []
+        for variable, value in self.__dict__.items():
+            if variable in self.fields:
+                filters.append([variable, "is", value])
+
+        if not filters:
+            raise ValueError("Missing filter data")
+
+        data = sg.find(self.type, filters=filters, fields=self.fields)
+        for variable, value in data[0].items():
+            exec(f"self.{variable} = {repr(value)}")
+
+    def __str__(self):
+        _string = "< ShotGrid Project >\n"
+        for variable, value in self.__dict__.items():
+            if variable in self.fields:
+                _string = _string + f"{variable:<10} \t{value}\n"
+        return _string
+
+    def get_episodes(self):
+        filters = [["project", "is", self.identity]]
+        data = sg.find("Episode", filters=filters, fields=EPISODE_FIELDS)
+        episode_objects = []
+        for episode in data:
+            episode_objects.append(Episode(_update=False, **episode))
+        return episode_objects
+
+    def get_sequences(self):
+        filters = [["project", "is", self.identity]]
+        data = sg.find("Sequence", filters=filters, fields=SEQUENCE_FIELDS)
+        sequence_objects = []
+        for sequence in data:
+            sequence_objects.append(Sequence(_update=False, **sequence))
+        return sequence_objects
+
+    def get_shots(self):
+        filters = [["project", "is", self.identity]]
+        data = sg.find("Shot", filters=filters, fields=SEQUENCE_FIELDS)
+        shot_objects = []
+        for shot in data:
+            shot_objects.append(Shot(_update=False, **shot))
+        return shot_objects
+
+
+class Episode:
+    def __init__(self, fields=None, _update=True, **kwargs):
+        if not kwargs:
+            raise ValueError("Missing identifying keyword arguments like code or id")
+
+        self.fields = fields
+        if not self.fields:
+            self.fields = EPISODE_FIELDS
+        self.type = "Episode"
+
+        for variable, value in kwargs.items():
+            if variable in self.fields:
+                exec(f"self.{variable} = {repr(value)}")
+
+        self.episodes = []
+        if _update:
+            self.update()
+        self.name = self.code
+        self.identity = {"type": self.type, "id": self.id}
+        self.sequences = self.get_sequences()
+        self.shots = self.get_shots()
+
+    def update(self):
+        filters = []
+        for variable, value in self.__dict__.items():
+            if variable in self.fields:
+                filters.append([variable, "is", value])
+
+        if not filters:
+            raise ValueError("Missing filter data")
+
+        data = sg.find(self.type, filters=filters, fields=self.fields)
+        for variable, value in data[0].items():
+            exec(f"self.{variable} = {repr(value)}")
+
+    def __str__(self):
+        _string = "< ShotGrid Episode >\n"
+        for variable, value in self.__dict__.items():
+            if variable in self.fields:
+                _string = _string + f"{variable:<10} \t{value}\n"
+        return _string
+
+    def get_sequences(self):
+        filters = [["episode", "is", self.identity]]
+        data = sg.find("Sequence", filters=filters, fields=SEQUENCE_FIELDS)
+        sequence_objects = []
+        for sequence in data:
+            sequence_objects.append(Sequence(_update=False, **sequence))
+        return sequence_objects
+
+    def get_shots(self):
+        shots = []
+        for sequence in self.get_sequences():
+            for shot in sequence.get_shots():
+                shots.append(shot)
+        return shots
+
+
+class Sequence:
+    def __init__(self, fields=None, _update=True, **kwargs):
+        if not kwargs:
+            raise ValueError("Missing identifying keyword arguments like code or id")
+
+        self.fields = fields
+        if not self.fields:
+            self.fields = SEQUENCE_FIELDS
+        self.type = "Sequence"
+
+        for variable, value in kwargs.items():
+            if variable in self.fields:
+                exec(f"self.{variable} = {repr(value)}")
+
+        self.episodes = []
+        if _update:
+            self.update()
+        self.name = self.code
+        self.identity = {"type": self.type, "id": self.id}
+        self.shots = self.get_shots()
+
+    def update(self):
+        filters = []
+        for variable, value in self.__dict__.items():
+            if variable in self.fields:
+                filters.append([variable, "is", value])
+
+        if not filters:
+            raise ValueError("Missing filter data")
+
+        data = sg.find(self.type, filters=filters, fields=self.fields)
+        for variable, value in data[0].items():
+            exec(f"self.{variable} = {repr(value)}")
+
+    def __str__(self):
+        _string = "< ShotGrid Sequence >\n"
+        for variable, value in self.__dict__.items():
+            if variable in self.fields:
+                _string = _string + f"{variable:<10} \t{value}\n"
+        return _string
+
+    def get_shots(self):
+        filters = [["sg_sequence", "is", self.identity]]
+        data = sg.find("Shot", filters=filters, fields=SHOT_FIELDS)
+        shot_objects = []
+        for shot in data:
+            shot_objects.append(Shot(_update=False, **shot))
+        return shot_objects
+
+
+class Shot:
+    def __init__(self, fields=None, _update=True, **kwargs):
+        if not kwargs:
+            raise ValueError("Missing identifying keyword arguments like code or id")
+
+        self.fields = fields
+        if not self.fields:
+            self.fields = SHOT_FIELDS
+        self.type = "Shot"
+
+        for variable, value in kwargs.items():
+            if variable in self.fields:
+                exec(f"self.{variable} = {repr(value)}")
+
+        self.episodes = []
+        if _update:
+            self.update()
+        self.name = self.code
+        self.identity = {"type": self.type, "id": self.id}
+
+    def update(self):
+        filters = []
+        for variable, value in self.__dict__.items():
+            if variable in self.fields:
+                filters.append([variable, "is", value])
+
+        if not filters:
+            raise ValueError("Missing filter data")
+
+        data = sg.find(self.type, filters=filters, fields=self.fields)
+        for variable, value in data[0].items():
+            exec(f"self.{variable} = {repr(value)}")
+
+    def __str__(self):
+        _string = "< ShotGrid Shot >\n"
+        for variable, value in self.__dict__.items():
+            if variable in self.fields:
+                _string = _string + f"{variable:<10} \t{value}\n"
+        return _string
+
+if __name__ == "__main__":
+    lf = Project(name="Lego Friends - Wildbrain")
+    for shot in lf.shots:
+        print(shot.name)
+
+    # for episode in lf.episodes:
+    #     for shot in episode.shots:
+    #         print(shot.name)

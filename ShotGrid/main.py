@@ -26,4 +26,5 @@ def create_shot_example():
 #         sg.update('Shot', shot['id'], data)
 
 if __name__ == '__main__':
-    sg = get_shotgrid(script="cobopipe", key="iVmuqi3bykeorop?fzhgmbxat")
+    sg = get_shotgrid(script="cobopipe", key="fbda0Jg$zihrnynjqhiaywhic")
+    print(query_data_example())
