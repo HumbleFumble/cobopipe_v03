@@ -62,7 +62,17 @@ $driveRoot = "\\wsx3\shared"
 $driveName = "W"
 
 $creds = Get-Credential -UserName "cphbom\administrator"
-$session = New-PSSession -ComputerName $computerName -Credential $creds
+# $session = New-PSSession -ComputerName $computerName -Credential $creds
+do { # Try to open
+    Start-Sleep -Milliseconds 300
+    Write-Host "Connecting..."
+# Remote session with appropriate name (computername/session/session number)
+    $session = New-PSSession -ComputerName $computerName -Credential $creds
+}until (
+# Keep trying until it's been opened
+    Get-PSSession
+)
+Write-Host "`nSuccessfully connected"
 
 Invoke-Command -Session $session -ScriptBlock {
 
