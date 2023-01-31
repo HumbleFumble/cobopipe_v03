@@ -20,7 +20,16 @@ CLIENT_USER_FIELDS = [
     "projects",
     "groups",
 ]
-API_USER_FIELDS = ["firstname", "description", "id", "email", "permission_rule_set", "projects", "lastname"]
+API_USER_FIELDS = [
+    "firstname",
+    "description",
+    "id",
+    "email",
+    "permission_rule_set",
+    "projects",
+    "lastname",
+    "salted_password",
+]
 PROJECT_FIELDS = ["name", "id", "sg_description", "sg_status", "users", "tank_name"]
 EPISODE_FIELDS = [
     "project",
@@ -59,6 +68,8 @@ VERSION_FIELDS = ["project", "code", "id", "sg_status_list", "user"]
 # Creating an API instance
 def get_shotgrid(url="https://cphbom.shotgrid.autodesk.com/", script="", key=""):
     return shotgun_api3.Shotgun(url, script_name=script, api_key=key)
+
+
 sg = get_shotgrid(script="cobopipe", key="fbda0Jg$zihrnynjqhiaywhic")
 
 
@@ -129,9 +140,9 @@ class ApiUser:
         self.type = self.__class__.__name__
 
         for variable, value in kwargs.items():
-            if variable == 'name':
+            if variable == "name":
                 self.firstname = value
-            elif variable == 'version':
+            elif variable == "version":
                 self.lastname = value
             elif variable in self.fields:
                 exec(f"self.{variable} = {repr(value)}")
@@ -150,9 +161,9 @@ class ApiUser:
         return str_entity(self)
 
     def __getattr__(self, name: str):
-        if name == 'name':
+        if name == "name":
             return self.firstname
-        elif name == 'version':
+        elif name == "version":
             return self.lastname
         else:
             return self.__dict__[f"{name}"]
