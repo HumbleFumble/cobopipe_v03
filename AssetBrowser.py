@@ -745,45 +745,64 @@ class MainWindow(QtWidgets.QWidget):
 				self.tab4AssetThumbnailHolder.setPixmap(c_pix)
 
 	def getRenderCamera(self):
+		current_focus = cmds.getPanel(withFocus=True)
+		try:
+			cam = cmds.modelPanel(current_focus, q=True, camera=True)
+			# cmds.modelPanel(self.focus_view, edit=True, camera="%s_Cam" % _sh)
+			cam_shape = cmds.listRelatives(cam,type="camera")
+			if cam_shape:
+				return cam_shape[0]
+		except:
+			cmds.warning("Please be sure that the right panel has focus")
+			return False
+		# print(cam,cam_shape)
+		# return cam_shape
 
-		cameras_list = cmds.listCameras()
-		camera = ""
 
-		for i in cameras_list:
-			if cmds.getAttr(i + '.renderable') == True:
-				camera = i
-			if camera == "":
-				camera = cameras_list[0]
-				return camera
-			else:
-				return camera
+		# cameras_list = cmds.listCameras()
+		# camera = ""
+		#
+		# for i in cameras_list:
+		# 	if cmds.getAttr(i + '.renderable') == True:
+		# 		camera = i
+		# 	if camera == "":
+		# 		camera = cameras_list[0]
+		# 		return camera
+		# 	else:
+		# 		return camera
 
 	def SetRenderer(self, render_dir):
 		current_width = cmds.getAttr('defaultResolution.width')
 		current_height = cmds.getAttr('defaultResolution.height')
-  
-		width = 122
-		height = 90
+
+		width = 960
+		height = 540
 		
 		if cmds.getAttr("defaultRenderGlobals.currentRenderer") != CC.project_settings['maya_render']:
 			cmds.setAttr("defaultRenderGlobals.currentRenderer", CC.project_settings['maya_render'], type="string")
+		if CC.project_settings['maya_render'] == "vray":
+			mel.eval('vray vfbControl -saveimage "%s"' % render_dir)
+		else:
+			cmds.setAttr("defaultArnoldDriver.aiTranslator", "png", type="string")
+			cmds.setAttr('defaultRenderGlobals.imageFilePrefix', render_dir, type="string")
 
-		cmds.setAttr("defaultArnoldDriver.aiTranslator", "png", type="string")
-		cmds.setAttr('defaultRenderGlobals.imageFilePrefix', render_dir, type="string")
-		
 
-		cmds.setAttr("defaultResolution.width", width)
-		cmds.setAttr("defaultResolution.height", height)
-		
-		cmds.arnoldRender(cam=self.getRenderCamera(), width=width, height=height, seq=None)
-		# Hardcoded '_1'
-		old_name = cmds.getAttr('defaultRenderGlobals.imageFilePrefix') + '_1' + ".png"
-		new_name = render_dir + ".png"
-		
-		os.rename(old_name, new_name)
+			cmds.setAttr("defaultResolution.width", width)
+			cmds.setAttr("defaultResolution.height", height)
+			render_cam = self.getRenderCamera()
+			if render_cam:
+				cmds.arnoldRender(cam=render_cam, width=width, height=height, seq=None)
 
-		cmds.setAttr("defaultResolution.width", current_width)
-		cmds.setAttr("defaultResolution.height", current_height)		
+				old_name = cmds.getAttr('defaultRenderGlobals.imageFilePrefix') + '_1' + ".png"
+				# old_name = cmds.getAttr('defaultRenderGlobals.imageFilePrefix') + ".png"
+				new_name = render_dir + ".png"
+				if os.path.exists(new_name):
+					os.remove(new_name)
+				os.rename(old_name, new_name)
+
+			cmds.setAttr("defaultResolution.width", current_width)
+			cmds.setAttr("defaultResolution.height", current_height)
+
   
   
 
