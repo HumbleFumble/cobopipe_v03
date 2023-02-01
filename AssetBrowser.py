@@ -774,11 +774,10 @@ class MainWindow(QtWidgets.QWidget):
 		cmds.setAttr("defaultResolution.height", height)
 		
 		cmds.arnoldRender(cam=self.getRenderCamera(), width=width, height=height, seq=None)
-
+		# Hardcoded '_1'
 		old_name = cmds.getAttr('defaultRenderGlobals.imageFilePrefix') + '_1' + ".png"
-		print(old_name)
 		new_name = render_dir + ".png"
-		print(new_name)
+		
 		os.rename(old_name, new_name)
 
 		cmds.setAttr("defaultResolution.width", current_width)
