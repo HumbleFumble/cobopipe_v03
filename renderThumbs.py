@@ -1,14 +1,8 @@
-import sys
-import maya.cmds as cmds
-import json
-import maya.app.renderSetup.views.renderSetupPreferences as prefs
-import maya.app.renderSetup.views.renderSetupWindow as rs_wind
-
-
 
 import maya.cmds as cmds
 
-from PySide2.QtWidgets import QMainWindow, QPushButton, QWidget, QGroupBox, QVBoxLayout, QHBoxLayout, QComboBox, QGridLayout, \
+from PySide2.QtWidgets import QMainWindow, QPushButton, QWidget, QGroupBox, QVBoxLayout, QHBoxLayout, QComboBox, \
+    QGridLayout, \
     QLineEdit, QLabel, QFileDialog
 from PySide2.QtCore import Qt
 
@@ -28,13 +22,14 @@ class MainWindow(QMainWindow):
         # -----------------------------------------------------------------------------------------------------------
         # Cameras groupbox
         # -----------------------------------------------------------------------------------------------------------
-        self.cg_box = QGroupBox("Choose Camera")                        # Create groupbox
-        self.cg_box_layout = QHBoxLayout()                              # Create layout (necessary to display the elements in the groupbox)
-        self.cg_combo_box = QComboBox()                                 # Create combobox (dropdown)
-        self.cg_box.setLayout(self.cg_box_layout)                       # Set layout to the groupbox
+        self.cg_box = QGroupBox("Choose Camera")  # Create groupbox
+        self.cg_box_layout = QHBoxLayout()  # Create layout (necessary to display the elements in the groupbox)
+        self.cg_combo_box = QComboBox()  # Create combobox (dropdown)
+        self.cg_box.setLayout(self.cg_box_layout)  # Set layout to the groupbox
 
-        self.cg_combo_box.addItems(cmds.listCameras())                  # Create list to display in the combobox
-        self.cg_combo_box.setCurrentText(self.getRenderCamera())        # Set the currently displayed camera to the renderable camera
+        self.cg_combo_box.addItems(cmds.listCameras())  # Create list to display in the combobox
+        self.cg_combo_box.setCurrentText(
+            self.getRenderCamera())  # Set the currently displayed camera to the renderable camera
 
         # "Make renderable" button
         # -----------------------------------------------------------------------------------------------------------
@@ -44,9 +39,8 @@ class MainWindow(QMainWindow):
 
         # Add dropdown and button to the layout
         # -----------------------------------------------------------------------------------------------------------
-        self.cg_box_layout.addWidget(self.cg_combo_box)                 # Add the combobox to the layout
-        self.cg_box_layout.addWidget(self.make_cam_button)              # Add the button to the layout
-
+        self.cg_box_layout.addWidget(self.cg_combo_box)  # Add the combobox to the layout
+        self.cg_box_layout.addWidget(self.make_cam_button)  # Add the button to the layout
 
         # -----------------------------------------------------------------------------------------------------------
         # Make new camera groupbox
@@ -61,7 +55,6 @@ class MainWindow(QMainWindow):
         self.camera_name_textbox.setMaximumWidth(150)
         self.camera_name_textbox.setAlignment(Qt.AlignLeft)
 
-
         # "Make Camera" button
         # --------------------------------------------------------------------
         self.make_cam_button = QPushButton("Make Camera")
@@ -70,7 +63,6 @@ class MainWindow(QMainWindow):
 
         self.mnc_box_layout.addWidget(self.camera_name_textbox)
         self.mnc_box_layout.addWidget(self.make_cam_button)
-
 
         # -----------------------------------------------------------------------------------------------------------
         # Image format groupbox
@@ -102,7 +94,6 @@ class MainWindow(QMainWindow):
         self.height_textbox.setMaximumWidth(50)
 
         self.height_label = QLabel("height")
-
 
         self.res_box_layout.addWidget(self.width_textbox)
         self.res_box_layout.addWidget(self.width_label)
@@ -156,14 +147,14 @@ class MainWindow(QMainWindow):
         widget.setLayout(self.main_layout)
         self.setCentralWidget(widget)
 
-
-    def getRenderCamera(self):
+    @staticmethod
+    def getRenderCamera():
 
         cameras_list = cmds.listCameras()
         camera = ""
 
         for i in cameras_list:
-            if cmds.getAttr(i + '.renderable') == True:
+            if cmds.getAttr(i + '.renderable'):
                 camera = i
         if camera == "":
             camera = cameras_list[0]
@@ -183,7 +174,8 @@ class MainWindow(QMainWindow):
             cmds.setAttr(self.getRenderCamera() + '.renderable', False)
             cmds.setAttr(dropdown_cam + '.renderable', True)
 
-    def MakeCamera(self, camera_name):
+    @staticmethod
+    def MakeCamera(camera_name):
         cmds.camera(name=camera_name)
         cmds.rename(camera_name + '1', camera_name)
 
@@ -201,7 +193,7 @@ class MainWindow(QMainWindow):
 
         current_width = cmds.getAttr('defaultResolution.width')
         current_height = cmds.getAttr('defaultResolution.height')
-        
+
         width = int(self.width_textbox.text())
         height = int(self.height_textbox.text())
 
@@ -213,10 +205,9 @@ class MainWindow(QMainWindow):
         cmds.setAttr("defaultResolution.width", current_width)
         cmds.setAttr("defaultResolution.height", current_height)
 
+
 mainWin = MainWindow()
 mainWin.show()
-
-
 
 # # To do:
 # # Set renderable camera - done (cameras?)
