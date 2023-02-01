@@ -1,0 +1,693 @@
+import shotgun_api3
+import pprint
+
+# Setting default fields of interest
+HUMAN_USER_FIELDS = [
+    "name",
+    "sg_status_list",
+    "email",
+    "permission_rule_set",
+    "projects",
+    "groups",
+]
+CLIENT_USER_FIELDS = [
+    "name",
+    "firstname",
+    "lastname",
+    "sg_status_list",
+    "email",
+    "permission_rule_set",
+    "projects",
+    "groups",
+]
+API_USER_FIELDS = [
+    "firstname",
+    "description",
+    "id",
+    "email",
+    "permission_rule_set",
+    "projects",
+    "lastname",
+    "salted_password",
+]
+PROJECT_FIELDS = ["name", "id", "sg_description", "sg_status", "users", "tank_name"]
+EPISODE_FIELDS = [
+    "project",
+    "code",
+    "id",
+    "description",
+    "sg_status_list",
+    "sequences",
+]
+SEQUENCE_FIELDS = [
+    "project",
+    "code",
+    "id",
+    "description",
+    "sg_status_list",
+    "shots",
+    "assets",
+]
+SHOT_FIELDS = ["project", "code", "id", "sg_status_list", "sg_cut_duration", "assets"]
+ASSET_FIELDS = ["project", "code", "id", "sg_status_list", "sg_asset_type", "parents"]
+TASK_FIELDS = [
+    "project",
+    "content",
+    "id",
+    "entity",
+    "step",
+    "sg_status_list",
+    "task_assignees",
+    "task_reviewers",
+    "start_date",
+    "due_date",
+    "duration",
+]
+VERSION_FIELDS = ["project", "code", "id", "sg_status_list", "user"]
+
+# Creating an API instance
+def get_shotgrid(url="https://cphbom.shotgrid.autodesk.com/", script="", key=""):
+    return shotgun_api3.Shotgun(url, script_name=script, api_key=key)
+
+
+sg = get_shotgrid(script="cobopipe", key="fbda0Jg$zihrnynjqhiaywhic")
+
+
+class HumanUser:
+    def __init__(self, fields=HUMAN_USER_FIELDS, auto_update=True, **kwargs):
+        if not kwargs:
+            raise ValueError("Missing identifying keyword arguments like name or id")
+
+        self.fields = fields
+        self.type = self.__class__.__name__
+
+        for variable, value in kwargs.items():
+            if variable in self.fields:
+                exec(f"self.{variable} = {repr(value)}")
+
+        if auto_update:
+            self.update()
+
+    def update(self):
+        update_entity(self)
+        self.identity = {"type": self.type, "id": self.id}
+
+    def __repr__(self):
+        return repr_entity(self)
+
+    def __str__(self):
+        return str_entity(self)
+
+    def __getattr__(self, name: str):
+        return self.__dict__[f"{name}"]
+
+
+class ClientUser:
+    def __init__(self, fields=CLIENT_USER_FIELDS, auto_update=True, **kwargs):
+        if not kwargs:
+            raise ValueError("Missing identifying keyword arguments like name or id")
+
+        self.fields = fields
+        self.type = self.__class__.__name__
+
+        for variable, value in kwargs.items():
+            if variable in self.fields:
+                exec(f"self.{variable} = {repr(value)}")
+
+        if auto_update:
+            self.update()
+
+    def update(self):
+        update_entity(self)
+        self.identity = {"type": self.type, "id": self.id}
+
+    def __repr__(self):
+        return repr_entity(self)
+
+    def __str__(self):
+        return str_entity(self)
+
+    def __getattr__(self, name: str):
+        return self.__dict__[f"{name}"]
+
+
+class ApiUser:
+    def __init__(self, fields=API_USER_FIELDS, auto_update=True, **kwargs):
+        if not kwargs:
+            raise ValueError("Missing identifying keyword arguments like name or id")
+
+        self.fields = fields
+        self.type = self.__class__.__name__
+
+        for variable, value in kwargs.items():
+            if variable == "name":
+                self.firstname = value
+            elif variable == "version":
+                self.lastname = value
+            elif variable in self.fields:
+                exec(f"self.{variable} = {repr(value)}")
+
+        if auto_update:
+            self.update()
+
+    def update(self):
+        update_entity(self)
+        self.identity = {"type": self.type, "id": self.id}
+
+    def __repr__(self):
+        return repr_entity(self)
+
+    def __str__(self):
+        return str_entity(self)
+
+    def __getattr__(self, name: str):
+        if name == "name":
+            return self.firstname
+        elif name == "version":
+            return self.lastname
+        else:
+            return self.__dict__[f"{name}"]
+
+
+class Project:
+    def __init__(self, fields=PROJECT_FIELDS, auto_update=True, **kwargs):
+        if not kwargs:
+            raise ValueError("Missing identifying keyword arguments like name or id")
+
+        self.fields = fields
+        self.type = self.__class__.__name__
+
+        for variable, value in kwargs.items():
+            if variable in self.fields:
+                exec(f"self.{variable} = {repr(value)}")
+
+        if auto_update:
+            self.update()
+
+    def update(self):
+        update_entity(self)
+        self.identity = {"type": self.type, "id": self.id}
+
+    def __repr__(self):
+        return repr_entity(self)
+
+    def __str__(self):
+        return str_entity(self)
+
+    def get_users(self, auto_update=True):
+        users = []
+        for user in self.users:
+            users.append(HumanUser(**user, auto_update=auto_update))
+        return users
+
+    def get_episodes(self, fields=EPISODE_FIELDS, extra_filters=[], auto_update=True):
+        return get_entity(
+            self.identity,
+            self.type,
+            "episode",
+            fields,
+            Episode,
+            extra_filters,
+            auto_update=auto_update,
+        )
+
+    def get_sequences(self, fields=SEQUENCE_FIELDS, extra_filters=[], auto_update=True):
+        return get_entity(
+            self.identity,
+            self.type,
+            "sequence",
+            fields,
+            Sequence,
+            extra_filters,
+            auto_update=auto_update,
+        )
+
+    def get_shots(self, fields=SHOT_FIELDS, extra_filters=[], auto_update=True):
+        return get_entity(
+            self.identity,
+            self.type,
+            "shot",
+            fields,
+            Shot,
+            extra_filters,
+            auto_update=auto_update,
+        )
+
+    def get_assets(self, fields=ASSET_FIELDS, extra_filters=[], auto_update=True):
+        return get_entity(
+            self.identity,
+            self.type,
+            "asset",
+            fields,
+            Asset,
+            extra_filters,
+            auto_update=auto_update,
+        )
+
+    def get_tasks(self, fields=TASK_FIELDS, extra_filters=[], auto_update=True):
+        return get_entity(
+            self.identity,
+            self.type,
+            "task",
+            fields,
+            Task,
+            extra_filters,
+            auto_update=auto_update,
+        )
+
+    def get_versions(self, fields=VERSION_FIELDS, extra_filters=[], auto_update=True):
+        return get_entity(
+            self.identity,
+            self.type,
+            "version",
+            fields,
+            Version,
+            extra_filters,
+            auto_update=auto_update,
+        )
+
+    def __getattr__(self, name: str):
+        return_dictionary = {
+            "users": self.get_users,
+            "episodes": self.get_episodes,
+            "sequences": self.get_sequences,
+            "shots": self.get_shots,
+            "assets": self.get_assets,
+            "tasks": self.get_tasks,
+            "versions": self.get_versions,
+        }
+
+        if name in return_dictionary.keys():
+            return return_dictionary[name]()
+        else:
+            self.__dict__[f"{name}"]
+
+
+class Episode:
+    def __init__(self, fields=EPISODE_FIELDS, auto_update=True, **kwargs):
+        if not kwargs:
+            raise ValueError("Missing identifying keyword arguments like name or id")
+
+        self.fields = fields
+        self.type = self.__class__.__name__
+
+        for variable, value in kwargs.items():
+            if variable == "name":
+                self.code = value
+            if variable in self.fields:
+                exec(f"self.{variable} = {repr(value)}")
+
+        if auto_update:
+            self.update()
+
+    def update(self):
+        update_entity(self)
+        self.identity = {"type": self.type, "id": self.id}
+
+    def __repr__(self):
+        return repr_entity(self)
+
+    def __str__(self):
+        return str_entity(self)
+
+    def get_sequences(self, auto_update=True):
+        sequences = []
+        for sequence in self.sequences:
+            sequences.append(Sequence(**sequence, auto_update=auto_update))
+        return sequences
+
+    def get_shots(self, auto_update=True):
+        shots = []
+        sequences = self.get_sequences()
+        for sequence in sequences:
+            shots = shots + sequence.get_shots(auto_update=auto_update)
+        return shots
+
+    def get_assets(self, fields=ASSET_FIELDS, extra_filters=[], auto_update=True):
+        return get_entity(
+            self.identity,
+            "episodes",
+            "asset",
+            fields,
+            Asset,
+            extra_filters,
+            auto_update=auto_update,
+        )
+
+    def get_tasks(self, fields=TASK_FIELDS, extra_filters=[], auto_update=True):
+        return get_entity(
+            self.identity,
+            "entity",
+            "task",
+            fields,
+            Asset,
+            extra_filters,
+            auto_update=auto_update,
+        )
+
+    def get_versions(self, fields=VERSION_FIELDS, extra_filters=[], auto_update=True):
+        return get_entity(
+            self.identity,
+            "entity",
+            "version",
+            fields,
+            Version,
+            extra_filters,
+            auto_update=auto_update,
+        )
+
+    def __getattr__(self, name: str):
+        if name == "name":
+            return self.__dict__["code"]
+        else:
+            return self.__dict__[f"{name}"]
+
+
+class Sequence:
+    def __init__(self, fields=SEQUENCE_FIELDS, auto_update=True, **kwargs):
+        if not kwargs:
+            raise ValueError("Missing identifying keyword arguments like name or id")
+
+        self.fields = fields
+        self.type = self.__class__.__name__
+
+        for variable, value in kwargs.items():
+            if variable == "name":
+                self.code = value
+            if variable in self.fields:
+                exec(f"self.{variable} = {repr(value)}")
+
+        if auto_update:
+            self.update()
+
+    def update(self):
+        update_entity(self)
+        self.identity = {"type": self.type, "id": self.id}
+
+    def __repr__(self):
+        return repr_entity(self)
+
+    def __str__(self):
+        return str_entity(self)
+
+    def get_shots(self, auto_update=True):
+        shots = []
+        for shot in self.shots:
+            shots.append(Shot(**shot, auto_update=auto_update))
+        return shots
+
+    def get_assets(self, auto_update=True):
+        assets = []
+        for asset in self.assets:
+            assets.append(Asset(**asset, auto_update=auto_update))
+        return assets
+
+    def get_tasks(self, fields=TASK_FIELDS, extra_filters=[], auto_update=True):
+        return get_entity(
+            self.identity,
+            "entity",
+            "task",
+            fields,
+            Task,
+            extra_filters,
+            auto_update=auto_update,
+        )
+
+    def get_versions(self, fields=VERSION_FIELDS, extra_filters=[], auto_update=True):
+        return get_entity(
+            self.identity,
+            "entity",
+            "version",
+            fields,
+            Version,
+            extra_filters,
+            auto_update=auto_update,
+        )
+
+    def __getattr__(self, name: str):
+        if name == "name":
+            return self.__dict__["code"]
+        else:
+            return self.__dict__[f"{name}"]
+
+
+class Shot:
+    def __init__(self, fields=SHOT_FIELDS, auto_update=True, **kwargs):
+        if not kwargs:
+            raise ValueError("Missing identifying keyword arguments like name or id")
+
+        self.fields = fields
+        self.type = self.__class__.__name__
+
+        for variable, value in kwargs.items():
+            if variable == "name":
+                self.code = value
+            if variable in self.fields:
+                exec(f"self.{variable} = {repr(value)}")
+
+        if auto_update:
+            self.update()
+
+    def update(self):
+        update_entity(self)
+        self.identity = {"type": self.type, "id": self.id}
+
+    def __repr__(self):
+        return repr_entity(self)
+
+    def __str__(self):
+        return str_entity(self)
+
+    def get_assets(self, auto_update=True):
+        assets = []
+        for asset in self.assets:
+            assets.append(Asset(**asset, auto_update=auto_update))
+        return assets
+
+    def get_tasks(self, fields=TASK_FIELDS, extra_filters=[], auto_update=True):
+        return get_entity(
+            self.identity,
+            "entity",
+            "task",
+            fields,
+            Task,
+            extra_filters,
+            auto_update=auto_update,
+        )
+
+    def get_versions(self, fields=VERSION_FIELDS, extra_filters=[], auto_update=True):
+        return get_entity(
+            self.identity,
+            "entity",
+            "version",
+            fields,
+            Version,
+            extra_filters,
+            auto_update=auto_update,
+        )
+
+    def __getattr__(self, name: str):
+        if name == "name":
+            return self.__dict__["code"]
+        else:
+            return self.__dict__[f"{name}"]
+
+
+class Asset:
+    def __init__(self, fields=ASSET_FIELDS, auto_update=True, **kwargs):
+        if not kwargs:
+            raise ValueError("Missing identifying keyword arguments like name or id")
+
+        self.fields = fields
+        self.type = self.__class__.__name__
+
+        for variable, value in kwargs.items():
+            if variable == "name":
+                self.code = value
+            if variable in self.fields:
+                exec(f"self.{variable} = {repr(value)}")
+
+        if auto_update:
+            self.update()
+
+    def update(self):
+        update_entity(self)
+        self.identity = {"type": self.type, "id": self.id}
+
+    def __repr__(self):
+        return repr_entity(self)
+
+    def __str__(self):
+        return str_entity(self)
+
+    def get_tasks(self, fields=TASK_FIELDS, extra_filters=[], auto_update=True):
+        return get_entity(
+            self.identity,
+            "entity",
+            "task",
+            fields,
+            Task,
+            extra_filters,
+            auto_update=auto_update,
+        )
+
+    def get_versions(self, fields=VERSION_FIELDS, extra_filters=[], auto_update=True):
+        return get_entity(
+            self.identity,
+            "entity",
+            "version",
+            fields,
+            Version,
+            extra_filters,
+            auto_update=auto_update,
+        )
+
+    def __getattr__(self, name: str):
+        if name == "name":
+            return self.__dict__["code"]
+        else:
+            return self.__dict__[f"{name}"]
+
+
+class Task:
+    def __init__(self, fields=TASK_FIELDS, auto_update=True, **kwargs):
+        if not kwargs:
+            raise ValueError("Missing identifying keyword arguments like name or id")
+
+        self.fields = fields
+        self.type = self.__class__.__name__
+
+        for variable, value in kwargs.items():
+            if variable == "name":
+                self.content = value
+            if variable in self.fields:
+                exec(f"self.{variable} = {repr(value)}")
+
+        if auto_update:
+            self.update()
+
+    def update(self):
+        update_entity(self)
+        self.identity = {"type": self.type, "id": self.id}
+
+    def __repr__(self):
+        return repr_entity(self)
+
+    def __str__(self):
+        return str_entity(self)
+
+    def get_versions(self, auto_update=True):
+        versions = []
+        for version in self.sg_versions:
+            versions.append(Version(**version, auto_update=auto_update))
+
+    def get_artists(self):
+        artists = []
+        for user in self.task_assignees:
+            artists.append(HumanUser(**user))
+        return artists
+
+    def get_reviewers(self):
+        reviewers = []
+        for user in self.task_reviewers:
+            reviewers.append(HumanUser(**user))
+        return reviewers
+
+    def __getattr__(self, name: str):
+        if name == "name":
+            return self.__dict__["content"]
+        else:
+            return self.__dict__[f"{name}"]
+
+
+class Version:
+    def __init__(self, fields=VERSION_FIELDS, auto_update=True, **kwargs):
+        if not kwargs:
+            raise ValueError("Missing identifying keyword arguments like name or id")
+
+        self.fields = fields
+        self.type = self.__class__.__name__
+
+        for variable, value in kwargs.items():
+            if variable == "name":
+                self.code = value
+            if variable in self.fields:
+                exec(f"self.{variable} = {repr(value)}")
+
+        if auto_update:
+            self.update()
+
+    def update(self):
+        update_entity(self)
+        self.identity = {"type": self.type, "id": self.id}
+
+    def __repr__(self):
+        return repr_entity(self)
+
+    def __str__(self):
+        return str_entity(self)
+
+    def get_artist(self):
+        return HumanUser(**self.user)
+
+    def get_task(self):
+        return Task(**self.sg_task)
+
+    def __getattr__(self, name: str):
+        if name == "name":
+            return self.__dict__["content"]
+        else:
+            return self.__dict__[f"{name}"]
+
+
+def repr_entity(self):
+    return f"<ShotGrid.{self.__class__.__name__} object>"
+
+
+def str_entity(self):
+    _string = f"\n<ShotGrid.{self.__class__.__name__} object>\n"
+    for variable, value in self.__dict__.items():
+        if variable in self.fields:
+            _string = _string + f"{variable:<10} \t{pprint.pformat(value)}\n"
+    return _string
+
+
+def get_entity(
+    source_identity,
+    source_type,
+    target_type,
+    fields,
+    return_class,
+    extra_filters=[],
+    auto_update=True,
+):
+    filters = [[source_type.lower(), "is", source_identity]]
+    filters = filters + extra_filters
+    data = sg.find(target_type.capitalize(), filters=filters, fields=fields)
+    objects = []
+    for entity in data:
+        objects.append(return_class(_update=False, auto_update=auto_update, **entity))
+    return objects
+
+
+def update_entity(self):
+    filters = []
+    for variable, value in self.__dict__.items():
+        if variable in self.fields:
+            if value:
+                filters.append([variable, "is", value])
+
+    if not filters:
+        raise ValueError("Missing filter data")
+
+    # print(f"\n\nfilters: {filters}\nfields: {self.fields}\n\n")
+    data = sg.find(self.type, filters=filters, fields=self.fields)
+    if not data:
+        return
+    for variable, value in data[0].items():
+        exec(f"self.{variable} = {repr(value)}")
+
+
+if __name__ == "__main__":
+    script = ApiUser(name="cobopipe")
+    print(script.name)

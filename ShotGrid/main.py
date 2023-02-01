@@ -16,5 +16,15 @@ def create_shot_example():
         "code": "E01_SQ020_SH010"}
     sg.create('Shot', data)
 
+# def change_shot_names_example(ep):
+#     filters = [['code', 'is', 'E01_SQ010']]
+#     data = ['shots']
+#     result = sg.find('Sequence', filters, data)[0]['shots']
+#     for shot in result:
+#         new_name = shot['name'].replace('E01', 'S105')
+#         data = {'code': new_name}
+#         sg.update('Shot', shot['id'], data)
+
 if __name__ == '__main__':
-    sg = get_shotgrid(script="Test01", key="p8s(jidcqwkypsitmpmsuasQu")
+    sg = get_shotgrid(script="cobopipe", key="fbda0Jg$zihrnynjqhiaywhic")
+    print(query_data_example())

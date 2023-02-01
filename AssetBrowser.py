@@ -724,10 +724,13 @@ class MainWindow(QtWidgets.QWidget):
 			if not choice == "cancel":
 				thumb_path = CC.get_asset_thumbnail_path(**cur_node.GetAssetInfo())
 				thumb_folder, thumb_file = os.path.split(thumb_path)
+				print(thumb_folder)
 				if not os.path.exists(thumb_folder):
 					os.makedirs(thumb_folder)
 				if choice == "Render": #Save image in vray frame buffer!
-					mel.eval('vray vfbControl -saveimage "%s"' % thumb_path)
+					noext = os.path.splitext(thumb_path)[0]
+					self.SetRenderer(noext)
+				
 				elif choice == "Viewport": #Save image from maya viewport
 					# mel.eval('vray hideVFB')
 					view = apiUI.M3dView.active3dView()
@@ -739,6 +742,52 @@ class MainWindow(QtWidgets.QWidget):
 				c_pix = convertPathToPixmap(thumb_path,300,300,added_name="_Big",overwrite=True)
 				self.tab4AssetThumbnailHolder.setPixmap(c_pix)
 
+	def getRenderCamera(self):
+
+		cameras_list = cmds.listCameras()
+		camera = ""
+
+		for i in cameras_list:
+			if cmds.getAttr(i + '.renderable') == True:
+				camera = i
+			if camera == "":
+				camera = cameras_list[0]
+				return camera
+			else:
+				return camera
+
+	def SetRenderer(self, render_dir):
+		current_width = cmds.getAttr('defaultResolution.width')
+		current_height = cmds.getAttr('defaultResolution.height')
+  
+		width = 122
+		height = 90
+		
+		if cmds.getAttr("defaultRenderGlobals.currentRenderer") != CC.project_settings['maya_render']:
+			cmds.setAttr("defaultRenderGlobals.currentRenderer", CC.project_settings['maya_render'], type="string")
+
+		cmds.setAttr("defaultArnoldDriver.aiTranslator", "png", type="string")
+		cmds.setAttr('defaultRenderGlobals.imageFilePrefix', render_dir, type="string")
+		
+
+		cmds.setAttr("defaultResolution.width", width)
+		cmds.setAttr("defaultResolution.height", height)
+		
+		cmds.arnoldRender(cam=self.getRenderCamera(), width=width, height=height, seq=None)
+
+		old_name = cmds.getAttr('defaultRenderGlobals.imageFilePrefix') + '_1' + ".png"
+		print(old_name)
+		new_name = render_dir + ".png"
+		print(new_name)
+		os.rename(old_name, new_name)
+
+		cmds.setAttr("defaultResolution.width", current_width)
+		cmds.setAttr("defaultResolution.height", current_height)		
+  
+  
+
+    	
+ 
 	def RefreshTab1(self):
 		if self.chosen_node.GetNodeType() == "asset":  # Changed to look for asset type instead of if it had children
 			self.ShowQuickView(False)
