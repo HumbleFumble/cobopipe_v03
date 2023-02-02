@@ -19,7 +19,7 @@
 # pr = cProfile.Profile()
 from Log.CoboLoggers import getLogger
 logger = getLogger()
-
+from maya import mel
 #import ClearImportedModules as CIM
 #CIM.dropCachedImports("PublishAssets.PublishSetdress","PublishAssets.PublishSet","PublishAssets.PublishProp","PublishAssets.PublishChar","PublishAssets.PublishMaster", "AssetFunctions","Maya_Functions.asset_util_functions","Maya_Functions.publish_util_functions","Maya_Functions.set_util_functions","Maya_Functions.vray_util_functions","Maya_Functions.general_util_functions","getConfig","ClearImportedModules")
 from PySide2 import QtWidgets, QtCore, QtGui
@@ -755,29 +755,18 @@ class MainWindow(QtWidgets.QWidget):
 		except:
 			cmds.warning("Please be sure that the right panel has focus")
 			return False
-		# print(cam,cam_shape)
-		# return cam_shape
 
-
-		# cameras_list = cmds.listCameras()
-		# camera = ""
-		#
-		# for i in cameras_list:
-		# 	if cmds.getAttr(i + '.renderable') == True:
-		# 		camera = i
-		# 	if camera == "":
-		# 		camera = cameras_list[0]
-		# 		return camera
-		# 	else:
-		# 		return camera
 
 	def SetRenderer(self, render_dir):
+		# Get current render width and height
 		current_width = cmds.getAttr('defaultResolution.width')
 		current_height = cmds.getAttr('defaultResolution.height')
 
+		# Set resolution parameters
 		width = 960
 		height = 540
-		
+
+		# Set current renderer to the project renderer
 		if cmds.getAttr("defaultRenderGlobals.currentRenderer") != CC.project_settings['maya_render']:
 			cmds.setAttr("defaultRenderGlobals.currentRenderer", CC.project_settings['maya_render'], type="string")
 		if CC.project_settings['maya_render'] == "vray":
@@ -786,7 +775,7 @@ class MainWindow(QtWidgets.QWidget):
 			cmds.setAttr("defaultArnoldDriver.aiTranslator", "png", type="string")
 			cmds.setAttr('defaultRenderGlobals.imageFilePrefix', render_dir, type="string")
 
-
+			# Set resolution
 			cmds.setAttr("defaultResolution.width", width)
 			cmds.setAttr("defaultResolution.height", height)
 			render_cam = self.getRenderCamera()
@@ -794,15 +783,16 @@ class MainWindow(QtWidgets.QWidget):
 				cmds.arnoldRender(cam=render_cam, width=width, height=height, seq=None)
 
 				old_name = cmds.getAttr('defaultRenderGlobals.imageFilePrefix') + '_1' + ".png"
-				# old_name = cmds.getAttr('defaultRenderGlobals.imageFilePrefix') + ".png"
 				new_name = render_dir + ".png"
 				if os.path.exists(new_name):
 					os.remove(new_name)
 				os.rename(old_name, new_name)
 
+			# Set resolution back to what it was before
 			cmds.setAttr("defaultResolution.width", current_width)
 			cmds.setAttr("defaultResolution.height", current_height)
-
+		# Set image name/location empty
+		cmds.setAttr('defaultRenderGlobals.imageFilePrefix', '', type="string")
   
   
 
