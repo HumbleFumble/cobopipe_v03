@@ -30,7 +30,7 @@
   'referrer_path': ['/detail/HumanUser/89'],
   'selected_ids': ['6041'],
   'server_hostname': ['cphbom.shotgrid.autodesk.com'],
-  'session_uuid': ['82688ab0-a3ba-11ed-b72b-0242ac110005'],
+  'session_uuid': ['417ec422-a3cb-11ed-ab5e-0242ac110008'],
   'sort_column': ['entity'],
   'sort_direction': ['asc'],
   'target_column': ['content'],
