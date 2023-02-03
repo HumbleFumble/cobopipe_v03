@@ -23,8 +23,9 @@ def main(args):
 
 
 if __name__ == '__main__':
-    print('Running :D')
-    fh = open(r'C:\Users\mha\Projects\cobopipe_v02-001\ShotGrid\output.txt', 'w')
-    fh.write('Hello :D')
-    fh.close()
+    # print('Running :D')
+    # fh = open(r'C:\Users\mha\Projects\cobopipe_v02-001\ShotGrid\output.txt', 'w+')
+    # for arg in sys.argv:
+    #     fh.write(arg + "\n")
+    # fh.close()
     sys.exit(main(sys.argv[1:]))

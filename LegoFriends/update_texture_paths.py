@@ -40,3 +40,5 @@ def update_texture_paths():
                         number_of_spaces = 50 - len(node)
                         spaces = ' ' * number_of_spaces
                         print(' > ' + node + spaces + '  -->  ' + os.path.join(root, file))
+
+    print('\n   ... Done ...\n')
