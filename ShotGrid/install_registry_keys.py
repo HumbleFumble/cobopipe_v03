@@ -13,5 +13,5 @@ def install():
     os.remove(new_file_path)
     print('\n\n > Done\n')
 
-if __file__ == "__main__":
+if __name__ == "__main__":
     install()
