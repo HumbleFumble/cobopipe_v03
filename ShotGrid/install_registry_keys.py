@@ -9,7 +9,8 @@ def install():
     new_file_path = os.path.join(f'C:\\Users\\{os.getlogin()}\\Desktop', file_name)
     shutil.copy(file_path, new_file_path)
     command = f"regedit.exe /S {new_file_path}"
-    subprocess.Popen(command, shell=True)
+    process = subprocess.Popen(command, shell=True)
+    process.communicate()
     os.remove(new_file_path)
     print('\n\n > Done\n')
 
