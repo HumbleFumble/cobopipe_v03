@@ -12,7 +12,7 @@ def install():
     process = subprocess.Popen(command, shell=True)
     process.communicate()
     os.remove(new_file_path)
-    print('\n\n > Done\n')
+    print('\n\n   >> Done <<   \n')
 
 if __name__ == "__main__":
     install()
