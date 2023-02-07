@@ -20,6 +20,8 @@
 from Log.CoboLoggers import getLogger
 logger = getLogger()
 from maya import mel
+
+import runtimeEnv as runtime
 #import ClearImportedModules as CIM
 #CIM.dropCachedImports("PublishAssets.PublishSetdress","PublishAssets.PublishSet","PublishAssets.PublishProp","PublishAssets.PublishChar","PublishAssets.PublishMaster", "AssetFunctions","Maya_Functions.asset_util_functions","Maya_Functions.publish_util_functions","Maya_Functions.set_util_functions","Maya_Functions.vray_util_functions","Maya_Functions.general_util_functions","getConfig","ClearImportedModules")
 from PySide2 import QtWidgets, QtCore, QtGui
@@ -824,11 +826,12 @@ class MainWindow(QtWidgets.QWidget):
 		path_to_display = "/%s/%s/%s" %(self.tab3TypeDropdown.currentText(),self.tab3CategoryDropdown.currentText(),self.tab3NameTextField.text())
 		self.tab3Path.setText(path_to_display)
 
-	def RefreshPopup(self):
-		if self.popupSyncEnableRadioButton.isChecked():
-			self.UpdateDropdownTab3()
-		path_to_display = "/%s/%s/%s" %(self.popupTypeDropdown.currentText(),self.popupCategoryDropdown.currentText(),self.popupNameTextField.text())
-		self.popupPath.setText(path_to_display)
+	# def RefreshPopup(self):
+	# 	if self.popupSyncEnableRadioButton.isChecked():
+	# 		self.UpdateDropdownPopup()
+	# 	path_to_display = "/%s/%s/%s" %(self.popupTypeDropdown.currentText(),self.popupCategoryDropdown.currentText(),self.popupNameTextField.text())
+	# 	print(path_to_display)
+	# 	self.popupPath.setText(path_to_display)
 
 	def RefreshTab4(self):  # initiate the publish window
 			if in_maya:
@@ -895,6 +898,7 @@ class MainWindow(QtWidgets.QWidget):
 
 		# self.publish_step_types = ["Model", "Rig", "Shading"]
 		self.publish_step_types = [x.text() for x in self.tab4FilesToPublish if x.isChecked()]
+		print(self.tab4FilesToPublish)
 		# from PublishAssets import PublishMaster
 		import PublishAssets.PublishMaster
 		if self.tab4CurrentRadioButton.isChecked():
@@ -1039,7 +1043,9 @@ class MainWindow(QtWidgets.QWidget):
 					fileToOpen = "%s" % (node.GetPath())
 					self.OpenDir(fileToOpen)
 				if action.text() == "Duplicate":
-					self.DuplicatePopup()
+					self.DuplicatePopup(node)
+					self.UpdateDropdownPopup()
+
 
 		return QtWidgets.QWidget.eventFilter(self, source, event) #Tried using this methode instead of:  return super(MainWindow, self).eventFilter(source, event)
 
@@ -1498,11 +1504,11 @@ class MainWindow(QtWidgets.QWidget):
 		self.tab3NameTextField.clear()
 
 
-	def PopupCreateAsset(self):
-
+	def DuplicateAsset(self,orig_asset_info=None):
+		orig_asset_info["asset_name"] = orig_asset_info["node_name"]
 		asset_dict = {"asset_type": self.popupTypeDropdown.currentText(),
 					  "asset_category": self.popupCategoryDropdown.currentText(),
-					  "asset_name": self.popupNameTextField.text(),"node_name":self.popupNameTextField.text(),"node_type":"asset",}
+					  "asset_name": self.popupNameTextField.text(),"node_name":self.popupNameTextField.text(),"node_type":"asset"}
 		create_path = CC.get_asset_base_path(**asset_dict)
 		asset_dict["path"]=create_path
 
@@ -1517,7 +1523,7 @@ class MainWindow(QtWidgets.QWidget):
 			return False
 		else:
 
-			create_class = AF.CreateAsset(asset_info=asset_dict) 	#initiate the create class
+			create_class = AF.DuplicateAsset(orig_asset_info=orig_asset_info,asset_info=asset_dict) 	#initiate the create class
 			create_class.Run() 										#Run the asset creations /folder copy and name replacing.
 
 		if self.popupOpenAfterCheckbox.isChecked():
@@ -1530,10 +1536,52 @@ class MainWindow(QtWidgets.QWidget):
 				if c.GetAssetType()==asset_dict["asset_type"]:
 					asset_parent = c
 
-		self.insertNewNode(name=asset_dict["node_name"],node_type="asset",
+		node = self.insertNewNode(name=asset_dict["node_name"],node_type="asset",
 						   path=asset_dict["path"], asset_category=asset_dict["asset_category"],
 						   asset_type=asset_dict["asset_type"],parent=asset_parent)
 		self.popupNameTextField.clear()
+
+		# ea_asset_type = self.popupTypeDropdown.currentText()
+		# ea_category = self.popupCategoryDropdown.currentText()
+		# ea_name = self.popupNameTextField.text()
+
+		import PublishAssets.PublishMaster
+		for c_step in CC.ref_steps[asset_dict["asset_type"]]:
+			asset_dict["asset_step"] = c_step
+			w_path = CC.get_asset_work_file(**asset_dict)
+			if os.path.exists(w_path):
+				if c_step in ["Base", "Rig"]:
+					print("FOUND %s" % c_step)
+
+					script_content = f"""import sys
+import maya.standalone
+maya.standalone.initialize('python')
+import maya.cmds as cmds
+path_rig = '{w_path}'
+cmds.file(path_rig, open=True,f=True)
+cmds.setAttr('Root_Group.asset_type', '{asset_dict["asset_type"]}', type='string')
+cmds.setAttr('Root_Group.asset_category', '{asset_dict["asset_category"]}', type='string')
+cmds.setAttr('Root_Group.asset_name', '{asset_dict["asset_name"]}', type='string')
+cmds.file(save=True,f=True)
+"""
+					script_content = ";".join(script_content.split("\n"))
+					base_command = 'mayapy.exe -c "%s"' % (script_content)
+					logger.info(base_command)
+					print(base_command)
+					rc = subprocess.Popen(base_command, shell=False, universal_newlines=True, env=runtime.getRuntimeEnvFromConfig(CC),stdout=subprocess.PIPE,
+								  stderr=subprocess.PIPE)
+					print_out = rc.communicate()
+
+				PubClass = PublishAssets.PublishMaster.ReadyPublish(asset_info=asset_dict)
+				pub_success = PubClass.StartPublish()
+
+
+		# Check if "Open file" is checked
+		# If so, open shading
+
+		# self.Publish(node)
+		# Update extra attributes
+
 
 	def insertNewNode(self, name, path, node_type,asset_type=None, asset_category=None, parent=None):
 		new_node = CustomNode(node_name=name, node_type=node_type, children=[],
@@ -1542,6 +1590,10 @@ class MainWindow(QtWidgets.QWidget):
 		parent.addChild(new_node)
 		self.custom_nodes.append(new_node)
 		self.UpdateUI()
+
+		return new_node
+
+
 
 		# expanded_folders = self.tree_model.saveModelState(self.tree, new_node)
 		# self.tree_model = CustomModel(self.custom_nodes, self)
@@ -1553,11 +1605,13 @@ class MainWindow(QtWidgets.QWidget):
 	def UpdateDropdownTab3(self):
 		# ------------------- Create Tab Selected and Synch Enabled -------------------------------------------
 		cur_node = self.chosen_node
+
 		self.tab3TypeDropdown.clear()
 
 		self.tab3TypeDropdown.addItems(list(x.GetAssetType() for x in self.tree_model._root.GetChildren()))
 
 		temp_dict = cur_node.GetAssetInfo()
+		print(temp_dict)
 		if temp_dict["asset_type"]:
 			self.tab3TypeDropdown.setCurrentIndex(self.tab3TypeDropdown.findText(temp_dict["asset_type"]))
 			# type_node = [x for x in self.tree_model._root.GetChildren() if (x.GetName()==temp_dict["asset_type"])][0]
@@ -1568,17 +1622,21 @@ class MainWindow(QtWidgets.QWidget):
 	def UpdateDropdownPopup(self):
 		# ------------------- Create Tab Selected and Synch Enabled -------------------------------------------
 		cur_node = self.chosen_node
+
 		self.popupTypeDropdown.clear()
 
 		self.popupTypeDropdown.addItems(list(x.GetAssetType() for x in self.tree_model._root.GetChildren()))
 
 		temp_dict = cur_node.GetAssetInfo()
+		print(temp_dict)
 		if temp_dict["asset_type"]:
 			self.popupTypeDropdown.setCurrentIndex(self.popupTypeDropdown.findText(temp_dict["asset_type"]))
 			# type_node = [x for x in self.tree_model._root.GetChildren() if (x.GetName()==temp_dict["asset_type"])][0]
 
 		if temp_dict["asset_category"]:
 			self.popupCategoryDropdown.setCurrentIndex(self.popupCategoryDropdown.findText(temp_dict["asset_category"]))
+		path_to_display = "/%s/%s/%s" % (self.popupTypeDropdown.currentText(), self.popupCategoryDropdown.currentText(), self.popupNameTextField.text())
+		self.popupPath.setText(path_to_display)
 
 	def UpdateCategoryDropdownTab3(self):
 		type_node = self.tree_model._root.GetChildren()[self.tab3TypeDropdown.currentIndex()]
@@ -1643,12 +1701,11 @@ class MainWindow(QtWidgets.QWidget):
 		temp_popup.deleteLater()
 		return to_return
 
-	def DuplicatePopup(self):
+	def DuplicatePopup(self,cur_node):
 		popup = Popup(self, 'Duplicate Asset')
+		popup_Layout = QtWidgets.QGridLayout()
 
-		popupLayout = QtWidgets.QGridLayout()
 		#--------------------------------------------------------------------------------------------
-
 		self.popupTypeDropdown = QtWidgets.QComboBox()
 		self.popupCategoryDropdown = QtWidgets.QComboBox()
 
@@ -1656,31 +1713,9 @@ class MainWindow(QtWidgets.QWidget):
 		self.popupNameTextField.setPlaceholderText("Enter name of new asset here")
 		self.popupNameTextField.setSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
 
-		self.popupSyncEnableRadioButton = QtWidgets.QRadioButton("Synchronize with selected folder")
-		self.popupSyncDisabledRadioButton = QtWidgets.QRadioButton("Free creation")
-		self.popupSyncEnableRadioButton.clicked.connect(partial(self.DisableFreeCreate,False))
-		self.popupSyncDisabledRadioButton.clicked.connect(partial(self.DisableFreeCreate,True))
-		self.popupSyncEnableRadioButton.setChecked(True)
-
 		#--------------------------------------------------------------------------------------------
-		self.popupCreateButton = QtWidgets.QPushButton("Create")
-
-		self.popupCreateButton.clicked.connect(self.PopupCreateAsset)
-		#--------------------------------------------------------------------------------------------
-		self.popupSyncEnabledOrDisabledGroup = QtWidgets.QGroupBox()
-		self.popupSyncEnabledOrDisabledGroup.layout = QtWidgets.QHBoxLayout()
-
-		self.popupSyncEnabledOrDisabledGroup.setAlignment(QtCore.Qt.AlignCenter)
-
-		self.popupSyncEnabledOrDisabled = QtWidgets.QButtonGroup()
-		self.popupSyncEnabledOrDisabled.addButton(self.popupSyncEnableRadioButton)
-		self.popupSyncEnabledOrDisabled.addButton(self.popupSyncDisabledRadioButton)
-		self.popupSyncEnabledOrDisabled.setExclusive(True)
-
-
-		self.popupSyncEnabledOrDisabledGroup.layout.addWidget(self.popupSyncEnableRadioButton)
-		self.popupSyncEnabledOrDisabledGroup.layout.addWidget(self.popupSyncDisabledRadioButton)
-		self.popupSyncEnabledOrDisabledGroup.setLayout(self.popupSyncEnabledOrDisabledGroup.layout)
+		self.popupCreateButton = QtWidgets.QPushButton("Duplicate")
+		self.popupCreateButton.clicked.connect(partial(self.DuplicateAsset, cur_node.GetNodeDict()))
 
 		#--------------------------------------------------------------------------------------------
 		self.popupPathLabel = QtWidgets.QLabel("Create location:")
@@ -1728,21 +1763,21 @@ class MainWindow(QtWidgets.QWidget):
 		self.popupCategoryBox.setLayout(self.popupCategoryBox.layout)
 
 		# --------------------------------------------------------------------------------------------
-		#popupLayout.addWidget(self.popupSyncEnabledOrDisabledGroup, 1, 0, 1, 1)
-		popupLayout.addWidget(self.popupPathLabel, 					2, 0, 1, 1)
-		popupLayout.addWidget(self.popupPathHolder, 				3, 0, 1, 1)
-		popupLayout.addWidget(self.popupTypeLabel, 					4, 0, 1, 1)
-		popupLayout.addWidget(self.popupTypeBox, 					5, 0, 1, 1)
-		popupLayout.addWidget(self.popupCategoryLabel, 				6, 0, 1, 1)
-		popupLayout.addWidget(self.popupCategoryBox, 				7, 0, 1, 1)
-		popupLayout.addWidget(self.popupNameLabel, 					8, 0, 1, 1)
-		popupLayout.addWidget(self.popupNameTextField, 				9, 0, 1, 1)
-		popupLayout.addWidget(self.popupOpenAfterRadioButtonHolder, 10, 0, 1, 1)
-		popupLayout.addWidget(self.popupCreateButton, 				11, 0, 1, 1)
 
-		popupLayout.setAlignment(QtCore.Qt.AlignCenter)
+		popup_Layout.addWidget(self.popupPathLabel, 					1, 0, 1, 1)
+		popup_Layout.addWidget(self.popupPathHolder, 					2, 0, 1, 1)
+		popup_Layout.addWidget(self.popupTypeLabel, 					3, 0, 1, 1)
+		popup_Layout.addWidget(self.popupTypeBox, 						4, 0, 1, 1)
+		popup_Layout.addWidget(self.popupCategoryLabel, 				5, 0, 1, 1)
+		popup_Layout.addWidget(self.popupCategoryBox, 					6, 0, 1, 1)
+		popup_Layout.addWidget(self.popupNameLabel, 					7, 0, 1, 1)
+		popup_Layout.addWidget(self.popupNameTextField, 				8, 0, 1, 1)
+		popup_Layout.addWidget(self.popupOpenAfterRadioButtonHolder, 	9, 0, 1, 1)
+		popup_Layout.addWidget(self.popupCreateButton, 					10, 0, 1, 1)
 
-		popup.setLayout(popupLayout)
+		popup_Layout.setAlignment(QtCore.Qt.AlignCenter)
+
+		popup.setLayout(popup_Layout)
 
 
 		popup.show()

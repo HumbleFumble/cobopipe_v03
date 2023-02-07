@@ -13,6 +13,42 @@ import os
 import shutil
 import re
 
+"""
+ToDo
+Duplicate CreateAsset
+Change so we replace the old asset name with new asset name, instead of "Template"
+
+Also find a way to change the Root_Group attributes
+
+"""
+
+
+# def ExportCamMayaPy(self, shot_path=None, shot_name=None, shot=None):
+#     # TODO Paths are hardcoded a bit, we could pull some of this out and use the config class instead
+#     current_file = "%s/02_Light/%s_Light.ma" % (shot_path, shot_name)
+#     script_content = """import maya.standalone
+# maya.standalone.initialize('python')
+# import maya.cmds as cmds
+# import subprocess
+# import Maya_Functions.publish_util_functions as pub_util
+# cmds.file('%s', open=True,f=True)
+# shot_path = '%s'
+# shot_name = '%s'
+# shot = '%s'
+# pub_util.ExportBakedCamera(shot, shot_path, shot_name)
+# cmds.quit(f=True)
+# """ % (current_file, shot_path, shot_name, shot)
+#     script_content = ";".join(script_content.split("\n"))
+#     base_command = 'mayapy.exe -c "%s"' % (script_content)
+#     logger.debug(base_command)
+#     subprocess.Popen(base_command, shell=False, universal_newlines=True, env=runtime.getRuntimeEnvFromConfig(CC))
+
+
+    # c_p = subprocess.Popen(base_command, shell=False, universal_newlines=True, stdout=subprocess.PIPE)
+    # stdout = c_p.communicate()[0]
+    # print("Saving Render File:\n%s" % stdout)
+    # print("-------------SAVING DONE--------------")
+
 class CreateAsset():
     def __init__(self, asset_info=None):
         # from getConfig import getConfigClass
@@ -32,8 +68,6 @@ class CreateAsset():
         print(asset_info, self.asset_info)
         self.asset_base = CC.get_asset_base_path(**self.asset_info)
         print(self.asset_base)
-
-
 
     def Run(self):
         # TODO RUN check to see if asset already exists?
@@ -74,9 +108,6 @@ class CreateAsset():
             self.CreateRegexDict()
             self.CopyTemplateAndReplace()
         return True
-
-
-
 
     def CopyTemplateAndReplace(self):
         shutil.copytree(self.template_path, self.asset_base)
@@ -145,6 +176,130 @@ class CreateAsset():
         for key in self.reg_dict.keys():
             # print("running regex: %s on %s" % (self.reg_dict[key], cur_path))
             cur_content = re.sub(key,self.reg_dict[key],cur_content)
+        temp = open(cur_path, "w")
+        temp.write(cur_content)
+        temp.close()
+        print("Finished with regex on file: %s" % cur_path)
+        return cur_path
+
+class DuplicateAsset():
+    def __init__(self, orig_asset_info=None, asset_info=None):
+        # from getConfig import getConfigClass
+        # CC = getConfigClass("KiwiStrit3")
+        # import UtilFunctions as UF
+        # self.UF = UF.PublishFunctions()
+        self.orig_asset_info = orig_asset_info
+        self.ref_dict = {}
+        # self._type = _type
+        # self._category = _category
+        # self._name = _name
+        #TODO This could be changed. No reason to have this if statement
+        if asset_info: #If asset_info is not given, can't create new asset :/ No reason to check for it.
+            self.asset_info = asset_info
+        else:
+            self.asset_info = {"asset_type":"", "asset_category":"","asset_name":"","asset_step":""}
+            return
+        print(asset_info, self.asset_info)
+        self.asset_base = CC.get_asset_base_path(**self.asset_info)
+        self.original_asset = CC.get_asset_base_path(**self.orig_asset_info)
+        print(self.asset_base)
+
+    def Run(self):
+        # TODO RUN check to see if asset already exists?
+        if os.path.exists(self.asset_base):
+            print("Asset folder already exists! -> %s"% self.asset_base)
+            return False
+
+        # if self.asset_info["asset_type"] == "Setdress":
+        #     self.template_path = CC.get_template_asset_path(**self.asset_info)
+        #     self.MakeRefPaths()
+        #     self.CreateRegexDict()
+        #
+        #     self.CopyTemplateAndReplace()
+        #     # self.asset_info["asset_step"] = "Base"
+        #
+        # elif self.asset_info["asset_type"] == "Set" or self.asset_info["asset_type"] == "Prop":
+        #     self.template_path = CC.get_template_asset_path(asset_type='Set')
+        #     self.MakeRefPaths()
+        #     self.CreateRegexDict()
+        #
+        #     self.CopyTemplateAndReplace()
+        # elif self.asset_info["asset_type"] == "RigModule":
+        #     self.template_path = CC.get_template_asset_path(**self.asset_info)
+        #     self.MakeRefPaths()
+        #     self.CreateRegexDict()
+        #
+        #     self.CopyTemplateAndReplace()
+        #
+        # elif self.asset_info["asset_type"] == "Char":
+        #     self.template_path = CC.get_template_asset_path(**self.asset_info)
+        #     self.MakeRefPaths()
+        #     self.CreateRegexDict()
+        #     self.CopyTemplateAndReplace()
+        #
+        # elif self.asset_info["asset_type"] == "FX":
+        #     self.template_path = CC.get_template_asset_path(asset_type='Set')
+        #     self.MakeRefPaths()
+        #     self.CreateRegexDict()
+        #     self.CopyTemplateAndReplace()
+
+
+        self.MakeRefPaths()
+        #self.CreateRegexDict()
+
+        self.CopyTemplateAndReplace()
+        return True
+
+    def CopyTemplateAndReplace(self):
+        shutil.copytree(self.original_asset, self.asset_base)
+        # work_path = self.UF.CreatePathFromDict(cfg.project_paths["asset_work_path"], self.asset_info)
+        for dirpath, dirnames, files in os.walk(self.asset_base):
+            for c_file in files:
+                if self.orig_asset_info["asset_name"] in c_file:
+                    file_path = os.path.join(dirpath,c_file)
+
+                    correct_path = file_path.replace(self.orig_asset_info["asset_name"], self.asset_info["asset_name"])
+                    correct_path = correct_path.replace("\\","/")
+                    # print("renaming: %s to %s" % (file_path, correct_path))
+                    os.rename(file_path,correct_path)
+                    if correct_path.endswith(".ma"):
+                        self.ReplaceInMAFile(correct_path)
+
+    def MakeRefPaths(self):
+        # self.asset_info["asset_step"]
+        for c_step in CC.ref_steps[self.asset_info["asset_type"]]:
+            for c_ref in CC.ref_steps[self.asset_info["asset_type"]][c_step]:
+                # self.asset_info["asset_step"]= c_ref
+                self.asset_info['asset_output'] = c_ref
+                my_regex = r"(((?<=\").:.*\/%s.*)(%s).*(?=\"))" % (self.orig_asset_info["asset_name"],c_ref) # (((?<=\").:.*\/Templates.*)(Model).*(?=\"))
+                # asset_ref = cfg_util.CreatePathFromDict(cfg.ref_paths[c_ref], self.asset_info)
+                asset_ref_function = getattr(CC,"get_%s" % c_ref)
+                asset_ref = asset_ref_function(**self.asset_info)
+                # temp_ref = asset_ref.replace(self.asset_base,self.template_path)
+                # self.ref_dict[temp_ref] = asset_ref
+                self.ref_dict[my_regex] = asset_ref
+        print(self.ref_dict)
+
+    # def CreateRegexDict(self):
+    #     replace_dict = {"ReplaceName":[self._type],
+    #                     "ReplaceType":[self._category],
+    #                     "ReplaceCategory":[self._name]}
+    #     replace_dict.update(self.ref_dict)
+    #     for key in replace_dict.keys():
+    #         if not replace_dict[key] == "":
+    #             # print("Replace key: %s : %s |" % (key, replace_dict[key]))
+    #             self.reg_dict[re.compile(key)] = replace_dict[key]
+
+    def ReplaceInMAFile(self, cur_path):
+
+        #(((? <= \").:.*/Templates.*)(?=\")) regex for finding template ref paths in ma files
+        print("opening and running regex on file: %s" % cur_path)
+        cur_file = open(cur_path, "r")
+        cur_content = cur_file.read()
+        cur_file.close()
+        #print(self.ref_dict.keys())
+        for cur_key in self.ref_dict.keys():
+            cur_content = re.sub(cur_key, self.ref_dict[cur_key], cur_content)
         temp = open(cur_path, "w")
         temp.write(cur_content)
         temp.close()
