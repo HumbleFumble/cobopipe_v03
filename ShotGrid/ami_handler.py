@@ -25,9 +25,9 @@ def main(args):
     fh.write(pprint.pformat((action, params)))
     fh.close()
 
-    project = sg.Project(name=params['project_name'], id=params['project_id'])
-    CC = getConfigClass(project_name=project.code)
-    runtime_environment = getRuntimeEnvFromConfig(config_class=CC)
+    # project = sg.Project(name=params['project_name'], id=params['project_id'])
+    # CC = getConfigClass(project_name=project.code)
+    # runtime_environment = getRuntimeEnvFromConfig(config_class=CC)
 
     # if params['entity_type'][0] == 'Task':
     #     task = sg.Task(id=params['selected_ids'][0])
@@ -35,12 +35,10 @@ def main(args):
     #     fh.write(pprint.pformat(task.name))
     #     fh.close()
 
-    os.sleep(5000)
-
 if __name__ == '__main__':
-    print('Running :D')
-    fh = open(r'C:\Users\mha\Projects\cobopipe_v02-001\ShotGrid\output.txt', 'w+')
-    for arg in sys.argv:
-        fh.write(arg + "\n")
-    fh.close()
+    # print('Running :D')
+    # fh = open(r'C:\Users\mha\Projects\cobopipe_v02-001\shotgrid\output.txt', 'w+')
+    # for arg in sys.argv:
+    #     fh.write(arg + "\n")
+    # fh.close()
     sys.exit(main(sys.argv[1:]))
