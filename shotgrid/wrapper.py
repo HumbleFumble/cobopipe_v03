@@ -65,6 +65,7 @@ TASK_FIELDS = [
     "entity",
     "step",
     "sg_status_list",
+    "sg_client_status",
     "task_assignees",
     "task_reviewers",
     "start_date",

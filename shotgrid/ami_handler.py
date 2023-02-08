@@ -23,10 +23,11 @@ def main(args):
     # parsed URL.
 
     # COMMENT THIS OUT
-
-    fh = open(r'C:\Users\mha\Projects\cobopipe_v02-001\shotgrid\output.txt', 'w')
+    shotgrid_folder = os.path.dirname(__file__)
+    fh = open(f'{shotgrid_folder}/output.txt', 'w')
     fh.write(pprint.pformat((action, params)))
-
+    # if action == "update_status":
+    #     import status_update
     try:
         print("""
                            ██████╗ ██████╗ ██████╗  ██████╗ ██████╗ ██╗██████╗ ███████╗
