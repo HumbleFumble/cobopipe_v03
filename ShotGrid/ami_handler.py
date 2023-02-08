@@ -3,7 +3,7 @@ import sys
 import urllib.parse
 import pprint
 import shotgrid.wrapper as sg
-# from getConfig import getConfigClass
+from getConfig import getConfigClass
 # from runtimeEnv import getRuntimeEnvFromConfig
 
 def main(args):
@@ -41,4 +41,5 @@ if __name__ == '__main__':
     # for arg in sys.argv:
     #     fh.write(arg + "\n")
     # fh.close()
+    # print('Hiii')
     sys.exit(main(sys.argv[1:]))
