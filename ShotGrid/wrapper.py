@@ -654,11 +654,20 @@ class Task:
         _query_entity(self)
         self.identity = {"type": self.type, "id": self.id}
 
+    def update(self):
+        _update_entity(self)
+        self.identity = {"type": self.type, "id": self.id}
+    
     def __repr__(self):
         return _repr_entity(self)
 
     def __str__(self):
         return _str_entity(self)
+
+    def get_parent(self, query=True):
+        if self.entity['type'] == 'Shot':
+           _class = Shot()
+        return _class(name=self.entity['name'], id=self.entity['id'], query=query)
 
     def get_versions(self, query=True):
         versions = []
@@ -824,7 +833,6 @@ def _update_entity(self):
     shotgrid_api.update(self.type, self.id, data)
 
 if __name__ == "__main__":
-    project = Project(name="Lego Friends - Wildbrain")
-    assets = project.get_assets()
-    assets[0].code = "BallOfYarn2"
-    assets[0].update()
+    # project = Project(name="Lego Friends - Wildbrain")
+    task = Task(id=6224)
+    print(task.get_parent(query=False))

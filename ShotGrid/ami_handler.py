@@ -6,6 +6,7 @@ import pprint
 import shotgrid.wrapper as sg
 from getConfig import getConfigClass
 from runtimeEnv import getRuntimeEnvFromConfig
+import time
 
 def main(args):
     # Make sure we have only one arg, the URL
@@ -23,15 +24,33 @@ def main(args):
 
     # COMMENT THIS OUT
 
-    project = sg.Project(name=params['project_name'], id=params['project_id'])
-    CC = getConfigClass(project_name=project.code)
-    runtime_environment = getRuntimeEnvFromConfig(config_class=CC)
+    fh = open(r'C:\Users\mha\Projects\cobopipe_v02-001\shotgrid\output.txt', 'w')
+    fh.write(pprint.pformat((action, params)))
 
-    if params['entity_type'][0] == 'Task':
-        task = sg.Task(id=params['selected_ids'][0])
-        fh = open(r'C:\Users\mha\Projects\cobopipe_v02-001\shotgrid\output.txt', 'w')
-        fh.write(pprint.pformat((action, params)))
+    try:
+        print("""
+                           ██████╗ ██████╗ ██████╗  ██████╗ ██████╗ ██╗██████╗ ███████╗
+                          ██╔════╝██╔═══██╗██╔══██╗██╔═══██╗██╔══██╗██║██╔══██╗██╔════╝
+                          ██║     ██║   ██║██████╔╝██║   ██║██████╔╝██║██████╔╝█████╗  
+                          ██║     ██║   ██║██╔══██╗██║   ██║██╔═══╝ ██║██╔═══╝ ██╔══╝  
+                          ╚██████╗╚██████╔╝██████╔╝╚██████╔╝██║     ██║██║     ███████╗
+                           ╚═════╝ ╚═════╝ ╚═════╝  ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚══════╝\n\n\n""")
+        project = sg.Project(name=params['project_name'][0], id=int(params['project_id'][0]))
+        CC = getConfigClass(project_name=project.code)
+        runtime_environment = getRuntimeEnvFromConfig(config_class=CC)
+        
+        if params['entity_type'][0] == 'Task':
+            task = sg.Task(id=int(params['selected_ids'][0]))
+            print(task.name)
+
         fh.close()
+        time.sleep(1000)
+    except Exception as e:
+        fh.write("\n\n\n" + str(e))
+        fh.close()
+    
+
+
 
 if __name__ == '__main__':
     # print('Running :D')
@@ -40,4 +59,5 @@ if __name__ == '__main__':
     #     fh.write(arg + "\n")
     # fh.close()
     # print('Hiii')
+
     sys.exit(main(sys.argv[1:]))
