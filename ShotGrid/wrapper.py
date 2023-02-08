@@ -30,7 +30,7 @@ API_USER_FIELDS = [
     "lastname",
     "salted_password",
 ]
-PROJECT_FIELDS = ["name", "id", "sg_description", "sg_status", "users", "tank_name"]
+PROJECT_FIELDS = ["name", "id", "sg_description", "sg_status", "users", "tank_name", "code"]
 EPISODE_FIELDS = [
     "project",
     "code",

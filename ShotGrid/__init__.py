@@ -1,1 +1,1 @@
-from ShotGrid.main import *
+from shotgrid.wrapper import *

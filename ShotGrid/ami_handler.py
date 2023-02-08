@@ -1,9 +1,11 @@
 import sys
 import urllib.parse
 import pprint
+import shotgrid.wrapper as sg
+from getConfig import getConfigClass
+from runtimeEnv import getRuntimeEnvFromConfig
 
 def main(args):
-    print('main')
     # Make sure we have only one arg, the URL
     if len(args) != 1:
         return 1
@@ -13,14 +15,24 @@ def main(args):
     action = path.strip("/")
     args = fullArgs.split("&")
     params = urllib.parse.parse_qs(fullArgs)
-    print(params)
     # This is where you can do something productive based on the params and the
     # action value in the URL. For now we'll just print out the contents of the
     # parsed URL.
-    fh = open(r'C:\Users\mha\Projects\cobopipe_v02-001\ShotGrid\output.txt', 'w')
+
+    # COMMENT THIS OUT
+    fh = open(r'C:\Users\mha\Projects\cobopipe_v02-001\shotgrid\output.txt', 'w')
     fh.write(pprint.pformat((action, params)))
     fh.close()
 
+    project = sg.Project(name=params['project_name'], id=params['project_id'])
+    CC = getConfigClass(project_name=project.code)
+    runtime_environment = getRuntimeEnvFromConfig(config_class=CC)
+
+    if params['entity_type'][0] == 'Task':
+        task = sg.Task(id=params['selected_ids'][0])
+        fh = open(r'C:\Users\mha\Projects\cobopipe_v02-001\shotgrid\output.txt', 'w+')
+        fh.write(pprint.pformat(task.name))
+        fh.close()
 
 if __name__ == '__main__':
     # print('Running :D')
