@@ -45,7 +45,9 @@ pause""",
 
 'update_harmony_hotbar.bat': r"""@echo off
 T:/_Executables/python/Python310/python.exe T:/_Pipeline/cobopipe_v02-001/TB/updateHotbar.py
-EXIT /B 0"""
+EXIT /B 0""",
+
+'install_shotgrid_regkey.bat': 'T:/_Executables/python/Python310/python.exe T:/_Pipeline/cobopipe_v02-001/shotgrid/install_registry_keys.py'
 }
     return bat_files_info
 

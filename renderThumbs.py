@@ -7,6 +7,8 @@ from PySide2.QtWidgets import QMainWindow, QPushButton, QWidget, QGroupBox, QVBo
 from PySide2.QtCore import Qt
 
 
+
+
 class MainWindow(QMainWindow):
     # Get list with all json presets in "C:\Users\plp\Documents\maya\Presets"
     # presets = prefs.getUserPresets("arnold")

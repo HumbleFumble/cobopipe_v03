@@ -1,0 +1,1 @@
+T:/_Executables/python/Python310/python.exe T:/_Pipeline/cobopipe_v02-001/shotgrid/install_registry_keys.py
