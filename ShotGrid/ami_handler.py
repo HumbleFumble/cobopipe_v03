@@ -38,9 +38,9 @@ def main(args):
     os.sleep(5000)
 
 if __name__ == '__main__':
-    # print('Running :D')
-    # fh = open(r'C:\Users\mha\Projects\cobopipe_v02-001\ShotGrid\output.txt', 'w+')
-    # for arg in sys.argv:
-    #     fh.write(arg + "\n")
-    # fh.close()
+    print('Running :D')
+    fh = open(r'C:\Users\mha\Projects\cobopipe_v02-001\ShotGrid\output.txt', 'w+')
+    for arg in sys.argv:
+        fh.write(arg + "\n")
+    fh.close()
     sys.exit(main(sys.argv[1:]))
