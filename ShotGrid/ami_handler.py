@@ -1,3 +1,4 @@
+import os
 import sys
 import urllib.parse
 import pprint
@@ -33,6 +34,8 @@ def main(args):
         fh = open(r'C:\Users\mha\Projects\cobopipe_v02-001\shotgrid\output.txt', 'w+')
         fh.write(pprint.pformat(task.name))
         fh.close()
+
+    os.sleep(5)
 
 if __name__ == '__main__':
     # print('Running :D')
