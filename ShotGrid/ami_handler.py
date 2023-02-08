@@ -3,8 +3,8 @@ import sys
 import urllib.parse
 import pprint
 import shotgrid.wrapper as sg
-from getConfig import getConfigClass
-from runtimeEnv import getRuntimeEnvFromConfig
+# from getConfig import getConfigClass
+# from runtimeEnv import getRuntimeEnvFromConfig
 
 def main(args):
     # Make sure we have only one arg, the URL
