@@ -2,7 +2,7 @@ import os
 import sys
 import urllib.parse
 import pprint
-# import shotgrid.wrapper as sg
+import shotgrid.wrapper as sg
 # from getConfig import getConfigClass
 # from runtimeEnv import getRuntimeEnvFromConfig
 
