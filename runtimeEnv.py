@@ -50,10 +50,13 @@ def getRuntimeEnvFromConfig_OLD(runtime_config=None,local_user=False,ocio=False)
     run_env = _runtime_environment(python_path=python_path,maya_project=maya_project,project_name=project_name)
     return run_env
 
-def getRuntimeEnvFromConfig(config_class=None,local_user=True):
+def getRuntimeEnvFromConfig(config_class=None,local_user=True,add_to_current=False):
     config_env_dict = config_class.environment_vars
     #copy the system env
-    runtime_env = os.environ.copy()
+    if add_to_current:
+        runtime_env = os.environ
+    else:
+        runtime_env = os.environ.copy()
     #Do the dynamic env vars
     for key in config_class.environment_vars:
         if key in config_class.local_vars and local_user:
