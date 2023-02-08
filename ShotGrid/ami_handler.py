@@ -29,11 +29,11 @@ def main(args):
     CC = getConfigClass(project_name=project.code)
     runtime_environment = getRuntimeEnvFromConfig(config_class=CC)
 
-    if params['entity_type'][0] == 'Task':
-        task = sg.Task(id=params['selected_ids'][0])
-        fh = open(r'C:\Users\mha\Projects\cobopipe_v02-001\shotgrid\output.txt', 'w+')
-        fh.write(pprint.pformat(task.name))
-        fh.close()
+    # if params['entity_type'][0] == 'Task':
+    #     task = sg.Task(id=params['selected_ids'][0])
+    #     fh = open(r'C:\Users\mha\Projects\cobopipe_v02-001\shotgrid\output.txt', 'w+')
+    #     fh.write(pprint.pformat(task.name))
+    #     fh.close()
 
     os.sleep(5)
 
