@@ -22,9 +22,6 @@ def main(args):
     # parsed URL.
 
     # COMMENT THIS OUT
-    fh = open(r'C:\Users\mha\Projects\cobopipe_v02-001\shotgrid\output.txt', 'w')
-    fh.write(pprint.pformat((action, params)))
-    fh.close()
 
     project = sg.Project(name=params['project_name'], id=params['project_id'])
     CC = getConfigClass(project_name=project.code)
@@ -32,8 +29,8 @@ def main(args):
 
     if params['entity_type'][0] == 'Task':
         task = sg.Task(id=params['selected_ids'][0])
-        fh = open(r'C:\Users\mha\Projects\cobopipe_v02-001\shotgrid\output.txt', 'w+')
-        fh.write(pprint.pformat(task.name))
+        fh = open(r'C:\Users\mha\Projects\cobopipe_v02-001\shotgrid\output.txt', 'w')
+        fh.write(pprint.pformat((action, params)))
         fh.close()
 
 if __name__ == '__main__':
