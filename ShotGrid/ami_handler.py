@@ -4,8 +4,8 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import urllib.parse
 import pprint
 import shotgrid.wrapper as sg
-# from getConfig import getConfigClass
-# from runtimeEnv import getRuntimeEnvFromConfig
+from getConfig import getConfigClass
+from runtimeEnv import getRuntimeEnvFromConfig
 
 def main(args):
     # Make sure we have only one arg, the URL
@@ -26,15 +26,15 @@ def main(args):
     fh.write(pprint.pformat((action, params)))
     fh.close()
 
-    # project = sg.Project(name=params['project_name'], id=params['project_id'])
-    # CC = getConfigClass(project_name=project.code)
-    # runtime_environment = getRuntimeEnvFromConfig(config_class=CC)
+    project = sg.Project(name=params['project_name'], id=params['project_id'])
+    CC = getConfigClass(project_name=project.code)
+    runtime_environment = getRuntimeEnvFromConfig(config_class=CC)
 
-    # if params['entity_type'][0] == 'Task':
-    #     task = sg.Task(id=params['selected_ids'][0])
-    #     fh = open(r'C:\Users\mha\Projects\cobopipe_v02-001\shotgrid\output.txt', 'w+')
-    #     fh.write(pprint.pformat(task.name))
-    #     fh.close()
+    if params['entity_type'][0] == 'Task':
+        task = sg.Task(id=params['selected_ids'][0])
+        fh = open(r'C:\Users\mha\Projects\cobopipe_v02-001\shotgrid\output.txt', 'w+')
+        fh.write(pprint.pformat(task.name))
+        fh.close()
 
 if __name__ == '__main__':
     # print('Running :D')
