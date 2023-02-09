@@ -47,7 +47,7 @@ $installPackFolder = $PackFolder + $packFolderName
 $global:installLog = $null
 $result = $null
 
-function Check-Install {
+function Get-Install {
 
     param (
         [string]$package
@@ -252,7 +252,7 @@ Start-Sleep 3
 
 Write-Host "Installing Harmony Toon Boom...`n"
 
-function Make-Shortcut {
+function Install-Shortcut {
         [CmdletBinding()]
         param (
             [PSCustomObject]$parameters
