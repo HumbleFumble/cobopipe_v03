@@ -8,7 +8,7 @@ import os
 import shutil
 
 
-def createPreview(shot, inputPath='', outputPath='', title=True, frameCount=True, timecode=False, date=True, runCmd=True):
+def createPreview(shot, inputPath='', outputPath='', title=True, frameCount=True, timecode=False, date=True, user=False, runCmd=True):
     import Preview.ffmpeg_util as preview_util
     import ffmpeg
     if title == True:
@@ -26,7 +26,7 @@ def createPreview(shot, inputPath='', outputPath='', title=True, frameCount=True
         audio = preview_util.readySoundStream(inputPath, inputPath)
     else:
         audio = ffmpeg.input(inputPath).audio
-    stream = preview_util.createSlate(stream, title=title, frameCount=frameCount, timecode=timecode, date=date)
+    stream = preview_util.createSlate(stream, title=title, frameCount=frameCount, timecode=timecode, date=date, user=user)
 
 
     if audio_check:
