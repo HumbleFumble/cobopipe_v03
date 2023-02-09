@@ -667,9 +667,11 @@ class Task:
         return _str_entity(self)
 
     def get_parent(self, query=True):
-        if self.entity['type'] == 'Shot':
-           _class = Shot()
-        return _class(name=self.entity['name'], id=self.entity['id'], query=query)
+        _type = self.entity['type']
+        _name = self.entity['name']
+        _id = self.entity['id']
+        _class = globals()[_type]
+        return _class(name=_name, id=_id, query=query)
 
     def get_versions(self, query=True):
         versions = []
@@ -837,4 +839,5 @@ def _update_entity(self):
 if __name__ == "__main__":
     # project = Project(name="Lego Friends - Wildbrain")
     task = Task(id=6224)
-    print(task.get_parent(query=False))
+    shot = task.get_parent(query=False)
+    print(shot)

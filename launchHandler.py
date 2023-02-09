@@ -5,26 +5,35 @@ from runtimeEnv import getRuntimeEnvFromConfig
 from getConfig import getConfigClass
 
 
-def launch(app="maya", local_user=True):
-    if app == 'maya':
-        runMayaFromConfig(local_user=local_user)
-    elif app == 'mayapy':
-        runMayapyFromConfig(local_user=local_user)
-    elif app == 'cmd':
-        runCmdFromConfig(local_user=local_user)
-    elif app == 'harmony':
-        runHarmonyFromConfig(local_user=local_user)
-    elif app == 'aftereffects':
-        runAEFromConfig(local_user=local_user)
+def launch(app="maya", file_path=None, CC=None, run_env=None, project_name=None, local_user=True):
+    if not CC:
+        if project_name:
+            CC = getConfigClass(project_name=project_name)
+        else:
+            CC = getConfigClass(pick_project=True)
 
-def runAEFromConfig(file_path=None, local_user=False):
-    CC = getConfigClass(pick_project=True)
-    run_env = getRuntimeEnvFromConfig(config_class=CC, local_user=local_user)
+    if not run_env:
+        run_env = getRuntimeEnvFromConfig(config_class=CC, local_user=local_user)
+
+    args = [run_env]
+    kwargs = {'file_path': file_path}
+    
+    if app == 'maya':
+        runMaya(*args, **kwargs)
+    elif app == 'mayapy':
+        runMayapy(*args, **kwargs)
+    elif app == 'cmd':
+        runCmd(*args, **kwargs)
+    elif app == 'harmony':
+        runHarmony(*args, **kwargs)
+    elif app == 'aftereffects':
+        runAE(*args, **kwargs)
+
+def runAE(run_env, file_path=None):
     if not file_path:
         subprocess.Popen('START afterfx.exe -m', shell=True, env=run_env)
-def runHarmonyFromConfig(file_path=None,local_user=False):
-    CC = getConfigClass(pick_project=True)
-    run_env = getRuntimeEnvFromConfig(config_class=CC, local_user=local_user)
+        
+def runHarmony(run_env, file_path=None):
     run_env["TOONBOOM_GLOBAL_SCRIPT_LOCATION"] = "%s/TB/ToonBoom_Global_Scripts" % os.path.dirname(os.path.realpath(__file__))
     run_env["BOM_USER"] = ""
     if file_path:
@@ -32,23 +41,19 @@ def runHarmonyFromConfig(file_path=None,local_user=False):
     else:
         subprocess.Popen('wstart-wcc.exe HarmonyPremium.exe', shell=True, env=run_env)
 
-def runMayaFromConfig(file_path=None,local_user=False):
-    CC = getConfigClass(pick_project=True)
-    run_env = getRuntimeEnvFromConfig(config_class=CC, local_user=local_user)
-    if not file_path:
+def runMaya(run_env, file_path=None):
+    if file_path:
+        process = subprocess.Popen(f"START maya -file {file_path}", shell=True, env=run_env)
+    else:
         subprocess.Popen('START maya', shell=True, env=run_env)
 
 
-def runMayapyFromConfig(file_path=None,local_user=False):
-    CC = getConfigClass(pick_project=True)
-    run_env = getRuntimeEnvFromConfig(config_class=CC, local_user=local_user)
+def runMayapy(run_env, file_path=None):
     if not file_path:
         subprocess.Popen('START mayapy', shell=True, env=run_env)
 
 
-def runCmdFromConfig(file_path=None,local_user=False):
-    CC = getConfigClass(pick_project=True)
-    run_env = getRuntimeEnvFromConfig(config_class=CC, local_user=local_user)
+def runCmd(run_env, file_path=None):
     if not file_path:
         subprocess.Popen('START cmd', shell=True, env=run_env)
 

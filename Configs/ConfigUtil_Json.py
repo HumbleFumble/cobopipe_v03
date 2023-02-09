@@ -109,7 +109,7 @@ class JsonConfigUtilClass():
                                 print("Already found: %s" % cur_key)
                                 if not scene_path_dict[cur_key] == cur_value:
                                     print("ERROR same key with different values: key:%s Values %s->%s" % (
-                                        cur_key, scene_path_dict[cur_key], cur_value))
+                                        cur_keOky, scene_path_dict[cur_key], cur_value))
                             scene_path_dict[cur_key] = cur_value
 
                             if cur_key in replace_dict.keys():
