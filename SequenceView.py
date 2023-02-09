@@ -25,7 +25,14 @@ logger = getLogger()
 from runtimeEnv import getRuntimeEnvFromConfig
 
 from getConfig import getConfigClass
+
 CC = getConfigClass()
+
+from runtimeEnv import getRuntimeEnvFromConfig
+run_env = getRuntimeEnvFromConfig(config_class=CC)
+
+print(run_env.keys())
+
 
 import os
 import shutil
@@ -492,6 +499,10 @@ class MainWindow(QtWidgets.QWidget): ### Main UI and Functions
             self.seq = file_name.split("_")[1]
             self.setWindowTitle("SeqShot: %s_%s" % (self.ep, self.seq))
             logger.info("EP: %s - SEQ: %s" % (self.ep, self.seq))
+            print(file_name)
+            print(self.ep)
+            print(self.seq)
+            print("SeqShot: %s_%s" % (self.ep, self.seq))
         else:
             self.setWindowTitle("SuperSequenceShot: Unknown Episode")
 
@@ -618,6 +629,7 @@ class MainWindow(QtWidgets.QWidget): ### Main UI and Functions
             new_shot_duration = new_shot_et - new_shot_st
 
             cmds.shot(cur_shot, e=True, et=new_shot_st)
+            print(cmds.shot(cur_shot, e=True, et=new_shot_st))
 
             # # define the name of the directory to be created
             # temp_path = "P:/_WFH_Projekter/930450_MiasMagicComicBook/Production/Film/E03/E03_SQ090/E03_SQ090_%s" % new_shot
@@ -1033,9 +1045,16 @@ class MainWindow(QtWidgets.QWidget): ### Main UI and Functions
         from runInPython3 import runInPython3
         from Preview.general import getPreview
         #title = 'E01_SQ020_SH030'
-        runInPython3(getPreview, str(title), type='anim', create=True, force=True, local=True, inputPath=str(playblast_path), outputPath=str(temp_path))
+        user = os.environ.get("BOM_USER")
+        print(os.environ.keys())
+        if not user:
+            user = False
+            print("NO USERS IN HERE")
+        print(user)
+        runInPython3(getPreview, str(title), type='anim', create=True, force=True, local=True, user=user, inputPath=str(playblast_path), outputPath=str(temp_path))
         logger.info("Created Slate on: %s" % shot_name)
         return True
+    
 
     def HighlightAssets(self, asset_list):
         for x in range(self.asset_list.count()):
