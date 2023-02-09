@@ -26,34 +26,29 @@ def main(args):
     shotgrid_folder = os.path.dirname(__file__)
     fh = open(f'{shotgrid_folder}/output.txt', 'w')
     fh.write(pprint.pformat((action, params)))
-    if action == "update_status":
-        print("STATUS UPDATE")
-        import shotgrid.status_update as status_update
-        status_update.run(params['selected_ids'][0])
-        time.sleep(1000)
+
+    try:
+        print("""
+                           ██████╗ ██████╗ ██████╗  ██████╗ ██████╗ ██╗██████╗ ███████╗
+                          ██╔════╝██╔═══██╗██╔══██╗██╔═══██╗██╔══██╗██║██╔══██╗██╔════╝
+                          ██║     ██║   ██║██████╔╝██║   ██║██████╔╝██║██████╔╝█████╗  
+                          ██║     ██║   ██║██╔══██╗██║   ██║██╔═══╝ ██║██╔═══╝ ██╔══╝  
+                          ╚██████╗╚██████╔╝██████╔╝╚██████╔╝██║     ██║██║     ███████╗
+                           ╚═════╝ ╚═════╝ ╚═════╝  ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚══════╝\n\n\n""")
+        project = sg.Project(name=params['project_name'][0], id=int(params['project_id'][0]))
+        CC = getConfigClass(project_name=project.code)
+        runtime_environment = getRuntimeEnvFromConfig(config_class=CC)
+
+        if action == "update_status":
+            print("STATUS UPDATE")
+            import shotgrid.status_update as status_update
+            # status_update.run_on_selected(params['selected_ids'][0])
+            status_update.run()
         fh.close()
-    else:
-        try:
-            print("""
-                               ██████╗ ██████╗ ██████╗  ██████╗ ██████╗ ██╗██████╗ ███████╗
-                              ██╔════╝██╔═══██╗██╔══██╗██╔═══██╗██╔══██╗██║██╔══██╗██╔════╝
-                              ██║     ██║   ██║██████╔╝██║   ██║██████╔╝██║██████╔╝█████╗  
-                              ██║     ██║   ██║██╔══██╗██║   ██║██╔═══╝ ██║██╔═══╝ ██╔══╝  
-                              ╚██████╗╚██████╔╝██████╔╝╚██████╔╝██║     ██║██║     ███████╗
-                               ╚═════╝ ╚═════╝ ╚═════╝  ╚═════╝ ╚═╝     ╚═╝╚═╝     ╚══════╝\n\n\n""")
-            project = sg.Project(name=params['project_name'][0], id=int(params['project_id'][0]))
-            CC = getConfigClass(project_name=project.code)
-            runtime_environment = getRuntimeEnvFromConfig(config_class=CC)
-
-            if params['entity_type'][0] == 'Task':
-                task = sg.Task(id=int(params['selected_ids'][0]))
-                print(task.name)
-
-            fh.close()
-            time.sleep(1000)
-        except Exception as e:
-            fh.write("\n\n\n" + str(e))
-            fh.close()
+        time.sleep(1000)
+    except Exception as e:
+        fh.write("\n\n\n" + str(e))
+        fh.close()
 
 
 
