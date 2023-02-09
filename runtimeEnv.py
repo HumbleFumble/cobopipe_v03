@@ -48,6 +48,7 @@ def getRuntimeEnvFromConfig_OLD(runtime_config=None,local_user=False,ocio=False)
 
         #print("picked local user python-path: %s" % python_path)
     run_env = _runtime_environment(python_path=python_path,maya_project=maya_project,project_name=project_name)
+    
     return run_env
 
 def getRuntimeEnvFromConfig(config_class=None,local_user=True,add_to_current=False):

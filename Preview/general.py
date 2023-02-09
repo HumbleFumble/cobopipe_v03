@@ -35,7 +35,7 @@ def getPreview(shot, type='comp', create=True, force=False, local=True, inputPat
             if local:
                     if type == 'anim':
                         anim.createPreview(shot, inputPath=inputPath, outputPath=outputPath,title=True,
-                                           frameCount=True, timecode=False, date=True, runCmd=True)
+                                           frameCount=True, timecode=False, date=True, user=user, runCmd=True)
                     elif type == 'anim_2D':
                         anim.createPreview_2D(shot, inputPath=inputPath, outputPath=outputPath,title=True,
                                            frameCount=True, timecode=False, date=True, useAudioFile=useAudioFile,
