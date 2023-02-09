@@ -1,6 +1,6 @@
 import shotgrid.wrapper as sg
-import shotgun_api3
-import time
+
+
 sg_api = sg.initialize(script="status_update",key="Eaxdtjyiiddtpx9~jxhkhqyor")
 def run_on_selected(list_of_ids):
     if "," in list_of_ids:
