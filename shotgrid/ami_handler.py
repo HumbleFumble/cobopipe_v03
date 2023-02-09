@@ -104,10 +104,19 @@ def main(args):
 
         if action == 'launch_in_maya':
             task = entities[0]
-            shot = task.get_parent(query=False)
+            parent = task.get_parent(query=False)
+
             file_path = None
-            if task.name == 'Animation':
-                file_path = CC.get_shot_anim_path(*shot.name.split('_'))
+            if parent.type == 'Shot':
+                if task.name == 'Layout':
+                    pass
+                elif task.name == 'Animation':
+                    file_path = CC.get_shot_anim_path(*parent.name.split('_'))
+                elif task.name == 'Lighting':
+                    file_path = CC.get_shot_light_file(*parent.name.split('_'))
+            elif parent.type == 'Asset':
+                pass
+                
 
             print(f"   Launching Autodesk Maya . . .\n")
             launchHandler.launch('maya', CC=CC, file_path=file_path)
