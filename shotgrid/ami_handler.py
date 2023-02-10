@@ -109,7 +109,7 @@ def main(args):
             file_path = None
             if parent.type == 'Shot':
                 if task.name == 'Layout':
-                    pass
+                    file_path = CC.get_sequence_previs_file(*parent.name[:2].split('_'))
                 elif task.name == 'Animation':
                     file_path = CC.get_shot_anim_path(*parent.name.split('_'))
                 elif task.name == 'Lighting':
@@ -127,8 +127,8 @@ def main(args):
         fh.write("\n\n\n" + str(e))
         fh.close()
 
-    # input('\n   > Press ENTER to exit') # To keep console open
-    time.sleep(10)
+    input('\n   > Press ENTER to exit') # To keep console open
+    # time.sleep(10)
 
 def get_shot_dict(episode="", sequence="", shot=""):
     return {"episode_name": episode, "seq_name": sequence, "shot_name": shot}
