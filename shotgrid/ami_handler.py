@@ -56,13 +56,15 @@ def main(args):
             print("here!!")
             import shotgrid.status_update as status_update
             status_update.run()
+        else:
 
-        elif action == 'launch_in_maya':
+
             entities = []
             selected = params["selected_ids"][0].split(",")
             number_of_entities = len(selected)
             _type = params["entity_type"][0]
             wrapper_class = sg.__dict__[_type.capitalize()]
+
 
 
             for _id in selected:
@@ -116,7 +118,7 @@ def main(args):
                 file_path = None
                 if parent.type == 'Shot':
                     if task.name == 'Layout':
-                        pass
+                        file_path = CC.get_sequence_previs_file(*parent.name[:2].split('_'))
                     elif task.name == 'Animation':
                         file_path = CC.get_shot_anim_path(*parent.name.split('_'))
                     elif task.name == 'Lighting':
@@ -133,9 +135,8 @@ def main(args):
         fh.write("\n\n\n" + str(e))
         fh.close()
 
-
-    # input('\n   > Press ENTER to exit') # To keep console open
-    time.sleep(50)
+    input('\n   > Press ENTER to exit') # To keep console open
+    # time.sleep(10)
 
 
 
