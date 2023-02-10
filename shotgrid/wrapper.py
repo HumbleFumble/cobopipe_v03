@@ -65,12 +65,13 @@ TASK_FIELDS = [
     "entity",
     "step",
     "sg_status_list",
-    "sg_client_status",
     "task_assignees",
     "task_reviewers",
     "start_date",
     "due_date",
     "duration",
+    "upstream_tasks",
+    "downstream_tasks"
 ]
 VERSION_FIELDS = ["project", "code", "id", "sg_status_list", "user"]
 TASK_TEMPLATE_FIELDS = ["id", "code"]
