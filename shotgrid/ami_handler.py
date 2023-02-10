@@ -52,10 +52,11 @@ def main(args):
         CC = getConfigClass(project_name=project.code)
         runtime_environment = getRuntimeEnvFromConfig(config_class=CC)
 
-        if action == "status_update":
+        if action == "update_status":
+            print("here!!")
             import shotgrid.status_update as status_update
             status_update.run()
-        else: 
+        else:
 
 
             entities = []
@@ -99,7 +100,6 @@ def main(args):
             print(f"{'   Protocol: ':<25}{protocol_dictionary[action]}")
             print(f"\n   {'─'*60}\n")
 
-            
             single_target_protocols = ['launch_in_maya']
             if action in single_target_protocols:
                 if len(entities) > 1:
@@ -110,7 +110,7 @@ def main(args):
                     print(f"{parent_name}{'':<16}{tasks[0].entity['id']}")
                     print(f"{'':<25} └─ {task.name:<28}{task.id}")
                     print(f"\n   {'─'*60}\n")
-                    
+
             if action == 'launch_in_maya':
                 task = entities[0]
                 parent = task.get_parent(query=False)
@@ -126,7 +126,6 @@ def main(args):
                 elif parent.type == 'Asset':
                     pass
 
-
                 print(f"   Launching Autodesk Maya . . .\n")
                 launchHandler.launch('maya', CC=CC, file_path=file_path)
 
@@ -139,8 +138,6 @@ def main(args):
     input('\n   > Press ENTER to exit') # To keep console open
     # time.sleep(10)
 
-def get_shot_dict(episode="", sequence="", shot=""):
-    return {"episode_name": episode, "seq_name": sequence, "shot_name": shot}
 
 
 if __name__ == "__main__":

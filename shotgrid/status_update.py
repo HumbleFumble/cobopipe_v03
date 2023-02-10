@@ -24,6 +24,7 @@ def run(project_code="LegoFriends"):
     fields = ["downstream_tasks"]
 
     all_tasks = sg_api.find(entity_type="Task",filters=filters,fields=fields)
+    print(all_tasks)
     print(f"Found {len(all_tasks)} Tasks that can be set to ready")
     for d_tasks in all_tasks:
         for i in d_tasks["downstream_tasks"]:

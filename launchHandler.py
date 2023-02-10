@@ -5,7 +5,7 @@ from runtimeEnv import getRuntimeEnvFromConfig
 from getConfig import getConfigClass
 
 
-def launch(app="maya", file_path=None, CC=None, run_env=None, project_name=None, local_user=True):
+def launch(app="maya", local_user=True,file_path=None, CC=None, run_env=None, project_name=None):
     if not CC:
         if project_name:
             CC = getConfigClass(project_name=project_name)

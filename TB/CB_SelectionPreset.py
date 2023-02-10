@@ -537,8 +537,14 @@ class FrontController(QObject):
 		# node_dict
 		if parent_node:
 			parent_node.append(p)
+			self.saveLocalData()
 		else:
 			self.addNodesToModel([p])
+		self.tree_model.beginResetModel()
+		self.tree_model.endResetModel()
+
+
+
 
 	def createPresetNode(self, name="Test", node_dict={}, parent_node=None, node_type="Preset"):
 		top_node = Node(name=name,parent=parent_node,type=node_type)
@@ -930,7 +936,7 @@ class SelectionPreset_UI(QDialog):
 
 
 	def createPreset(self):
-		current_name = self.getTextInput("Duplicate Name:","Pick New Name")
+		current_name = self.getTextInput("Preset Name:","Pick New Name")
 		parent_node = self.tree_model.getNode(self.tree.currentIndex())
 		if parent_node:
 			if not parent_node.getType() == "Collection":
