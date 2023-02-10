@@ -540,6 +540,10 @@ class FrontController(QObject):
 			self.saveLocalData()
 		else:
 			self.addNodesToModel([p])
+		self.tree_model.beginResetModel()
+		self.tree_model.endResetModel()
+
+
 
 
 	def createPresetNode(self, name="Test", node_dict={}, parent_node=None, node_type="Preset"):
