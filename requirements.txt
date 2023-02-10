@@ -1,0 +1,5 @@
+PySide2==5.15.2.1
+PySide6==6.4.2
+ffmpeg_python==0.2.0
+shotgun_api3==3.3.5
+pyshortcuts==1.8.3
