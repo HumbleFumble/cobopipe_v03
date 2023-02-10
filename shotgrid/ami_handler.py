@@ -52,18 +52,17 @@ def main(args):
         CC = getConfigClass(project_name=project.code)
         runtime_environment = getRuntimeEnvFromConfig(config_class=CC)
 
-        if action == "status_update":
+        if action == "update_status":
+            print("here!!")
             import shotgrid.status_update as status_update
             status_update.run()
+
         elif action == 'launch_in_maya':
-
-
             entities = []
             selected = params["selected_ids"][0].split(",")
             number_of_entities = len(selected)
             _type = params["entity_type"][0]
             wrapper_class = sg.__dict__[_type.capitalize()]
-
 
 
             for _id in selected:
@@ -125,7 +124,6 @@ def main(args):
                 elif parent.type == 'Asset':
                     pass
 
-
                 print(f"   Launching Autodesk Maya . . .\n")
                 launchHandler.launch('maya', CC=CC, file_path=file_path)
 
@@ -137,10 +135,8 @@ def main(args):
 
 
     # input('\n   > Press ENTER to exit') # To keep console open
-    time.sleep(10)
+    time.sleep(50)
 
-def get_shot_dict(episode="", sequence="", shot=""):
-    return {"episode_name": episode, "seq_name": sequence, "shot_name": shot}
 
 
 if __name__ == "__main__":
