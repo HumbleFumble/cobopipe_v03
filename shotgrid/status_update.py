@@ -14,9 +14,18 @@ def run_on_selected(list_of_ids):
             for ds in cur_task.downstream_tasks:
                 down_task = sg.Task(id=int(ds["id"]))
                 if down_task.sg_status_list in ["wtg"]:
-                    print(f"{down_task.entity['name']}.{down_task.content} changed from '{down_task.sg_status_list}' to 'Ready to Start'")
-                    down_task.sg_status_list = "ready"
-                    down_task.update()
+                    #Check if there is any other tasks upstream that needs to be apr
+                    set_this =True
+                    if len(down_task.upstream_tasks) >1:
+                        for ut in down_task.upstream_tasks:
+                            if ut["id"] != cur_task.id:
+                                up_task = sg.Task(id=int(ut["id"]))
+                                if not up_task.sg_status_list in ["apr"]:
+                                    set_this = False
+                    if set_this:
+                        print(f"{down_task.entity['name']}.{down_task.content} changed from '{down_task.sg_status_list}' to 'Ready to Start'")
+                        down_task.sg_status_list = "ready"
+                        down_task.update()
     print("### Remember to refresh browser to see changes made (F5) ###")
 
 def run(project_code="LegoFriends"):
@@ -26,11 +35,19 @@ def run(project_code="LegoFriends"):
     all_tasks = sg_api.find(entity_type="Task",filters=filters,fields=fields)
     print(all_tasks)
     print(f"Found {len(all_tasks)} Tasks that can be set to ready")
-    for d_tasks in all_tasks:
-        for i in d_tasks["downstream_tasks"]:
-            cur_task = sg.Task(**i,query=True)
-            print(f"{cur_task.entity['name']}.{cur_task.content} changed from '{cur_task.sg_status_list}' to 'Ready to Start'")
-            cur_task.sg_status_list = "ready"
-            cur_task.update()
+    for found_tasks in all_tasks:
+        for sg_down_task in found_tasks["downstream_tasks"]:
+            wrap_down_task = sg.Task(**sg_down_task,query=True)
+            set_this = True
+            if len(wrap_down_task.upstream_tasks) > 1:
+                for ut in wrap_down_task.upstream_tasks:
+                    if ut["id"] != found_tasks["id"]:
+                        up_task = sg.Task(id=int(ut["id"]))
+                        if not up_task.sg_status_list in ["apr"]:
+                            set_this = False
+            if set_this:
+                print(f"{wrap_down_task.entity['name']}.{wrap_down_task.content} changed from '{wrap_down_task.sg_status_list}' to 'Ready to Start'")
+                wrap_down_task.sg_status_list = "ready"
+                wrap_down_task.update()
     print("### Remember to refresh browser to see changes made (F5) ###")
 
