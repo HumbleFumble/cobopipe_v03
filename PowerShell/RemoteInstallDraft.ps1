@@ -1,5 +1,3 @@
-
-
 # Get / Set connection profile on the target machine. 
 # Once a computer joins a domain, the network profile changes automatically to "Domain"
 # ----------------------------------------------------------------------------------------------------------------------
@@ -49,21 +47,3 @@ Invoke-Command -ComputerName $computerName -ScriptBlock {
     # Remove the share
     Remove-PSDrive $using:driveName -Force
 }
-
-
-# Get current logged-in user from remote computer
-function Get-CurrentUser {
-    [CmdletBinding()]
-    param( 
-        [Parameter(Mandatory = $true)]
-        [string]$ComputerName
-    )
-  
-    $queryResults = (qwinsta /server:$ComputerName | ForEach-Object { (($_.trim() -replace "\s+",","))} | ConvertFrom-Csv)
-    foreach ($i in $queryResults.username){
-        try {$i.ToUInt32($null) -ne "String" | Out-Null} 
-        catch {$result += $i}
-    }
-  return $result
-  }
-
