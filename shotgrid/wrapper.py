@@ -673,6 +673,18 @@ class Task:
         _class = globals()[_type]
         return _class(name=_name, id=_id, query=query)
 
+    def get_upstream_tasks(self, query=True):
+        tasks = []
+        for task in self.upstream_tasks:
+            tasks.append(Task(**task))
+        return tasks
+
+    def get_downstream_tasks(self, query=True):
+        tasks = []
+        for task in self.downstream_tasks:
+            tasks.append(Task(**task))
+        return tasks
+
     def get_versions(self, query=True):
         versions = []
         for version in self.sg_versions:

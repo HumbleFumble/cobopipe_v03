@@ -34,3 +34,13 @@ def run(project_code="LegoFriends"):
             cur_task.update()
     print("### Remember to refresh browser to see changes made (F5) ###")
 
+
+def update_downstream(project_id, entity_id):
+    approved_task = sg.Task(id=entity_id)
+    for downstream_task in approved_task.get_downstream_tasks():
+        status_list = []
+        for upstream_task in downstream_task.get_upstream_tasks():
+            status_list.append(upstream_task.sg_status_list)
+        if set(status_list) == {'apr'}:
+            downstream_task.sg_status_list = 'ready'
+            downstream_task.update()
