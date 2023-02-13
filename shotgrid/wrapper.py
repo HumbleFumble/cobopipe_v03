@@ -440,7 +440,7 @@ class Sequence:
 
         initialize()
         if query:
-            self.query_shotgrid()
+            self.query()
         if "id" in self.__dict__.keys():
             self.identity = {"type": self.type, "id": self.id}
 
@@ -489,13 +489,14 @@ class Sequence:
         )
 
     def create_shot(
-        self, code: str, description: str = "", task_template: object = None,
+        self, code: str, task_template: object = None,
     sg_cut_duration: int = 0,**kwargs):
         # data = {"sg_sequence": self.identity, "code": code, "description": description, "sg_cut_duration": sg_cut_duration}
-        data = {"sg_sequence": self.identity}
-        data.update(kwargs)
+        data = {"sg_sequence": self.identity, "code":code, "sg_cut_duration":sg_cut_duration}
+        data.update(**kwargs)
         if task_template:
             data["task_template"] = task_template.identity
+        data["project"] = self.project
         shot = shotgrid_api.create("Shot", data)
         return Shot(**shot, query=False)
 
