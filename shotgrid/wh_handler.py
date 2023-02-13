@@ -2,9 +2,8 @@ from status_update import update_downstream
 
 def run(data, timestamp):
     if status_updated_to_approve(data):
-        project_id = data.get("project").get("id")
-        entity_id = data.get("meta").get("enttiy_id")
-        update_downstream.run_on_selected(project_id, entity_id)
+        entity_id = data.get("meta").get("entity_id")
+        update_downstream.run_on_selected(entity_id)
 
 def status_updated_to_approve(data):
     if not data.get("event_type") == "Shotgun_Task_Change":
@@ -20,3 +19,5 @@ def status_updated_to_approve(data):
         return False
 
     return True
+
+
