@@ -39,7 +39,11 @@ def run(project_code="LegoFriends"):
         for sg_down_task in found_tasks["downstream_tasks"]:
             wrap_down_task = sg.Task(**sg_down_task,query=True)
             set_this = True
+            #Checking that this is not a mistake or haven't been changed already
+            if not wrap_down_task.sg_status_list in ["wtg"]:
+                set_this = False
             if len(wrap_down_task.upstream_tasks) > 1:
+                print("Found multiple upstreams tasks. Checking if they are all Approved")
                 for ut in wrap_down_task.upstream_tasks:
                     if ut["id"] != found_tasks["id"]:
                         up_task = sg.Task(id=int(ut["id"]))
