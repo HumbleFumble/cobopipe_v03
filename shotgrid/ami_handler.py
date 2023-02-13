@@ -56,6 +56,8 @@ def main(args):
             print("here!!")
             import shotgrid.status_update as status_update
             status_update.run()
+        elif action == "check_asset_state":
+            pass
         else:
 
 
