@@ -1,0 +1,62 @@
+#-------------------------------------------------------------------------------------------------------------------------------------------
+function Install-OpenSSH {
+
+    $openssh = Get-WindowsCapability -Online | Where-Object Name -like 'OpenSSH*'
+    $openssh | ForEach-Object {
+        if($_.State -ne "Installed"){
+            Write-Host $("`n" + $_.Name + " was not found on this system. Installing...") -ForegroundColor Green
+            Add-WindowsCapability -Online -Name $_.Name
+            if(Get-WindowsCapability -Online -Name $_.Name){
+                Write-Host $("`n" +$_.Name + " successfully installed") -ForegroundColor Green
+            }else{
+                Write-Host $("`n" +$_.Name + " could not be installed") -ForegroundColor Red
+            }
+        }else{
+            Write-Host $("`n" +$_.Name + " already installed") -ForegroundColor Yellow
+        } 
+    }
+
+    Start-Sleep 3
+    $sshd = Get-Service sshd
+    $index = 0
+
+    do {
+        Start-Sleep 1
+        Start-Service sshd
+        Set-Service -Name sshd -StartupType 'Automatic'
+        $index += 1
+    }until ($sshd.Status -eq "Running" -or $index -eq 10)
+
+    if ($sshd.Status -eq "Running" -and $sshd.StartType -eq "Automatic"){
+        Write-Host "`nsshd service is running and set to 'Automatic'"
+    }else {
+        Write-Host "`nsshd service could not be started"
+    }
+    # Install PowerShell 7+ silently. This is necessary because PowerShell 5.1 does not work with SSH
+    iex "& { $(irm https://aka.ms/install-powershell.ps1) } -UseMSI -quiet"
+    
+    # Copy sshd_config with ready settings
+    Copy-Item -Path "\\dumpap3\tools\_Software\PowerShell\SSHSettings\sshd_config" -Destination $env:ProgramData\ssh -Force
+    
+    #Check if the sshd_config has been updated successfully and restart the sshd service
+    if ((Get-Content -Path $env:ProgramData\ssh\sshd_config) -contains "#PubkeyAuthentication yes"){
+        Restart-Service sshd
+    }else{
+        Write-Host "Wrong sshd_config detected"
+    }
+    # Check if ssh-agent is running and start it, if it is not
+    $service = Get-Service ssh-agent
+    $index = 0
+    if ($service.Status -eq "Stopped"){
+        do {
+            Start-Service $service.Name
+            Start-Sleep 1
+            }until(Get-Service $service.name -or $index -gt 10)
+    } else {
+        Write-Host $service.Name "is running"
+    }
+    
+
+}
+# END Install-OpenSSH
+#-------------------------------------------------------------------------------------------------------------------------------------------

@@ -48,7 +48,7 @@ SEQUENCE_FIELDS = [
     "shots",
     "assets",
 ]
-SHOT_FIELDS = ["project", "code", "id", "sg_status_list", "sg_cut_duration", "assets"]
+SHOT_FIELDS = ["project", "code", "id", "sg_status_list", "sg_cut_duration", "assets","task_template"]
 ASSET_FIELDS = [
     "project",
     "code",
