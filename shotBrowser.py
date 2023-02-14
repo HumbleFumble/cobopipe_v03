@@ -660,7 +660,7 @@ class FrontController(QtCore.QObject):
 		super(FrontController, self).__init__()
 		self.signals = Signals()
 		# filmPath = cfg_util.CreatePathFromDict(cfg.project_paths["film_path"])
-		self.__repository = RepositoryFactory(filmPath=CC.get_film_path()).create()
+		self.repository = RepositoryFactory(filmPath=CC.get_film_path()).create()
 		# self.saveNodeInfo()
 		self.loadNodeInfo()
 		self.__pixmapUtil = PixmapUtil()
@@ -698,14 +698,14 @@ class FrontController(QtCore.QObject):
 	# TODO MAKE EVENT TO SET STYLES/TITLE ON RIGHT CLICK
 	def loadNodeInfo(self, cur_node=None):
 		logger.debug("Loading node information")
-		episodes = self.__repository.GetByFilter(type_filter="episode")
+		episodes = self.repository.GetByFilter(type_filter="episode")
 		if "episode_info_file" in CC.__dict__.keys():
 			for ep in episodes:
 				ep_info_file = CC.get_episode_info_file(episode_name=ep.getName())
 				ep_info_dict = self.loadSettings(ep_info_file)
 				if ep_info_dict:
 					for info_node_name in ep_info_dict.keys():
-						info_node_dict = self.__repository.GetByName(info_node_name)
+						info_node_dict = self.repository.GetByName(info_node_name)
 						if info_node_dict:
 							info_node = info_node_dict["object"]
 							for set_info in ep_info_dict[info_node_name].keys():
@@ -962,7 +962,7 @@ class FrontController(QtCore.QObject):
 		return_list = []
 		if cur_nodes:
 			for cur_node in cur_nodes:
-				return_list.append((self.__repository.GetByName(cur_node))["object"])
+				return_list.append((self.repository.GetByName(cur_node))["object"])
 		return return_list
 
 	def CreateCategory(self, name="", list_of_nodes=[]):
@@ -1445,13 +1445,13 @@ class FrontController(QtCore.QObject):
 		logger.info("Finished with pre-comps")
 
 	def getAllNodes(self):
-		return self.__repository.GetByFilter()
+		return self.repository.GetByFilter()
 
 	def getType(self, cur_name=None):
-		return self.__repository.getType(cur_name)
+		return self.repository.getType(cur_name)
 
 	def createTreeModel(self):
-		cur_nodes = self.__repository.GetByFilter(type_filter="episode")
+		cur_nodes = self.repository.GetByFilter(type_filter="episode")
 		# cur_nodes = sorted(cur_nodes,key=lambda x:x.getName())
 		self.__imgTree = TreeModel(nodes=cur_nodes, pixmap_util=self.__pixmapUtil)
 		return self.__imgTree
@@ -1462,7 +1462,7 @@ class FrontController(QtCore.QObject):
 	# 	self.__imgTree.endResetModel()
 
 	def setTableByFilter(self, name_filter=None, type_filter=None, parent_filter=None):
-		cur_nodes = self.__repository.GetByFilter(name_filter=name_filter, type_filter=type_filter,
+		cur_nodes = self.repository.GetByFilter(name_filter=name_filter, type_filter=type_filter,
 												  parent_filter=parent_filter)
 		return self.setTableModel(cur_nodes)
 
@@ -1749,7 +1749,7 @@ class FrontController(QtCore.QObject):
 		os.startfile(output_path)
 		return output_path
 
-	def toonboomRenderExternally(self,nodes):
+	def toonboomRenderExternally(self, nodes, wait=False):
 		shots = []
 		for node in nodes:
 			if not node.getType() in ["episode","seq"]:
@@ -1757,6 +1757,7 @@ class FrontController(QtCore.QObject):
 			else:
 				shots.extend(node.getAllChildren())
 		pool = ThreadPool2.ThreadPool()
+		# pool.setMaxThreads(1)
 		workers = []
 		for shot in shots:
 			scene_path = self.findToonboomAnimationFile(shot)
@@ -1769,12 +1770,15 @@ class FrontController(QtCore.QObject):
 		if workers:
 			pool.signals.finished.connect(createCompPreviewDone)
 			pool.run()
-			# pool.wait()
+			if wait == True:
+				print('Trying to wait') 
+				pool.wait()
 			print('\n >> Rendering! <<')
    
 	def toonboomRenderExternallyCmd(self,scene_path):
 		cmd = r"Python T:\_Pipeline\cobopipe_v02-001\TB\ToonBoom_PythonExternal_Funcs.py %s" % scene_path
-		subprocess.Popen(cmd,shell=True,universal_newlines=True,env=run_env)
+		process = subprocess.Popen(cmd,shell=True,universal_newlines=True,env=run_env)
+		process.communicate()
 
 	def updateHarmonyPalettes(self, nodes):
 		shots = []
@@ -2280,7 +2284,7 @@ class MainWindow(QtWidgets.QWidget):
 	def __init__(self, parent=None):
 
 		self.__threadPool = thread_pool.ThreadPool()
-		self.__ctrl = FrontController()
+		self.ctrl = FrontController()
 		super(MainWindow, self).__init__(parent)
 		self.setWindowTitle("Comp Contact Sheet")
 		self.setWindowFlags(QtCore.Qt.Window)
@@ -2301,7 +2305,7 @@ class MainWindow(QtWidgets.QWidget):
 		self.createSearchCompleter()
 		self.populateTableStateCombo()
 		# Set startup table model
-		self.table_model = self.__ctrl.setTableByFilter(type_filter="episode")
+		self.table_model = self.ctrl.setTableByFilter(type_filter="episode")
 		self.table_view.setModel(self.table_model)
 
 		self.resize(1000, 800)
@@ -2402,8 +2406,8 @@ class MainWindow(QtWidgets.QWidget):
 		self.progress_bar_label = QtWidgets.QLabel("")
 		self.progress_bar_label.setMinimumHeight(5)
 		self.progress_bar_label.setWordWrap(True)
-		self.__ctrl.signals.progressbar_init.connect(self.progressBar.setMaximum)
-		self.__ctrl.signals.progressbar_value.connect(self.progressBar.setValue)
+		self.ctrl.signals.progressbar_init.connect(self.progressBar.setMaximum)
+		self.ctrl.signals.progressbar_value.connect(self.progressBar.setValue)
 
 		self.splitter_tree_table = QtWidgets.QSplitter()
 		# self.splitter_tree_table.setContentsMargins(5, 0, 5, 5)
@@ -2477,7 +2481,7 @@ class MainWindow(QtWidgets.QWidget):
 		if cur_node:
 			logger.debug(cur_node.getName())
 			if cur_node.getType() == "seq":
-				self.__ctrl.refreshThumbs(cur_node.getChildren(), overwrite=False)
+				self.ctrl.refreshThumbs(cur_node.getChildren(), overwrite=False)
 
 	def __setPalette(self):
 		#TODO setting palette in maya does NOT look great
@@ -2541,7 +2545,7 @@ class MainWindow(QtWidgets.QWidget):
 		self.table_view_from.installEventFilter(self)
 		self.table_view_from.setFixedSize(self.width + 10, self.height + 30)
 
-		self.table_model_from = self.__ctrl.setFromTable(None)
+		self.table_model_from = self.ctrl.setFromTable(None)
 		self.table_view_from.setModel(self.table_model_from)
 		self.table_view_from.installEventFilter(self)
 
@@ -2568,7 +2572,7 @@ class MainWindow(QtWidgets.QWidget):
 		self.table_view_to.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
 
 		self.table_view_to.installEventFilter(self)
-		self.table_model_to = self.__ctrl.setToTable([])
+		self.table_model_to = self.ctrl.setToTable([])
 		self.table_view_to.setModel(self.table_model_to)
 
 		self.to_toolbar = QtWidgets.QToolBar()
@@ -2600,7 +2604,7 @@ class MainWindow(QtWidgets.QWidget):
 		self.from_to_widget.setLayout(self.from_to_layout)
 
 	def ApplyCompFromTo(self):
-		self.__ctrl.applyComp()
+		self.ctrl.applyComp()
 
 	# TODO Open Preview folder
 	# TODO Open Personal HookUp
@@ -2731,7 +2735,7 @@ class MainWindow(QtWidgets.QWidget):
 
 
 					# For Adding to category
-					for category in self.__ctrl.getCategories():
+					for category in self.ctrl.getCategories():
 						add_temp = QtWidgets.QAction(category, category_add_menu)
 						add_temp.triggered.connect(
 							partial(self.AddToCategory, category_name=category, list_of_nodes=nodes))
@@ -2784,42 +2788,42 @@ class MainWindow(QtWidgets.QWidget):
 				action = menu.exec_(event.globalPos())
 				if not action == None:
 					if action.text() == "Open Folder":
-						self.__ctrl.openDir(node.getUrl())
+						self.ctrl.openDir(node.getUrl())
 					if action.text() == "Refresh Thumbnails":  # NOT USED ANYMORE
 						for cur_node in nodes:
-							self.__ctrl.refreshThumbs(cur_nodes=self.__ctrl.findShotsInParent(cur_node=cur_node),
+							self.ctrl.refreshThumbs(cur_nodes=self.ctrl.findShotsInParent(cur_node=cur_node),
 													  overwrite=True, overwrite_cache=True, use_threads=False)
 					if action.text() == "Rebuild Thumbnails":
 						for cur_node in nodes:
-							self.__ctrl.refreshThumbs(cur_nodes=self.__ctrl.findShotsInParent(cur_node=cur_node),
+							self.ctrl.refreshThumbs(cur_nodes=self.ctrl.findShotsInParent(cur_node=cur_node),
 													  overwrite=True, overwrite_cache=True, use_threads=True)
 					if action.text() == "Zip Anim Folder":
-						self.__ctrl.zipFolders(nodes,user_name=self.user_combobox.currentText(), local=False)
+						self.ctrl.zipFolders(nodes,user_name=self.user_combobox.currentText(), local=False)
 					if action.text() == "Zip Anim Folder to FTP":
-						self.__ctrl.zipFolders(nodes, destination=self.__ctrl.get_ftp_directory(self.user_combobox.currentText()),user_name=self.user_combobox.currentText(), local=False)
+						self.ctrl.zipFolders(nodes, destination=self.ctrl.get_ftp_directory(self.user_combobox.currentText()),user_name=self.user_combobox.currentText(), local=False)
 					if action.text() == "Zip Anim Folder (Local)":
-						self.__ctrl.zipFolders(nodes,user_name=self.user_combobox.currentText(), local=True)
+						self.ctrl.zipFolders(nodes,user_name=self.user_combobox.currentText(), local=True)
 					if action.text() == "Zip Anim Folder to FTP (Local)":
-						self.__ctrl.zipFolders(nodes, destination=self.__ctrl.get_ftp_directory(self.user_combobox.currentText()),user_name=self.user_combobox.currentText(), local=True)
+						self.ctrl.zipFolders(nodes, destination=self.ctrl.get_ftp_directory(self.user_combobox.currentText()),user_name=self.user_combobox.currentText(), local=True)
 					if action.text() == "Rebuild Anim Publish Report":
 						cur_list = nodes
 						if node.getType() in ["episode","seq"]:
 							cur_list = node.getAllChildren()
-						self.__ctrl.createPublishReport(node_list=cur_list)
+						self.ctrl.createPublishReport(node_list=cur_list)
 					if action.text() == "Publish Animation":
-						self.__ctrl.publishAnimation(nodes)
+						self.ctrl.publishAnimation(nodes)
 					if action.text() == "PublishReport Overview":
-						self.__ctrl.publishReport(parent=self, type='overview', scope=node.getName(),filter_type="Prop")
+						self.ctrl.publishReport(parent=self, type='overview', scope=node.getName(),filter_type="Prop")
 					if action.text() == "Create Prop-OIDs from Report":
-						self.__ctrl.buildOIDBasedOnPublishReport(scope=node.getName())
+						self.ctrl.buildOIDBasedOnPublishReport(scope=node.getName())
 					if action.text() == "PublishReport Breakdown":
-						self.__ctrl.publishReport(parent=self, type='breakdown', scope=node.getName())
+						self.ctrl.publishReport(parent=self, type='breakdown', scope=node.getName())
 					if action.text() == "Open Animation File":
-						self.__ctrl.FindSceneAndOpen(scene_type="Animation", cur_node=node)
+						self.ctrl.FindSceneAndOpen(scene_type="Animation", cur_node=node)
 					if action.text() == "Open Light File":
-						self.__ctrl.FindSceneAndOpen(scene_type="Light", cur_node=node)
+						self.ctrl.FindSceneAndOpen(scene_type="Light", cur_node=node)
 					if action.text() == "Open Comp File":
-						self.__ctrl.FindSceneAndOpen(scene_type="Comp", cur_node=node)
+						self.ctrl.FindSceneAndOpen(scene_type="Comp", cur_node=node)
 					if action.text() == "Create Category":
 						self.CreateCategory(list_of_nodes=nodes)
 					if action.text() == "Delete Current Category":
@@ -2827,35 +2831,35 @@ class MainWindow(QtWidgets.QWidget):
 					if action.text() == "Remove Selection From Category":
 						self.RemoveFromCategory()
 					if action.text() == "Open Previs File":
-						self.__ctrl.FindSceneAndOpen(scene_type="Previs", cur_node=node)
+						self.ctrl.FindSceneAndOpen(scene_type="Previs", cur_node=node)
 					if action.text() == "Check Files for Virus":
 						shot_nodes = []
 						if node.getType() in ["seq","episode"]:
 							shot_nodes.extend(node.getAllChildren(node))
 						else:
 							shot_nodes = nodes
-						self.__ctrl.removeVirusFromScene(node_list=shot_nodes)
+						self.ctrl.removeVirusFromScene(node_list=shot_nodes)
 					if action.text() == "Run SceneSetup":
 						setup_nodes = []
 						if node.getType() == "seq":
 							setup_nodes.extend(node.getAllChildren(node))
 						else:
 							setup_nodes = nodes
-						self.__ctrl.runSceneSetup(setup_nodes)
+						self.ctrl.runSceneSetup(setup_nodes)
 					if action.text() == "Create Empty Scene":
 						if node.getType() == "seq":
-							self.__ctrl.runEmptySceneSetup(node)
+							self.ctrl.runEmptySceneSetup(node)
 					if action.text() == "Update Harmony Palettes":
-						self.__ctrl.updateHarmonyPalettes(nodes)
+						self.ctrl.updateHarmonyPalettes(nodes)
 					if action.text() == "Render Scene Externally":
-						self.__ctrl.toonboomRenderExternally(nodes)
+						self.ctrl.toonboomRenderExternally(nodes)
 					### OPEN PREVIEW ###
 					if action.text() == "Open Anim Preview":
-						self.__ctrl.openPreview(node, "anim")
+						self.ctrl.openPreview(node, "anim")
 					if action.text() == "Open Animatic":
-						self.__ctrl.openPreview(node, "animatic")
+						self.ctrl.openPreview(node, "animatic")
 					if action.text() == "Open Comp Preview":
-						self.__ctrl.openPreview(node, "comp")
+						self.ctrl.openPreview(node, "comp")
 					if action.text() == "Create HookUp":
 						if len(nodes) == 1:
 							if node.getType() == "seq":
@@ -2866,15 +2870,15 @@ class MainWindow(QtWidgets.QWidget):
 							cur_list = nodes
 							cur_name = "%s_Hookup" % self.user_combobox.currentText()
 
-						self.__ctrl.makeHookUpFromNodes(cur_list, cur_name, self.thumb_show_combo.currentText().lower())
+						self.ctrl.makeHookUpFromNodes(cur_list, cur_name, self.thumb_show_combo.currentText().lower())
 						# self.__ctrl.SceneSetupToonBoom(nodes)
 					if action.text() == "Compare AV":
-						self.__ctrl.compareLengths(self.thumb_show_combo.currentText(), node=node, fps=25, silent=True)
+						self.ctrl.compareLengths(self.thumb_show_combo.currentText(), node=node, fps=25, silent=True)
 					if action.text() == "Submit Toonboom Scene to RR":
-						self.__ctrl.submitToonBoomToRoyalRender(list_of_nodes=nodes,
+						self.ctrl.submitToonBoomToRoyalRender(list_of_nodes=nodes,
 																user=self.user_combobox.currentText())
 					if action.text() == "Submit Comp Scene to RR":
-						self.__ctrl.submitFusionToRoyalRender(list_of_nodes=nodes,
+						self.ctrl.submitFusionToRoyalRender(list_of_nodes=nodes,
 															  user=self.user_combobox.currentText(),
 															  comp=True)
 					# if action.text() == "Submit Comp_preview to RR":
@@ -2882,15 +2886,15 @@ class MainWindow(QtWidgets.QWidget):
 					if action.text() == "Create Toonboom Preview Locally":
 						for cur_node in nodes:
 							if cur_node.getAnimationStyle() == "Toonboom":
-								self.__ctrl.createPreviewFromToonboom(cur_node)
+								self.ctrl.createPreviewFromToonboom(cur_node)
 					if action.text() == "Create Comp Preview":
-						self.__ctrl.createCompPreview(nodes=nodes, force=False)
+						self.ctrl.createCompPreview(nodes=nodes, force=False)
 					if action.text() == "Create Comp Preview (Force)":
-						self.__ctrl.createCompPreview(nodes=nodes, force=True)
+						self.ctrl.createCompPreview(nodes=nodes, force=True)
 					if action.text() == "Submit Comp Preview to RR":
-						self.__ctrl.submitCompPreviewToRR(nodes=nodes, force=False, user=self.user_combobox.currentText())
+						self.ctrl.submitCompPreviewToRR(nodes=nodes, force=False, user=self.user_combobox.currentText())
 					if action.text() == "Submit Comp Preview to RR (Force)":
-						self.__ctrl.submitCompPreviewToRR(nodes=nodes, force=True, user=self.user_combobox.currentText())
+						self.ctrl.submitCompPreviewToRR(nodes=nodes, force=True, user=self.user_combobox.currentText())
 						# self.__ctrl.submitFusionToRoyalRender(list_of_nodes=nodes,
 						#                                       user=self.user_combobox.currentText(), preview=True,submit_to_RR=False)
 					#### APPLY TABLES ACTIONS ####
@@ -2899,7 +2903,7 @@ class MainWindow(QtWidgets.QWidget):
 					if action.text() == "Add to (apply) TO shots":
 						self.AddToListShots(nodes)
 					if action.text() == "Create PreComp":
-						self.__ctrl.createAEPrecomp(nodes)
+						self.ctrl.createAEPrecomp(nodes)
 					if action.text() == "Switch Shot With FROM":
 						self.SwitchToFromShots(nodes[0])
 					if action.text() == "Remove Shot from list":
@@ -2910,22 +2914,22 @@ class MainWindow(QtWidgets.QWidget):
 						self.SetTitle(cur_node=node)
 					if action.text() == "Clear Info":
 						node.setTitle("")
-						self.__ctrl.saveNodeInfo(cur_node=node, clear=True)
+						self.ctrl.saveNodeInfo(cur_node=node, clear=True)
 					if action.text() in ["Maya", "Toonboom", "Fusion", "AE"]:  # Checking the info of anim/comp style
 						if action.actionGroup() == anim_style_group:
 							if node.getType() == "seq":
 								for n in node.getAllChildren():
 									n.setAnimationStyle(anim_style_group.checkedAction().text())
-									self.__ctrl.saveNodeInfo(cur_node=n, info_keys=["animation_style"])
+									self.ctrl.saveNodeInfo(cur_node=n, info_keys=["animation_style"])
 							node.setAnimationStyle(anim_style_group.checkedAction().text())
-							self.__ctrl.saveNodeInfo(cur_node=node, info_keys=["animation_style"])
+							self.ctrl.saveNodeInfo(cur_node=node, info_keys=["animation_style"])
 						elif action.actionGroup() == comp_style_group:
 							if node.getType() == "seq":
 								for n in node.getAllChildren():
 									n.setCompStyle(comp_style_group.checkedAction().text())
-									self.__ctrl.saveNodeInfo(cur_node=n, info_keys=["comp_style"])
+									self.ctrl.saveNodeInfo(cur_node=n, info_keys=["comp_style"])
 							node.setCompStyle(comp_style_group.checkedAction().text())
-							self.__ctrl.saveNodeInfo(cur_node=node, info_keys=["comp_style"])
+							self.ctrl.saveNodeInfo(cur_node=node, info_keys=["comp_style"])
 
 
 		return QtWidgets.QWidget.eventFilter(self, source, event)
@@ -2982,8 +2986,8 @@ class MainWindow(QtWidgets.QWidget):
 		# else:
 		cur_nodes = cur_node.getChildren()
 		if cur_node.getType() == "seq":
-			self.__ctrl.refreshThumbs(cur_nodes=cur_nodes, overwrite=False, overwrite_cache=True)
-		self.table_model = self.__ctrl.setTableModel(cur_nodes)
+			self.ctrl.refreshThumbs(cur_nodes=cur_nodes, overwrite=False, overwrite_cache=True)
+		self.table_model = self.ctrl.setTableModel(cur_nodes)
 		self.table_view.setModel(self.table_model)
 		self.ExpandToNode(cur_node)
 
@@ -3015,12 +3019,12 @@ class MainWindow(QtWidgets.QWidget):
 				self.tree.setCurrentIndex(self.proxyModel.index(row, 0, index))
 
 	def SetFromShot(self, cur_node):
-		self.table_model_from = self.__ctrl.setFromTable(cur_node)
+		self.table_model_from = self.ctrl.setFromTable(cur_node)
 		self.table_view_from.setModel(self.table_model_from)
 		self.splitter_treetable_tofrom.setSizes([1, 1])
 
 	def AddToListShots(self, cur_nodes):
-		self.table_model_to = self.__ctrl.setToTable(cur_nodes, add=True)
+		self.table_model_to = self.ctrl.setToTable(cur_nodes, add=True)
 		self.table_view_to.setModel(self.table_model_to)
 		self.splitter_treetable_tofrom.setSizes([1, 1])
 
@@ -3029,27 +3033,27 @@ class MainWindow(QtWidgets.QWidget):
 		self.SetFromShot(nodes[0])
 
 	def Btn_ClearFROM(self):
-		self.table_view_to.setModel(self.__ctrl.getFromTable().removeAllNodes())
-		self.__ctrl.from_node = []
+		self.table_view_to.setModel(self.ctrl.getFromTable().removeAllNodes())
+		self.ctrl.from_node = []
 
 	def Btn_AddTO(self):
 		nodes = self.table_view.model().getNodesByIndex(self.table_view.selectedIndexes())
 		self.AddToListShots(nodes)
 
 	def Btn_ClearTO(self):
-		self.__ctrl.to_node_list = []
-		self.table_view_to.setModel(self.__ctrl.getToTable().removeAllNodes())
+		self.ctrl.to_node_list = []
+		self.table_view_to.setModel(self.ctrl.getToTable().removeAllNodes())
 		# self.__ctrl.to_node_list = []
 
 	def RemoveShotsInTOList(self, cur_nodes):
 		# for node in cur_nodes:
-		self.__ctrl.RemoveTo(cur_nodes)
-		self.table_view_to.setModel(self.__ctrl.getToTable())
+		self.ctrl.RemoveTo(cur_nodes)
+		self.table_view_to.setModel(self.ctrl.getToTable())
 
 	def SwitchToFromShots(self, cur_node):
-		self.__ctrl.SwitchFromAndTo(cur_node)
-		self.table_view_from.setModel(self.__ctrl.getFromTable())
-		self.table_view_to.setModel(self.__ctrl.getToTable())
+		self.ctrl.SwitchFromAndTo(cur_node)
+		self.table_view_from.setModel(self.ctrl.getFromTable())
+		self.table_view_to.setModel(self.ctrl.getToTable())
 
 	### CATEGORY CALLS ###
 
@@ -3061,7 +3065,7 @@ class MainWindow(QtWidgets.QWidget):
 					list_of_nodes.append(temp_node)
 		if not category_name:
 			category_name = self.table_category_combo.currentText()
-		self.__ctrl.AddToCategory(category_name, list_of_nodes)
+		self.ctrl.AddToCategory(category_name, list_of_nodes)
 		if self.radiobttn_table_category.isChecked():
 			self.updateTable()
 
@@ -3074,7 +3078,7 @@ class MainWindow(QtWidgets.QWidget):
 					table_selected_nodes.append(temp_node)
 			if not category_name:
 				category_name = self.table_category_combo.currentText()
-			self.__ctrl.RemoveFromCategory(category_name, table_selected_nodes)
+			self.ctrl.RemoveFromCategory(category_name, table_selected_nodes)
 			self.updateTable()
 
 	def SetTitle(self, cur_node):
@@ -3090,7 +3094,7 @@ class MainWindow(QtWidgets.QWidget):
 			logger.info("no new title given")
 			return
 		cur_node.setTitle(new_title)
-		self.__ctrl.saveNodeInfo(cur_node=cur_node, info_keys=["title"])
+		self.ctrl.saveNodeInfo(cur_node=cur_node, info_keys=["title"])
 
 	def CreateCategory(self, list_of_nodes=[]):
 		text, ok = QtWidgets.QInputDialog().getText(self, "Create New Category", "example: Forest:",
@@ -3106,7 +3110,7 @@ class MainWindow(QtWidgets.QWidget):
 				temp_node = self.table_model.getNode(selected_index)
 				if temp_node:
 					list_of_nodes.append(temp_node)
-		category = self.__ctrl.CreateCategory(category_name, list_of_nodes)
+		category = self.ctrl.CreateCategory(category_name, list_of_nodes)
 		if not category:
 			logger.info("Already a category with that name. Please pick a new name!")
 		else:
@@ -3114,15 +3118,15 @@ class MainWindow(QtWidgets.QWidget):
 
 	def DeleteCategory(self):  # TODO Add confirmation prompt
 		category_name = self.table_category_combo.currentText()
-		self.__ctrl.deleteCategory(category_name)
+		self.ctrl.deleteCategory(category_name)
 		self.populateTableStateCombo()
 
 	def ThumbComboChanged(self):
 		logger.info("Changing thumb view to show: %s" % self.thumb_show_combo.currentText())
 		QtGui.QPixmapCache.clear()
 		if self.last_selection:
-			self.__ctrl.updateViewState(new_view_state=self.thumb_show_combo.currentText())
-			self.__ctrl.refreshThumbs(cur_nodes=self.__ctrl.findShotsInParent(cur_node=self.last_selection),
+			self.ctrl.updateViewState(new_view_state=self.thumb_show_combo.currentText())
+			self.ctrl.refreshThumbs(cur_nodes=self.ctrl.findShotsInParent(cur_node=self.last_selection),
 									  overwrite=False, overwrite_cache=True)
 
 	def setProxyModel(self):
@@ -3148,10 +3152,10 @@ class MainWindow(QtWidgets.QWidget):
 			if cur_node.getType() == "episode":
 				if self.last_selection:
 					if not cur_node.getName() in self.last_selection.getName() and self.radiobttn_grp_table.checkedButton() == "Sync":
-						self.__ctrl.ClearPixCache()
+						self.ctrl.ClearPixCache()
 			elif cur_node.getType() == "seq":
 				if not self.radiobttn_grp_table.checkedButton() == "Sync":
-					self.__ctrl.refreshThumbs(cur_nodes=self.__ctrl.findShotsInParent(cur_node=cur_node),
+					self.ctrl.refreshThumbs(cur_nodes=self.ctrl.findShotsInParent(cur_node=cur_node),
 											  overwrite=False, use_threads=True)
 			# if not self.__ctrl.getType(cur_node.getName()) == "shot":
 			#     self.__ctrl.refreshThumbs(cur_nodes=self.__ctrl.findShotsInParent(cur_node=cur_node), overwrite=False,use_threads=True)
@@ -3165,30 +3169,30 @@ class MainWindow(QtWidgets.QWidget):
 		if table_state == "Sync":
 			cur_node = self.tree_model.getNode(self.proxyModel.mapToSource(self.tree.currentIndex()))
 			if cur_node:
-				self.table_model = self.__ctrl.setTableModel(self.__ctrl.findShotsInParent(cur_node))
-				self.__ctrl.refreshThumbs(cur_nodes=self.__ctrl.findShotsInParent(cur_node), overwrite=False,
+				self.table_model = self.ctrl.setTableModel(self.ctrl.findShotsInParent(cur_node))
+				self.ctrl.refreshThumbs(cur_nodes=self.ctrl.findShotsInParent(cur_node), overwrite=False,
 										  overwrite_cache=True)
 		if table_state == "Freeze":
 			pass
 		if table_state == "Isolate":
 			pass
 		if table_state == "Category":
-			cur_nodes = self.__ctrl.getCategoryNodes(self.table_category_combo.currentText())
-			self.__ctrl.refreshThumbs(cur_nodes=cur_nodes, overwrite=False, overwrite_cache=True)
-			self.table_model = self.__ctrl.setTableModel(cur_nodes)
+			cur_nodes = self.ctrl.getCategoryNodes(self.table_category_combo.currentText())
+			self.ctrl.refreshThumbs(cur_nodes=cur_nodes, overwrite=False, overwrite_cache=True)
+			self.table_model = self.ctrl.setTableModel(cur_nodes)
 		self.table_model.endResetModel()
 		self.table_view.setModel(self.table_model)
 
 	def thumbSizeRadioGrpChange(self):
 		cur_button = self.radiobttn_grp_thumbsize.checkedButton().text()
 		if cur_button == "Large":
-			self.__ctrl.setThumbSize("large")
+			self.ctrl.setThumbSize("large")
 		elif cur_button == "Medium":
-			self.__ctrl.setThumbSize("medium")
+			self.ctrl.setThumbSize("medium")
 		else:
-			self.__ctrl.setThumbSize("small")
+			self.ctrl.setThumbSize("small")
 		self.table_model.beginResetModel()
-		self.__ctrl.ClearPixCache()
+		self.ctrl.ClearPixCache()
 		self.table_model.endResetModel()
 
 	def tableStateRadioGrpChanged(self):
@@ -3209,7 +3213,7 @@ class MainWindow(QtWidgets.QWidget):
 
 	def populateTableStateCombo(self, current_text=None):
 		self.table_category_combo.currentTextChanged.disconnect()
-		current_categories = self.__ctrl.getCategories()
+		current_categories = self.ctrl.getCategories()
 		self.table_category_combo.clear()
 		self.table_category_combo.addItems(current_categories)
 		self.table_category_combo.currentTextChanged.connect(self.tableStateComboChanged)
@@ -3217,7 +3221,7 @@ class MainWindow(QtWidgets.QWidget):
 			self.table_category_combo.setCurrentText(current_text)
 
 	def populateTree(self):
-		self.tree_model = self.__ctrl.createTreeModel()
+		self.tree_model = self.ctrl.createTreeModel()
 		# self.tree_model.sort(0, order=QtCore.Qt.AscendingOrder)
 		# self.tree.setModel(self.tree_model)
 		self.setProxyModel()
@@ -3228,7 +3232,7 @@ class MainWindow(QtWidgets.QWidget):
 		self.completer.setModelSorting(QtWidgets.QCompleter.CaseInsensitivelySortedModel)
 		self.completer.setFilterMode(QtCore.Qt.MatchContains)
 		self.completer.setCompletionMode(QtWidgets.QCompleter.PopupCompletion)
-		self.completer_list = [x.getName() for x in self.__ctrl.getAllNodes()]
+		self.completer_list = [x.getName() for x in self.ctrl.getAllNodes()]
 		self.completer.setModel(QtCore.QStringListModel(self.completer_list))
 		self.menu_search_bar.setCompleter(self.completer)
 
@@ -3328,6 +3332,23 @@ def createCompPreviewDone(result):
 #     run_env["TOONBOOM_GLOBAL_SCRIPT_LOCATION"] = "%s/TB/ToonBoom_Global_Scripts" % os.path.dirname(os.path.realpath(__file__))
 #     run_env["BOM_USER"] = ""
 
+def render_all(main):
+    main.hide()
+    nodes = []
+    episodes = main.table_model.getAllNodes()
+    for episode in episodes:
+        if episode.getName() in ['S105']:
+            sequences = episode.getChildren()
+            for sequence in sequences:
+                shots = sequence.getChildren()
+                nodes = nodes + shots
+    for i in range(0, len(nodes), 10):
+        render(main, nodes[i:i+10])
+
+def render(main, nodes):
+    main.ctrl.toonboomRenderExternally(nodes, wait=True)
+    print('Finished Chunk')
+
 if not in_maya:  
 	if __name__ == '__main__':
 		import sys
@@ -3335,12 +3356,13 @@ if not in_maya:
 			app = QtWidgets.QApplication(sys.argv)
 		else:
 			app = QtWidgets.QApplication.instance()
-		# addExtraEnv()
 		mainWin = MainWindow()
 		mainWin.show()
 
-	# print(os.environ)
+		##### REMOVE
+		render_all(mainWin)
+
+		# mainWin.__ctrl.toonboomRenderExternally
+
 	app.exec_()
-	#sys.exit()
-# sys.exit(app.exec_())
-# print(os.environ)
+

@@ -4,7 +4,7 @@ import os
 
 
 def send_webhook():
-    url = "http://192.168.0.89:8080/webhook"
+    url = "http://192.168.0.4:8080/webhook"
     path = os.path.abspath(os.path.join(__file__, '..', 'data.json'))
     data = get_json(path)
     requests.post(url, json=data)
