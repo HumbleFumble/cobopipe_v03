@@ -41,4 +41,4 @@ def deploy(dev=False):
 
 
 if __name__ == "__main__":
-    deploy(dev=True)
+    deploy(dev=False)
