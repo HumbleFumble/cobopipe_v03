@@ -1,3 +1,8 @@
+import sys
+import os
+path = os.path.abspath(os.path.join(__file__, '../../..'))
+if path not in sys.path:
+    sys.path.append(path)
 from flask import Flask, request
 from waitress import serve
 import shotgrid.webhook.handler as handler
