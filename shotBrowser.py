@@ -3360,9 +3360,7 @@ if not in_maya:
 		mainWin.show()
 
 		##### REMOVE
-		render_all(mainWin)
-
-		# mainWin.__ctrl.toonboomRenderExternally
+		# render_all(mainWin)
 
 	app.exec_()
 
