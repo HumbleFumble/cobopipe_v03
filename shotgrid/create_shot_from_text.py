@@ -16,4 +16,4 @@ if __name__ == "__main__":
     project_name = "LegoFriends"
     seq_name = "S105_SQ010"
     shot_list = [["S105_SQ010_SH015", 20]]
-    ready_up_classes(list_of_shots=shot_list,project_name=project_name,seq_name=seq_name)
+    ready_up_classes(list_of_shots=shot_list, project_name=project_name, seq_name=seq_name)
