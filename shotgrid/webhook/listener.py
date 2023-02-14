@@ -1,6 +1,6 @@
 from flask import Flask, request
 from waitress import serve
-import shotgrid.wh_handler as wh_handler
+import shotgrid.webhook.wh_handler as wh_handler
 import json
 
 app = Flask(__name__)
