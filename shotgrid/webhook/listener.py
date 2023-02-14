@@ -1,6 +1,6 @@
 from flask import Flask, request
 from waitress import serve
-import shotgrid.webhook.wh_handler as wh_handler
+import shotgrid.webhook.handler as handler
 import json
 
 app = Flask(__name__)
@@ -24,7 +24,7 @@ def webhook():
     if request.method == "POST":
         data = request.json.get("data")
         timestamp = request.json.get("timestamp")
-        wh_handler.run(data, timestamp)
+        handler.run(data, timestamp)
         return "Webhook received!"
     
 
