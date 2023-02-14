@@ -6,7 +6,7 @@ def ready_up_classes(list_of_shots=None, project_name=None, seq_name=None, task_
     seq = sg.Sequence(project=p.identity, code=seq_name)
     wrap_task_temp = sg.TaskTemplate(code=task_template)
     
-    for shot,duration in list_of_shots:
+    for shot, duration in list_of_shots:
         new_shot = seq.create_shot(code=shot, task_template=wrap_task_temp, sg_cut_duration=duration)
         list_of_wrap_shots.append(new_shot)
 
