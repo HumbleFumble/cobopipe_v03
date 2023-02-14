@@ -30,7 +30,15 @@ API_USER_FIELDS = [
     "lastname",
     "salted_password",
 ]
-PROJECT_FIELDS = ["name", "id", "sg_description", "sg_status", "users", "tank_name", "code"]
+PROJECT_FIELDS = [
+    "name",
+    "id",
+    "sg_description",
+    "sg_status",
+    "users",
+    "tank_name",
+    "code",
+]
 EPISODE_FIELDS = [
     "project",
     "code",
@@ -48,7 +56,15 @@ SEQUENCE_FIELDS = [
     "shots",
     "assets",
 ]
-SHOT_FIELDS = ["project", "code", "id", "sg_status_list", "sg_cut_duration", "assets","task_template"]
+SHOT_FIELDS = [
+    "project",
+    "code",
+    "id",
+    "sg_status_list",
+    "sg_cut_duration",
+    "assets",
+    "task_template",
+]
 ASSET_FIELDS = [
     "project",
     "code",
@@ -71,10 +87,11 @@ TASK_FIELDS = [
     "due_date",
     "duration",
     "upstream_tasks",
-    "downstream_tasks"
+    "downstream_tasks",
 ]
 VERSION_FIELDS = ["project", "code", "id", "sg_status_list", "user"]
 TASK_TEMPLATE_FIELDS = ["id", "code"]
+
 
 # Creating an API instance
 def get_shotgrid(
@@ -95,11 +112,18 @@ def initialize(
         shotgrid_api = get_shotgrid(url=url, script=script, key=key)
     return shotgrid_api
 
+sg_counter = 0
+def addShotgridCall_Counter():
+    # A counter to track whenever we make a call for shotgrid_api.
+     global sg_counter
+     sg_counter = sg_counter + 1
+     return sg_counter
 
 def get_task_templates(fields=TASK_TEMPLATE_FIELDS):
     initialize()
     task_templates = []
     data = shotgrid_api.find("TaskTemplate", filters=[], fields=fields)
+    addShotgridCall_Counter()
     for item in data:
         task_templates.append(TaskTemplate(**item, query=False))
     return task_templates
@@ -162,7 +186,7 @@ class ClientUser:
     def update(self):
         _update_entity(self)
         self.identity = {"type": self.type, "id": self.id}
-    
+
     def __repr__(self):
         return _repr_entity(self)
 
@@ -248,75 +272,70 @@ class Project:
             users.append(HumanUser(**user, query=query))
         return users
 
-    def get_episodes(self, fields=EPISODE_FIELDS, extra_filters=[], query=True):
+    def get_episodes(self, fields=EPISODE_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             self.type,
             "episode",
             fields,
             Episode,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
-    def get_sequences(self, fields=SEQUENCE_FIELDS, extra_filters=[], query=True):
+    def get_sequences(self, fields=SEQUENCE_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             self.type,
             "sequence",
             fields,
             Sequence,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
-    def get_shots(self, fields=SHOT_FIELDS, extra_filters=[], query=True):
+    def get_shots(self, fields=SHOT_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             self.type,
             "shot",
             fields,
             Shot,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
-    def get_assets(self, fields=ASSET_FIELDS, extra_filters=[], query=True):
+    def get_assets(self, fields=ASSET_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             self.type,
             "asset",
             fields,
             Asset,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
-    def get_tasks(self, fields=TASK_FIELDS, extra_filters=[], query=True):
+    def get_tasks(self, fields=TASK_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             self.type,
             "task",
             fields,
             Task,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
-    def get_versions(self, fields=VERSION_FIELDS, extra_filters=[], query=True):
+    def get_versions(self, fields=VERSION_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             self.type,
             "version",
             fields,
             Version,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
     def create_episode(self, code: str, nice_name: str = ""):
         data = {"project": self.identity, "code": code, "description": nice_name}
         episode = shotgrid_api.create("Episode", data)
+        addShotgridCall_Counter()
         return Episode(**episode, query=False)
 
     def create_asset(
@@ -326,10 +345,11 @@ class Project:
         if task_template:
             data["task_template"] = task_template.identity
         asset = shotgrid_api.create("Asset", data)
+        addShotgridCall_Counter()
         return Asset(**asset, query=False)
 
     def __getattr__(self, code: str):
-        self.__dict__[f"{name}"]
+        self.__dict__[f"{code}"]
 
 
 class Episode:
@@ -375,37 +395,34 @@ class Episode:
             shots = shots + sequence.get_shots(query=query)
         return shots
 
-    def get_assets(self, fields=ASSET_FIELDS, extra_filters=[], query=True):
+    def get_assets(self, fields=ASSET_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             "episodes",
             "asset",
             fields,
             Asset,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
-    def get_tasks(self, fields=TASK_FIELDS, extra_filters=[], query=True):
+    def get_tasks(self, fields=TASK_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             "entity",
             "task",
             fields,
             Asset,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
-    def get_versions(self, fields=VERSION_FIELDS, extra_filters=[], query=True):
+    def get_versions(self, fields=VERSION_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             "entity",
             "version",
             fields,
             Version,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
     def create_sequence(
@@ -415,6 +432,7 @@ class Episode:
         if task_template:
             data["task_template"] = task_template.identity
         sequence = shotgrid_api.create("Sequence", data)
+        addShotgridCall_Counter()
         return Sequence(**sequence, query=False)
 
     def __getattr__(self, name: str):
@@ -466,38 +484,34 @@ class Sequence:
             assets.append(Asset(**asset, query=query))
         return assets
 
-    def get_tasks(self, fields=TASK_FIELDS, extra_filters=[], query=True):
+    def get_tasks(self, fields=TASK_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             "entity",
             "task",
             fields,
             Task,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
-    def get_versions(self, fields=VERSION_FIELDS, extra_filters=[], query=True):
+    def get_versions(self, fields=VERSION_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             "entity",
             "version",
             fields,
             Version,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
-    def create_shot(
-        self, code: str, task_template: object = None,
-    sg_cut_duration: int = 0,**kwargs):
-        # data = {"sg_sequence": self.identity, "code": code, "description": description, "sg_cut_duration": sg_cut_duration}
-        data = {"sg_sequence": self.identity, "code":code, "sg_cut_duration":sg_cut_duration}
+    def create_shot(self, code: str, task_template: object = None, **kwargs):
+        data = {"sg_sequence": self.identity, "code": code}
         data.update(**kwargs)
         if task_template:
             data["task_template"] = task_template.identity
         data["project"] = self.project
         shot = shotgrid_api.create("Shot", data)
+        addShotgridCall_Counter()
         return Shot(**shot, query=False)
 
     def __getattr__(self, name: str):
@@ -543,26 +557,24 @@ class Shot:
             assets.append(Asset(**asset, query=query))
         return assets
 
-    def get_tasks(self, fields=TASK_FIELDS, extra_filters=[], query=True):
+    def get_tasks(self, fields=TASK_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             "entity",
             "task",
             fields,
             Task,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
-    def get_versions(self, fields=VERSION_FIELDS, extra_filters=[], query=True):
+    def get_versions(self, fields=VERSION_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             "entity",
             "version",
             fields,
             Version,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
     def __getattr__(self, name: str):
@@ -599,33 +611,31 @@ class Asset:
     def update(self):
         _update_entity(self)
         self.identity = {"type": self.type, "id": self.id}
-    
+
     def __repr__(self):
         return _repr_entity(self)
 
     def __str__(self):
         return _str_entity(self)
 
-    def get_tasks(self, fields=TASK_FIELDS, extra_filters=[], query=True):
+    def get_tasks(self, fields=TASK_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             "entity",
             "task",
             fields,
             Task,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
-    def get_versions(self, fields=VERSION_FIELDS, extra_filters=[], query=True):
+    def get_versions(self, fields=VERSION_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             "entity",
             "version",
             fields,
             Version,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
     def __getattr__(self, name: str):
@@ -662,7 +672,7 @@ class Task:
     def update(self):
         _update_entity(self)
         self.identity = {"type": self.type, "id": self.id}
-    
+
     def __repr__(self):
         return _repr_entity(self)
 
@@ -670,9 +680,9 @@ class Task:
         return _str_entity(self)
 
     def get_parent(self, query=True):
-        _type = self.entity['type']
-        _name = self.entity['name']
-        _id = self.entity['id']
+        _type = self.entity["type"]
+        _name = self.entity["name"]
+        _id = self.entity["id"]
         _class = globals()[_type]
         return _class(name=_name, id=_id, query=query)
 
@@ -775,6 +785,7 @@ class TaskTemplate:
         if "id" in self.__dict__.keys():
             self.identity = {"type": self.type, "id": self.id}
 
+
     def query(self):
         _query_entity(self)
         self.identity = {"type": self.type, "id": self.id}
@@ -811,15 +822,15 @@ def _get_entity(
     target_type,
     fields,
     return_class,
-    extra_filters=[],
-    query=True,
+    extra_filters=[]
 ):
     filters = [[source_type.lower(), "is", source_identity]]
     filters = filters + extra_filters
     data = shotgrid_api.find(target_type.capitalize(), filters=filters, fields=fields)
+    addShotgridCall_Counter()
     objects = []
     for entity in data:
-        objects.append(return_class(query=query, **entity))
+        objects.append(return_class(query=False, **entity))
     return objects
 
 
@@ -828,28 +839,31 @@ def _query_entity(self):
     for variable, value in self.__dict__.items():
         if variable in self.fields:
             if value:
-                filters.append([variable, "is", value])
+                if not type(value) == type([]):
+                    filters.append([variable, "is", value])
 
     if not filters:
         raise ValueError("Missing filter data")
-
     # print(f"\n\nfilters: {filters}\nfields: {self.fields}\n\n")
     data = shotgrid_api.find(self.type, filters=filters, fields=self.fields)
+    addShotgridCall_Counter()
     if not data:
         return
     for variable, value in data[0].items():
         exec(f"self.{variable} = {repr(value)}")
+
 
 def _update_entity(self):
     data = {}
     for variable, value in self.__dict__.items():
         if not variable in self.fields:
             continue
-        if variable in ['id', 'type']:
+        if variable in ["id", "type"]:
             continue
         data[variable] = value
-
+    addShotgridCall_Counter()
     shotgrid_api.update(self.type, self.id, data)
+
 
 if __name__ == "__main__":
     # project = Project(name="Lego Friends - Wildbrain")

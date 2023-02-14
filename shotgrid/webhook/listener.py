@@ -1,6 +1,11 @@
+import sys
+import os
+path = os.path.abspath(os.path.join(__file__, '../../..'))
+if path not in sys.path:
+    sys.path.append(path)
 from flask import Flask, request
 from waitress import serve
-import shotgrid.wh_handler as wh_handler
+import shotgrid.webhook.handler as handler
 import json
 
 app = Flask(__name__)
@@ -24,7 +29,7 @@ def webhook():
     if request.method == "POST":
         data = request.json.get("data")
         timestamp = request.json.get("timestamp")
-        wh_handler.run(data, timestamp)
+        handler.run(data, timestamp)
         return "Webhook received!"
     
 
@@ -36,4 +41,4 @@ def deploy(dev=False):
 
 
 if __name__ == "__main__":
-    deploy(dev=True)
+    deploy(dev=False)
