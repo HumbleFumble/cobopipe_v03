@@ -58,6 +58,9 @@ def run(project_code="LegoFriends"):
 
 def update_downstream(entity_id):
     approved_task = sg.Task(id=entity_id)
+    if not approved_task.sg_status_list == 'apr':
+        return False
+    
     for downstream_task in approved_task.get_downstream_tasks():
         status_list = []
         for upstream_task in downstream_task.get_upstream_tasks():
@@ -65,3 +68,4 @@ def update_downstream(entity_id):
         if set(status_list) == {'apr'}:
             downstream_task.sg_status_list = 'ready'
             downstream_task.update()
+    return True
