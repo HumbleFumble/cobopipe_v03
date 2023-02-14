@@ -63,15 +63,23 @@ def externalRendering(scene_file):
     #     print(i)
 
     # Iterating on the node list with a for-loop
+
+    correct_name = 'Guska'
+    nodetype = "RENDER"
     render_nodes = []
-    for node in nodes:  # For loop on the node list.
-        if 'Guska' in node.path and "RENDER" in node.path:
+
+    # Match the correct name with the render node and add to list. The group containing the render node should match
+    # the correct name
+    for node in nodes:
+        if correct_name in node.path and nodetype in node.path:
             render_nodes.append(node)
 
+    # Rename
     for node in render_nodes:
         name = node.name
-        node.name = name.replace('Trin', 'Guska')
+        node.name = name.replace('Trin', correct_name)
 
-    project.save_all()
+    # Save scene for the changes to take effect
+    # project.save_all()
 
 externalRendering(r"\\dumpap3\production\930462_HOJ_Project\Production\Film\S105\S105_SQ010\S105_SQ010_SH010\S105_SQ010_SH010\Test_H010_V100.xstage")
