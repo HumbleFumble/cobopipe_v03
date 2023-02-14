@@ -25,7 +25,7 @@ def ready_up_classes(list_of_shots=None, project_name=None, seq_name=None, episo
     print(f"Calls to shotgrid api: {sg.sg_counter}")
     return list_of_wrap_shots
 
-def auto_bid(shot_name=None,task_id=None,project_name=None,task_bid_dict={"Layout":0.05, "Animation":23,"Lightning":0.5,"Comp":0.5}):
+def auto_bid(shot_name=None,task_id=None,project_name=None,task_bid_dict={"Layout":100, "Animation":23,"Lightning":50,"Comp":50}):
     if shot_name and not task_id:
         #query all task attached to shot
         if project_name:
@@ -39,7 +39,7 @@ def auto_bid(shot_name=None,task_id=None,project_name=None,task_bid_dict={"Layou
     for cur_task in task_list:
         if cur_task.cotent in task_bid_dict:
             if not cur_task.est_in_mins:
-                cur_task.est_in_mins = cur_task.duration*task_bid_dict[cur_task.content]
+                cur_task.est_in_mins = cur_task.duration/task_bid_dict[cur_task.content]
     print(task_list)
 
 
