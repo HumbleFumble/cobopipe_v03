@@ -30,7 +30,15 @@ API_USER_FIELDS = [
     "lastname",
     "salted_password",
 ]
-PROJECT_FIELDS = ["name", "id", "sg_description", "sg_status", "users", "tank_name", "code"]
+PROJECT_FIELDS = [
+    "name",
+    "id",
+    "sg_description",
+    "sg_status",
+    "users",
+    "tank_name",
+    "code",
+]
 EPISODE_FIELDS = [
     "project",
     "code",
@@ -48,7 +56,15 @@ SEQUENCE_FIELDS = [
     "shots",
     "assets",
 ]
-SHOT_FIELDS = ["project", "code", "id", "sg_status_list", "sg_cut_duration", "assets","task_template"]
+SHOT_FIELDS = [
+    "project",
+    "code",
+    "id",
+    "sg_status_list",
+    "sg_cut_duration",
+    "assets",
+    "task_template",
+]
 ASSET_FIELDS = [
     "project",
     "code",
@@ -71,10 +87,11 @@ TASK_FIELDS = [
     "due_date",
     "duration",
     "upstream_tasks",
-    "downstream_tasks"
+    "downstream_tasks",
 ]
 VERSION_FIELDS = ["project", "code", "id", "sg_status_list", "user"]
 TASK_TEMPLATE_FIELDS = ["id", "code"]
+
 
 # Creating an API instance
 def get_shotgrid(
@@ -162,7 +179,7 @@ class ClientUser:
     def update(self):
         _update_entity(self)
         self.identity = {"type": self.type, "id": self.id}
-    
+
     def __repr__(self):
         return _repr_entity(self)
 
@@ -488,11 +505,8 @@ class Sequence:
             query=query,
         )
 
-    def create_shot(
-        self, code: str, task_template: object = None,
-    sg_cut_duration: int = 0,**kwargs):
-        # data = {"sg_sequence": self.identity, "code": code, "description": description, "sg_cut_duration": sg_cut_duration}
-        data = {"sg_sequence": self.identity, "code":code, "sg_cut_duration":sg_cut_duration}
+    def create_shot(self, code: str, task_template: object = None, **kwargs):
+        data = {"sg_sequence": self.identity, "code": code}
         data.update(**kwargs)
         if task_template:
             data["task_template"] = task_template.identity
@@ -599,7 +613,7 @@ class Asset:
     def update(self):
         _update_entity(self)
         self.identity = {"type": self.type, "id": self.id}
-    
+
     def __repr__(self):
         return _repr_entity(self)
 
@@ -662,7 +676,7 @@ class Task:
     def update(self):
         _update_entity(self)
         self.identity = {"type": self.type, "id": self.id}
-    
+
     def __repr__(self):
         return _repr_entity(self)
 
@@ -670,9 +684,9 @@ class Task:
         return _str_entity(self)
 
     def get_parent(self, query=True):
-        _type = self.entity['type']
-        _name = self.entity['name']
-        _id = self.entity['id']
+        _type = self.entity["type"]
+        _name = self.entity["name"]
+        _id = self.entity["id"]
         _class = globals()[_type]
         return _class(name=_name, id=_id, query=query)
 
@@ -840,16 +854,18 @@ def _query_entity(self):
     for variable, value in data[0].items():
         exec(f"self.{variable} = {repr(value)}")
 
+
 def _update_entity(self):
     data = {}
     for variable, value in self.__dict__.items():
         if not variable in self.fields:
             continue
-        if variable in ['id', 'type']:
+        if variable in ["id", "type"]:
             continue
         data[variable] = value
 
     shotgrid_api.update(self.type, self.id, data)
+
 
 if __name__ == "__main__":
     # project = Project(name="Lego Friends - Wildbrain")
