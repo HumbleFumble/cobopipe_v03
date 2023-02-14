@@ -25,6 +25,25 @@ def ready_up_classes(list_of_shots=None, project_name=None, seq_name=None, episo
     print(f"Calls to shotgrid api: {sg.sg_counter}")
     return list_of_wrap_shots
 
+def auto_bid(shot_name=None,task_id=None,project_name=None,task_bid_dict={"Layout":0.05, "Animation":23,"Lightning":0.5,"Comp":0.5}):
+    if shot_name and not task_id:
+        #query all task attached to shot
+        if project_name:
+            p = sg.Project(code=project_name)
+            shot = sg.Shot(code=shot_name,project=p.identity)
+        else:
+            shot = sg.Shot(code=shot_name)
+        task_list = shot.get_tasks()
+    else:
+        task_list = [sg.Task(id=task_id)]
+    for cur_task in task_list:
+        if cur_task.cotent in task_bid_dict:
+            if not cur_task.est_in_mins:
+                cur_task.est_in_mins = cur_task.duration*task_bid_dict[cur_task.content]
+    print(task_list)
+
+
+
 
 
 def ready_shot_list_from_file(file_path=None):
@@ -41,14 +60,18 @@ def ready_shot_list_from_file(file_path=None):
     return shot_list
 
 if __name__ == "__main__":
-    project_name = "LegoFriends"
-    file_path = r"C:\Users\cg\PycharmProjects\cobopipe_v02-001\local\previs_output_test.txt"
-    shot_list = ready_shot_list_from_file(file_path)
+    auto_bid("S105_SQ010_SH010",project_name="LegoFriends")
 
-    # if working with the current split-up file(S105_SQ010.txt) output we could do:
-    # episode_name, seq_name = filename.split(".")[0].split("_")
-    episode_name = "S105"
-    seq_name = "S105_SQ010"
+    ##### Create shots example #####
+    # project_name = "LegoFriends"
+    # file_path = r"C:\Users\cg\PycharmProjects\cobopipe_v02-001\local\previs_output_test.txt"
+    # shot_list = ready_shot_list_from_file(file_path)
+    #
+    # # if working with the current split-up file(S105_SQ010.txt) output we could do:
+    # # episode_name, seq_name = filename.split(".")[0].split("_")
+    # episode_name = "S105"
+    # seq_name = "S105_SQ010"
+    #
+    #
+    # ready_up_classes(list_of_shots=shot_list, project_name=project_name, episode_name=episode_name,seq_name=seq_name)
 
-
-    ready_up_classes(list_of_shots=shot_list, project_name=project_name, episode_name=episode_name,seq_name=seq_name)

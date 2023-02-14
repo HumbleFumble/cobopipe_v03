@@ -77,6 +77,7 @@ ASSET_FIELDS = [
 TASK_FIELDS = [
     "project",
     "content",
+    "est_in_mins",
     "id",
     "entity",
     "step",
