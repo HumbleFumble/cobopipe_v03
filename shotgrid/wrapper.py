@@ -265,70 +265,64 @@ class Project:
             users.append(HumanUser(**user, query=query))
         return users
 
-    def get_episodes(self, fields=EPISODE_FIELDS, extra_filters=[], query=True):
+    def get_episodes(self, fields=EPISODE_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             self.type,
             "episode",
             fields,
             Episode,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
-    def get_sequences(self, fields=SEQUENCE_FIELDS, extra_filters=[], query=True):
+    def get_sequences(self, fields=SEQUENCE_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             self.type,
             "sequence",
             fields,
             Sequence,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
-    def get_shots(self, fields=SHOT_FIELDS, extra_filters=[], query=True):
+    def get_shots(self, fields=SHOT_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             self.type,
             "shot",
             fields,
             Shot,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
-    def get_assets(self, fields=ASSET_FIELDS, extra_filters=[], query=True):
+    def get_assets(self, fields=ASSET_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             self.type,
             "asset",
             fields,
             Asset,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
-    def get_tasks(self, fields=TASK_FIELDS, extra_filters=[], query=True):
+    def get_tasks(self, fields=TASK_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             self.type,
             "task",
             fields,
             Task,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
-    def get_versions(self, fields=VERSION_FIELDS, extra_filters=[], query=True):
+    def get_versions(self, fields=VERSION_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             self.type,
             "version",
             fields,
             Version,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
     def create_episode(self, code: str, nice_name: str = ""):
@@ -392,37 +386,34 @@ class Episode:
             shots = shots + sequence.get_shots(query=query)
         return shots
 
-    def get_assets(self, fields=ASSET_FIELDS, extra_filters=[], query=True):
+    def get_assets(self, fields=ASSET_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             "episodes",
             "asset",
             fields,
             Asset,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
-    def get_tasks(self, fields=TASK_FIELDS, extra_filters=[], query=True):
+    def get_tasks(self, fields=TASK_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             "entity",
             "task",
             fields,
             Asset,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
-    def get_versions(self, fields=VERSION_FIELDS, extra_filters=[], query=True):
+    def get_versions(self, fields=VERSION_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             "entity",
             "version",
             fields,
             Version,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
     def create_sequence(
@@ -483,26 +474,24 @@ class Sequence:
             assets.append(Asset(**asset, query=query))
         return assets
 
-    def get_tasks(self, fields=TASK_FIELDS, extra_filters=[], query=True):
+    def get_tasks(self, fields=TASK_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             "entity",
             "task",
             fields,
             Task,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
-    def get_versions(self, fields=VERSION_FIELDS, extra_filters=[], query=True):
+    def get_versions(self, fields=VERSION_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             "entity",
             "version",
             fields,
             Version,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
     def create_shot(self, code: str, task_template: object = None, **kwargs):
@@ -557,26 +546,24 @@ class Shot:
             assets.append(Asset(**asset, query=query))
         return assets
 
-    def get_tasks(self, fields=TASK_FIELDS, extra_filters=[], query=True):
+    def get_tasks(self, fields=TASK_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             "entity",
             "task",
             fields,
             Task,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
-    def get_versions(self, fields=VERSION_FIELDS, extra_filters=[], query=True):
+    def get_versions(self, fields=VERSION_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             "entity",
             "version",
             fields,
             Version,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
     def __getattr__(self, name: str):
@@ -620,26 +607,24 @@ class Asset:
     def __str__(self):
         return _str_entity(self)
 
-    def get_tasks(self, fields=TASK_FIELDS, extra_filters=[], query=True):
+    def get_tasks(self, fields=TASK_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             "entity",
             "task",
             fields,
             Task,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
-    def get_versions(self, fields=VERSION_FIELDS, extra_filters=[], query=True):
+    def get_versions(self, fields=VERSION_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,
             "entity",
             "version",
             fields,
             Version,
-            extra_filters,
-            query=query,
+            extra_filters
         )
 
     def __getattr__(self, name: str):
@@ -789,6 +774,7 @@ class TaskTemplate:
         if "id" in self.__dict__.keys():
             self.identity = {"type": self.type, "id": self.id}
 
+
     def query(self):
         _query_entity(self)
         self.identity = {"type": self.type, "id": self.id}
@@ -825,15 +811,14 @@ def _get_entity(
     target_type,
     fields,
     return_class,
-    extra_filters=[],
-    query=True,
+    extra_filters=[]
 ):
     filters = [[source_type.lower(), "is", source_identity]]
     filters = filters + extra_filters
     data = shotgrid_api.find(target_type.capitalize(), filters=filters, fields=fields)
     objects = []
     for entity in data:
-        objects.append(return_class(query=query, **entity))
+        objects.append(return_class(query=False, **entity))
     return objects
 
 
@@ -842,12 +827,12 @@ def _query_entity(self):
     for variable, value in self.__dict__.items():
         if variable in self.fields:
             if value:
-                filters.append([variable, "is", value])
+                if not type(value) == type([]):
+                    filters.append([variable, "is", value])
 
     if not filters:
         raise ValueError("Missing filter data")
-
-    # print(f"\n\nfilters: {filters}\nfields: {self.fields}\n\n")
+    print(f"\n\nfilters: {filters}\nfields: {self.fields}\n\n")
     data = shotgrid_api.find(self.type, filters=filters, fields=self.fields)
     if not data:
         return
