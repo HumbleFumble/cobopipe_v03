@@ -18,27 +18,37 @@ def ready_up_classes(list_of_shots=None, project_name=None, seq_name=None, episo
     wrap_task_temp = sg.TaskTemplate(code=task_template)
     for shot, duration in list_of_shots:
         if not shot in (shot_i.code for shot_i in shots):
-            new_shot = seq.create_shot(code=shot, task_template=wrap_task_temp, sg_cut_duration=duration)
+            new_shot = seq.create_shot(code=shot, task_template=wrap_task_temp, sg_cut_duration=int(duration))
             list_of_wrap_shots.append(new_shot)
         else:
             print(f"Shot: {shot} already exist. Skipping it." )
-
-
-
-    print(episodes)
-    print(seq_list)
-    print(shots)
     print(f"Calls to shotgrid api: {sg.sg_counter}")
-    # seq = sg.Sequence(project=p.identity, code=seq_name)
-    # wrap_task_temp = sg.TaskTemplate(code=task_template)
-    #
+    return list_of_wrap_shots
 
-    #
-    # return list_of_wrap_shots
 
+
+def ready_shot_list_from_file(file_path=None):
+
+    shot_list = []
+    # file_path = r"C:\Users\cg\PycharmProjects\cobopipe_v02-001\local\previs_output_test.txt"
+    with open(file_path, 'r') as shot_file:
+        content = shot_file.read()
+    shot_file.close()
+    for line in content.split("\n"):
+        if not line == "":
+            shot, duration = line.split(",")
+            shot_list.append([shot, duration])
+    return shot_list
 
 if __name__ == "__main__":
     project_name = "LegoFriends"
+    file_path = r"C:\Users\cg\PycharmProjects\cobopipe_v02-001\local\previs_output_test.txt"
+    shot_list = ready_shot_list_from_file(file_path)
+
+    # if working with the current split-up file(S105_SQ010.txt) output we could do:
+    # episode_name, seq_name = filename.split(".")[0].split("_")
+    episode_name = "S105"
     seq_name = "S105_SQ010"
-    shot_list = [["S105_SQ010_SH015", 20]]
-    ready_up_classes(list_of_shots=shot_list, project_name=project_name, episode_name="S105",seq_name=seq_name)
+
+
+    ready_up_classes(list_of_shots=shot_list, project_name=project_name, episode_name=episode_name,seq_name=seq_name)
