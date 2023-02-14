@@ -112,11 +112,18 @@ def initialize(
         shotgrid_api = get_shotgrid(url=url, script=script, key=key)
     return shotgrid_api
 
+sg_counter = 0
+def addShotgridCall_Counter():
+    # A counter to track whenever we make a call for shotgrid_api.
+     global sg_counter
+     sg_counter = sg_counter + 1
+     return sg_counter
 
 def get_task_templates(fields=TASK_TEMPLATE_FIELDS):
     initialize()
     task_templates = []
     data = shotgrid_api.find("TaskTemplate", filters=[], fields=fields)
+    addShotgridCall_Counter()
     for item in data:
         task_templates.append(TaskTemplate(**item, query=False))
     return task_templates
@@ -328,6 +335,7 @@ class Project:
     def create_episode(self, code: str, nice_name: str = ""):
         data = {"project": self.identity, "code": code, "description": nice_name}
         episode = shotgrid_api.create("Episode", data)
+        addShotgridCall_Counter()
         return Episode(**episode, query=False)
 
     def create_asset(
@@ -337,10 +345,11 @@ class Project:
         if task_template:
             data["task_template"] = task_template.identity
         asset = shotgrid_api.create("Asset", data)
+        addShotgridCall_Counter()
         return Asset(**asset, query=False)
 
     def __getattr__(self, code: str):
-        self.__dict__[f"{name}"]
+        self.__dict__[f"{code}"]
 
 
 class Episode:
@@ -423,6 +432,7 @@ class Episode:
         if task_template:
             data["task_template"] = task_template.identity
         sequence = shotgrid_api.create("Sequence", data)
+        addShotgridCall_Counter()
         return Sequence(**sequence, query=False)
 
     def __getattr__(self, name: str):
@@ -501,6 +511,7 @@ class Sequence:
             data["task_template"] = task_template.identity
         data["project"] = self.project
         shot = shotgrid_api.create("Shot", data)
+        addShotgridCall_Counter()
         return Shot(**shot, query=False)
 
     def __getattr__(self, name: str):
@@ -816,6 +827,7 @@ def _get_entity(
     filters = [[source_type.lower(), "is", source_identity]]
     filters = filters + extra_filters
     data = shotgrid_api.find(target_type.capitalize(), filters=filters, fields=fields)
+    addShotgridCall_Counter()
     objects = []
     for entity in data:
         objects.append(return_class(query=False, **entity))
@@ -832,8 +844,9 @@ def _query_entity(self):
 
     if not filters:
         raise ValueError("Missing filter data")
-    print(f"\n\nfilters: {filters}\nfields: {self.fields}\n\n")
+    # print(f"\n\nfilters: {filters}\nfields: {self.fields}\n\n")
     data = shotgrid_api.find(self.type, filters=filters, fields=self.fields)
+    addShotgridCall_Counter()
     if not data:
         return
     for variable, value in data[0].items():
@@ -848,7 +861,7 @@ def _update_entity(self):
         if variable in ["id", "type"]:
             continue
         data[variable] = value
-
+    addShotgridCall_Counter()
     shotgrid_api.update(self.type, self.id, data)
 
 
