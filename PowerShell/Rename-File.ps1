@@ -16,12 +16,12 @@ function Rename-File {
                 $new += $item
             }else{
                 Write-Host "Match found in" $item.Directory.Parent.Name
-            $new += $item
+                $new += $item
             }
         }
     }
     #------------------------------------------------------------------------------------------------------
-    if(!($new)){
+    if($new = $null){
         Write-Host "No item matching basename `"$MatchString`" was found" -ForegroundColor Yellow
     }else {
         $index = 0
