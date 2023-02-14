@@ -62,10 +62,11 @@ def update_downstream(entity_id):
         return False
     
     for downstream_task in approved_task.get_downstream_tasks():
-        status_list = []
-        for upstream_task in downstream_task.get_upstream_tasks():
-            status_list.append(upstream_task.sg_status_list)
-        if set(status_list) == {'apr'}:
-            downstream_task.sg_status_list = 'ready'
-            downstream_task.update()
+        if downstream_task.sg_status_list == 'wtg':
+            status_list = []
+            for upstream_task in downstream_task.get_upstream_tasks():
+                status_list.append(upstream_task.sg_status_list)
+            if set(status_list) == {'apr'}:
+                downstream_task.sg_status_list = 'ready'
+                downstream_task.update()
     return True

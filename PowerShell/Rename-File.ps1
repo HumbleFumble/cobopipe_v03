@@ -8,6 +8,7 @@ function Rename-File {
     )
     $items = Get-ChildItem -Path $Directory -Recurse
     $new = New-Object System.Collections.ArrayList
+    #------------------------------------------------------------------------------------------------------
     ForEach ($item in $items){
         if($item.BaseName -match $MatchString){
             if ($FullPath){
@@ -19,6 +20,7 @@ function Rename-File {
             }
         }
     }
+    #------------------------------------------------------------------------------------------------------
     if(!($new)){
         Write-Host "No item matching basename `"$MatchString`" was found" -ForegroundColor Yellow
     }else {
@@ -43,3 +45,16 @@ function Rename-File {
 }
 # END Rename-File
 #-------------------------------------------------------------------------------------------------------------------------------------------
+
+
+ForEach ($item in $items){
+    if($item.BaseName -match $MatchString){
+        if ($FullPath){
+            Write-Host "Match found in" $item.Directory.Parent.Name " - " $item.Directory
+            $new += $item
+        }else{
+            Write-Host "Match found in" $item.Directory.Parent.Name
+        $new += $item
+        }
+    }
+}
