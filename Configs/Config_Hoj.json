@@ -101,7 +101,7 @@
 
 "project_style":{"animation_style":["AE","Toonboom"],"comp_style":["AE"],"default_animation_style":"Toonboom","default_comp_style":"AE"},
 
-"users":{"Animation":["Anna","Teo","Otto","Lho", "Kristoffer", "Jamie","Julia", "Tue", "Fanny", "Julie", "Louise", "Mik","Mikkel", "Gustavo", "Sabrina", "James", "Bernardo", "Christian", "Mads","Vedel", "Conor"],"Render":["Adalstein", "James", "Bernardo", "Christian", "Christian", "Mads"]},
+"users":{"Animation":["Anna","Teo","Daniel","Elliot","Otto","Lho", "Kristoffer", "Jamie","Julia", "Tue", "Fanny", "Julie", "Louise", "Mik","Mikkel", "Gustavo", "Sabrina", "James", "Bernardo", "Christian", "Mads","Vedel", "Conor"],"Render":["Adalstein", "James", "Bernardo", "Christian", "Christian", "Mads"]},
 "remove_list":{},
 "publish_remove_set":"RemoveInPublish",
 "publish_set":"PublishSet",
