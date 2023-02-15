@@ -35,9 +35,9 @@ def webhook():
 
 def deploy(dev=False):
     if dev:
-        app.run(host="0.0.0.0", port=8080)
+        app.run(host="0.0.0.0", port=21224)
     else:
-        serve(app, host="0.0.0.0", port=8080)
+        serve(app, host="0.0.0.0", port=21224)
 
 
 if __name__ == "__main__":
