@@ -3332,25 +3332,9 @@ def createCompPreviewDone(result):
 #     run_env["TOONBOOM_GLOBAL_SCRIPT_LOCATION"] = "%s/TB/ToonBoom_Global_Scripts" % os.path.dirname(os.path.realpath(__file__))
 #     run_env["BOM_USER"] = ""
 
-def render_all(main):
-    main.hide()
-    nodes = []
-    episodes = main.table_model.getAllNodes()
-    for episode in episodes:
-        if episode.getName() in ['S105']:
-            sequences = episode.getChildren()
-            for sequence in sequences:
-                shots = sequence.getChildren()
-                nodes = nodes + shots
-    for i in range(0, len(nodes), 10):
-        render(main, nodes[i:i+10])
-
-def render(main, nodes):
-    main.ctrl.toonboomRenderExternally(nodes, wait=True)
-    print('Finished Chunk')
-
-if not in_maya:  
-	if __name__ == '__main__':
+if __name__ == '__main__':
+	if not in_maya:  
+	
 		import sys
 		if not QtWidgets.QApplication.instance():
 			app = QtWidgets.QApplication(sys.argv)
@@ -3358,9 +3342,6 @@ if not in_maya:
 			app = QtWidgets.QApplication.instance()
 		mainWin = MainWindow()
 		mainWin.show()
-
-		##### REMOVE
-		# render_all(mainWin)
 
 	app.exec_()
 
