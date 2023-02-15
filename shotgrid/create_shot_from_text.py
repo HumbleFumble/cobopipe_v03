@@ -25,7 +25,10 @@ def ready_up_classes(list_of_shots=None, project_name=None, seq_name=None, episo
     print(f"Calls to shotgrid api: {sg.sg_counter}")
     return list_of_wrap_shots
 
-def auto_bid(shot_name=None,task_id=None,project_name=None,task_bid_dict={"Layout":100, "Animation":23,"Lightning":50,"Comp":50}):
+def auto_bid(shot_name=None,task_id=None,project_name=None,task_bid_dict={"Layout":230, "Animation":23,"Lighting":50,"Comp":50}):
+    """
+    Roughed out. Doesn't set it yet. Not sure what the best auto calculation setup would be.
+    """
     if shot_name and not task_id:
         #query all task attached to shot
         if project_name:
@@ -36,10 +39,14 @@ def auto_bid(shot_name=None,task_id=None,project_name=None,task_bid_dict={"Layou
         task_list = shot.get_tasks()
     else:
         task_list = [sg.Task(id=task_id)]
+    if shot:
+        duration = float(shot.sg_cut_duration)
     for cur_task in task_list:
-        if cur_task.cotent in task_bid_dict:
+        if cur_task.content in task_bid_dict:
+            print(cur_task.content, duration, duration/task_bid_dict[cur_task.content])
             if not cur_task.est_in_mins:
-                cur_task.est_in_mins = cur_task.duration/task_bid_dict[cur_task.content]
+
+                pass #cur_task.est_in_mins = cur_task.duration/task_bid_dict[cur_task.content]
     print(task_list)
 
 
