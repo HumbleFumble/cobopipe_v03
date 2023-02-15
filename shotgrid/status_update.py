@@ -55,9 +55,23 @@ def run(project_code="LegoFriends"):
                 wrap_down_task.update()
     print("### Remember to refresh browser to see changes made (F5) ###")
 
+def update_check_asset_status(shot_id,task_status):
+    task_relation = {"Animation":"Rig", "Lighting":"Texture","Layout":"Model"}
+    cur_shot = sg.Shot(id=shot_id)
+    asset_list = cur_shot.get_assets()
 
-def update_downstream(entity_id):
-    approved_task = sg.Task(id=entity_id)
+    for asset in asset_list:
+        cur_asset_tasks = asset.get_tasks()
+        for cur_task in cur_asset_tasks:
+            if cur_task.content == task_relation[task_status]:
+                if cur_task.sg_status_list in ["apr"]:
+                    return True
+                else:
+                    return False
+
+
+def update_downstream(task_id):
+    approved_task = sg.Task(id=task_id)
     if not approved_task.sg_status_list == 'apr':
         return False
     
