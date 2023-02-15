@@ -55,7 +55,7 @@ def run(project_code="LegoFriends"):
                 wrap_down_task.update()
     print("### Remember to refresh browser to see changes made (F5) ###")
 
-def update_check_asset_status(shot_id,task_status):
+def check_shot_asset_status(shot_id,task_status):
     task_relation = {"Animation":"Rig", "Lighting":"Texture","Layout":"Model"}
     cur_shot = sg.Shot(id=shot_id)
     asset_list = cur_shot.get_assets()
@@ -69,6 +69,9 @@ def update_check_asset_status(shot_id,task_status):
                 else:
                     return False
 
+def check_subasset_status(asset_id,task_status):
+
+    pass
 
 def update_downstream(task_id):
     approved_task = sg.Task(id=task_id)
