@@ -79,6 +79,25 @@ def check_scene(scene_path):
 
 check_scene(r"\\dumpap3\production\930462_HOJ_Project\Production\Film\S105\S105_SQ010\S105_SQ010_SH010\S105_SQ010_SH010\Test_H010_V100.xstage")
 
+
+"""
+
+Check all shots in an episode for errors. Either use shotbrowser or copy functions to find shot/scenes.
+if shotbrowser -> add right click function to main_window. Add function to run this script in front_ctrl class.
+Fix the current functions so they called with just a scene_path. should return if there is an issue and if its fixed. 
+Create an error_dict that contains all the known issues of wrongly names nodes, by key of the character name. Example: {"Guska:":{"RENDER_Trin_Shadow":"RENDER_Guska_Shadow","RENDER_Trin":"Render_Guska"}}
+Create an output that contains all the shots which have an issue, and which shots have been fixed and what was fixed, maybe a dict that you save as json file.
+
+"""
+
+output_dict = {"issue_scenes":["S105_SQ010_SH010",...],
+               "scenes_not_fixed":{"S105_SQ010_SH010":{"nodes":["Char_name/Node_not_fixed"],"path_to_scene":"P:/path_to_scene.xstage"}}
+               }
+to_render = output_dict["issue_scenes"] not in output_dict["scenes_not_fixed"].keys()
+
+print(f"Found issues in: {output_dict['issue_scenes']}. Scenes left to fix: {output_dict['scenes_not_fixed'].keys()}. Scenes to render: {to_render}")
+
+
 # project = get_harmony_project(r"\\dumpap3\production\930462_HOJ_Project\Production\Film\S105\S105_SQ010\S105_SQ010_SH010\S105_SQ010_SH010\Test_H010_V100.xstage")
 # allnodes = project.scene.nodes
 #
