@@ -29,16 +29,17 @@ def index():
 def webhook():
     if request.method == "POST":
         if validate_sg_secret_token(request):
+            webhook_id = request.headers.get('X-Sg-webhook-id')
             data = request.json.get("data")
             timestamp = request.json.get("timestamp")
-            handler.run(data, timestamp)
+            handler.run(webhook_id, data, timestamp)
             return "Webhook received and processed."
         else:
             return "Token validation failed."
-    return 'An unknown error has occurred.'
 
 
 def validate_sg_secret_token(request):
+    # DO NOT TOUCH - PLEASE
     body = request.data
     secret_token = token.encode()
     generated_signature = "sha1=%s" % hmac.new(secret_token, body, hashlib.sha1).hexdigest()
@@ -52,9 +53,7 @@ def deploy(dev=False):
     port = 21224
     if os.getlogin() == 'mha':
         port = 21225
-    if os.getlogin()== 'cg':
-        port = 21226
-        dev = True
+        
     if dev:
         app.run(host="0.0.0.0", port=port)
     else:
@@ -62,4 +61,7 @@ def deploy(dev=False):
 
 
 if __name__ == "__main__":
-    deploy(dev=False)
+    if os.getlogin() in ['mha', 'cg']:
+        deploy(dev=True)
+    else:
+        deploy(dev=False)
