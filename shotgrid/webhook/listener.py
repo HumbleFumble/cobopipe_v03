@@ -61,4 +61,7 @@ def deploy(dev=False):
 
 
 if __name__ == "__main__":
-    deploy(dev=False)
+    if os.getlogin() in ['mha', 'cg']:
+        deploy(dev=True)
+    else:
+        deploy(dev=False)
