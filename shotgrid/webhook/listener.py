@@ -35,7 +35,7 @@ def webhook():
             return "Webhook received and processed."
         else:
             return "Token validation failed."
-        return 'An unknown error has occurred.'
+    return 'An unknown error has occurred.'
 
 
 def validate_sg_secret_token(request):
@@ -52,7 +52,9 @@ def deploy(dev=False):
     port = 21224
     if os.getlogin() == 'mha':
         port = 21225
-        
+    if os.getlogin()== 'cg':
+        port = 21226
+        dev = True
     if dev:
         app.run(host="0.0.0.0", port=port)
     else:
