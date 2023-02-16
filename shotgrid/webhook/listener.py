@@ -35,7 +35,6 @@ def webhook():
             return "Webhook received and processed."
         else:
             return "Token validation failed."
-        return 'An unknown error has occurred.'
 
 
 def validate_sg_secret_token(request):
