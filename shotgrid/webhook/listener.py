@@ -6,10 +6,11 @@ if path not in sys.path:
 from flask import Flask, request
 from waitress import serve
 import shotgrid.webhook.handler as handler
-import json
+import hmac
+import hashlib
 
 app = Flask(__name__)
-# app.secret_key = '97806dc14d1045b4adabbbb7fd90f193'
+token = '97806dc14d1045b4adabbbb7fd90f193'
 
 
 @app.route("/")
@@ -27,17 +28,35 @@ def index():
 @app.route("/webhook", methods=["POST"])
 def webhook():
     if request.method == "POST":
-        data = request.json.get("data")
-        timestamp = request.json.get("timestamp")
-        handler.run(data, timestamp)
-        return "Webhook received!"
-    
+        if validate_sg_secret_token(request):
+            data = request.json.get("data")
+            timestamp = request.json.get("timestamp")
+            handler.run(data, timestamp)
+            return "Webhook received and processed."
+        else:
+            return "Token validation failed."
+        return 'An unknown error has occurred.'
+
+
+def validate_sg_secret_token(request):
+    body = request.data
+    secret_token = token.encode()
+    generated_signature = "sha1=%s" % hmac.new(secret_token, body, hashlib.sha1).hexdigest()
+    signature = request.headers.get('X-Sg-Signature')
+    if hmac.compare_digest(signature, generated_signature):
+        return True
+    return False
+
 
 def deploy(dev=False):
+    port = 21224
+    if os.getlogin() == 'mha':
+        port = 21225
+        
     if dev:
-        app.run(host="0.0.0.0", port=21224)
+        app.run(host="0.0.0.0", port=port)
     else:
-        serve(app, host="0.0.0.0", port=21224)
+        serve(app, host="0.0.0.0", port=port)
 
 
 if __name__ == "__main__":
