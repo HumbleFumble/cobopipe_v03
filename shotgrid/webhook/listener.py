@@ -29,9 +29,10 @@ def index():
 def webhook():
     if request.method == "POST":
         if validate_sg_secret_token(request):
+            webhook_id = request.headers.get('X-Sg-webhook-id')
             data = request.json.get("data")
             timestamp = request.json.get("timestamp")
-            handler.run(data, timestamp)
+            handler.run(webhook_id, data, timestamp)
             return "Webhook received and processed."
         else:
             return "Token validation failed."
