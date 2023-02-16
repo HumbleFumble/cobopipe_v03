@@ -39,6 +39,7 @@ def webhook():
 
 
 def validate_sg_secret_token(request):
+    # DO NOT TOUCH - PLEASE
     body = request.data
     secret_token = token.encode()
     generated_signature = "sha1=%s" % hmac.new(secret_token, body, hashlib.sha1).hexdigest()
