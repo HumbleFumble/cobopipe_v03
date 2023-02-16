@@ -71,6 +71,7 @@ ASSET_FIELDS = [
     "id",
     "sg_status_list",
     "sg_asset_type",
+    "assets",
     "parents",
     "task_template",
 ]
@@ -618,7 +619,11 @@ class Asset:
 
     def __str__(self):
         return _str_entity(self)
-
+    def get_assets(self, query=True):
+        assets = []
+        for asset in self.assets:
+            assets.append(Asset(**asset, query=query))
+        return assets
     def get_tasks(self, fields=TASK_FIELDS, extra_filters=[]):
         return _get_entity(
             self.identity,

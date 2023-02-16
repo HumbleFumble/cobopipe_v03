@@ -55,20 +55,36 @@ def run(project_code="LegoFriends"):
                 wrap_down_task.update()
     print("### Remember to refresh browser to see changes made (F5) ###")
 
-def update_check_asset_status(shot_id,task_status):
+def check_shot_asset_status(shot_id,task_status):
     task_relation = {"Animation":"Rig", "Lighting":"Texture","Layout":"Model"}
     cur_shot = sg.Shot(id=shot_id)
     asset_list = cur_shot.get_assets()
 
     for asset in asset_list:
         cur_asset_tasks = asset.get_tasks()
-        for cur_task in cur_asset_tasks:
-            if cur_task.content == task_relation[task_status]:
-                if cur_task.sg_status_list in ["apr"]:
-                    return True
-                else:
-                    return False
+        if not check_apr_task_status(cur_asset_tasks,task_relation[task_status]):
+            print(f"Found {asset.code} linked to {cur_shot.code}, is not ready for {task_status}")
+            return False
+    return True
+def check_apr_task_status(task_list, task_name):
+    for cur_task in task_list:
+        if cur_task.content == task_name:
+            if cur_task.sg_status_list in ["apr"]:
+                return True
+            else:
+                return False
 
+def check_subasset_status(asset_id,task_status):
+    task_relation = {"Animation":"Rig", "Lighting":"Texture","Layout":"Model"}
+    base_asset = sg.Asset(id=asset_id)
+    asset_list = base_asset.get_assets()
+
+    for sub_asset in asset_list:
+        cur_asset_tasks = sub_asset.get_tasks()
+        if not check_apr_task_status(cur_asset_tasks,task_relation[task_status]):
+            print(f"Found {sub_asset.code} linked to {base_asset.code}, is not ready for {task_status}")
+            return False
+    return True
 
 def update_downstream(task_id):
     approved_task = sg.Task(id=task_id)
