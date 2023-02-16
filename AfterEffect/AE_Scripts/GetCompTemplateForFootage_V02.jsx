@@ -1,4 +1,9 @@
 ﻿#target AfterEffects
+//#include T:/_Pipeline/cobopipe_v02-001/AfterEffect/include/config_functions.js
+#include C:/Users/cg/PycharmProjects/cobopipe_v02-001/AfterEffect/includes/config_functions.jsx
+
+cc = getConfig()
+var base_project_path = dict_replace(cc.project_paths,cc.project_paths["film_path"])
 
 function Run(){
     cur_item = app.project.selection[0];
@@ -12,13 +17,12 @@ function Run(){
 
 function CreateDropDownPopup(dd_list){
     var ddWin = new Window("palette","PickTemplate",undefined);
-    
     }
 
 function ImportTemplateFromName(cur_name){
-        var template_path = "P:/930460_SprinterGalore_Animated_S02_S03/Production/Pipeline/Template/_AECharacterTemplate";
+        var template_path = base_project_path + "/_Comp_Templates/_AE_CharTemplates";
         precomp_folder = new Folder(template_path);
-        var template_aeps = precomp_folder.getFiles('*_CharacterTemplate.aep');
+        var template_aeps = precomp_folder.getFiles('*_CharTemplate.aep');
         for(t=0;t<template_aeps.length;t++){
             cur_template_name = template_aeps[t].name.split("_")[0];
             
@@ -56,6 +60,7 @@ function ReplaceMoveDelete(cur_folder,orig_folder){
         }
         for(x=1;x<=orig_folder.numItems;x++){
             cur_name = orig_folder.items[x].name;
+            log(cur_name);
             var split_name ="";
             if(cur_name.indexOf("{")>-1){
                 split_name = cur_name.split("{")[0];
@@ -63,7 +68,7 @@ function ReplaceMoveDelete(cur_folder,orig_folder){
             if(cur_name.indexOf("[")>-1){
                 split_name = cur_name.split("[")[0];
                 }
-            find_index = footage_list.indexOf(split_name);
+            find_index = footage_list.join(",").indexOf(split_name);
             if(find_index>-1){
                 replace_alert = ReplaceInComps(footage_folder.items[find_index+1],orig_folder.items[x])
                 to_alert = to_alert + replace_alert;
@@ -72,7 +77,7 @@ function ReplaceMoveDelete(cur_folder,orig_folder){
     }//if footage folder
     alert(to_alert);
     cur_folder.remove();
-}//function
+}
 
 function ReplaceInComps(old_footage,new_footage){
 
