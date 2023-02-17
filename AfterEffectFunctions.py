@@ -42,17 +42,33 @@ def CreatePrecomp(base_file, passes_folder,comp_folder, precomp_name):
         app.project.bitsPerChannel = 16;
         app.project.save(comp_file);
     }
-
+     function FindItem(item_name, item_type){
+        var project_content = app.project.items;
+        for(var p =project_content.length;p>=1;p--){
+            var cur_content = project_content[p];
+            if(cur_content instanceof item_type){
+                if(cur_content.name == item_name){
+                    return cur_content
+                    }
+                }
+            }
+        return null
+        }
     function Run(base_file, passes_folder, comp_folder, precomp_name){
         //var cur_proj = app.newProject();
         app.open(new File(base_file));
         var footage_folder = app.project.items.addFolder("Footage");
         var duration = ImportFootage(passes_folder,footage_folder);
         //var duration = frame_duration *(1/25);
-        render_item = app.project.items.addComp(".RENDER", 1920, 1080, 1, duration, 25);
-        work_item = app.project.items.addComp(".WORK", 1920, 1080, 1, duration, 25);
-        render_item.layers.add(work_item);
-        
+        render_item = FindItem(".RENDER",compItem);
+        if!(render_item){
+            render_item = app.project.items.addComp(".RENDER", 1920, 1080, 1, duration, 25);
+            }
+        work_item = FindItem(".WORK",compItem);
+        if!(work_item){
+            work_item = app.project.items.addComp(".WORK", 1920, 1080, 1, duration, 25);
+            render_item.layers.add(work_item);
+        }        
         SavePrecompFile(comp_folder, precomp_name);	
         }
 
