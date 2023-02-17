@@ -60,12 +60,12 @@ def CreatePrecomp(base_file, passes_folder,comp_folder, precomp_name):
         var footage_folder = app.project.items.addFolder("Footage");
         var duration = ImportFootage(passes_folder,footage_folder);
         //var duration = frame_duration *(1/25);
-        render_item = FindItem(".RENDER",compItem);
-        if!(render_item){
+        render_item = FindItem(".RENDER",CompItem);
+        if(!render_item){
             render_item = app.project.items.addComp(".RENDER", 1920, 1080, 1, duration, 25);
             }
-        work_item = FindItem(".WORK",compItem);
-        if!(work_item){
+        work_item = FindItem(".WORK",CompItem);
+        if(!work_item){
             work_item = app.project.items.addComp(".WORK", 1920, 1080, 1, duration, 25);
             render_item.layers.add(work_item);
         }        
