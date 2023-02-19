@@ -1,10 +1,16 @@
+import sys
+import os
+path = os.path.abspath(os.path.join(__file__, '../../..'))
+if path not in sys.path:
+    sys.path.append(path)
 from flask import Flask, request
 from waitress import serve
-import shotgrid.wh_handler as wh_handler
-import json
+import shotgrid.webhook.handler as handler
+import hmac
+import hashlib
 
 app = Flask(__name__)
-# app.secret_key = '97806dc14d1045b4adabbbb7fd90f193'
+token = '97806dc14d1045b4adabbbb7fd90f193'
 
 
 @app.route("/")
@@ -22,18 +28,41 @@ def index():
 @app.route("/webhook", methods=["POST"])
 def webhook():
     if request.method == "POST":
-        data = request.json.get("data")
-        timestamp = request.json.get("timestamp")
-        wh_handler.run(data, timestamp)
-        return "Webhook received!"
-    
+        if validate_sg_secret_token(request):
+            webhook_id = request.headers.get('X-Sg-webhook-id')
+            data = request.json.get("data")
+            timestamp = request.json.get("timestamp")
+            handler.run(webhook_id, data, timestamp)
+            return "Webhook received and processed."
+        else:
+            return "Token validation failed."
+
+
+def validate_sg_secret_token(request):
+    # DO NOT TOUCH - PLEASE
+    body = request.data
+    secret_token = token.encode()
+    generated_signature = "sha1=%s" % hmac.new(secret_token, body, hashlib.sha1).hexdigest()
+    signature = request.headers.get('X-Sg-Signature')
+    if hmac.compare_digest(signature, generated_signature):
+        return True
+    return False
+
 
 def deploy(dev=False):
+    port = 21224
+    if os.getlogin() == 'mha':
+        port = 21225
+    if os.getlogin() == 'cg':
+        port = 21226
     if dev:
-        app.run(host="0.0.0.0", port=8080)
+        app.run(host="0.0.0.0", port=port)
     else:
-        serve(app, host="0.0.0.0", port=8080)
+        serve(app, host="0.0.0.0", port=port)
 
 
 if __name__ == "__main__":
-    deploy(dev=True)
+    if os.getlogin() in ['mha', 'cg']:
+        deploy(dev=True)
+    else:
+        deploy(dev=False)
