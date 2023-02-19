@@ -7,19 +7,19 @@ function Rename-File {
         [switch]$Rename        
     )
     $items = Get-ChildItem -Path $Directory -Recurse
-    $new = New-Object System.Collections.ArrayList
+    $newlist = New-Object System.Collections.ArrayList
     ForEach ($item in $items){
         if($item.BaseName -match $MatchString){
             if ($FullPath){
                 Write-Host "Match found in" $item.Directory.Parent.Name " - " $item.Directory
-                $new += $item
+                $newlist += $item
             }else{
                 Write-Host "Match found in" $item.Directory.Parent.Name
-            $new += $item
+            $newlist += $item
             }
         }
     }
-    if(!($new)){
+    if(!($newlist)){
         Write-Host "No item matching basename `"$MatchString`" was found" -ForegroundColor Yellow
     }else {
         $index = 0
@@ -43,3 +43,29 @@ function Rename-File {
 }
 # END Rename-File
 #-------------------------------------------------------------------------------------------------------------------------------------------
+
+# ForEach ($item in $items){
+#     if($item.BaseName -match $MatchString){
+#         if ($FullPath){
+#             Write-Host "Match found in" $item.Directory.Parent.Name " - " $item.Directory
+#             $new += $item
+#         }else{
+#             Write-Host "Match found in" $item.Directory.Parent.Name
+#         $new += $item
+#         }
+#     }
+# }
+
+# Display only non-matching results
+#
+# foreach ($item in $items){
+#     if ($null -eq $newlist[$list.IndexOf($item)]){
+#         $newlist.Add($item)
+#     }else{
+#         foreach ($n in $newlist){
+#             if ($n -ne $item){
+#                 $newlist.Add($item)
+#             }
+#         }
+#     }
+# }
