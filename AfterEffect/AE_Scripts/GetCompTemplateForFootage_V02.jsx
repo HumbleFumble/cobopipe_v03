@@ -4,6 +4,7 @@
 
 cc = getConfig()
 var base_project_path = dict_replace(cc.project_paths,cc.project_paths["film_path"])
+var template_path = base_project_path + "/_Comp_Templates/_AE_CharTemplates";
 
 
 function Run(){
@@ -16,22 +17,21 @@ function Run(){
     }
 
 function GetCurrentSelectedFootage(){
-    var cur_item = app.project.selection[0];
+    var cur_item = app.project.selection;
     //var footage_folder = cur_item.parentFolder;
     if(cur_item){
-        return cur_item
+        return cur_item[0]
         }else{
     return false
     }
 }
 
 function ImportTemplateFromFootageName(cur_name){
-        var template_path = base_project_path + "/_Comp_Templates/_AE_CharTemplates";
         precomp_folder = new Folder(template_path);
         var template_aeps = precomp_folder.getFiles('*_CharTemplate.aep');
         for(t=0;t<template_aeps.length;t++){
             cur_template_name = template_aeps[t].name.split("_")[0];
-            
+
             if(cur_name.search(cur_template_name)>-1){
                 var project_item = ImportProject(template_aeps[t])
                 return project_item
@@ -65,7 +65,6 @@ function ReplaceMoveDelete(cur_folder,orig_folder){
         }
         for(x=1;x<=orig_folder.numItems;x++){
             cur_name = orig_folder.items[x].name;
-            log(cur_name);
             var split_name ="";
             if(cur_name.indexOf("{")>-1){
                 split_name = cur_name.split("{")[0];
@@ -123,13 +122,11 @@ function FindFootageFolder(){
         if(cur_content instanceof FolderItem){
             var _name = cur_content.name;
             if(_name == "Footage"){
-                my_folder = cur_content;  
+                my_folder = cur_content;
+                return cur_content
             }
         }
     }
-    if (my_folder != ""){
-        my_folder.name = "Old_Footage";
-        }
     return project_content.addFolder("Footage");
 }
 
@@ -151,6 +148,8 @@ function RefreshDropDown(folder_path){
     var footage_selection = GetCurrentSelectedFootage();
     if(!footage_selection){
         var cur_selection = dd.selection;
+        }else{
+            cur_selection = footage_selection.name.split("_")[0];
         }
     var f_list = FindInFolder(folder_path);
     dd.removeAll();
@@ -182,11 +181,7 @@ var cur_win = (function(thisObj){
     }}}\
     ")
     var footage_folder = FindFootageFolder()
-    var template_path = base_project_path + "/_Comp_Templates/_AE_CharTemplates";
-//    dialog.grp.panel_group.drop_down.add("item", "new");
-    //$.writeln(dialog.grp.panel_group.drop_down.selection)
-    //$.writeln(dialog.grp.panel_group.drop_down.find("new"))
-//    dialog.grp.panel_group.drop_down.selection="new"
+
     dialog.grp.panel_group.bttn_group.run_button.onClick = function(){
         if(dialog.grp.panel_group.drop_down.selection){
             var selection_path = template_path +"/" + String(dialog.grp.panel_group.drop_down.selection) + "_CharTemplate.aep"
@@ -219,5 +214,5 @@ var cur_win = (function(thisObj){
     return dialog
 })(this);
 
-var template_path = base_project_path + "/_Comp_Templates/_AE_CharTemplates";
+
 RefreshDropDown(template_path)
