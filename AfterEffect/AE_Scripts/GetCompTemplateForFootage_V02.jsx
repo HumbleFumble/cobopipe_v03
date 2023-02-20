@@ -1,11 +1,10 @@
 ﻿#target AfterEffects
 //#include T:/_Pipeline/cobopipe_v02-001/AfterEffect/include/config_functions.js
 #include C:/Users/cg/PycharmProjects/cobopipe_v02-001/AfterEffect/includes/config_functions.jsx
-
+//TODO Place footage it can't replace in the old-footage folder, instead of deleting it.
 cc = getConfig()
 var base_project_path = dict_replace(cc.project_paths,cc.project_paths["film_path"])
 var template_path = base_project_path + "/_Comp_Templates/_AE_CharTemplates";
-
 
 function Run(){
     var cur_item = GetCurrentSelectedFootage()
@@ -17,10 +16,15 @@ function Run(){
     }
 
 function GetCurrentSelectedFootage(){
-    var cur_item = app.project.selection;
-    //var footage_folder = cur_item.parentFolder;
-    if(cur_item){
-        return cur_item[0]
+    var cur_selection = app.project.selection;
+    if(cur_selection != ""){
+        for(var s=(cur_selection.length-1); s>=0;s--){
+            if(cur_selection[s] instanceof FootageItem){
+                }else{
+                    to_remove = cur_selection.splice(s,1);
+                    }
+            }
+        return cur_selection
         }else{
     return false
     }
@@ -142,35 +146,51 @@ function FindInFolder(folder_path){
 	return script_files;
 }
 
-
-function RefreshDropDown(folder_path){
-    var dd = cur_win.grp.panel_group.drop_down
+function ImportMulti(){
     var footage_selection = GetCurrentSelectedFootage();
-    $.writeln(footage_selection)
-    if(!footage_selection){
-        var cur_selection = dd.selection;
-    }else{
-        var cur_selection = footage_selection.name.split("_")[0];
+    if(footage_selection && footage_selection!=""){
+        var footage_folder = FindFootageFolder()
+        var f_list = FindInFolder(template_path);
+        for(var i=0;i<footage_selection.length;i++){
+          var cur_footage = footage_selection[i];
+          var cur_name = cur_footage.name.split("_")[0]
+          $.writeln(cur_name);
+          if(CheckForMatch(cur_name,f_list)){
+                var selection_path = template_path +"/" + String(cur_name) + "_CharTemplate.aep"
+                var imported_folder = ImportProject(selection_path)
+                ReplaceMoveDelete(imported_folder,footage_folder)
+            }
+          }
+        }
     }
-    $.writeln("hey: " + cur_selection)
+function CheckForMatch(name, list){
+     for(var j=0;j<list.length;j++){
+            if(name == list[j]){
+                $.writeln("Found " + name);
+                return true
+                }
+            }
+        return false
+    }
+function RefreshDropDown(folder_path){
+    var dd = cur_win.grp.panel_group.drop_group.drop_down
+    var footage_selection = GetCurrentSelectedFootage();
+    if(footage_selection && footage_selection!=""){
+        var cur_selection = footage_selection[0].name.split("_")[0];
+    }else{
+        var cur_selection = String(dd.selection);
+    }
     var f_list = FindInFolder(folder_path);
     dd.removeAll();
     for(var x = 0;x<f_list.length;x ++){
-        if(f_list[x] == cur_selection){
-            $.writeln("found it");
-            }
         dd.add("item",f_list[x])
     }
-   
-    $.writeln("sel: " + String(dd.find(cur_selection)))
-    //(dd.find(cur_selection) && 
-    dd.selection="Hilda"
-    /*
-    if(cur_selection!=null){
-        dd.selection=cur_selection
+
+    if(dd.find(cur_selection) &&  cur_selection!=null){
+            dd.selection=dd.find(cur_selection)
         }else{
             dd.selection = dd.items[0]
-            }*/
+            }
     }
 
 
@@ -183,31 +203,38 @@ var cur_win = (function(thisObj){
 
     dialog.grp = dialog.add("Group{orientation:'column',alignment:['fill','fill'],\
     panel_group: Group{orientation: 'column',\
-    drop_down: DropDownList { alignment:['fill','top'],preferredSize: ['200','20'] },\
-    bttn_group: Group{orientation: 'row', alignChildren:['fill','top']\
-    run_button: Button{text:'Run'}, refresh_bttn: Button{text: 'Refresh'}\
-    help_button: Button{text:'?'},\
+    drop_group: Group{orientation: 'row',\
+    drop_down: DropDownList { alignment:['fill','top'],preferredSize: ['200','20'] }, help_button: Button{text:'?',preferredSize: ['20','27']}\
+    },\
+    bttn_group: Group{orientation: 'column', alignChildren:['fill','top']\
+    refresh_bttn: Button{text: 'Refresh'},import_single_button: Button{text:'Import from DropDown'}, \
+    import_multi_button: Button{text:'Import from Footage Selected'}\
     }}}\
     ")
     var footage_folder = FindFootageFolder()
 
-    dialog.grp.panel_group.bttn_group.run_button.onClick = function(){
-        if(dialog.grp.panel_group.drop_down.selection){
-            var selection_path = template_path +"/" + String(dialog.grp.panel_group.drop_down.selection) + "_CharTemplate.aep"
+    dialog.grp.panel_group.bttn_group.import_single_button.onClick = function(){
+        if(dialog.grp.panel_group.drop_group.drop_down.selection){
+            var selection_path = template_path +"/" + String(dialog.grp.panel_group.drop_group.drop_down.selection) + "_CharTemplate.aep"
             var imported_folder = ImportProject(selection_path)
-            
             ReplaceMoveDelete(imported_folder,footage_folder)
             }
+    }
+    dialog.grp.panel_group.bttn_group.import_multi_button.onClick = function(){
+        ImportMulti()
     }
     dialog.grp.panel_group.bttn_group.refresh_bttn.onClick = function(){
 
         RefreshDropDown(template_path)
     }
-    dialog.grp.panel_group.bttn_group.help_button.onClick = function(){
+    dialog.grp.panel_group.drop_group.help_button.onClick = function(){
         alert("This is a UI for importing premade Character Templates\
-        \nbased on the selection of footage in the project view.\
-        \nSelect only one footage item and run the script.\
-        \nClick Run to import the selected PreComp from the dropdown.")
+        \nbased on either the selection of footage in the project view OR the set name in the drop-down.\
+        \nSelect only 1 footage item and run refresh to update the drop-down with the template based on that name.\
+        \nIf the naming is weird or you need to be more picky, use the drop-down to set the goal template and hit import.\
+        \n Otherwise select all the base footage passes you want and hit import from footage.\
+        \nTry to only select the footage with the simple character name and not extra passes.\
+        \nThe template import only replaces footage/passes from the template that it can match to footage found in the current scene.")
     }
 
     
