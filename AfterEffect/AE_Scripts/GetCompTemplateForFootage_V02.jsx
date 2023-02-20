@@ -146,22 +146,31 @@ function FindInFolder(folder_path){
 function RefreshDropDown(folder_path){
     var dd = cur_win.grp.panel_group.drop_down
     var footage_selection = GetCurrentSelectedFootage();
+    $.writeln(footage_selection)
     if(!footage_selection){
         var cur_selection = dd.selection;
-        }else{
-            cur_selection = footage_selection.name.split("_")[0];
-        }
+    }else{
+        var cur_selection = footage_selection.name.split("_")[0];
+    }
+    $.writeln("hey: " + cur_selection)
     var f_list = FindInFolder(folder_path);
     dd.removeAll();
     for(var x = 0;x<f_list.length;x ++){
+        if(f_list[x] == cur_selection){
+            $.writeln("found it");
+            }
         dd.add("item",f_list[x])
     }
-
-    if(dd.find(cur_selection) && cur_selectoion !=null){
+   
+    $.writeln("sel: " + String(dd.find(cur_selection)))
+    //(dd.find(cur_selection) && 
+    dd.selection="Hilda"
+    /*
+    if(cur_selection!=null){
         dd.selection=cur_selection
         }else{
             dd.selection = dd.items[0]
-            }
+            }*/
     }
 
 
