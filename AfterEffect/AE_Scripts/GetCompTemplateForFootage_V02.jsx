@@ -5,21 +5,27 @@
 cc = getConfig()
 var base_project_path = dict_replace(cc.project_paths,cc.project_paths["film_path"])
 
+
 function Run(){
-    cur_item = app.project.selection[0];
+    var cur_item = GetCurrentSelectedFootage()
     var footage_folder = cur_item.parentFolder;
-    
-    imported_folder = ImportTemplateFromName(cur_item.name);
+    imported_folder = ImportTemplateFromFootageName(cur_item.name);
     if(imported_folder){
         ReplaceMoveDelete(imported_folder,footage_folder);
         }
     }
 
-function CreateDropDownPopup(dd_list){
-    var ddWin = new Window("palette","PickTemplate",undefined);
+function GetCurrentSelectedFootage(){
+    var cur_item = app.project.selection[0];
+    //var footage_folder = cur_item.parentFolder;
+    if(cur_item){
+        return cur_item
+        }else{
+    return false
     }
+}
 
-function ImportTemplateFromName(cur_name){
+function ImportTemplateFromFootageName(cur_name){
         var template_path = base_project_path + "/_Comp_Templates/_AE_CharTemplates";
         precomp_folder = new Folder(template_path);
         var template_aeps = precomp_folder.getFiles('*_CharTemplate.aep');
@@ -27,7 +33,6 @@ function ImportTemplateFromName(cur_name){
             cur_template_name = template_aeps[t].name.split("_")[0];
             
             if(cur_name.search(cur_template_name)>-1){
-                //TODO Make a drop down with all the possibe options
                 var project_item = ImportProject(template_aeps[t])
                 return project_item
                 }
@@ -127,4 +132,92 @@ function FindFootageFolder(){
         }
     return project_content.addFolder("Footage");
 }
-Run();
+
+function FindInFolder(folder_path){
+    var script_folder = new Folder(folder_path);
+	var folder_files = script_folder.getFiles('*CharTemplate.aep');
+	var folder_files = folder_files.sort();
+	var script_files = [];
+	for(var f = 0;f<folder_files.length;f ++){
+		var cur_name = folder_files[f].name.split("_CharTemplate")[0];
+		script_files.push(cur_name);
+		}
+	return script_files;
+}
+
+
+function RefreshDropDown(folder_path){
+    var dd = cur_win.grp.panel_group.drop_down
+    var footage_selection = GetCurrentSelectedFootage();
+    if(!footage_selection){
+        var cur_selection = dd.selection;
+        }
+    var f_list = FindInFolder(folder_path);
+    dd.removeAll();
+    for(var x = 0;x<f_list.length;x ++){
+        dd.add("item",f_list[x])
+    }
+
+    if(dd.find(cur_selection) && cur_selectoion !=null){
+        dd.selection=cur_selection
+        }else{
+            dd.selection = dd.items[0]
+            }
+    }
+
+
+var cur_win = (function(thisObj){
+    var isPanel = thisObj instanceof Panel; // true or false
+    var dialog = isPanel  ? thisObj : new Window("window", "CharTemplateImport");
+
+    dialog.alignChildren = 'left'
+    dialog.alignment = ['top','fill']
+
+    dialog.grp = dialog.add("Group{orientation:'column',alignment:['fill','fill'],\
+    panel_group: Group{orientation: 'column',\
+    drop_down: DropDownList { alignment:['fill','top'],preferredSize: ['200','20'] },\
+    bttn_group: Group{orientation: 'row', alignChildren:['fill','top']\
+    run_button: Button{text:'Run'}, refresh_bttn: Button{text: 'Refresh'}\
+    help_button: Button{text:'?'},\
+    }}}\
+    ")
+    var footage_folder = FindFootageFolder()
+    var template_path = base_project_path + "/_Comp_Templates/_AE_CharTemplates";
+//    dialog.grp.panel_group.drop_down.add("item", "new");
+    //$.writeln(dialog.grp.panel_group.drop_down.selection)
+    //$.writeln(dialog.grp.panel_group.drop_down.find("new"))
+//    dialog.grp.panel_group.drop_down.selection="new"
+    dialog.grp.panel_group.bttn_group.run_button.onClick = function(){
+        if(dialog.grp.panel_group.drop_down.selection){
+            var selection_path = template_path +"/" + String(dialog.grp.panel_group.drop_down.selection) + "_CharTemplate.aep"
+            var imported_folder = ImportProject(selection_path)
+            
+            ReplaceMoveDelete(imported_folder,footage_folder)
+            }
+    }
+    dialog.grp.panel_group.bttn_group.refresh_bttn.onClick = function(){
+
+        RefreshDropDown(template_path)
+    }
+    dialog.grp.panel_group.bttn_group.help_button.onClick = function(){
+        alert("This is a UI for importing premade Character Templates\
+        \nbased on the selection of footage in the project view.\
+        \nSelect only one footage item and run the script.\
+        \nClick Run to import the selected PreComp from the dropdown.")
+    }
+
+    
+    if (!isPanel) {
+      // if it's a window
+      dialog.show();
+    } else {
+      // if it's a panel
+      dialog.layout.layout(true);
+      dialog.layout.resize();
+      }
+
+    return dialog
+})(this);
+
+var template_path = base_project_path + "/_Comp_Templates/_AE_CharTemplates";
+RefreshDropDown(template_path)
