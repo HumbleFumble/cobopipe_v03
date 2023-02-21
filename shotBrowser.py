@@ -1269,16 +1269,25 @@ class FrontController(QtCore.QObject):
 		logger.warning("Can't find animation file for: %s" % cur_node.getName())
 		return False
 
-	def checkTBRenderNodes(self, nodes_list,rename=False):
+	def checkTBRenderNodes(self, node,rename=False):
 		"""Checks the given scenes for issues with the render nodes
 		Returns a list of shots that are fixed and of shots where other issues are still present -> and what those issues are"""
+
+		if node.getType() in ["episode", "seq"]:
+			nodes_list = node.getAllChildren()
+		else:
+			nodes_list = [node]
+
 		import TB.FindRename
 		result_dict = {}
 		for item in nodes_list:
 			scene_path = self.findToonboomAnimationFile(item)
 			if scene_path:
-				result = (TB.FindRename.findMisNamed(scene_path, rename=False))
+				result = (TB.FindRename.findMisNamed(scene_path, rename=True))
 				result_dict[item.getName()] = result
+
+		for i, j in result_dict.items():
+			print(i + " -", j)
 		# Construct separate dictionaries for later use
 		final_dict_for_renamed = {}
 		final_dict_for_misnamed = {}
@@ -1289,18 +1298,25 @@ class FrontController(QtCore.QObject):
 			in_misname = result_dict[i]["Misnamed"]
 			if in_misname:
 				final_dict_for_misnamed[i] = in_misname
-		print(final_dict_for_renamed)
-		print(final_dict_for_misnamed)
-		print(f"EVERYTHING: {result_dict}")
+		# print(final_dict_for_renamed)
+		# print(final_dict_for_misnamed)
+		# print(f"EVERYTHING: {result_dict}")
 
 		# Save to file
-		location_path = CC.get_base_path() + "/Pipeline/" + "Misnamed_Json.json"
+		node_name = node.getName()
+		location_path = CC.get_base_path() + "/Pipeline/" + node_name + "_TB_Misnamed_Nodes.json"
 		orig_dict = self.loadSettings(location_path)
 		final_dict_for_misnamed.update(orig_dict)
-		print(final_dict_for_misnamed)
-		self.saveSettings(location_path,final_dict_for_misnamed)
+		self.saveSettings(location_path, final_dict_for_misnamed)
 
+		location_path = CC.get_base_path() + "/Pipeline/" + node_name + "_TB_Renamed_Nodes.json"
+		orig_dict = self.loadSettings(location_path)
+		final_dict_for_renamed.update(orig_dict)
+		self.saveSettings(location_path, final_dict_for_renamed)
 
+		location_path = CC.get_base_path() + "/Pipeline/" + node_name + "_TB_All_nodes.json"
+		orig_dict = self.loadSettings(location_path)
+		self.saveSettings(location_path, result_dict)
 
 
 	def createPreviewFromToonboom(self,cur_node):
@@ -2966,10 +2982,8 @@ class MainWindow(QtWidgets.QWidget):
 							node.setCompStyle(comp_style_group.checkedAction().text())
 							self.ctrl.saveNodeInfo(cur_node=node, info_keys=["comp_style"])
 					if action.text() == "Check Scene Render Nodes":
-						cur_list = nodes
-						if node.getType() in ["episode", "seq"]:
-							cur_list = node.getAllChildren()
-						self.ctrl.checkTBRenderNodes(cur_list)
+
+						self.ctrl.checkTBRenderNodes(node)
 
 
 		return QtWidgets.QWidget.eventFilter(self, source, event)

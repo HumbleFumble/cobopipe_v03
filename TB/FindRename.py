@@ -28,7 +28,8 @@ def findMisNamed(scene_file, rename=False):
     else:
         ttt = path[0].split('V')
         base_name = ttt[0]
-        version_number = int(ttt[1]) + 1
+        version = int(ttt[1]) + 1
+        version_number = str(version).rjust(3, '0')
         new_version = base_name + 'V' + str(version_number)
 
     result = {"Shotname": path[0], "Renamed" : [], "Misnamed" : [], "Ignored" : []}
@@ -42,9 +43,11 @@ def findMisNamed(scene_file, rename=False):
                     continue
             if "_Rig" in node.parent_group().name:
                 parent_name = node.parent_group().name.split("_Rig")[0]
+            elif "_rig" in node.parent_group().name:
+                parent_name = node.parent_group().name.split("_rig")[0]
             else:
                 parent_name = node.parent_group().name
-            if not parent_name in node.name and node.parent_group().name != 'Top':
+            if not parent_name.lower() in node.name.lower() and node.parent_group().name != 'Top':
                 check = True
 
                 # if node.name in ignore_list:
@@ -65,3 +68,5 @@ def findMisNamed(scene_file, rename=False):
 
     # Return list with matching results (misnamed nodes)
     return result
+
+# print(findMisNamed(r"P:\930462_HOJ_Project\Production\Film\S105\S105_SQ010\S105_SQ010_SH020\S105_SQ010_SH020\S105_SQ010_SH020_V049.xstage", rename=False))
