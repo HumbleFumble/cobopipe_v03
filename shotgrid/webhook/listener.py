@@ -53,7 +53,8 @@ def deploy(dev=False):
     port = 21224
     if os.getlogin() == 'mha':
         port = 21225
-        
+    if os.getlogin() == 'cg':
+        port = 21226
     if dev:
         app.run(host="0.0.0.0", port=port)
     else:

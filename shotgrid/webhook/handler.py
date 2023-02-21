@@ -5,6 +5,8 @@ def run(webhook_id, data, timestamp):
         if status_updated_to_approve(data):
             entity_id = data.get("meta").get("entity_id")
             update_downstream(entity_id)
+    if webhook_id == "10c2b363-dbb7-4059-8836-ef99b5f8794f": #shot duration changed webhook (Christian test)
+        print(f"Shot(id: {data.get('entity').get('id')}) duration changed from: {data.get('meta').get('old_value')} to {data.get('meta').get('new_value')}")
 
 def status_updated_to_approve(data):       
     if not data.get("event_type") == "Shotgun_Task_Change":

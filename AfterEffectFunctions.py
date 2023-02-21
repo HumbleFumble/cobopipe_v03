@@ -42,17 +42,33 @@ def CreatePrecomp(base_file, passes_folder,comp_folder, precomp_name):
         app.project.bitsPerChannel = 16;
         app.project.save(comp_file);
     }
-
+     function FindItem(item_name, item_type){
+        var project_content = app.project.items;
+        for(var p =project_content.length;p>=1;p--){
+            var cur_content = project_content[p];
+            if(cur_content instanceof item_type){
+                if(cur_content.name == item_name){
+                    return cur_content
+                    }
+                }
+            }
+        return null
+        }
     function Run(base_file, passes_folder, comp_folder, precomp_name){
         //var cur_proj = app.newProject();
         app.open(new File(base_file));
         var footage_folder = app.project.items.addFolder("Footage");
         var duration = ImportFootage(passes_folder,footage_folder);
         //var duration = frame_duration *(1/25);
-        render_item = app.project.items.addComp(".RENDER", 1920, 1080, 1, duration, 25);
-        work_item = app.project.items.addComp(".WORK", 1920, 1080, 1, duration, 25);
-        render_item.layers.add(work_item);
-        
+        render_item = FindItem(".RENDER",CompItem);
+        if(!render_item){
+            render_item = app.project.items.addComp(".RENDER", 1920, 1080, 1, duration, 25);
+            }
+        work_item = FindItem(".WORK",CompItem);
+        if(!work_item){
+            work_item = app.project.items.addComp(".WORK", 1920, 1080, 1, duration, 25);
+            render_item.layers.add(work_item);
+        }        
         SavePrecompFile(comp_folder, precomp_name);	
         }
 
@@ -436,6 +452,47 @@ def RenderShot(scene_path, output_folder, output_name, watchfolder_path):
         result = subprocess.run(ae_apply, shell=True, universal_newlines=True)
         print("Added shot to watchfolder")
         os.remove(script_path)
+
+
+def ExportAsProject(comp_path,list_of_ids, script_location):
+    script_path = "%s/Temp_ExportAsProject.jsx" % script_location
+    # print("Dest: %s Src: %s Pass: %s" % (dst_comp,src_comp,passes_folder))
+    script_content = """
+    #target.aftereffects
+
+    function Run(){
+        //Setting paths and variables
+        var dst_file = new File(dst_comp);
+        var project_folder = new Folder(dst_file.path);
+        if(!project_folder.exists){project_folder.create();}
+
+
+        //Running functions. Opening src comp, finding footing in src comp, 
+        //check footage in src up against footage in passes folder, if footage in both places then replace it, otherwise just import it.
+        //Rename footage_folder to OLD and place footage from passes folder in a new "Footage" folder.
+        //Then set duration, based on the longest footage found, and save project.
+
+        ImportProject(src_comp, dst_comp);
+        var footage_folder = FindFootageFolder();
+        var src_footage = ProjectFootage("." + file_type);
+        var _duration = FindAndReplaceFootage(src_footage, passes_folder, footage_folder,file_type,old_shot,new_shot);
+        SetRenderCompDuration(_duration);
+        app.project.bitsPerChannel = 16;
+        app.project.save(new File(dst_comp));
+        }
+
+    """ % (comp_path, list_of_ids)
+
+    script_file = open(script_path, "w")
+    script_file.write(script_content)
+    script_file.close()
+
+    ae_apply = 'afterfx -noui -r %s' % (script_path)
+    logger.info("RUNNING :: " + ae_apply)
+    subprocess.run(ae_apply, shell=True, universal_newlines=True)
+    # os.remove(script_path) // Deletes before subprocess finishes
+    # print("Create %s " % script_path)
+    return True
 
 
 # shot_folder = "P:/_WFH_Projekter/930448_MSP_academy/Film/E010/sq050/sh140/"
