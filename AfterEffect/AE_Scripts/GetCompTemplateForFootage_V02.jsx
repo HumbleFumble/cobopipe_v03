@@ -6,14 +6,6 @@ cc = getConfig()
 var base_project_path = dict_replace(cc.project_paths,cc.project_paths["film_path"])
 var template_path = base_project_path + "/_Comp_Templates/_AE_CharTemplates";
 
-function Run(){
-    var cur_item = GetCurrentSelectedFootage()
-    var footage_folder = cur_item.parentFolder;
-    imported_folder = ImportTemplateFromFootageName(cur_item.name);
-    if(imported_folder){
-        ReplaceMoveDelete(imported_folder,footage_folder);
-        }
-    }
 
 function GetCurrentSelectedFootage(){
     var cur_selection = app.project.selection;
@@ -30,21 +22,6 @@ function GetCurrentSelectedFootage(){
     }
 }
 
-function ImportTemplateFromFootageName(cur_name){
-        precomp_folder = new Folder(template_path);
-        var template_aeps = precomp_folder.getFiles('*_CharTemplate.aep');
-        for(t=0;t<template_aeps.length;t++){
-            cur_template_name = template_aeps[t].name.split("_")[0];
-
-            if(cur_name.search(cur_template_name)>-1){
-                var project_item = ImportProject(template_aeps[t])
-                return project_item
-                }
-            }
-        alert("Can't find any template for " + cur_name);
-        return null;
-        }
-
 function ReplaceMoveDelete(cur_folder,orig_folder){
     var footage_folder = null;
     to_alert = "REPLACING:\n";
@@ -56,6 +33,7 @@ function ReplaceMoveDelete(cur_folder,orig_folder){
                 }
         }
     var footage_list = [];
+    var old_footage_folder = false
     if(footage_folder){
         for(f=1;f<=footage_folder.numItems;f++){
             temp_name = footage_folder.items[f].name;
@@ -79,7 +57,15 @@ function ReplaceMoveDelete(cur_folder,orig_folder){
             find_index = footage_list.join(",").indexOf(split_name);
             if(find_index>-1){
                 replace_alert = ReplaceInComps(footage_folder.items[find_index+1],orig_folder.items[x])
+                if(replace_alert == ""){
+                    if(!old_footage_folder){
+                        old_footage_folder = FindFolderByName("Old_Footage")
+                        }
+                        footage_folder.items[find_index+1].parentFolder = old_footage_folder
+                        replace_alert = "Couldn't find " +  String(footage_folder.items[find_index+1].name) + " used anywhere. Putting it in the old_footage folder");
+                    }
                 to_alert = to_alert + replace_alert;
+
                 }
         }
     }//if footage folder
@@ -118,20 +104,20 @@ function ImportProject(my_path){
 	}
 
 
-function FindFootageFolder(){
+function FindFolderByName(name){
     var project_content = app.project.items;
     var my_folder = "";
     for(var p =project_content.length;p>=1;p--){
         var cur_content = project_content[p];
         if(cur_content instanceof FolderItem){
             var _name = cur_content.name;
-            if(_name == "Footage"){
+            if(_name == name){
                 my_folder = cur_content;
                 return cur_content
             }
         }
     }
-    return project_content.addFolder("Footage");
+    return project_content.addFolder(name);
 }
 
 function FindInFolder(folder_path){
@@ -149,7 +135,7 @@ function FindInFolder(folder_path){
 function ImportMulti(){
     var footage_selection = GetCurrentSelectedFootage();
     if(footage_selection && footage_selection!=""){
-        var footage_folder = FindFootageFolder()
+        var footage_folder = FindFolderByName("Footage")
         var f_list = FindInFolder(template_path);
         for(var i=0;i<footage_selection.length;i++){
           var cur_footage = footage_selection[i];
@@ -211,7 +197,7 @@ var cur_win = (function(thisObj){
     import_multi_button: Button{text:'Import from Footage Selected'}\
     }}}\
     ")
-    var footage_folder = FindFootageFolder()
+    var footage_folder = FindFolderByName("Footage")
 
     dialog.grp.panel_group.bttn_group.import_single_button.onClick = function(){
         if(dialog.grp.panel_group.drop_group.drop_down.selection){
