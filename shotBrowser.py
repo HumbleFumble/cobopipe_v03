@@ -1799,6 +1799,37 @@ class FrontController(QtCore.QObject):
 		os.startfile(output_path)
 		return output_path
 
+	def disableGlowExternally(self, nodes, wait=False):
+		shots = []
+		for node in nodes:
+			if not node.getType() in ["episode","seq"]:
+				shots.append(node)
+			else:
+				shots.extend(node.getAllChildren())
+		pool = ThreadPool2.ThreadPool()
+		pool.setMaxThreads(10)
+		workers = []
+		for shot in shots:
+			scene_path = self.findToonboomAnimationFile(shot)
+			if scene_path:
+				worker = None
+				worker = ThreadPool2.Worker(self.disableGlowExternallyCmd, scene_path)
+				if worker:
+					pool.addWorker(worker)
+					workers.append(worker)
+		if workers:
+			pool.signals.finished.connect(createCompPreviewDone)
+			pool.run()
+			if wait == True:
+				print('Trying to wait') 
+				pool.wait()
+			print('\n >> Rendering! <<')
+
+	def disableGlowExternallyCmd(self, scene_path):
+		cmd = r"Python C:\Users\mha\Projects\cobopipe_v02-001\TB\disable_glow_nodes.py %s" % scene_path
+		process = subprocess.Popen(cmd,shell=True,universal_newlines=True,env=run_env)
+		process.communicate()
+
 	def toonboomRenderExternally(self, nodes, wait=False):
 		shots = []
 		for node in nodes:
