@@ -1269,6 +1269,40 @@ class FrontController(QtCore.QObject):
 		logger.warning("Can't find animation file for: %s" % cur_node.getName())
 		return False
 
+	def checkTBRenderNodes(self, nodes_list,rename=False):
+		"""Checks the given scenes for issues with the render nodes
+		Returns a list of shots that are fixed and of shots where other issues are still present -> and what those issues are"""
+		import TB.FindRename
+		result_dict = {}
+		for item in nodes_list:
+			scene_path = self.findToonboomAnimationFile(item)
+			if scene_path:
+				result = (TB.FindRename.findMisNamed(scene_path, rename=False))
+				result_dict[item.getName()] = result
+		# Construct separate dictionaries for later use
+		final_dict_for_renamed = {}
+		final_dict_for_misnamed = {}
+		for i in result_dict.keys():
+			in_rename = result_dict[i]["Renamed"]
+			if in_rename:
+				final_dict_for_renamed[i] = in_rename
+			in_misname = result_dict[i]["Misnamed"]
+			if in_misname:
+				final_dict_for_misnamed[i] = in_misname
+		print(final_dict_for_renamed)
+		print(final_dict_for_misnamed)
+		print(f"EVERYTHING: {result_dict}")
+
+		# Save to file
+		location_path = CC.get_base_path() + "/Pipeline/" + "Misnamed_Json.json"
+		orig_dict = self.loadSettings(location_path)
+		final_dict_for_misnamed.update(orig_dict)
+		print(final_dict_for_misnamed)
+		self.saveSettings(location_path,final_dict_for_misnamed)
+
+
+
+
 	def createPreviewFromToonboom(self,cur_node):
 		shot_name = cur_node.getName()
 		logger.info("Trying to make preview off: %s" % shot_name)
@@ -2693,6 +2727,7 @@ class MainWindow(QtWidgets.QWidget):
 					if animation_style in ["Toonboom"]:
 						create_menu.addAction("Update Harmony Palettes")
 						create_menu.addAction("Render Scene Externally")
+						create_menu.addAction("Check Scene Render Nodes")
 
 					menu.addSeparator()
 					if node.getType() == "shot":
@@ -2930,6 +2965,11 @@ class MainWindow(QtWidgets.QWidget):
 									self.ctrl.saveNodeInfo(cur_node=n, info_keys=["comp_style"])
 							node.setCompStyle(comp_style_group.checkedAction().text())
 							self.ctrl.saveNodeInfo(cur_node=node, info_keys=["comp_style"])
+					if action.text() == "Check Scene Render Nodes":
+						cur_list = nodes
+						if node.getType() in ["episode", "seq"]:
+							cur_list = node.getAllChildren()
+						self.ctrl.checkTBRenderNodes(cur_list)
 
 
 		return QtWidgets.QWidget.eventFilter(self, source, event)
