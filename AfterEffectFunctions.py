@@ -455,44 +455,6 @@ def RenderShot(scene_path, output_folder, output_name, watchfolder_path):
         os.remove(script_path)
 
 
-def ExportAsProject(comp_path,list_of_ids, script_location):
-    script_path = "%s/Temp_ExportAsProject.jsx" % script_location
-    # print("Dest: %s Src: %s Pass: %s" % (dst_comp,src_comp,passes_folder))
-    script_content = """
-    #target.aftereffects
-
-    function Run(file_path,list_of_ids){
-        //Setting paths and variables
-        var new_project = new File(file_path);
-        app.open(new_project);
-        split_list = list_of_ids.split(",")
-        reduce_items = ReturnItemsFromIds (split_list)
-        app.project.reduceProject(reduce_items);
-        app.project.save();
-    }
-
-    function ReturnItemsFromIds(list_of_ids){
-        return_list = []
-        for(var i =0; i < list_of_ids.length;i++){
-            return_list.push(app.project.itemByID(list_of_ids[i]))
-            }
-        return return_list
-    }
-
-    Run(%s,%s)
-    """ % (comp_path, list_of_ids)
-
-    script_file = open(script_path, "w")
-    script_file.write(script_content)
-    script_file.close()
-
-    ae_apply = 'afterfx -noui -r %s' % (script_path)
-    logger.info("RUNNING :: " + ae_apply)
-    comm = subprocess.Popen(ae_apply, shell=True, universal_newlines=True,stdout=sys.stdout)
-    print(comm)
-    os.remove(script_path)  #Deletes before subprocess finishes
-    # print("Create %s " % script_path)
-    return True
 
 
 # shot_folder = "P:/_WFH_Projekter/930448_MSP_academy/Film/E010/sq050/sh140/"
