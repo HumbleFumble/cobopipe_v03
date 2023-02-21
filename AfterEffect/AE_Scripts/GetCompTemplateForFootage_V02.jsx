@@ -33,10 +33,12 @@ function ReplaceMoveDelete(cur_folder,orig_folder){
                 }
         }
     var footage_list = [];
-    var old_footage_folder = false
+    var used_footage_list =[]
+    var old_footage_folder = null;
     if(footage_folder){
         for(f=1;f<=footage_folder.numItems;f++){
             temp_name = footage_folder.items[f].name;
+            used_footage_list.push(footage_folder.items[f]);
             if(temp_name.indexOf("{")>-1){
                 push_name = temp_name.split("{")[0];
                 }
@@ -45,7 +47,8 @@ function ReplaceMoveDelete(cur_folder,orig_folder){
                 }
             footage_list.push(push_name);
         }
-        for(x=1;x<=orig_folder.numItems;x++){
+        
+        for(x=orig_folder.numItems;x>=1;x--){
             cur_name = orig_folder.items[x].name;
             var split_name ="";
             if(cur_name.indexOf("{")>-1){
@@ -57,18 +60,20 @@ function ReplaceMoveDelete(cur_folder,orig_folder){
             find_index = footage_list.join(",").indexOf(split_name);
             if(find_index>-1){
                 replace_alert = ReplaceInComps(footage_folder.items[find_index+1],orig_folder.items[x])
-                if(replace_alert == ""){
-                    if(!old_footage_folder){
-                        old_footage_folder = FindFolderByName("Old_Footage")
-                        }
-                        footage_folder.items[find_index+1].parentFolder = old_footage_folder
-                        replace_alert = "Couldn't find " +  String(footage_folder.items[find_index+1].name) + " used anywhere. Putting it in the old_footage folder");
-                    }
                 to_alert = to_alert + replace_alert;
-
+                used_footage_list.splice(find_index,1)
                 }
         }
-    }//if footage folder
+    }
+    if(used_footage_list.length >0){
+        if(!old_footage_folder){
+            old_footage_folder = FindFolderByName("Old_Footage")
+            }
+            for(var y=(used_footage_list.length-1 );y>=0;y--){
+               used_footage_list[y].parentFolder = old_footage_folder
+               to_alert = to_alert + "Couldn't find " + used_footage_list[y].name + " used anywhere. Placed it in Old_Footage folder."
+                }
+        }
     alert(to_alert);
     cur_folder.remove();
 }
