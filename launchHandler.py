@@ -28,6 +28,7 @@ def launch(app="maya", local_user=True,file_path=None, CC=None, run_env=None, pr
         runHarmony(*args, **kwargs)
     elif app == 'aftereffects':
         runAE(*args, **kwargs)
+    return True
 
 def runAE(run_env, file_path=None):
     if not file_path:
