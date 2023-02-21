@@ -1,5 +1,6 @@
 import subprocess
 import os
+import sys
 
 from Log.CoboLoggers import getLogger
 logger = getLogger()
@@ -460,27 +461,25 @@ def ExportAsProject(comp_path,list_of_ids, script_location):
     script_content = """
     #target.aftereffects
 
-    function Run(){
+    function Run(file_path,list_of_ids){
         //Setting paths and variables
-        var dst_file = new File(dst_comp);
-        var project_folder = new Folder(dst_file.path);
-        if(!project_folder.exists){project_folder.create();}
+        var new_project = new File(file_path);
+        app.open(new_project);
+        split_list = list_of_ids.split(",")
+        reduce_items = ReturnItemsFromIds (split_list)
+        app.project.reduceProject(reduce_items);
+        app.project.save();
+    }
 
+    function ReturnItemsFromIds(list_of_ids){
+        return_list = []
+        for(var i =0; i < list_of_ids.length;i++){
+            return_list.push(app.project.itemByID(list_of_ids[i]))
+            }
+        return return_list
+    }
 
-        //Running functions. Opening src comp, finding footing in src comp, 
-        //check footage in src up against footage in passes folder, if footage in both places then replace it, otherwise just import it.
-        //Rename footage_folder to OLD and place footage from passes folder in a new "Footage" folder.
-        //Then set duration, based on the longest footage found, and save project.
-
-        ImportProject(src_comp, dst_comp);
-        var footage_folder = FindFootageFolder();
-        var src_footage = ProjectFootage("." + file_type);
-        var _duration = FindAndReplaceFootage(src_footage, passes_folder, footage_folder,file_type,old_shot,new_shot);
-        SetRenderCompDuration(_duration);
-        app.project.bitsPerChannel = 16;
-        app.project.save(new File(dst_comp));
-        }
-
+    Run(%s,%s)
     """ % (comp_path, list_of_ids)
 
     script_file = open(script_path, "w")
@@ -489,8 +488,9 @@ def ExportAsProject(comp_path,list_of_ids, script_location):
 
     ae_apply = 'afterfx -noui -r %s' % (script_path)
     logger.info("RUNNING :: " + ae_apply)
-    subprocess.run(ae_apply, shell=True, universal_newlines=True)
-    # os.remove(script_path) // Deletes before subprocess finishes
+    comm = subprocess.Popen(ae_apply, shell=True, universal_newlines=True,stdout=sys.stdout)
+    print(comm)
+    os.remove(script_path)  #Deletes before subprocess finishes
     # print("Create %s " % script_path)
     return True
 
