@@ -2,6 +2,7 @@ import os
 import maya.cmds as cmds
 
 def update_texture_paths():
+    
     # Define the directory to check
     scene_file_path = cmds.file(query=True, l=True)[0]
     scene_folder_path = os.path.dirname(scene_file_path)
@@ -31,14 +32,28 @@ def update_texture_paths():
     for root, dirs, files in os.walk(tex_folder_path):
         for file in files:
             # Not wasting time on useless files.
-            if not any(file.endswith(w) for w in ['.tx', '.swatch', '.DS_Store', '.tmp']):
-                # Checking if the file is in our index of file nodes
-                if file in reference_dictionary.keys():
-                    # Updating the texture file path
-                    for node in reference_dictionary[file]:
-                        cmds.setAttr(node + ".fileTextureName", os.path.join(root, file), type='string')
-                        number_of_spaces = 50 - len(node)
-                        spaces = ' ' * number_of_spaces
-                        print(' > ' + node + spaces + '  -->  ' + os.path.join(root, file))
+            if any(file.endswith(w) for w in ['.tx', '.swatch', '.DS_Store', '.tmp']):
+                continue
+            
+            # Checking if the file is in our index of file nodes
+            if not file in reference_dictionary.keys():
+                continue
+            
+            # Updating the texture file path
+            for node in reference_dictionary[file]:
+                cmds.setAttr(node + ".fileTextureName", os.path.join(root, file), type='string')
+                number_of_spaces = 50 - len(node)
+                spaces = ' ' * number_of_spaces
+                print(' > ' + node + spaces + '  -->  ' + os.path.join(root, file))
 
     print('\n   ... Done ...\n')
+
+def move_projections_to_face():
+    selected_nodes = cmds.ls(sl=True)
+    for node in selected_nodes:
+        if cmds.nodeType(node) == 'projection':
+            continue
+        
+        place_node = cmds.createNode('place3dTexture')
+        cmds.setAttr(f"{place_node}.translateY", 4)
+        cmds.connectAttr(f"{place_node}.worldInverseMatrix[0]", f"{node}.placementMatrix")
