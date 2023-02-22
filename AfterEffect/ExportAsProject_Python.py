@@ -57,7 +57,7 @@ def ExportAsProject(comp_path, list_of_ids, script_location):
 
     ae_apply = 'afterfx -noui -r "%s"' % (script_path)
     wait = subprocess.call(ae_apply, shell=True, universal_newlines=True)
-    #os.remove(script_path)  # Deletes before subprocess finishes
+    os.remove(script_path)  # Deletes before subprocess finishes
     # print("Create %s " % script_path)
     return True
 
