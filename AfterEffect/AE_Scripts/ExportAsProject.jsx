@@ -1,5 +1,5 @@
 ﻿#target.aftereffects
-#include T:/_Pipeline/cobopipe_v02-001/AfterEffect/includes/config_functions.js
+#include T:/_Pipeline/cobopipe_v02-001/AfterEffect/includes/config_functions.jsx
 //include C:/Users/cg/PycharmProjects/cobopipe_v02-001/AfterEffect/includes/config_functions.jsx
 
 cc = getConfig()
