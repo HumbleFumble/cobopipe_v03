@@ -29,17 +29,16 @@ def ExportAsProject(comp_path, list_of_ids, script_location):
     # print("Dest: %s Src: %s Pass: %s" % (dst_comp,src_comp,passes_folder))
     script_content = """
       #target.aftereffects
-
+      app.beginSuppressDialogs()
+      
       function Run(file_path,list_of_ids){
           //Setting paths and variables
           var new_project = new File(file_path);
-          app.beginSuppressDialogs()
-          app.open(new_project);
-          //list_of_ids = list_of_ids.split(",")
+          //app.open(new_project);
           reduce_items = ReturnItemsFromIds (list_of_ids)
           app.project.reduceProject(reduce_items);
           app.project.save();
-          app.endSuppressDialogs(0)
+          
       }
 
       function ReturnItemsFromIds(list_of_ids){
@@ -49,8 +48,9 @@ def ExportAsProject(comp_path, list_of_ids, script_location):
               }
           return return_list
       }
-
+      
       Run("%s",[%s])
+      app.endSuppressDialogs(0)
       """ % (comp_path, list_of_ids)
 
     script_file = open(script_path, "w")
