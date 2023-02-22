@@ -1861,7 +1861,7 @@ class FrontController(QtCore.QObject):
 		process = subprocess.Popen(cmd,shell=True,universal_newlines=True,env=run_env)
 		process.communicate()
 
-	def updateHarmonyPalettes(self, nodes):
+	def updateHarmonyPalettes(self, nodes, wait=False):
 		shots = []
 		for node in nodes:
 			if node.getType() == 'episode':
@@ -1891,7 +1891,9 @@ class FrontController(QtCore.QObject):
 		if workers:
 			pool.signals.finished.connect(createCompPreviewDone)
 			pool.run()
-			pool.wait()
+			if wait == True:
+				print('Trying to wait') 
+				pool.wait()
 			print('\n >> Done updating harmony palettes <<')
 
 	def createCompPreview(self, nodes, force):
