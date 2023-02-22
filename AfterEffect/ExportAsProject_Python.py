@@ -34,7 +34,7 @@ def ExportAsProject(comp_path, list_of_ids, script_location):
       function Run(file_path,list_of_ids){
           //Setting paths and variables
           var new_project = new File(file_path);
-          //app.open(new_project);
+          app.open(new_project);
           reduce_items = ReturnItemsFromIds (list_of_ids)
           app.project.reduceProject(reduce_items);
           app.project.save();
