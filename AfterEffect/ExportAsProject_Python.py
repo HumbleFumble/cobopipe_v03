@@ -3,19 +3,20 @@ import sys
 import shutil
 import subprocess
 
+#TODO Make temp save on c drive, and from there save on the desired location.
 def run(orig_file, new_file, list_of_ids):
     # duplicate file and save it correctly
     orig_drive_letter = orig_file.split("/")[1]
     orig_file = "P:/" + orig_file.split("/"+orig_drive_letter+"/")[1]
     new_drive_letter = new_file.split("/")[1]
     new_file = "P:/" + new_file.split("/" + new_drive_letter + "/")[1]
-
+    temp_save_location = "C:/Temp/AE_ExportAsProject_Temp.aep"
     if os.path.exists(orig_file):
-        shutil.copy(orig_file,new_file)
-        script_file = f"{os.path.dirname(new_file)}/Temp_ExportAsProject_script.jsx"
+        shutil.copy(orig_file,temp_save_location)
+        script_file = f"{os.path.dirname(temp_save_location)}/Temp_ExportAsProject_script.jsx"
 
         # run script
-        ExportAsProject(new_file, list_of_ids, script_file)
+        ExportAsProject(temp_save_location,new_file, list_of_ids, script_file)
         # remove script bat
         #os.remove(script_file)
         return True
@@ -23,7 +24,7 @@ def run(orig_file, new_file, list_of_ids):
         print(f"Can't find {orig_file}. Stopped exporting project")
 
 
-def ExportAsProject(comp_path, list_of_ids, script_location):
+def ExportAsProject(cur_location,comp_path, list_of_ids, script_location):
     script_path = script_location
     # script_path = "%s/Temp_ExportAsProject.jsx" % script_location
     # print("Dest: %s Src: %s Pass: %s" % (dst_comp,src_comp,passes_folder))
@@ -31,13 +32,13 @@ def ExportAsProject(comp_path, list_of_ids, script_location):
       #target.aftereffects
       app.beginSuppressDialogs()
       
-      function Run(file_path,list_of_ids){
+      function Run(cur_location,file_path,list_of_ids){
           //Setting paths and variables
-          var new_project = new File(file_path);
+          var new_project = new File(cur_location);
           app.open(new_project);
           reduce_items = ReturnItemsFromIds (list_of_ids)
           app.project.reduceProject(reduce_items);
-          app.project.save();
+          app.project.save(file_path);
           
       }
 
@@ -49,9 +50,9 @@ def ExportAsProject(comp_path, list_of_ids, script_location):
           return return_list
       }
       
-      Run("%s",[%s])
+      Run("%s","%s",[%s])
       app.endSuppressDialogs(0)
-      """ % (comp_path, list_of_ids)
+      """ % (cur_location, comp_path, list_of_ids)
 
     script_file = open(script_path, "w")
     script_file.write(script_content)
