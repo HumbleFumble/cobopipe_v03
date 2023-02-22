@@ -5,7 +5,7 @@
 cc = getConfig()
 var pipepath = cc.project_paths["python_path"]
 //var pipepath = "C:/Users/cg/PycharmProjects/cobopipe_v02-001/AfterEffect/"
-var python_script_path = pipepath + "/ExportAsProject_Python.py";
+var python_script_path = pipepath + "AfterEffect/ExportAsProject_Python.py";
 
 function Export(orig_file_path,export_path){
     log(orig_file_path)
