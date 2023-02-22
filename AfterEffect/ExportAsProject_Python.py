@@ -33,11 +33,13 @@ def ExportAsProject(comp_path, list_of_ids, script_location):
       function Run(file_path,list_of_ids){
           //Setting paths and variables
           var new_project = new File(file_path);
+          app.beginSuppressDialogs()
           app.open(new_project);
           //list_of_ids = list_of_ids.split(",")
           reduce_items = ReturnItemsFromIds (list_of_ids)
           app.project.reduceProject(reduce_items);
           app.project.save();
+          app.endSuppressDialogs()
       }
 
       function ReturnItemsFromIds(list_of_ids){
