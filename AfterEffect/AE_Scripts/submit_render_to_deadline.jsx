@@ -94,7 +94,7 @@ function SetupRenderQueue(render_comp, out_folder, out_name, out_module){
 }
 
 function my_window(){
-	var my_source = "window {text: 'Create Render Output', alignChildren: 'left' , alignment: ['top','fill'],preferredSize: [400,150],\
+	var my_source = "window {text: 'Submit Deadline Job', alignChildren: 'left' , alignment: ['top','fill'],preferredSize: [400,150],\
 			shot_panel: Panel {text: 'INFO:', \
 				alignment:['fill','top'], alignChildren: 'left',\
 				st2: StaticText{text: 'This script saves your file, so make sure you are okay with that before running it' ,},\
