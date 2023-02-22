@@ -39,7 +39,7 @@ def ExportAsProject(comp_path, list_of_ids, script_location):
           reduce_items = ReturnItemsFromIds (list_of_ids)
           app.project.reduceProject(reduce_items);
           app.project.save();
-          app.endSuppressDialogs(false)
+          app.endSuppressDialogs(0)
       }
 
       function ReturnItemsFromIds(list_of_ids){
