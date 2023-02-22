@@ -13,7 +13,7 @@ def run(orig_file, new_file, list_of_ids):
     print(temp_save_location)
     if os.path.exists(orig_file):
         shutil.copy(orig_file,temp_save_location)
-        script_file = f"{os.path.dirname(temp_save_location)}/Temp_ExportAsProject_script.jsx"
+        script_file = f"{os.path.dirname(temp_save_location)}/AE_ExportAsProject_Temp_script.jsx"
         print(script_file)
 
         # run script
@@ -39,7 +39,7 @@ def ExportAsProject(cur_location,comp_path, list_of_ids, script_location):
           app.open(new_project);
           reduce_items = ReturnItemsFromIds (list_of_ids)
           app.project.reduceProject(reduce_items);
-          app.project.save(file_path);
+          app.project.save(new File(file_path));
           
       }
 
