@@ -3,7 +3,6 @@ import sys
 import shutil
 import subprocess
 
-#TODO Make temp save on c drive, and from there save on the desired location.
 def run(orig_file, new_file, list_of_ids):
     # duplicate file and save it correctly
     orig_drive_letter = orig_file.split("/")[1]
@@ -11,9 +10,11 @@ def run(orig_file, new_file, list_of_ids):
     new_drive_letter = new_file.split("/")[1]
     new_file = "P:/" + new_file.split("/" + new_drive_letter + "/")[1]
     temp_save_location = "C:/Temp/AE_ExportAsProject_Temp.aep"
+    print(temp_save_location)
     if os.path.exists(orig_file):
         shutil.copy(orig_file,temp_save_location)
         script_file = f"{os.path.dirname(temp_save_location)}/Temp_ExportAsProject_script.jsx"
+        print(script_file)
 
         # run script
         ExportAsProject(temp_save_location,new_file, list_of_ids, script_file)
