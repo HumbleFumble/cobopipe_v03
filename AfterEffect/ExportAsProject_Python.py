@@ -17,7 +17,7 @@ def run(orig_file, new_file, list_of_ids):
         # run script
         ExportAsProject(new_file, list_of_ids, script_file)
         # remove script bat
-        # os.remove(script_file)
+        os.remove(script_file)
         return True
     else:
         print(f"Can't find {orig_file}. Stopped exporting project")
@@ -34,8 +34,8 @@ def ExportAsProject(comp_path, list_of_ids, script_location):
           //Setting paths and variables
           var new_project = new File(file_path);
           app.open(new_project);
-          split_list = list_of_ids.split(",")
-          reduce_items = ReturnItemsFromIds (split_list)
+          //list_of_ids = list_of_ids.split(",")
+          reduce_items = ReturnItemsFromIds (list_of_ids)
           app.project.reduceProject(reduce_items);
           app.project.save();
       }
@@ -48,18 +48,16 @@ def ExportAsProject(comp_path, list_of_ids, script_location):
           return return_list
       }
 
-      Run(%s,%s)
+      Run("%s",[%s])
       """ % (comp_path, list_of_ids)
 
     script_file = open(script_path, "w")
     script_file.write(script_content)
     script_file.close()
 
-    ae_apply = 'afterfx -noui -r %s' % (script_path)
-
-    comm = subprocess.Popen(ae_apply, shell=True, universal_newlines=True, stdout=sys.stdout)
-    print(comm)
-    os.remove(script_path)  # Deletes before subprocess finishes
+    ae_apply = 'afterfx -noui -r "%s"' % (script_path)
+    wait = subprocess.call(ae_apply, shell=True, universal_newlines=True)
+    #os.remove(script_path)  # Deletes before subprocess finishes
     # print("Create %s " % script_path)
     return True
 

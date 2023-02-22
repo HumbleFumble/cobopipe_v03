@@ -1,18 +1,23 @@
-﻿function Export(orig_file_path,export_path){
+﻿#target.aftereffects
+#include T:/_Pipeline/cobopipe_v02-001/AfterEffect/include/config_functions.js
+//include C:/Users/cg/PycharmProjects/cobopipe_v02-001/AfterEffect/includes/config_functions.jsx
+
+cc = getConfig()
+var pipepath = cc.project_paths["python_path"]
+var pipepath = "C:/Users/cg/PycharmProjects/cobopipe_v02-001/AfterEffect/"
+//var python_script_path = pipepath + "/ExportAsProject_Python.py";
+
+function Export(orig_file_path,export_path){
     log(orig_file_path)
     log(export_path)
     var cur_selection = app.project.selection;
     if(cur_selection){
         log(cur_selection)
         var list_of_ids = ReturnIdList(cur_selection);
-        python_proc  = "C:\\Users\\cg\\PycharmProjects\\cobopipe_v02-001\\AfterEffect\\ExportAsProject_Python.py"
-        add_args = python_proc + " " + orig_file_path + " " + export_path +" "+ String(list_of_ids);
+        var add_args = python_script_path + " " + orig_file_path + " " + export_path +" "+ String(list_of_ids);
          $.writeln(add_args)
         result = system.callSystem("python " + add_args)
         $.writeln(result)
-        //var new_project = new File(file_path);
-//        app.project.reduceProject(cur_comp);
-//        app.project.save(new_project);
         }
     }
 function log(message){
@@ -48,9 +53,15 @@ var cur_win = (function(thisObj){
     ")
     
      dialog.grp.panel_group.file_panel.browse_button.onClick=function(){
-        var start_folder = "P:/930462_HOJ_Project/Production/AE_Export.aep";
+        if(app.settings.haveSetting("ExportAsProject","StartFolder")){
+            var start_folder = String(app.settings.getSetting("ExportAsProject","StartFolder")) + "/ExportAsProject.aep"
+            }
+        else{
+            var start_folder = "P:/930462_HOJ_Project/Production/ExportAsProject.aep";
+        }
         var save_file = new File(start_folder).saveDlg("Save As", "AEP:*.aep;*.aep,All files:*.*", false);
         if(save_file != null){
+            app.settings.saveSetting("ExportAsProject","StartFolder", String(save_file.path));
             dialog.grp.panel_group.file_panel.file_et.text = save_file.fullName;
             return;
             }
