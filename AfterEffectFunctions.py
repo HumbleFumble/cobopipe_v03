@@ -1,5 +1,6 @@
 import subprocess
 import os
+import sys
 
 from Log.CoboLoggers import getLogger
 logger = getLogger()
@@ -454,45 +455,6 @@ def RenderShot(scene_path, output_folder, output_name, watchfolder_path):
         os.remove(script_path)
 
 
-def ExportAsProject(comp_path,list_of_ids, script_location):
-    script_path = "%s/Temp_ExportAsProject.jsx" % script_location
-    # print("Dest: %s Src: %s Pass: %s" % (dst_comp,src_comp,passes_folder))
-    script_content = """
-    #target.aftereffects
-
-    function Run(){
-        //Setting paths and variables
-        var dst_file = new File(dst_comp);
-        var project_folder = new Folder(dst_file.path);
-        if(!project_folder.exists){project_folder.create();}
-
-
-        //Running functions. Opening src comp, finding footing in src comp, 
-        //check footage in src up against footage in passes folder, if footage in both places then replace it, otherwise just import it.
-        //Rename footage_folder to OLD and place footage from passes folder in a new "Footage" folder.
-        //Then set duration, based on the longest footage found, and save project.
-
-        ImportProject(src_comp, dst_comp);
-        var footage_folder = FindFootageFolder();
-        var src_footage = ProjectFootage("." + file_type);
-        var _duration = FindAndReplaceFootage(src_footage, passes_folder, footage_folder,file_type,old_shot,new_shot);
-        SetRenderCompDuration(_duration);
-        app.project.bitsPerChannel = 16;
-        app.project.save(new File(dst_comp));
-        }
-
-    """ % (comp_path, list_of_ids)
-
-    script_file = open(script_path, "w")
-    script_file.write(script_content)
-    script_file.close()
-
-    ae_apply = 'afterfx -noui -r %s' % (script_path)
-    logger.info("RUNNING :: " + ae_apply)
-    subprocess.run(ae_apply, shell=True, universal_newlines=True)
-    # os.remove(script_path) // Deletes before subprocess finishes
-    # print("Create %s " % script_path)
-    return True
 
 
 # shot_folder = "P:/_WFH_Projekter/930448_MSP_academy/Film/E010/sq050/sh140/"
