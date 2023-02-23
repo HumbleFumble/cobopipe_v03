@@ -8,9 +8,10 @@ logger = getLogger()
 #we should be able to use os.environ["HarmonyPremium"] + "/python-packages"
 sys.path.append( r"C:\Program Files (x86)\Toon Boom Animation\Toon Boom Harmony 22 Premium\win64\bin\python-packages" )
 
-def findMisNamed(scene_file, rename=False):
+def findMisNamed(scene_file, rename=True):
     from ToonBoom import harmony
-    error_dict = {"Guska": {"RENDER_Trin": "RENDER_Guska", "RENDER_Trin_Shadow": "RENDER_Guska_Shadow"}}
+    error_dict = {"Guska": {"RENDER_Trin": "RENDER_Guska", "RENDER_Trin_Shadow": "RENDER_Guska_Shadow"},
+                  "Fenja": {"RENDER_Char": "RENDER_Fenja", "RENDER_Shadow": "RENDER_Fenja_Shadow"}}
     ignore_list = {"alfarim_Rig":["RENDER_Alpharim","RENDER_Alpharim_shadow"],"Huberts_Theaterwagon_prop":["RENDER_HubertsWagon", "RENDER_HubertsWagon_Shadow"],
                    "Hubert_Hat":["RENDER_Hubert", "RENDER_Hubert_shadow"]}
 
@@ -50,8 +51,8 @@ def findMisNamed(scene_file, rename=False):
             if not parent_name.lower() in node.name.lower() and node.parent_group().name != 'Top':
                 check = True
 
-                # if node.name in ignore_list:
-                #     continue
+                if node.name in ignore_list:
+                    continue
 
                 for key in error_dict.keys():
                     if key in node.path:

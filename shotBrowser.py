@@ -1269,7 +1269,7 @@ class FrontController(QtCore.QObject):
 		logger.warning("Can't find animation file for: %s" % cur_node.getName())
 		return False
 
-	def checkTBRenderNodes(self, node,rename=False):
+	def checkTBRenderNodes(self, node):
 		"""Checks the given scenes for issues with the render nodes
 		Returns a list of shots that are fixed and of shots where other issues are still present -> and what those issues are"""
 
@@ -1288,6 +1288,7 @@ class FrontController(QtCore.QObject):
 
 		for i, j in result_dict.items():
 			print(i + " -", j)
+		print("\n")
 		# Construct separate dictionaries for later use
 		final_dict_for_renamed = {}
 		final_dict_for_misnamed = {}
@@ -2743,8 +2744,9 @@ class MainWindow(QtWidgets.QWidget):
 					if animation_style in ["Toonboom"]:
 						create_menu.addAction("Update Harmony Palettes")
 						create_menu.addAction("Render Scene Externally")
+						create_menu.addSeparator()
 						create_menu.addAction("Check Scene Render Nodes")
-
+						create_menu.addSeparator()
 					menu.addSeparator()
 					if node.getType() == "shot":
 						menu.addMenu(view_menu)
