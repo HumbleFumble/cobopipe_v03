@@ -1,6 +1,9 @@
 import shotgrid.wrapper as sg
 #to do  go through
-def ready_up_classes(list_of_shots=None, project_name=None, seq_name=None, episode_name=None,task_template=r"CB// Anim 3D"):
+def create_sg_shot_from_list(list_of_shots=None, project_name=None, seq_name=None, episode_name=None,task_template=r"CB// Anim 3D"):
+    """
+    Takes in a list of [shot,duration] pairs, and all the info needed to build the shot
+    """
     list_of_wrap_shots = []
 
     p = sg.Project(code=project_name)
