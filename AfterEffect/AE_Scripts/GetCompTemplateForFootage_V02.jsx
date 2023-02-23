@@ -1,7 +1,7 @@
 ﻿#target AfterEffects
 #include T:/_Pipeline/cobopipe_v02-001/AfterEffect/includes/config_functions.jsx
 //include C:/Users/cg/PycharmProjects/cobopipe_v02-001/AfterEffect/includes/config_functions.jsx
-//TODO Place footage it can't replace in the old-footage folder, instead of deleting it.
+
 cc = getConfig()
 var base_project_path = dict_replace(cc.project_paths,cc.project_paths["film_path"])
 var template_path = base_project_path + "/_Comp_Templates/_AE_CharTemplates";
@@ -154,6 +154,7 @@ function ImportMulti(){
           }
         }
     }
+
 function CheckForMatch(name, list){
      for(var j=0;j<list.length;j++){
             if(name == list[j]){
@@ -163,6 +164,7 @@ function CheckForMatch(name, list){
             }
         return false
     }
+
 function RefreshDropDown(folder_path){
     var dd = cur_win.grp.panel_group.drop_group.drop_down
     var footage_selection = GetCurrentSelectedFootage();
