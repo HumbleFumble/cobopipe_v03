@@ -1,0 +1,1 @@
+\\dumpap3\tools\_Software\Deadline\DeadlineClient-10.2.0.10-windows-installer.exe --mode unattended --unattendedmodeui minimal --connectiontype Remote --proxyrootdir 192.168.0.4:4433 --proxycertificate "\\dumpap3\tools\_Software\Deadline\certs\Deadline10RemoteClient.pfx" --proxycertificatepassword "Bombay2023"

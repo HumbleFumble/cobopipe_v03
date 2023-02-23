@@ -7,21 +7,23 @@ function Rename-File {
         [switch]$Rename        
     )
     $items = Get-ChildItem -Path $Directory -Recurse
-    $new = New-Object System.Collections.ArrayList
+    $newlist = New-Object System.Collections.ArrayList
     ForEach ($item in $items){
         if($item.BaseName -match $MatchString){
             if ($FullPath){
-                Write-Host "Match found in" $item.Directory.Parent.Name " - " $item.Directory
+                Write-Host "Match found in" $item.Directory.Parent.Name " - " $item.FullName
                 $newlist += $item
             }else{
                 Write-Host "Match found in" $item.Directory.Parent.Name
-            $new += $item
+                $newlist += $item
             }
         }
     }
-    if(!($new)){
+
+    if(!$newlist){
         Write-Host "No item matching basename `"$MatchString`" was found" -ForegroundColor Yellow
-    }else {
+    break
+    }else{
         $index = 0
         if ($Rename){
             $renamefile = Read-Host -Prompt "`nRename files? [y/n]"
@@ -36,7 +38,7 @@ function Rename-File {
                         }
                     }
                 }
-                Write-Host "`n"$index "out of"$new.Count "items successfully renamed!" -ForegroundColor Green
+                Write-Host "`n"$index "out of"$newlist.Count "items successfully renamed!" -ForegroundColor Green
             }
         }
     }
