@@ -13,3 +13,8 @@ foreach ($i in $SwitchList){
         ([int]$SwitchList.IndexOf($i) + 1) {$SwitchList.name[$SwitchList.IndexOf($i)]}
     }
 }
+
+# Uninstall Python
+get-cimInstance -ClassName Win32_Product | Where-Object -Property Name -Match "python 3.9.1 tcl*" | Invoke-CimMethod -MethodName Uninstall
+get-cimInstance -ClassName Win32_Product | Where-Object -Property Name -Match "python 3.9.1 pip*" | Invoke-CimMethod -MethodName Uninstall
+get-cimInstance -ClassName Win32_Product | Where-Object -Property Name -Match "python 3.9.1*" | Invoke-CimMethod -MethodName Uninstall
