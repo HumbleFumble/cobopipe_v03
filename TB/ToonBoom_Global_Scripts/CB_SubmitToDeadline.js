@@ -198,19 +198,20 @@ function GroupTravel(groupName,my_type,name_filter)
 
 function run(){
     job_path = "C:/Temp/TB_Submit_Test/"
-    start_frame = 1
-    end_frame = 25
+    job_name = "Test"
+    start_frame = "1"
+    end_frame = "25"
     group = "Harmony"
     pool = "hoj"
 
-    version = 22
+    version = "22"
     plugin_path = "C:/Temp/TB_Submit_Test/"
     submitScene = true
     resolutionX = scene.currentResolutionX();
     resolutionY = scene.currentResolutionY();
     resolutionFov = scene.defaultResolutionFOV();
 
-    job_file = SaveJobFile(job_path,group,pool,start_frame,end_frame)
+    job_file = SaveJobFile(job_path,job_name,group,pool,start_frame,end_frame)
     plug_file = SavePluginFile(plugin_path,version,submitScene,resolutionX,resolutionY,resolutionFov)
 
     renderArguments = [];
