@@ -50,7 +50,7 @@ function Run(){
 	var submit_file = create_submit_job_file(temp_folder, '.RENDER', start_frame, end_frame, output_file);
 	var plugin_file = create_plugin_job_file(temp_folder);
 
-	commandLine = deadline_exe + " \"" + submit_file + "\" \"" + plugin_file + "\" \"" + app.project.file.fsName + "\""
+	commandLine = deadline_exe + " \"" + submit_file + "\" \"" + plugin_file +  "\" \"" + app.project.file.fsName + "\""
 	result = system.callSystem(commandLine)
 	alert(result)
 }
@@ -168,7 +168,7 @@ function create_plugin_job_file(tempFolder){
 	var pluginInfoFilename = tempFolder + "ae_plugin_info.job";
 	var pluginInfoFile = new File( pluginInfoFilename );
 	pluginInfoFile.open( "w" );
-	pluginInfoFile.writeln( "SceneFile=" + app.project.file.fsName);
+	//pluginInfoFile.writeln( "SceneFile=" + app.project.file.fsName);
 	pluginInfoFile.writeln( "Comp=.RENDER" );
 	pluginInfoFile.writeln( "Version=" + app.version.substring( 0, app.version.indexOf( 'x' ) ) );
 	pluginInfoFile.writeln( "SubmittedFromVersion=" + app.version );
