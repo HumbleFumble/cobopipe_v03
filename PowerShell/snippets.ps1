@@ -15,6 +15,8 @@ foreach ($i in $SwitchList){
 }
 
 # Uninstall Python
-get-cimInstance -ClassName Win32_Product | Where-Object -Property Name -Match "python 3.9.1 tcl*" | Invoke-CimMethod -MethodName Uninstall
-get-cimInstance -ClassName Win32_Product | Where-Object -Property Name -Match "python 3.9.1 pip*" | Invoke-CimMethod -MethodName Uninstall
-get-cimInstance -ClassName Win32_Product | Where-Object -Property Name -Match "python 3.9.1*" | Invoke-CimMethod -MethodName Uninstall
+function Uninstall-Python {
+    get-cimInstance -ClassName Win32_Product | Where-Object -Property Name -Match "python ..... tcl*" | Invoke-CimMethod -MethodName Uninstall
+    get-cimInstance -ClassName Win32_Product | Where-Object -Property Name -Match "python ..... pip*" | Invoke-CimMethod -MethodName Uninstall
+    get-cimInstance -ClassName Win32_Product | Where-Object -Property Name -Match "python *" | Invoke-CimMethod -MethodName Uninstall
+}
