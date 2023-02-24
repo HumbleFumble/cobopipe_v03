@@ -1,5 +1,6 @@
 #-------------------------------------------------------------------------------------------------------------------------------------------
 function Rename-File {
+    [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)][string]$MatchString,
         [Parameter(Mandatory = $true)][string]$Directory,
