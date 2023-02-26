@@ -1,44 +1,46 @@
-# -------------------------------------------------------------------------------------------------------------------------------------------
-function Install-App{
-    param ([Parameter(Mandatory=$true)][string]$ComputerName,
-           [Parameter(Mandatory=$true)][string]$PathToInstaller,
-           [Parameter()][string]$Arguments,
-           [switch]$AtTime
+# $InstallScriptBlock = .\InstallScriptBlock.ps1
+
+# # List of computers to run scriptblock agains
+# $ComputersList = "vm2", "vm3"
+
+# Run the scriptblock on remote computer
+# Invoke-Command -ComputerName $ComputersList -ScriptBlock $InstallScriptBlock
+
+# Or use session to send the command 
+# $creds = Get-Credential -UserName vmnet\admin
+# $session = New-PSSession -ComputerName $computerslist -Credential $creds
+# Invoke-Command -Session  $session -ScriptBlock $InstallScriptBlock
+
+# function Install-App {
+#     param (
+#         [Parameter(Mandatory)][string[]]$ComputersList,
+#         [Parameter(Mandatory)][scriptblock]$InstallScriptBlock,
+#         [string]$AtTime
+#     )
+#     Invoke-Command -ComputerName $ComputersList -ScriptBlock $InstallScriptBlock
+# }
+
+# Install-App -ComputersList $ComputersList -InstallScriptBlock $InstallScriptBlock
+#
+
+# List of computers to run scriptblock agains
+$ComputersList = "vm2", "vm3"
+
+function Install-App {
+    param (
+        [Parameter(Mandatory)][string[]]$ComputersList,
+        [scriptblock]$InstallScriptBlock,
+        [string]$FilePath,
+        [string]$AtTime
     )
-    if (!($AtTime)){
-        $AtTime = Get-Date -Format HH:mm
+    if ($InstallScriptBlock){
+        Invoke-Command -ComputerName $ComputersList -ScriptBlock $InstallScriptBlock
+    } elseif ($FilePath) {
+        Invoke-Command -FilePath $FilePath -ComputerName $ComputersList 
     }
-    $Action = New-ScheduledTaskAction -Execute $PathToInstaller -Argument $Arguments
-    $Trigger = New-ScheduledTaskTrigger -Once -At $AtTime
-    $Settings = New-ScheduledTaskSettingsSet
-    $Task = New-ScheduledTask -Action $Action -Trigger $Trigger -Settings $Settings
-    Register-ScheduledTask -TaskName 'Start Maya' -InputObject $Task -User 'System'
-    Start-ScheduledTask -TaskName 'Start Maya'
-    Unregister-ScheduledTask -TaskName 'Start Maya' -Confirm:$False
+    
 }
-# END Install-App
-#-------------------------------------------------------------------------------------------------------------------------------------------
-    
-# Function fails with System.Management.Automation.ParameterAttribute error. Perhaps PSObject fed function could work
-# Without function, the code executes fine, Python installation example:
 
-Invoke-Command -ComputerName vm2 -ScriptBlock {
+Install-App -ComputersList $ComputersList -FilePath 'C:\users\admin\desktop\InstallScriptBlock.ps1'
 
-    if (get-cimInstance -ClassName Win32_Product | Where-Object -Property Name -Match "python 3.9.1*"){
-    Write-Host "`nPython $PythonVersion installation(s) found. Uninstalling..."
-    Get-cimInstance -ClassName Win32_Product | Where-Object -Property Name -Match "python ..... tcl*" | Invoke-CimMethod -MethodName Uninstall
-    Get-cimInstance -ClassName Win32_Product | Where-Object -Property Name -Match "python ..... pip*" | Invoke-CimMethod -MethodName Uninstall
-    Get-cimInstance -ClassName Win32_Product | Where-Object -Property Name -Match "python *" | Invoke-CimMethod -MethodName Uninstall
-    
-    }
-    $PathToInstaller = "\\rs1\shared\Python\python-3.9.1-amd64.exe"
-    $Arguments = '/quiet TargetDir=C:\Python39 InstallAllUsers=1 PrependPath=1 Include_test=0'
-    $AtTime = Get-Date -Format HH:mm
-    $Action = New-ScheduledTaskAction -Execute $PathToInstaller -Argument $Arguments
-    $Trigger = New-ScheduledTaskTrigger -Once -At $AtTime
-    $Settings = New-ScheduledTaskSettingsSet
-    $Task = New-ScheduledTask -Action $Action -Description $Trigger -Settings $Settings
-    Register-ScheduledTask -TaskName 'Install Python' -InputObject $Task -User 'System'
-    Start-ScheduledTask -TaskName 'Install Python'
-    Unregister-ScheduledTask -TaskName 'Install Python' -Confirm:$false
-    }
+# or Install-App -ComputersList $ComputersList -InstallScriptBlock $InstallScriptBlock
