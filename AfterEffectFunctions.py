@@ -72,7 +72,7 @@ def CreatePrecomp(base_file, passes_folder,comp_folder, precomp_name):
             work_item = app.project.items.addComp(".WORK", 1920, 1080, 1, duration, 25);
             render_item.layers.add(work_item);
         }        
-        RunSetDuration(render_item,duration,25);
+        RunSetDuration(render_item,duration,0.04);
         SavePrecompFile(comp_folder, precomp_name);	
         }
 

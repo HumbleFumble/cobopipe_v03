@@ -43,4 +43,4 @@ function SetOutPoint(my_comp, my_length){
 	}
 }
 
-RunSetDuration(null,null,25)
+RunSetDuration(null,null,0.04)
