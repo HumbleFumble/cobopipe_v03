@@ -1,5 +1,6 @@
 #-------------------------------------------------------------------------------------------------------------------------------------------
 function Rename-File {
+    [CmdletBinding()]
     param (
         [Parameter(Mandatory = $true)][string]$MatchString,
         [Parameter(Mandatory = $true)][string]$Directory,
@@ -19,11 +20,12 @@ function Rename-File {
             }
         }
     }
-
+    
     if(!$newlist){
         Write-Host "No item matching basename `"$MatchString`" was found" -ForegroundColor Yellow
     break
     }else{
+        
         $index = 0
         if ($Rename){
             $renamefile = Read-Host -Prompt "`nRename files? [y/n]"
@@ -42,6 +44,7 @@ function Rename-File {
             }
         }
     }
+    return $newlist.Directory.Parent.FullName | Sort-Object | Get-Unique
 }
 # END Rename-File
 #-------------------------------------------------------------------------------------------------------------------------------------------

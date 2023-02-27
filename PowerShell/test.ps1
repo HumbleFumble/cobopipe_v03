@@ -445,8 +445,63 @@ foreach($i in $envmachine){
 Remove-Item $i -Recurse
 }
 
-Get-CimInstance -ClassName Win32_Product | Where-Object -Property Name -Match "python 3.9.1 tcl*" | Invoke-CimMethod -MethodName Uninstall
-Get-CimInstance -ClassName Win32_Product | Where-Object -Property Name -Match "python 3.9.1 pip*" | Invoke-CimMethod -MethodName Uninstall
+Get-CimInstance -ClassName Win32_Product | Where-Object -Property Name -Match "python ..... tcl*" | Invoke-CimMethod -MethodName Uninstall
+Get-CimInstance -ClassName Win32_Product | Where-Object -Property Name -Match "python ..... pip*" | Invoke-CimMethod -MethodName Uninstall
 Get-CimInstance -ClassName Win32_Product | Where-Object -Property Name -Match "python*" | Invoke-CimMethod -MethodName Uninstall
 
 #------------------------------------------------------------------------------------------------------------------
+
+# Scriptblock that runs on remote computer
+$InstallScriptBlock = {
+    
+    # Web install PowerShell silent
+    iex "& { $(irm https://aka.ms/install-powershell.ps1) } -UseMSI -quiet"
+    
+    # If $AtTime is not set above, it will be set with the current time 
+    if (!$AtTime){
+        $AtTime = $(Get-Date -Format HH:mm)
+    }
+    # List os custom objects, containing the parameters for each installer
+    $parameters = @(
+        [pscustomobject]@{PathToInstaller = "\\rs1\shared\Python\python-3.9.1-amd64.exe";TaskName = "Install Python";Arguments = "/quiet TargetDir=C:\Python39 InstallAllUsers=1 PrependPath=1 Include_test=0"},
+        [pscustomobject]@{PathToInstaller = "\\rs1\shared\Firefox\firefox.exe";TaskName = "Install Firefox";Arguments = "/S"},
+        [pscustomobject]@{PathToInstaller = "C:\Python39\python.exe";TaskName = "Upgrade Pip";Arguments = "-m pip install --upgrade pip"},
+        [pscustomobject]@{PathToInstaller = "C:\Python39\Scripts\pip.exe";TaskName = "Install PySide2";Arguments = "install pyside2"},
+        [pscustomobject]@{PathToInstaller = "C:\Python39\Scripts\pip.exe";TaskName = "Install FFMPEG";Arguments = "install ffmpeg-python"}
+    )
+    
+    # Uninstall any previously installed Python version
+    $python =  get-cimInstance -ClassName Win32_Product | Where-Object -Property Name -Match "python *"
+    $python | Where-Object -Property name -Match "tcl*" | Invoke-CimMethod -MethodName Uninstall
+    $python | Where-Object -Property name -Match "pip*" | Invoke-CimMethod -MethodName Uninstall
+    $python | Where-Object -Property name -Match "python*" | Invoke-CimMethod -MethodName Uninstall -ErrorAction SilentlyContinue
+
+    # Set up scheduled task for each set of parameters and run it
+    #--------------------------------------------------------------------------------------------------------------------------------------------
+    foreach ($p in $parameters){
+        $Action = New-ScheduledTaskAction -Execute $p.PathToInstaller -Argument $p.Arguments 
+        $Trigger = New-ScheduledTaskTrigger -Once -At $AtTime
+        $Settings = New-ScheduledTaskSettingsSet
+        $Task = New-ScheduledTask -Action $Action -Trigger $Trigger -Settings $Settings
+        Register-ScheduledTask -TaskName $p.TaskName -InputObject $Task -User 'System'
+        Start-ScheduledTask -TaskName $p.TaskName
+        Unregister-ScheduledTask -TaskName $p.TaskName -Confirm:$False
+    }
+    #--------------------------------------------------------------------------------------------------------------------------------------------
+
+    # Run additional code
+}
+
+# List of computers to run scriptblock agains
+$computerslist = "vm2", "vm3"
+
+# Set time for the scheduled task to run. If no time is set, it will be executed immediatelly
+$AtTime = $null
+
+# Run the scriptblock on remote computer
+Invoke-Command -ComputerName $computerslist -ScriptBlock $InstallScriptBlock
+
+# Or use session to send the command 
+# $creds = Get-Credential -UserName vmnet\admin
+# $session = New-PSSession -ComputerName $computerslist -Credential $creds
+# Invoke-Command -Session  $session -ScriptBlock $InstallScriptBlock
