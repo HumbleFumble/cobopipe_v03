@@ -18,7 +18,7 @@ function RunSetDuration(cur_comp, cur_length,cur_framerate){
 		for(var c = 1; c<=comp_layers.length; c++){
 			var cur_layer = comp_layers[c];
 			if(cur_layer.source instanceof CompItem){
-				Run(cur_layer.source,cur_length,cur_framerate);
+				RunSetDuration(cur_layer.source,cur_length,cur_framerate);
 				}
 			}
 		SetOutPoint(cur_comp, cur_length)
