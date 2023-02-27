@@ -1,6 +1,6 @@
 ﻿#target.aftereffects
 
-function Run(cur_comp, cur_length,cur_framerate){
+function RunSetDuration(cur_comp, cur_length,cur_framerate){
 		if(cur_comp==null){
 			var cur_comp = app.project.selection[0];
                 
@@ -43,4 +43,4 @@ function SetOutPoint(my_comp, my_length){
 	}
 }
 
-Run(null,null,25)
+RunSetDuration(null,null,25)
