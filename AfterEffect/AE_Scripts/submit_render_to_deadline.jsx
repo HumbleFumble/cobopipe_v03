@@ -33,7 +33,7 @@ function Run(){
 			}
 
 
-	app.project.save() 
+	// app.project.save() 
 	// SUBMIT TO DEADLINE
 	var deadlineBin = $.getenv( "DEADLINE_PATH" );
 	var deadline_exe = "\"" + deadlineBin + "\\deadlinecommand.exe\"";
@@ -155,7 +155,7 @@ function create_submit_job_file(tempFolder, jobName, start_frame, end_frame, out
 	submitInfoFile.writeln( "OnJobComplete=Nothing");
 	submitInfoFile.writeln( "Whitelist=");
 	submitInfoFile.writeln( "Frames=" + String(start_frame) + "-" + String(end_frame));
-	submitInfoFile.writeln( "OutputFilename0=" + output_file.toString().replace('/p/', '//dumpap3/production/'));
+	submitInfoFile.writeln( "OutputFilename0=" + output_file.toString()); // .replace('/p/', '//dumpap3/production/')
 	submitInfoFile.writeln( "MachineLimit=1");
 	submitInfoFile.writeln( "ChunkSize=1000000");
 	submitInfoFile.close();
