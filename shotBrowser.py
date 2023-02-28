@@ -39,6 +39,7 @@ from Multiplicity.Signals import Signals
 import CheckAudioVisual
 from PixmapUtil import PixmapUtil
 from CategoryHandler import CategoryHandler
+import psutil
 
 
 from functools import partial
@@ -1808,7 +1809,7 @@ class FrontController(QtCore.QObject):
 			else:
 				shots.extend(node.getAllChildren())
 		pool = ThreadPool2.ThreadPool()
-		pool.setMaxThreads(10)
+		pool.setMaxThreads(psutil.cpu_count()-4)
 		workers = []
 		for shot in shots:
 			scene_path = self.findToonboomAnimationFile(shot)
@@ -1839,7 +1840,7 @@ class FrontController(QtCore.QObject):
 			else:
 				shots.extend(node.getAllChildren())
 		pool = ThreadPool2.ThreadPool()
-		# pool.setMaxThreads(1)
+		pool.setMaxThreads(psutil.cpu_count()-4)
 		workers = []
 		for shot in shots:
 			scene_path = self.findToonboomAnimationFile(shot)
