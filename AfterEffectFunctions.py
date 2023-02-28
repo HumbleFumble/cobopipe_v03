@@ -9,6 +9,8 @@ def CreatePrecomp(base_file, passes_folder,comp_folder, precomp_name):
     precomp_script = "%sAutoCreatePrecomp.jsx" % passes_folder
     script_content = """
     #target.aftereffects
+    #include T:/_Pipeline/cobopipe_v02-001/AfterEffect/AE_Scripts/NDS_SetDurationOfSubComps.jsx
+    
     function ImportFootage(render_folder, footage_folder){
         precomp_folder = new Folder(render_folder);
         var my_footage_list = precomp_folder.getFiles('*001.*');
@@ -70,6 +72,7 @@ def CreatePrecomp(base_file, passes_folder,comp_folder, precomp_name):
             work_item = app.project.items.addComp(".WORK", 1920, 1080, 1, duration, 25);
             render_item.layers.add(work_item);
         }        
+        RunSetDuration(render_item,duration,0.04);
         SavePrecompFile(comp_folder, precomp_name);	
         }
 

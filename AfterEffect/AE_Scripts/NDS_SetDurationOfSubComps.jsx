@@ -1,6 +1,6 @@
 ﻿#target.aftereffects
 
-function Run(cur_comp, cur_length,cur_framerate){
+function RunSetDuration(cur_comp, cur_length,cur_framerate){
 		if(cur_comp==null){
 			var cur_comp = app.project.selection[0];
                 
@@ -18,7 +18,7 @@ function Run(cur_comp, cur_length,cur_framerate){
 		for(var c = 1; c<=comp_layers.length; c++){
 			var cur_layer = comp_layers[c];
 			if(cur_layer.source instanceof CompItem){
-				Run(cur_layer.source,cur_length,cur_framerate);
+				RunSetDuration(cur_layer.source,cur_length,cur_framerate);
 				}
 			}
 		SetOutPoint(cur_comp, cur_length)
@@ -43,4 +43,4 @@ function SetOutPoint(my_comp, my_length){
 	}
 }
 
-Run(null,null,25)
+RunSetDuration(null,null,0.04)
