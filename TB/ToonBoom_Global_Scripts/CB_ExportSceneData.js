@@ -32,13 +32,16 @@ function getCamera(){
 function getDrawings(nodes){
 	var drawings = [];
 	for (var i in nodes){
-		if(node.type(nodes[i]) == "READ"){
-			drawings.push(nodes[i]);
-		};
-		if(node.type(nodes[i]) == "GROUP"){
-			var out = getDrawings(node.subNodes(nodes[i]));
-			drawings = drawings.concat(out);
-		};
+	    if(node.getEnable(nodes[i])){
+            if(node.type(nodes[i]) == "READ"){
+                drawings.push(nodes[i]);
+
+            };
+            if(node.type(nodes[i]) == "GROUP"){
+                var out = getDrawings(node.subNodes(nodes[i]));
+                drawings = drawings.concat(out);
+		    };
+        }
 	}
 	MessageLog.trace("Exporting these: " + drawings)
 	return drawings;
