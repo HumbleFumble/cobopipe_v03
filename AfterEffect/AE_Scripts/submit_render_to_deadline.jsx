@@ -33,7 +33,7 @@ function Run(){
 			}
 
 
-	// app.project.save() 
+	app.project.save() 
 	// SUBMIT TO DEADLINE
 	var deadlineBin = $.getenv( "DEADLINE_PATH" );
 	var deadline_exe = "\"" + deadlineBin + "\\deadlinecommand.exe\"";
