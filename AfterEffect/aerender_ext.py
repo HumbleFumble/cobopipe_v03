@@ -4,7 +4,7 @@ import os
 def render(file_path):
     if not os.path.exists(file_path):
         return None
-    if not os.path.isfile(file_path)):
+    if not os.path.isfile(file_path):
         return None
     executable = r'"C:\Program Files\Adobe\Adobe After Effects 2023\Support Files\aerender.exe"'
     arguments = ""
