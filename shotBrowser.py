@@ -1856,7 +1856,7 @@ class FrontController(QtCore.QObject):
 				print('Trying to wait') 
 				pool.wait()
 			print('\n >> Rendering! <<')
-   
+
 	def toonboomRenderExternallyCmd(self,scene_path):
 		cmd = r"Python T:\_Pipeline\cobopipe_v02-001\TB\ToonBoom_PythonExternal_Funcs.py %s" % scene_path
 		process = subprocess.Popen(cmd,shell=True,universal_newlines=True,env=run_env)
@@ -1896,6 +1896,42 @@ class FrontController(QtCore.QObject):
 				print('Trying to wait') 
 				pool.wait()
 			print('\n >> Done updating harmony palettes <<')
+
+	def aeRenderExternally(self, nodes, wait=False):
+		import AfterEffect.aerender_ext as aer
+
+		shots = []
+		for node in nodes:
+			if not node.getType() in ["episode","seq"]:
+				shots.append(node)
+			else:
+				shots.extend(node.getAllChildren())
+		pool = ThreadPool2.ThreadPool()
+		pool.setMaxThreads(1)
+		workers = []
+		for shot in shots:
+
+			scene_folder = CC.get_shot_comp_folder(**shot.getInfoDict())
+			if os.path.exists(scene_folder):
+				find_version = self.FindVersion(name_list=os.listdir(scene_folder),
+												file_regex="(%s)*?" % shot.getName().lower(), file_ext=".aep")
+				if find_version:
+					scene_path = "%s/%s" % (scene_folder, find_version[0])
+
+			if scene_path:
+				worker = None
+				worker = ThreadPool2.Worker(aer.render, scene_path)
+				if worker:
+					pool.addWorker(worker)
+					workers.append(worker)
+
+		if workers:
+			pool.signals.finished.connect(createCompPreviewDone)
+			pool.run()
+			if wait == True:
+				print('Trying to wait') 
+				pool.wait()
+			print('\n >> Rendering! <<')
 
 	def createCompPreview(self, nodes, force):
 		from Preview.general import getPreview
@@ -2780,6 +2816,8 @@ class MainWindow(QtWidgets.QWidget):
 						create_menu.addSeparator()
 						create_menu.addAction("Check Scene Render Nodes")
 						create_menu.addSeparator()
+					if comp_style in ["AE"]:
+						create_menu.addAction("Render Comp Externally")
 					menu.addSeparator()
 					if node.getType() == "shot":
 						menu.addMenu(view_menu)
@@ -2939,6 +2977,8 @@ class MainWindow(QtWidgets.QWidget):
 						self.ctrl.updateHarmonyPalettes(nodes)
 					if action.text() == "Render Scene Externally":
 						self.ctrl.toonboomRenderExternally(nodes)
+					if action.text() == "Render Comp Externally":
+						self.ctrl.aeRenderExternally(nodes)
 					### OPEN PREVIEW ###
 					if action.text() == "Open Anim Preview":
 						self.ctrl.openPreview(node, "anim")
