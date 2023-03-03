@@ -24,3 +24,15 @@ $python =  get-cimInstance -ClassName Win32_Product | Where-Object -Property Nam
 $python | Where-Object -Property name -Match "tcl*" | Invoke-CimMethod -MethodName Uninstall
 $python | Where-Object -Property name -Match "pip*" | Invoke-CimMethod -MethodName Uninstall
 $python | Where-Object -Property name -Match "python*" | Invoke-CimMethod -MethodName Uninstall -ErrorAction SilentlyContinue
+
+
+# Create exception list and run it against the list of computers
+$exceplist = "wsx16", "wsx30", "wsx3"
+
+foreach ($item in $exceplist){
+    foreach($psobject in $newlist){
+        if ($psobject.name -eq $item){
+            $newlist.Remove($psobject)
+        }
+    }
+}
