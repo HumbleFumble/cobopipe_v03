@@ -505,3 +505,22 @@ Invoke-Command -ComputerName $computerslist -ScriptBlock $InstallScriptBlock
 # $creds = Get-Credential -UserName vmnet\admin
 # $session = New-PSSession -ComputerName $computerslist -Credential $creds
 # Invoke-Command -Session  $session -ScriptBlock $InstallScriptBlock
+
+
+
+$exceplist = "wsx16", "wsx30", "wsx3", "wsx15", "wsx12", "wsx33"
+
+$ComputersList = New-Object System.Collections.ArrayList
+1..33 | ForEach-Object {$ComputersList += "wsx" + $_}
+$newlist = foreach ($i in $ComputersList){Get-HostInfo -ComputerName $i -IPAddress -CurrentUser -WinRMStatus }
+
+foreach ($item in $exceplist){
+    foreach($pso in $newlist){
+        if ($pso.name -eq $item){
+            $newlist.Remove($pso)
+        }
+    }
+}
+$newlist
+
+
