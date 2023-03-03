@@ -56,6 +56,10 @@ var selectedLayers = getSelectedLayers(app.activeDocument);
 
 for( i = 0; i < selectedLayers.length; i++) {
     log(selectedLayers[i]);
+    //flatten the current selections
+    //make new layerSet named the same as the original layerSet
+    //place the new layer in that layerSet
+    //
     /*
     selectedLayers[i].selected = true;
     docRef.activeLayer = selectedLayers[i];
