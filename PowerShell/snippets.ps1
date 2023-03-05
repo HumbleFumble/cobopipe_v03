@@ -1,6 +1,6 @@
-# Web install PowerShell silent
+# Silent PowerShell web install
 # ------------------------------------------------------------------------------------------------------------------------------
-iex "& { $(irm https://aka.ms/install-powershell.ps1) } -UseMSI -quiet"
+Invoke-Expression "& { $(Invoke-RestMethod "https://aka.ms/install-powershell.ps1") } -UseMSI -quiet"
 
 # Dynamic switch
 # ------------------------------------------------------------------------------------------------------------------------------

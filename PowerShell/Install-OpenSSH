@@ -1,9 +1,8 @@
-Set-ExecutionPolicy RemoteSigned -Force -Confirm:$false
-#-------------------------------------------------------------------------------------------------------------------------------------------
+# For this function to work PowerShell 7+ must be already installed. This is necessary because PowerShell 5.1 does not work with SSH
 
-# Install PowerShell 7+ silently. This is necessary because PowerShell 5.1 does not work with SSH
-iex "& { $(irm https://aka.ms/install-powershell.ps1) } -UseMSI -quiet"
 function Install-OpenSSH {
+
+    Set-ExecutionPolicy RemoteSigned -Force -Confirm:$false
 
     $openssh = Get-WindowsCapability -Online | Where-Object Name -like 'OpenSSH*'
     $openssh | ForEach-Object {
@@ -38,34 +37,8 @@ function Install-OpenSSH {
         Write-Host "`nsshd service is already running"
     }
 
-    
-    # Copy sshd_config with ready settings
-    # Copy-Item -Path "\\dumpap3\tools\_Software\PowerShell\SSHSettings\sshd_config" -Destination $env:ProgramData\ssh -Force
-    #
-    # Check if the sshd_config has been updated successfully and restart the sshd service
-    # if ((Get-Content -Path $env:ProgramData\ssh\sshd_config) -contains "#PubkeyAuthentication yes"){
-    #     Restart-Service sshd
-    # }else{
-    #     Write-Host "Wrong sshd_config detected"
-    # }
-    # Check if ssh-agent is running and start it, if it is not
-    # $service = Get-Service ssh-agent
-    # $index = 0
-    # if (Get-Service ssh-agent){
-    #     if ($service.Status -eq "Stopped"){
-    #         do {
-    #             Start-Service $service.Name
-    #             Start-Sleep 1
-    #             }until(Get-Service $service.name -or $index -gt 10)
-    #     } else {
-    #         Write-Host $service.Name "is running"
-    #     }
-    # }else{
-    #     Write-Host "ssh-agent could not be found"
-    # }
+    Set-ExecutionPolicy Restricted -Force -Confirm:$false    
+
 }
 # END Install-OpenSSH
 #-------------------------------------------------------------------------------------------------------------------------------------------
-
-Install-OpenSSH
-Set-ExecutionPolicy Restricted -Force -Confirm:$false

@@ -4,7 +4,7 @@ Set-ExecutionPolicy Bypass
 
 # Powershell silent web install
 if (! (Test-Path -Path "C:\Program Files\PowerShell\7\pwsh.exe")){
-    iex "& { $(irm https://aka.ms/install-powershell.ps1) } -UseMSI -quiet"
+    Invoke-Expression "& { $(Invoke-RestMethod https://aka.ms/install-powershell.ps1) } -UseMSI -quiet"
 }else {
     Write-Host "`nPowerShell 7 already installed on this system"
 }

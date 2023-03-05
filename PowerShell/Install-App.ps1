@@ -24,7 +24,7 @@
 #
 
 # List of computers to run scriptblock agains
-$ComputersList = "vm2", "vm3"
+# $ComputersList = "vm2", "vm3"
 
 function Install-App {
     param (
@@ -41,6 +41,6 @@ function Install-App {
     
 }
 
-Install-App -ComputersList $ComputersList -FilePath 'C:\users\admin\desktop\InstallScriptBlock.ps1'
+# Install-App -ComputersList $ComputersList -FilePath 'C:\users\admin\desktop\InstallScriptBlock.ps1'
 
 # or Install-App -ComputersList $ComputersList -InstallScriptBlock $InstallScriptBlock
