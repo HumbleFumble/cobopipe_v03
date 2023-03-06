@@ -13,6 +13,26 @@ function FlattenLayerSet(unflattened_layerset){
 function Run(){
     var curDoc = app.activeDocument;
     var top_sets = curDoc.layerSets;
+    var selectedLayers = getSelectedLayers(curDoc);
+
+
+    for( i = (selectedLayers.length-1); i >=0; i--) {
+        log(selectedLayers[i]);
+        var cur_layer = selectedLayers[i];
+        var cur_name = cur_layer.name;
+        if(cur_layer instanceof LayerSet ){
+            var new_layer = FlattenLayerSet(cur_layer);
+            new_layer.name = cur_name
+            log(new_layer.parent)
+            if(new_layer.parent instanceof Document){
+                var new_layerset = curDoc.layerSets.add()
+                new_layerset.name = cur_name
+                new_layerset.move(new_layer, ElementPlacement.PLACEAFTER)
+                new_layer.move(new_layerset, ElementPlacement.INSIDE)
+                }
+            }
+     }
+
 
 }
 function log(message){
@@ -50,18 +70,4 @@ function getSelectedLayers(doc) {
   return selLayers;
 };
 
-var docRef = app.activeDocument;
-var selectedLayers = getSelectedLayers(app.activeDocument);
-
-
-for( i = 0; i < selectedLayers.length; i++) {
-    log(selectedLayers[i]);
-    //flatten the current selections
-    //make new layerSet named the same as the original layerSet
-    //place the new layer in that layerSet
-    //
-    /*
-    selectedLayers[i].selected = true;
-    docRef.activeLayer = selectedLayers[i];
-    log(docRef.activeLayer.name)*/
- }
+Run()
