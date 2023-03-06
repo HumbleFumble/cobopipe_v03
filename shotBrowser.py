@@ -1875,6 +1875,40 @@ class FrontController(QtCore.QObject):
 				pool.wait()
 			print('\n >> Done updating harmony palettes <<')
 
+	def exportingSceneData(self, nodes, wait=False):
+		shots = []
+		for node in nodes:
+			if node.getType() == 'episode':
+				for sequence in node.getChildren():
+					for shot in sequence.getChildren():
+						shots.append(shot)
+			elif node.getType() == 'seq':
+				for shot in node.getChildren():
+					shots.append(shot)
+			else:
+				shots.append(node)
+
+		print('\n')
+
+		pool = ThreadPool2.ThreadPool()
+		pool.setMaxThreads(12)
+		workers = []
+
+		for shot in shots:
+			scene_path = self.findToonboomAnimationFile(shot)
+			if scene_path:
+				worker = None
+				worker = ThreadPool2.Worker(TB.exportSceneData.process, scene_path)
+				if worker:
+					pool.addWorker(worker)
+					workers.append(worker)
+
+		if workers:
+			pool.run()
+			if wait == True:
+				pool.wait()
+			print('\n >> Done updating harmony palettes <<')
+
 	def aeRenderExternally(self, nodes, wait=False):
 		import AfterEffect.aerender_ext as aer
 
