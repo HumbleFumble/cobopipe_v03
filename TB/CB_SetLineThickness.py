@@ -24,12 +24,7 @@ def tbScene():
     project = sess.project  # The project that is already loaded.
     return project.scene()
 
-def getParentWidget():
-    topWidgets = QApplication.topLevelWidgets()
-    for tw in topWidgets:
-        if isinstance(tw, QMainWindow) and not tw.parentWidget():
-            return tw
-    return None
+
 
 class FrontController(QObject):
     def __init__(self):
@@ -61,9 +56,43 @@ class FrontController(QObject):
         node.attributes["TEXT"].set_text_value(value) #Find attribute namez
         node.attributes["TEXT"].set_value(-1,scale_depend)  # Find enum scale attribute namez
 
+class SetLineThickness_UI(QDialog):
+    def __init__(self, parent=None):
+        self._ctrl = FrontController()
+        super(SetLineThickness_UI, self).__init__(parent)
+        self.setWindowTitle("SetLineThickness_UI")
+        self.setObjectName("SetLineThickness_UI")
+        self.setWindowFlags(self.windowFlags()|Qt.Window|Qt.WindowStaysOnTopHint)
+        self.create_ui()
+    def create_ui(self):
+        self.main_lay = QVBoxLayout()
+        self.selection_bttn = QPushButton("Set Selection")
+
+        self.reset_bttn = QPushButton("Reset")
+        self.value_slider = QSlider(Qt.Orientation.Horizontal)
+        self.slider_label = QLabel("Value: ")
+        self.slider_lay = QHBoxLayout()
+        self.slider_lay.addWidget(self.slider_label)
+        self.slider_lay.addWidget(self.value_slider)
+        self.scale_check = QCheckBox("Scale Independent")
+
+        self.main_lay.addWidget(self.selection_bttn)
+        self.main_lay.addLayout(self.slider_lay)
+        self.main_lay.addWidget(self.scale_check)
+        self.main_lay.addWidget(self.reset_bttn)
+        self.setLayout(self.main_lay)
+
+def getParentWidget():
+    topWidgets = QApplication.topLevelWidgets()
+    for tw in topWidgets:
+        if isinstance(tw, QMainWindow) and not tw.parentWidget():
+            return tw
+    return None
+
 def run():
     global my_ui
-# my_ui = SelectionPreset_UI(getParentWidget())
+    my_ui = SetLineThickness_UI(getParentWidget())
+    my_ui.show()
 
 if __name__ == '__main__':
     import sys
