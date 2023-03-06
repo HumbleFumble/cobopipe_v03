@@ -43,7 +43,25 @@ function getDrawings(nodes){
 		    };
         }
 	}
-	MessageLog.trace("Exporting these: " + drawings)
+	return drawings;
+}
+
+function getDrawings2(nodes){
+	var drawings = [];
+	for (var i in nodes){
+	    if(node.getEnable(nodes[i])){
+            if(node.type(nodes[i]) == "READ"){
+                var node_name = node.getName(nodes[i]);
+                if (node_name.substring(0, 7) == 'BGNODE_'){
+                    drawings.push(nodes[i]);
+                };
+            };
+            if(node.type(nodes[i]) == "GROUP"){
+                var out = getDrawings2(node.subNodes(nodes[i]));
+                drawings = drawings.concat(out);
+		    };
+        }
+	}
 	return drawings;
 }
 
@@ -84,7 +102,7 @@ function createExportObject(nodePath)
     } else {
         var obj = {
         		type : node.type(nodePath),
-        		name : node.getName(nodePath),
+        		name : node.getName(nodePath).replace('BGNODE_', ''),
         		position : [],
         		scale : [],
         		rotation : []
@@ -160,7 +178,13 @@ function ExportSceneData()
 
     var defaultCamera = getCamera();
     var data = [createSettingsObject(), createExportObject(defaultCamera)];
-    var drawings = getDrawings(selection.selectedNodes());
+    var selected_nodes = selection.selectedNodes();
+    if(selected_nodes.length>0){
+        var drawings = getDrawings(selection.selectedNodes());
+    } else {
+        var drawings = getDrawings2(node.subNodes('Top'));
+    }
+    
     for(var i in drawings){
         data.push(createExportObject(drawings[i]))
     }

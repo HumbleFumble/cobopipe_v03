@@ -16,4 +16,5 @@
  <Script icon="TB_RemoveUnusedColors" function="TB_RemoveUnusedColors" file="CB_TB_RemoveUnusedColors.js"/>
  <Script icon="TB_Pose_Copier" function="TB_Pose_Copier" file="CB_TB_Pose_Copier.js"/>
  <Script icon="runQuickSlider" function="runQuickSlider" file="CB_SliderUI.js"/>
+ <Script icon="import_background" function="import_background" file="CB_import_background.js"/>
 </Scripts>
