@@ -4,6 +4,7 @@ logger = getLogger()
 #This is the tales of woe 123
 import Preview.file_util
 import TB.updatePalettes
+import TB.exportSceneData
 
 try:
 	import maya.cmds as cmds
