@@ -71,9 +71,9 @@ def execute_this_fn(self, progress_callback):
 	return "Done."
 """
 
-shot_dict = {"episode_name": "E26", "seq_name": "SQ030", "shot_name": "SH050"}
-# anim_preview_file = cfg_util.CreatePathFromDict(cfg.project_paths["shot_animatic_file"], shot_dict)
-anim_preview_file = CC.get_shot_animatic_file(**shot_dict)
+# shot_dict = {"episode_name": "E26", "seq_name": "SQ030", "shot_name": "SH050"}
+# # anim_preview_file = cfg_util.CreatePathFromDict(cfg.project_paths["shot_animatic_file"], shot_dict)
+# anim_preview_file = CC.get_shot_animatic_file(**shot_dict)
 
 
 # \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -1600,36 +1600,46 @@ class FrontController(QtCore.QObject):
 			return False
 
 	def __compareLengthsMsg(self, context, node, fps, silent=True):
+		import Preview.ffmpeg_util as ffmpeg_util
 		info_dict = node.getInfoDict()
 
-		if context == "comp":
-			# path01 = cfg_util.CreatePathFromDict(cfg.project_paths["shot_comp_output_file"], info_dict)
-			path01 = CC.get_shot_comp_output_file(**info_dict)
-			if not (os.path.exists(path01)):
-				context = "anim"
-		if context == "anim":
-			# path01 = cfg_util.CreatePathFromDict(cfg.project_paths["shot_anim_preview_file"], info_dict)
-			path01 = CC.get_shot_anim_preview_file(**info_dict)
-			if not (os.path.exists(path01)):
-				context = "animatic"
-		if context == "animatic":
-			# path01 = cfg_util.CreatePathFromDict(cfg.project_paths["shot_animatic_file"], info_dict)
-			path01 = CC.get_shot_animatic_file(**info_dict)
-			if not (os.path.exists(path01)):
-				msg = "%s: Can't find footage for shot!" % info_dict["shot_name"]
-				return -1, msg
-		path02 = CC.shot_get_sound_file(
-			**info_dict)  ##cfg_util.CreatePathFromDict(cfg.project_paths["shot_sound_file"], info_dict) # MISSING get_shot_sound_file
-		if not os.path.exists(path02):
-			return -1, "No sound file found!"
-		try:
-			msg = self.__AV.lengths.compare_equal(path01=path01, path02=path02, fps=fps, silent=silent)[1]
-			return 0, msg
-		except CheckAudioVisual.MediaLengthException as e:
-			msg = e.getMsg()
-			return -1, msg
+		file_list = { CC.get_shot_comp_output_file(**info_dict):0,CC.get_shot_anim_preview_file(**info_dict):0,
+					  CC.get_shot_animatic_file(**info_dict):0,CC.get_shot_sound_file(**info_dict):0}
+		# if context == "comp":
+		# 	# path01 = cfg_util.CreatePathFromDict(cfg.project_paths["shot_comp_output_file"], info_dict)
+		# 	path01 = CC.get_shot_comp_output_file(**info_dict)
+		# 	if not (os.path.exists(path01)):
+		# 		context = "anim"
+		# if context == "anim":
+		# 	# path01 = cfg_util.CreatePathFromDict(cfg.project_paths["shot_anim_preview_file"], info_dict)
+		# 	path01 = CC.get_shot_anim_preview_file(**info_dict)
+		# 	if not (os.path.exists(path01)):
+		# 		context = "animatic"
+		# if context == "animatic":
+		# 	# path01 = cfg_util.CreatePathFromDict(cfg.project_paths["shot_animatic_file"], info_dict)
+		# 	path01 = CC.get_shot_animatic_file(**info_dict)
+		# 	if not (os.path.exists(path01)):
+		# 		msg = "%s: Can't find footage for shot!" % info_dict["shot_name"]
+		# 		return -1, msg
+		# path02 = CC.get_shot_sound_file(**info_dict)  ##cfg_util.CreatePathFromDict(cfg.project_paths["shot_sound_file"], info_dict) # MISSING get_shot_sound_file
+		# if not os.path.exists(path02):
+		# 	return -1, "No sound file found!"
+		for cur_key in file_list.keys():
+			if os.path.exists(str(file_list[cur_key])):
+				print(cur_key)
+				file_list[cur_key] = ffmpeg_util.probeDuration(cur_key,codec_type="video")
 
-	def compareLengths(self, context, node, fps, silent=True):
+		print(file_list)
+		return file_list
+		# try:
+		# 	import Preview.ffmpeg_util as ffmpeg_util
+		# 	msg = self.__AV.lengths.compare_equal(path01=path01, path02=path02, fps=fps, silent=silent)[1]
+		# 	return 0, msg
+		# except CheckAudioVisual.MediaLengthException as e:
+		# 	msg = e.getMsg()
+		# 	return -1, msg
+
+	def compareLengths(self, context, node, fps=25, silent=True):
 		"""
 		changed so that we get a list of nodes and then do the same methods at the end.
 		"""
@@ -1638,46 +1648,14 @@ class FrontController(QtCore.QObject):
 		msg_box.setWindowTitle("Compare Video->Audio")
 		list_of_nodes = []
 		error_print = ""
-		if isinstance(node, Episode):
-			# list = QtWidgets.QListWidget()
-			# msg_box.layout().addWidget(list)
-			# msg_box.setText("                                    ")
-			for s in node.getChildren():
-				for n in s.getChildren():
-					list_of_nodes.append(n)
-					# try:
-					#     list.addItem(self.__compareLengthsMsg(context=context, node=n, fps=fps, silent=silent)[1])
-					# except subprocess.CalledProcessError:
-					#     try:
-					#         list.addItem(self.__compareLengthsMsg(context="animatic", node=n, fps=fps, silent=silent)[1])
-					#     except subprocess.CalledProcessError:
-					#         list.addItem(self.__compareLengthsMsg(context="anim", node=n, fps=fps, silent=silent)[1])
-		elif isinstance(node, Sequence):
-			# list = QtWidgets.QListWidget()
-			# msg_box.layout().addWidget(list)
-			# msg_box.setText("                                    ")
-			for n in node.getChildren():
-				list_of_nodes.append(n)
-				# try:
-				#     list.addItem(self.__compareLengthsMsg(context=context, node=n, fps=fps, silent=silent)[1])
-				# except subprocess.CalledProcessError:
-				#     try:
-				#         list.addItem(self.__compareLengthsMsg(context="animatic", node=n, fps=fps, silent=silent)[1])
-				#     except subprocess.CalledProcessError:
-				#         list.addItem(self.__compareLengthsMsg(context="anim", node=n, fps=fps, silent=silent)[1])
+		if node.getType() in ["episode", "seq"]:
+			list_of_nodes = node.getAllChildren()
 		else:
 			list_of_nodes.append(node)
-			# try:
-			#     msg = self.__compareLengthsMsg(context=context, node=node, fps=fps, silent=silent)[1]
-			# except subprocess.CalledProcessError:
-			#     try:
-			#         msg = self.__compareLengthsMsg(context="animatic", node=node, fps=fps, silent=silent)[1]
-			#     except subprocess.CalledProcessError:
-			#         msg = self.__compareLengthsMsg(context="anim", node=node, fps=fps, silent=silent)[1]
 		for cur_node in list_of_nodes:
 			cur_info = self.__compareLengthsMsg(context=context, node=cur_node, fps=fps, silent=silent)
-			if cur_info[0] == -1:
-				error_print = error_print + "\n" + cur_info[1]
+			# if cur_info[0] == -1:
+			# 	error_print = error_print + "\n" + cur_info[1]
 
 		logger.error(error_print)
 

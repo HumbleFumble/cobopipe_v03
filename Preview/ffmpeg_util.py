@@ -177,7 +177,9 @@ def probeDuration(path,index=0,codec_type=None):
     :return:
     """
     logger.info("Probe for duration: %s" % path)
+    logger.info(ffprobe_exe)
     probe_streams = ffmpeg.probe(path, cmd=ffprobe_exe)
+
     to_return = probe_streams["streams"][index]["duration"]
     if codec_type:
         for i in probe_streams["streams"]:
