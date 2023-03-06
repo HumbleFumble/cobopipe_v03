@@ -1600,45 +1600,28 @@ class FrontController(QtCore.QObject):
 						return True
 			return False
 
-	def __compareLengthsMsg(self, context, node, fps, silent=True):
+	def __compareLengthsMsg(self, node):
 		import Preview.ffmpeg_util as ffmpeg_util
+		to_return = False
+		duration = 0
 		info_dict = node.getInfoDict()
-
-		file_list = { CC.get_shot_comp_output_file(**info_dict):0,CC.get_shot_anim_preview_file(**info_dict):0,
-					  CC.get_shot_animatic_file(**info_dict):0,CC.get_shot_sound_file(**info_dict):0}
-		# if context == "comp":
-		# 	# path01 = cfg_util.CreatePathFromDict(cfg.project_paths["shot_comp_output_file"], info_dict)
-		# 	path01 = CC.get_shot_comp_output_file(**info_dict)
-		# 	if not (os.path.exists(path01)):
-		# 		context = "anim"
-		# if context == "anim":
-		# 	# path01 = cfg_util.CreatePathFromDict(cfg.project_paths["shot_anim_preview_file"], info_dict)
-		# 	path01 = CC.get_shot_anim_preview_file(**info_dict)
-		# 	if not (os.path.exists(path01)):
-		# 		context = "animatic"
-		# if context == "animatic":
-		# 	# path01 = cfg_util.CreatePathFromDict(cfg.project_paths["shot_animatic_file"], info_dict)
-		# 	path01 = CC.get_shot_animatic_file(**info_dict)
-		# 	if not (os.path.exists(path01)):
-		# 		msg = "%s: Can't find footage for shot!" % info_dict["shot_name"]
-		# 		return -1, msg
-		# path02 = CC.get_shot_sound_file(**info_dict)  ##cfg_util.CreatePathFromDict(cfg.project_paths["shot_sound_file"], info_dict) # MISSING get_shot_sound_file
-		# if not os.path.exists(path02):
-		# 	return -1, "No sound file found!"
+		file_list = { "Comp":{"path":CC.get_shot_comp_output_file(**info_dict), "duration":0},"anim":{"path":CC.get_shot_anim_preview_file(**info_dict),"duration":0},
+					  "animatic":{"path":CC.get_shot_animatic_file(**info_dict),"duration":0},"sound":{"path":CC.get_shot_sound_file(**info_dict),"duration":0}}
 		for cur_key in file_list.keys():
-			if os.path.exists(str(file_list[cur_key])):
-				print(cur_key)
-				file_list[cur_key] = ffmpeg_util.probeDuration(cur_key,codec_type="video")
+			if os.path.exists(file_list[cur_key]["path"]):
+				file_list[cur_key]["duration"] = ffmpeg_util.probeDuration(file_list[cur_key]["path"],codec_type="video")
+				if(duration != 0 and duration != file_list[cur_key]["duration"] and file_list[cur_key]["duration"] != 0):
+					to_return = True
+				if not file_list[cur_key]["duration"] == 0:
+					duration = file_list[cur_key]["duration"]
 
-		print(file_list)
-		return file_list
-		# try:
-		# 	import Preview.ffmpeg_util as ffmpeg_util
-		# 	msg = self.__AV.lengths.compare_equal(path01=path01, path02=path02, fps=fps, silent=silent)[1]
-		# 	return 0, msg
-		# except CheckAudioVisual.MediaLengthException as e:
-		# 	msg = e.getMsg()
-		# 	return -1, msg
+		if to_return:
+			to_return_list = f'Issue found in {info_dict["episode_name"]}_{info_dict["seq_name"]}_{info_dict["shot_name"]}, durations:\n'
+			for d in file_list.keys():
+				to_return_list = to_return_list + f'{d}:{file_list[d]["duration"]}\n'
+			return to_return_list
+		else:
+			return None
 
 	def compareLengths(self, context, node, fps=25, silent=True):
 		"""
@@ -1654,9 +1637,10 @@ class FrontController(QtCore.QObject):
 		else:
 			list_of_nodes.append(node)
 		for cur_node in list_of_nodes:
-			cur_info = self.__compareLengthsMsg(context=context, node=cur_node, fps=fps, silent=silent)
-			# if cur_info[0] == -1:
-			# 	error_print = error_print + "\n" + cur_info[1]
+			print(cur_node.getName())
+			cur_info = self.__compareLengthsMsg(node=cur_node)
+			if cur_info:
+				error_print = error_print + "\n" + cur_info
 
 		logger.error(error_print)
 
