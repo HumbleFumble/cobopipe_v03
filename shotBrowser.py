@@ -1875,7 +1875,7 @@ class FrontController(QtCore.QObject):
 				pool.wait()
 			print('\n >> Done updating harmony palettes <<')
 
-	def exportingSceneData(self, nodes, wait=False):
+	def exportSceneData(self, nodes, wait=False):
 		shots = []
 		for node in nodes:
 			if node.getType() == 'episode':
@@ -2824,6 +2824,7 @@ class MainWindow(QtWidgets.QWidget):
 						create_menu.addAction("Create Empty Scene")
 					if animation_style in ["Toonboom"]:
 						create_menu.addAction("Update Harmony Palettes")
+						create_menu.addAction("Export Scene Data")
 						create_menu.addAction("Render Scene Externally")
 						create_menu.addSeparator()
 						create_menu.addAction("Check Scene Render Nodes")
@@ -2987,6 +2988,8 @@ class MainWindow(QtWidgets.QWidget):
 							self.ctrl.runEmptySceneSetup(node)
 					if action.text() == "Update Harmony Palettes":
 						self.ctrl.updateHarmonyPalettes(nodes)
+					if action.text() == "Export Scene Data":
+						self.ctrl.exportSceneData(nodes)
 					if action.text() == "Render Scene Externally":
 						self.ctrl.toonboomRenderExternally(nodes)
 					if action.text() == "Render Comp Externally":
