@@ -63,25 +63,48 @@ class SetLineThickness_UI(QDialog):
         self.setWindowTitle("SetLineThickness_UI")
         self.setObjectName("SetLineThickness_UI")
         self.setWindowFlags(self.windowFlags()|Qt.Window|Qt.WindowStaysOnTopHint)
+        self.node_list = []
         self.create_ui()
     def create_ui(self):
         self.main_lay = QVBoxLayout()
         self.selection_bttn = QPushButton("Set Selection")
-
+        self.turn_off = QPushButton("Turn Off")
         self.reset_bttn = QPushButton("Reset")
-        self.value_slider = QSlider(Qt.Orientation.Horizontal)
+        self.bttn_lay = QHBoxLayout()
+        self.bttn_lay.addWidget(self.turn_off)
+        self.bttn_lay.addWidget(self.reset_bttn)
+        self.slider = QSlider(Qt.Orientation.Horizontal)
         self.slider_label = QLabel("Value: ")
+        self.slider_value = QLineEdit("0.0")
+        self.slider_value.setFixedWidth(50)
         self.slider_lay = QHBoxLayout()
         self.slider_lay.addWidget(self.slider_label)
-        self.slider_lay.addWidget(self.value_slider)
+        self.slider_lay.addWidget(self.slider)
+        self.slider_lay.addWidget(self.slider_value)
+
+
         self.scale_check = QCheckBox("Scale Independent")
 
         self.main_lay.addWidget(self.selection_bttn)
         self.main_lay.addLayout(self.slider_lay)
         self.main_lay.addWidget(self.scale_check)
-        self.main_lay.addWidget(self.reset_bttn)
+        self.main_lay.addLayout(self.bttn_lay)
         self.setLayout(self.main_lay)
 
+        
+
+    def setSelection(self):
+        self.node_list = []
+        pass
+    def reset_thickness(self):
+        #get all scene read nodes
+        #set to zero
+        #turn off adjust line thickness
+        pass
+    def slider_proc(self):
+        pass
+    def text_proc(self):
+        pass
 def getParentWidget():
     topWidgets = QApplication.topLevelWidgets()
     for tw in topWidgets:
