@@ -81,6 +81,13 @@ class SetLineThickness_UI(QDialog):
         self.slider_lay.addWidget(self.slider_label)
         self.slider_lay.addWidget(self.slider)
         self.slider_lay.addWidget(self.slider_value)
+        self.slider.setMaximum(200)
+
+        self.slider_int = QDoubleValidator()
+        self.slider_value.setValidator(self.slider_int)
+        self.slider.sliderMoved.connect(self.slider_proc)
+
+        self.slider_value.editingFinished.connect(self.text_proc)
 
 
         self.scale_check = QCheckBox("Scale Independent")
@@ -102,9 +109,15 @@ class SetLineThickness_UI(QDialog):
         #turn off adjust line thickness
         pass
     def slider_proc(self):
-        pass
+        v = round(self.slider.value() * 0.1,1)
+        print("slider",v)
+        self.slider_value.setText(str(v))
+
     def text_proc(self):
-        pass
+        print(self.slider_value.text())
+        v = round(float(self.slider_value.text()),1)*10
+        print("text", v)
+        # self.slider.setValue(str(v))
 def getParentWidget():
     topWidgets = QApplication.topLevelWidgets()
     for tw in topWidgets:
@@ -115,6 +128,7 @@ def getParentWidget():
 def run():
     global my_ui
     my_ui = SetLineThickness_UI(getParentWidget())
+    my_ui.resize(300,100)
     my_ui.show()
 
 if __name__ == '__main__':
