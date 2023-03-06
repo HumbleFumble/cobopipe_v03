@@ -1899,7 +1899,7 @@ class FrontController(QtCore.QObject):
 			scene_path = self.findToonboomAnimationFile(shot)
 			if scene_path:
 				worker = None
-				worker = ThreadPool2.Worker(TB.exportSceneData.process, scene_path)
+				worker = ThreadPool2.Worker(TB.exportSceneData.process, scene_path, run_env)
 				if worker:
 					pool.addWorker(worker)
 					workers.append(worker)
