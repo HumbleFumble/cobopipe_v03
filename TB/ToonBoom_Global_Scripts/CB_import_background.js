@@ -31,55 +31,62 @@ function import_background(){
     var nodes = []
 
     for(var i=0;i<object.layers.length;i++){
-        if(object.layers[i].layer.split(':').length < 1){
-            var name = object.baseElementName + "_";
-            var node_path = 'Top/' + name;
+        var basename = object.baseElementName;
+        if(object.layers[i].layerPathComponents.length === 0){
+            var node_path = 'Top/' + basename
         } else {
-            var name = object.baseElementName + "_" + object.layers[i].layer.split(':')[0];
-            var node_path = 'Top/' + name;
+            var node_path = 'Top/' + basename + '_' + object.layers[i].layerPathComponents[0];
+        }
+        if(nodes.indexOf(node_path) >= 0){
+            continue; 
         }
         disconnect_all_connections(node_path);
         nodes.push(node_path);
     }
-    
-    
+
     nodes = group_nodes(nodes, group_name);
     nodes = remove_basename(nodes, object.baseElementName);
     nodes = split_frame_nodes(nodes);
     var frame_nodes = nodes[0];
     nodes = nodes[1];
+    var frames_group = null;
     
-    frame_nodes = group_nodes(frame_nodes, 'Frames');
-    var frames_group = node.parentNode(frame_nodes[0]);
-    var frames_input = node.getGroupInputModule(frames_group, "", 0, 0, 0);
-    var frames_output = node.getGroupOutputModule(frames_group, "", 0, 0, 0);
-    var frame_name = frame_nodes[0].split('/')[frame_nodes[0].split('/').length-1];
-    var frames_composite = frame_nodes[0].replace(frame_name, 'Composite');
-    disconnect_all_connections(frames_composite);
-    node.link(frames_composite, 0, frames_output, 0, false, false);
-    node.setCoord(frames_input, 0-node.width(frames_input)/2, -100);
-    node.setCoord(frames_composite, 0-node.width(frames_composite)/2, 100);
-    node.setCoord(frames_output, 0-node.width(frames_output)/2, 200);
-    var node_spacing = 200;
-    var node_fan_width = (frame_nodes.length - 1) * node_spacing;
-    frame_nodes = frame_nodes.sort()
-
-    for(var i=0; i<frame_nodes.length; i++){
-        disconnect_all_connections(frame_nodes[i]);
-        node.link(frames_input, 0, frame_nodes[i], 0, false, false);
-        node.link(frame_nodes[i], 0, frames_composite, 0);
-        var x_coord = node_spacing * i - (node_fan_width / 2);
-        var y_coord = 0; // -150 + ((250 / frame_nodes.length) * i)
-        node.setCoord(frame_nodes[i], x_coord-node.width(frame_nodes[i])/2, y_coord);
+    if(frame_nodes.length>0){
+        frame_nodes = group_nodes(frame_nodes, 'Frames');
+        frames_group = node.parentNode(frame_nodes[0]);
+        var frames_input = node.getGroupInputModule(frames_group, "", 0, 0, 0);
+        var frames_output = node.getGroupOutputModule(frames_group, "", 0, 0, 0);
+        var frame_name = frame_nodes[0].split('/')[frame_nodes[0].split('/').length-1];
+        var frames_composite = frame_nodes[0].replace(frame_name, 'Composite');
+        disconnect_all_connections(frames_composite);
+        node.link(frames_composite, 0, frames_output, 0, false, false);
+        node.setCoord(frames_input, 0-node.width(frames_input)/2, -100);
+        node.setCoord(frames_composite, 0-node.width(frames_composite)/2, 100);
+        node.setCoord(frames_output, 0-node.width(frames_output)/2, 200);
+        var node_spacing = 200;
+        var node_fan_width = (frame_nodes.length - 1) * node_spacing;
+        frame_nodes = frame_nodes.sort()
+    
+        for(var i=0; i<frame_nodes.length; i++){
+            disconnect_all_connections(frame_nodes[i]);
+            node.link(frames_input, 0, frame_nodes[i], 0, false, false);
+            node.link(frame_nodes[i], 0, frames_composite, 0);
+            var x_coord = node_spacing * i - (node_fan_width / 2);
+            var y_coord = 0; // -150 + ((250 / frame_nodes.length) * i)
+            node.setCoord(frame_nodes[i], x_coord-node.width(frame_nodes[i])/2, y_coord);
+        }
     }
+
 
     nodes = custom_sort_nodes(nodes);
     nodes = add_bgnode_tag(nodes);
-    nodes.splice(0, 0, frames_group);
+    if(frames_group != null){
+        nodes.splice(0, 0, frames_group);
+    }
     var group = node.parentNode(nodes[0]);
     var input = node.getGroupInputModule(group, "", 0, 0, 0);
     var output = node.getGroupOutputModule(group, "", 0, 0, 0);
-    composite = frames_group.replace('Frames', 'Composite');
+    composite = group + '/Composite'
     disconnect_all_connections(input);
     node.setCoord(input, 0-node.width(input)/2, -400)
     var main_peg = node.add(group, 'Main-P', 'PEG', 0, -300, 0);
@@ -124,15 +131,20 @@ function import_background(){
         }
         node.link(peg_node, 0, nodes[i], 0, false, false);
         node.link(nodes[i], 0, composite, 0)
+
+        extend_exposure(nodes[i])
     }
     node.setCoord(composite, 0-node.width(composite)/2, 100);
     node.setCoord(output, 0-node.width(output)/2, 200);
+
+    node.getElementId(nodes)
+
 
     currentDate = new Date();
     var date_string = pad(currentDate.getDate(), 2, '0') + "/" + pad((currentDate.getMonth() + 1), 2, '0') + "/" + currentDate.getFullYear();
     var time_string = pad(currentDate.getHours(), 2, '0') + ":" + pad(currentDate.getMinutes(), 2, '0') + ":" + pad(currentDate.getSeconds(), 2, '0');
     var import_info = "Directory: " + file_path + "\nTimestamp: " + date_string + " - " + time_string + "\n";
-
+    
     backdrop_x_coord = Math.round((-node_fan_width / 2) * 1.4);
     backdrop_y_coord = Math.round(-400 * 1.2);
     backdrop_width = Math.abs(backdrop_x_coord * 2);
@@ -165,7 +177,7 @@ function import_psd(path){
         importType : Utils.IMPORT_TYPE.TVG_BITMAP,
         bitmapAlignment : Utils.ALIGNMENT.ACTUAL_SIZE,
         premultiply : Utils.PREMULTIPLY.STRAIGHT,
-        forceSingleLayer : false
+        forceSingleLayer : false,
     };
     return Utils.importDrawingInNewElementNode(path, options);
 }
@@ -197,7 +209,7 @@ function disconnect_all_connections(node_path){
 }
 
 function group_nodes(nodes, name){
-    node.createGroup(nodes, name);
+    node.createGroup(nodes.toString(), name);
     new_paths = [];
     for(var i=0; i<nodes.length; i++){
         var node_path = nodes[i].replace(
@@ -219,6 +231,7 @@ function remove_basename(nodes, basename){
             var new_path = nodes[i].replace(old_name, new_name);
             renamed_nodes.push(new_path);
         } else {
+            MessageLog.trace('Failed to rename ' + nodes[i])
             renamed_nodes.push(nodes[i]);
         }
     }
@@ -296,6 +309,16 @@ function custom_sort_nodes(nodes){
 function fromRGBAtoInt(r, g, b, a)
 {
   return ((a & 0xff) << 24) | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
+}
+
+function extend_exposure(node_path){
+    startFrame = scene.getStartFrame();
+	endFrame = scene.getStopFrame();
+    current_column = node.linkedColumn(node_path, 'DRAWING.ELEMENT');
+    for(var i = startFrame; i<endFrame+1; i++){
+        drawing_substitution = column.getEntry(current_column, 1, 1);
+        column.setEntry(current_column, 1, i, drawing_substitution);
+    }
 }
 
 // var script_path = System.getenv("BOM_PIPE_PATH")+"/TB/CB_SelectionPreset.py"
