@@ -65,6 +65,7 @@ class SetLineThickness_UI(QDialog):
         self.setWindowFlags(self.windowFlags()|Qt.Window|Qt.WindowStaysOnTopHint)
         self.node_list = []
         self.create_ui()
+
     def create_ui(self):
         self.main_lay = QVBoxLayout()
         self.selection_bttn = QPushButton("Set Selection")
@@ -83,8 +84,8 @@ class SetLineThickness_UI(QDialog):
         self.slider_lay.addWidget(self.slider_value)
         self.slider.setMaximum(200)
 
-        self.slider_int = QDoubleValidator()
-        self.slider_value.setValidator(self.slider_int)
+        # self.slider_int = QDoubleValidator()
+        # self.slider_value.setValidator(self.slider_int)
         self.slider.sliderMoved.connect(self.slider_proc)
 
         self.slider_value.editingFinished.connect(self.text_proc)
@@ -115,9 +116,10 @@ class SetLineThickness_UI(QDialog):
 
     def text_proc(self):
         print(self.slider_value.text())
-        v = round(float(self.slider_value.text()),1)*10
+        v = int(round(float(self.slider_value.text()),1)*10)
         print("text", v)
-        # self.slider.setValue(str(v))
+        self.slider.setValue(v)
+
 def getParentWidget():
     topWidgets = QApplication.topLevelWidgets()
     for tw in topWidgets:
