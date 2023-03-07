@@ -38,12 +38,9 @@ class FrontController(QObject):
             self.scene = None
         self.save_dir = "C:/Temp/TB/"
 
-
-    def findReadNodes(self,cur_node=None):
-        if cur_node:
-            scene_nodes = cur_node.nodes
-        else:
-            scene_nodes = self.scene.selection.nodes
+    def findReadNodes(self):
+        scene_nodes = self.scene.selection.nodes
+        log(scene_nodes)
         node_list = []
         for node in scene_nodes:
             if node.type == "GROUP":
@@ -65,12 +62,13 @@ class SetLineThickness_UI(QDialog):
         self.setWindowFlags(self.windowFlags()|Qt.Window|Qt.WindowStaysOnTopHint)
         self.node_list = []
         self.create_ui()
+        self.FC = FrontController()
 
     def create_ui(self):
         self.main_lay = QVBoxLayout()
         self.selection_bttn = QPushButton("Set Selection")
         self.turn_off = QPushButton("Turn Off")
-        self.reset_bttn = QPushButton("Reset")
+        self.reset_bttn = QPushButton("Reset all")
         self.bttn_lay = QHBoxLayout()
         self.bttn_lay.addWidget(self.turn_off)
         self.bttn_lay.addWidget(self.reset_bttn)
@@ -86,7 +84,7 @@ class SetLineThickness_UI(QDialog):
 
         # self.slider_int = QDoubleValidator()
         # self.slider_value.setValidator(self.slider_int)
-        self.slider.sliderMoved.connect(self.slider_proc)
+        self.slider.valueChanged.connect(self.slider_proc)
 
         self.slider_value.editingFinished.connect(self.text_proc)
 
@@ -103,7 +101,7 @@ class SetLineThickness_UI(QDialog):
 
     def setSelection(self):
         self.node_list = []
-        pass
+        self.FC.findReadNodes()
     def reset_thickness(self):
         #get all scene read nodes
         #set to zero
@@ -111,13 +109,10 @@ class SetLineThickness_UI(QDialog):
         pass
     def slider_proc(self):
         v = round(self.slider.value() * 0.1,1)
-        print("slider",v)
         self.slider_value.setText(str(v))
 
     def text_proc(self):
-        print(self.slider_value.text())
         v = int(round(float(self.slider_value.text()),1)*10)
-        print("text", v)
         self.slider.setValue(v)
 
 def getParentWidget():
