@@ -108,7 +108,7 @@ class SetLineThickness_UI(QDialog):
         self.main_lay = QVBoxLayout()
         self.pick_selection_bttn = QPushButton("Set Selection")
         self.set_selection_bttn = QPushButton("Pick Previous Selection")
-        self.turn_on_off_bttn = QPushButton("Turn Off")
+        self.turn_on_off_bttn = QPushButton("Toggle On/Off")
         self.reset_bttn = QPushButton("Reset all")
         self.bttn_lay = QHBoxLayout()
         self.bttn_lay.addWidget(self.turn_on_off_bttn)
@@ -141,6 +141,7 @@ class SetLineThickness_UI(QDialog):
         self.main_lay.addLayout(self.slider_lay)
         self.main_lay.addWidget(self.scale_check)
         self.main_lay.addLayout(self.bttn_lay)
+        self.scale_check.setChecked(True)
         self.setLayout(self.main_lay)
 
         
