@@ -1616,28 +1616,22 @@ class FrontController(QtCore.QObject):
 					duration = file_list[cur_key]["duration"]
 
 		if to_return:
-			to_return_list = f'Issue found in {info_dict["episode_name"]}_{info_dict["seq_name"]}_{info_dict["shot_name"]}, durations:\n'
+			to_return_list = f'Issue found in {info_dict["episode_name"]}_{info_dict["seq_name"]}_{info_dict["shot_name"]}, durations in frames:\n'
 			for d in file_list.keys():
-				to_return_list = to_return_list + f'{d}:{file_list[d]["duration"]}\n'
+				to_return_list = to_return_list + f'{d}:{(int(float(file_list[d]["duration"])*25))}\n'
 			return to_return_list
 		else:
 			return None
 
-	def compareLengths(self, context, node, fps=25, silent=True):
+	def compareLengths(self, node_list, fps=25, silent=True):
 		"""
 		changed so that we get a list of nodes and then do the same methods at the end.
 		"""
 		msg_box = QtWidgets.QMessageBox()
 		msg_box.setIcon(QtWidgets.QMessageBox.Information)
 		msg_box.setWindowTitle("Compare Video->Audio")
-		list_of_nodes = []
 		error_print = ""
-		if node.getType() in ["episode", "seq"]:
-			list_of_nodes = node.getAllChildren()
-		else:
-			list_of_nodes.append(node)
-		for cur_node in list_of_nodes:
-			print(cur_node.getName())
+		for cur_node in node_list:
 			cur_info = self.__compareLengthsMsg(node=cur_node)
 			if cur_info:
 				error_print = error_print + "\n" + cur_info
@@ -2999,7 +2993,14 @@ class MainWindow(QtWidgets.QWidget):
 						self.ctrl.makeHookUpFromNodes(cur_list, cur_name, self.thumb_show_combo.currentText().lower())
 						# self.__ctrl.SceneSetupToonBoom(nodes)
 					if action.text() == "Compare AV":
-						self.ctrl.compareLengths(self.thumb_show_combo.currentText(), node=node, fps=25, silent=True)
+						cur_list = []
+						for cur_node in nodes:
+							if node.getType() in ["episode", "seq"]:
+								cur_list.extend(cur_node.getAllChildren())
+							else:
+								cur_list.append(cur_node)
+
+						self.ctrl.compareLengths(node_list=cur_list, fps=25, silent=True)
 					if action.text() == "Submit Toonboom Scene to RR":
 						self.ctrl.submitToonBoomToRoyalRender(list_of_nodes=nodes,
 																user=self.user_combobox.currentText())

@@ -35,7 +35,7 @@ class ConfigClass():
         self.shot_tb_render_scene_stack="<shot_2D_passes_folder>/<episode_name>_<seq_name>_<shot_name>_*"
         self.shot_comp_folder="<shot_path>/Comp"
         self.shot_comp_output_folder="<shot_path>/_CompOutput"
-        self.shot_comp_output_file="<sequence_preview_folder>/<episode_name>_<seq_name>_<shot_name>_Comp.mov"
+        self.shot_comp_output_file="<shot_comp_output_folder>/<episode_name>_<seq_name>_<shot_name>_CompOutput.mov"
         self.shot_comp_preview_file="<sequence_preview_folder>/<episode_name>_<seq_name>_<shot_name>_Comp.mov"
         self.shot_comp_output_file_mov="<shot_comp_output_folder>/<episode_name>_<seq_name>_<shot_name>_CompOutput.mov"
         self.shot_ae_precomp_file="<shot_comp_folder>/<episode_name>_<seq_name>_<shot_name>_Precomp.aep"
@@ -502,7 +502,7 @@ class ConfigClass():
             shot_name="<shot_name>"
             logger.debug("Building path to shot_comp_output_file: Argument Missing: shot_name")
 
-        to_return = "P:/930462_HOJ_Project/Production/Film/{episode_name}/{episode_name}_{seq_name}/_Preview/{episode_name}_{seq_name}_{shot_name}_Comp.mov".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
+        to_return = "P:/930462_HOJ_Project/Production/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_{shot_name}/_CompOutput/{episode_name}_{seq_name}_{shot_name}_CompOutput.mov".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
         return to_return
 
 
