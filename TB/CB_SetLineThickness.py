@@ -38,9 +38,12 @@ class FrontController(QObject):
             self.scene = None
         self.save_dir = "C:/Temp/TB/"
 
-    def findReadNodes(self):
-        scene_nodes = self.scene.selection.nodes
-        log(scene_nodes)
+    def findReadNodes(self,cur_node=None):
+        if cur_node:
+            scene_nodes = cur_node.nodes
+        else:
+            scene_nodes = self.scene.selection.nodes
+
         node_list = []
         for node in scene_nodes:
             if node.type == "GROUP":
@@ -61,8 +64,9 @@ class SetLineThickness_UI(QDialog):
         self.setObjectName("SetLineThickness_UI")
         self.setWindowFlags(self.windowFlags()|Qt.Window|Qt.WindowStaysOnTopHint)
         self.node_list = []
-        self.create_ui()
         self.FC = FrontController()
+        self.create_ui()
+
 
     def create_ui(self):
         self.main_lay = QVBoxLayout()
@@ -89,6 +93,7 @@ class SetLineThickness_UI(QDialog):
         self.slider_value.editingFinished.connect(self.text_proc)
 
 
+        self.selection_bttn.clicked.connect(self.setSelection)
         self.scale_check = QCheckBox("Scale Independent")
 
         self.main_lay.addWidget(self.selection_bttn)
@@ -101,7 +106,9 @@ class SetLineThickness_UI(QDialog):
 
     def setSelection(self):
         self.node_list = []
-        self.FC.findReadNodes()
+        self.node_list = self.FC.findReadNodes()
+        log(self.node_list)
+
     def reset_thickness(self):
         #get all scene read nodes
         #set to zero
