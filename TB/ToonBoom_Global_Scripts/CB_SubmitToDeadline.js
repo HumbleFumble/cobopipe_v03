@@ -1,6 +1,7 @@
 
 sceneFile = scene.currentProjectPath() +"/"+ scene.currentVersionName()+".xstage";
-function SaveJobFile(file_path,jobName,group,pool,start_frame,end_frame,chunkSize,output_dir){
+
+function SaveDeadlineJobInfoFile(file_path,jobName,group,pool,start_frame,end_frame,chunkSize,output_dir){
 
     jobInfoFilePath = file_path+"harmony_submit_info.job"
     var jobInfoFile = new File( jobInfoFilePath );
@@ -84,7 +85,7 @@ function SaveJobFile(file_path,jobName,group,pool,start_frame,end_frame,chunkSiz
     jobInfoFile.close();
     return jobInfoFilePath
 }
-function SavePluginFile(plugin_path,version,submitScene,resolutionX,resolutionY,resolutionFov){
+function SavePluginFile(plugin_path,version,resolutionX,resolutionY,resolutionFov){
     pluginInfoFilePath = plugin_path+"harmony_plugin_info.job"
     var pluginInfoFile = new File( pluginInfoFilePath );
     pluginInfoFile.open(FileAccess.WriteOnly);
@@ -103,10 +104,7 @@ function SavePluginFile(plugin_path,version,submitScene,resolutionX,resolutionY,
 //    else
 //    {
     pluginInfoFile.writeLine("IsDatabase=False");
-    if( submitScene )
-    {
-        pluginInfoFile.writeLine("SceneFile="+sceneFile);
-    }
+    pluginInfoFile.writeLine("SceneFile="+sceneFile);
 //    }
 
 //    pluginInfoFile.writeLine("UsingResPreset="+useResName);
@@ -196,7 +194,7 @@ function GroupTravel(groupName,my_type,name_filter)
   }
 
 
-function run(){
+function runInTB(){
     job_path = "C:/Temp/TB_Submit_Test/"
     job_name = "Test"
 
@@ -215,7 +213,7 @@ function run(){
     chunkSize = 50
     output_dir = "" //Path to the shot passes folder
 
-    job_file = SaveJobFile(job_path,job_name,group,pool,start_frame,end_frame,chunkSize,output_dir)
+    job_file = SaveDeadlineJobInfoFile(job_path,job_name,group,pool,start_frame,end_frame,chunkSize,output_dir)
     plug_file = SavePluginFile(plugin_path,version,submitScene,resolutionX,resolutionY,resolutionFov)
 
     renderArguments = [];
