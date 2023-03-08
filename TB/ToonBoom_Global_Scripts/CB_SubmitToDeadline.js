@@ -1,6 +1,6 @@
 
 sceneFile = scene.currentProjectPath() +"/"+ scene.currentVersionName()+".xstage";
-function SaveJobFile(file_path,jobName,group,pool,start_frame,end_frame){
+function SaveJobFile(file_path,jobName,group,pool,start_frame,end_frame,chunkSize,output_dir){
 
     jobInfoFilePath = file_path+"harmony_submit_info.job"
     var jobInfoFile = new File( jobInfoFilePath );
@@ -21,8 +21,8 @@ function SaveJobFile(file_path,jobName,group,pool,start_frame,end_frame){
 //    jobInfoFile.writeLine( "OnJobComplete=" + onComplete );
     jobInfoFile.writeLine( "Frames=" + start_frame + "-" + end_frame); //jobInfoFile.writeLine( "Frames=" + frameList );
 //    jobInfoFile.writeLine( "MachineLimit=" + machineLimit );
-//    jobInfoFile.writeLine( "ChunkSize=" + chunkSize );
-
+    jobInfoFile.writeLine( "ChunkSize=" + chunkSize );
+    jobInfoFile.writeLine( "OutputDirectory0=" + output_dir );
 //    if( isBlacklist )
 //        jobInfoFile.writeLine( "Blacklist=" + machineList );
 //    else
@@ -103,7 +103,7 @@ function SavePluginFile(plugin_path,version,submitScene,resolutionX,resolutionY,
 //    else
 //    {
     pluginInfoFile.writeLine("IsDatabase=False");
-    if( !submitScene )
+    if( submitScene )
     {
         pluginInfoFile.writeLine("SceneFile="+sceneFile);
     }
@@ -145,12 +145,12 @@ function SavePluginFile(plugin_path,version,submitScene,resolutionX,resolutionY,
         var paddingLength = node.getTextAttr( name, 1, "leadingZeros" );
         var drawingType = node.getTextAttr( name, 1, "drawingType" )
         var startFrame = node.getTextAttr( name, 1, "start" )
-        pluginInfoFile.writeLine("Output"+outputNum+"Node="+name);
-        pluginInfoFile.writeLine("Output"+outputNum+"Type=Image");
-        pluginInfoFile.writeLine("Output"+outputNum+"Path=" +outputPath );
-        pluginInfoFile.writeLine("Output"+outputNum+"LeadingZero=" +paddingLength );
-        pluginInfoFile.writeLine("Output"+outputNum+"Format=" +drawingType );
-        pluginInfoFile.writeLine("Output"+outputNum+"StartFrame=" +startFrame );
+        pluginInfoFile.writeLine("Output"+i+"Node="+name);
+        pluginInfoFile.writeLine("Output"+i+"Type=Image");
+        pluginInfoFile.writeLine("Output"+i+"Path=" +outputPath );
+        //pluginInfoFile.writeLine("Output"+i+"LeadingZero=" +paddingLength );
+        //pluginInfoFile.writeLine("Output"+i+"Format=" +drawingType );
+        //pluginInfoFile.writeLine("Output"+i+"StartFrame=" +startFrame );
 
 //                outputNum++;
 //            }
@@ -199,19 +199,23 @@ function GroupTravel(groupName,my_type,name_filter)
 function run(){
     job_path = "C:/Temp/TB_Submit_Test/"
     job_name = "Test"
+
+    group = "harmony"
+    pool = "hoj"
+    version = "22"
+
+
     start_frame = "1"
     end_frame = "25"
-    group = "Harmony"
-    pool = "hoj"
-
-    version = "22"
     plugin_path = "C:/Temp/TB_Submit_Test/"
     submitScene = true
     resolutionX = scene.currentResolutionX();
     resolutionY = scene.currentResolutionY();
     resolutionFov = scene.defaultResolutionFOV();
+    chunkSize = 50
+    output_dir = "" //Path to the shot passes folder
 
-    job_file = SaveJobFile(job_path,job_name,group,pool,start_frame,end_frame)
+    job_file = SaveJobFile(job_path,job_name,group,pool,start_frame,end_frame,chunkSize,output_dir)
     plug_file = SavePluginFile(plugin_path,version,submitScene,resolutionX,resolutionY,resolutionFov)
 
     renderArguments = [];
