@@ -130,10 +130,12 @@ function SavePluginFile(plugin_path,version,resolutionX,resolutionY,resolutionFo
 //    var name;
 //    var outputNum = 0;
     n = GroupTravel("Top","WRITE", "RENDER_")
-    for(i = 0; i < n; ++i)
+    for(i = 0; i < n.length; i++)
     {
-        name = node.subNode(root, i);
 
+        //name = node.subNode("Top", n[i]);
+        name = n[i]
+        MessageLog.trace(name)
 //        if(node.type(name) == "WRITE")
 //        {
 //            var exportType = node.getTextAttr( name, 1, "exportToMovie" );
@@ -211,10 +213,15 @@ function runInTB(){
     resolutionY = scene.currentResolutionY();
     resolutionFov = scene.defaultResolutionFOV();
     chunkSize = 50
-    output_dir = "" //Path to the shot passes folder
+
+    var scene_path = scene.currentProjectPath();
+	var scene_path_split =scene_path.split("/");
+	scene_path_split.pop();
+	scene_path = scene_path_split.join("/") + "/Passes/";
+    output_dir = scene_path //Path to the shot passes folder
 
     job_file = SaveDeadlineJobInfoFile(job_path,job_name,group,pool,start_frame,end_frame,chunkSize,output_dir)
-    plug_file = SavePluginFile(plugin_path,version,submitScene,resolutionX,resolutionY,resolutionFov)
+    plug_file = SavePluginFile(plugin_path,version,resolutionX,resolutionY,resolutionFov)
 
     renderArguments = [];
     renderArgCount = 0;
