@@ -129,23 +129,39 @@
   },
   {
     "DisplayName": "Adobe After Effects",
-    "PSComputerName": "wsx32"
+    "PSComputerName": "wsx26"
   },
   {
     "DisplayName": "Adobe Media Encoder",
-    "PSComputerName": "wsx32"
+    "PSComputerName": "wsx26"
   },
   {
     "DisplayName": "Adobe Photoshop",
-    "PSComputerName": "wsx32"
+    "PSComputerName": "wsx26"
   },
   {
     "DisplayName": "Adobe Premiere Pro",
-    "PSComputerName": "wsx32"
+    "PSComputerName": "wsx26"
+  },
+  {
+    "DisplayName": "Adobe Acrobat",
+    "PSComputerName": "wsx26"
+  },
+  {
+    "DisplayName": "VLC",
+    "PSComputerName": "wsx26"
+  },
+  {
+    "DisplayName": "Chrome",
+    "PSComputerName": "wsx26"
+  },
+  {
+    "DisplayName": "Firefox",
+    "PSComputerName": "wsx26"
   },
   {
     "DisplayName": "Fusion",
-    "PSComputerName": "wsx32"
+    "PSComputerName": "wsx26"
   },
   {
     "DisplayName": "Adobe After Effects",
@@ -213,39 +229,23 @@
   },
   {
     "DisplayName": "Adobe After Effects",
-    "PSComputerName": "wsx11"
+    "PSComputerName": "wsx32"
   },
   {
     "DisplayName": "Adobe Media Encoder",
-    "PSComputerName": "wsx11"
+    "PSComputerName": "wsx32"
   },
   {
     "DisplayName": "Adobe Photoshop",
-    "PSComputerName": "wsx11"
+    "PSComputerName": "wsx32"
   },
   {
     "DisplayName": "Adobe Premiere Pro",
-    "PSComputerName": "wsx11"
-  },
-  {
-    "DisplayName": "Adobe Acrobat",
-    "PSComputerName": "wsx11"
-  },
-  {
-    "DisplayName": "VLC",
-    "PSComputerName": "wsx11"
-  },
-  {
-    "DisplayName": "Chrome",
-    "PSComputerName": "wsx11"
-  },
-  {
-    "DisplayName": "Firefox",
-    "PSComputerName": "wsx11"
+    "PSComputerName": "wsx32"
   },
   {
     "DisplayName": "Fusion",
-    "PSComputerName": "wsx11"
+    "PSComputerName": "wsx32"
   },
   {
     "DisplayName": "Adobe After Effects",
@@ -277,47 +277,35 @@
   },
   {
     "DisplayName": "Adobe After Effects",
-    "PSComputerName": "wsx13"
+    "PSComputerName": "wsx9"
   },
   {
     "DisplayName": "Adobe Media Encoder",
-    "PSComputerName": "wsx13"
+    "PSComputerName": "wsx9"
   },
   {
     "DisplayName": "Adobe Photoshop",
-    "PSComputerName": "wsx13"
+    "PSComputerName": "wsx9"
   },
   {
     "DisplayName": "Adobe Premiere Pro",
-    "PSComputerName": "wsx13"
-  },
-  {
-    "DisplayName": "Adobe Acrobat",
-    "PSComputerName": "wsx13"
-  },
-  {
-    "DisplayName": "Chrome",
-    "PSComputerName": "wsx13"
-  },
-  {
-    "DisplayName": "Firefox",
-    "PSComputerName": "wsx13"
+    "PSComputerName": "wsx9"
   },
   {
     "DisplayName": "Adobe After Effects",
-    "PSComputerName": "wsx9"
+    "PSComputerName": "wsx13"
   },
   {
     "DisplayName": "Adobe Media Encoder",
-    "PSComputerName": "wsx9"
+    "PSComputerName": "wsx13"
   },
   {
     "DisplayName": "Adobe Photoshop",
-    "PSComputerName": "wsx9"
+    "PSComputerName": "wsx13"
   },
   {
     "DisplayName": "Adobe Premiere Pro",
-    "PSComputerName": "wsx9"
+    "PSComputerName": "wsx13"
   },
   {
     "DisplayName": "Adobe Acrobat",
@@ -336,40 +324,16 @@
     "PSComputerName": "wsx9"
   },
   {
-    "DisplayName": "Adobe After Effects",
-    "PSComputerName": "wsx26"
-  },
-  {
-    "DisplayName": "Adobe Media Encoder",
-    "PSComputerName": "wsx26"
-  },
-  {
-    "DisplayName": "Adobe Photoshop",
-    "PSComputerName": "wsx26"
-  },
-  {
-    "DisplayName": "Adobe Premiere Pro",
-    "PSComputerName": "wsx26"
-  },
-  {
     "DisplayName": "Adobe Acrobat",
-    "PSComputerName": "wsx26"
-  },
-  {
-    "DisplayName": "VLC",
-    "PSComputerName": "wsx26"
+    "PSComputerName": "wsx13"
   },
   {
     "DisplayName": "Chrome",
-    "PSComputerName": "wsx26"
+    "PSComputerName": "wsx13"
   },
   {
     "DisplayName": "Firefox",
-    "PSComputerName": "wsx26"
-  },
-  {
-    "DisplayName": "Fusion",
-    "PSComputerName": "wsx26"
+    "PSComputerName": "wsx13"
   },
   {
     "DisplayName": "Adobe After Effects",
@@ -394,6 +358,26 @@
   {
     "DisplayName": "Chrome",
     "PSComputerName": "wsx21"
+  },
+  {
+    "DisplayName": "Adobe After Effects",
+    "PSComputerName": "wsx10"
+  },
+  {
+    "DisplayName": "Adobe Media Encoder",
+    "PSComputerName": "wsx10"
+  },
+  {
+    "DisplayName": "Adobe Photoshop",
+    "PSComputerName": "wsx10"
+  },
+  {
+    "DisplayName": "Adobe Premiere Pro",
+    "PSComputerName": "wsx10"
+  },
+  {
+    "DisplayName": "Fusion",
+    "PSComputerName": "wsx10"
   },
   {
     "DisplayName": "Python",
@@ -425,30 +409,6 @@
   },
   {
     "DisplayName": "Adobe After Effects",
-    "PSComputerName": "wsx8"
-  },
-  {
-    "DisplayName": "Adobe Media Encoder",
-    "PSComputerName": "wsx8"
-  },
-  {
-    "DisplayName": "Adobe Photoshop",
-    "PSComputerName": "wsx8"
-  },
-  {
-    "DisplayName": "Adobe Premiere Pro",
-    "PSComputerName": "wsx8"
-  },
-  {
-    "DisplayName": "Adobe Acrobat",
-    "PSComputerName": "wsx8"
-  },
-  {
-    "DisplayName": "Chrome",
-    "PSComputerName": "wsx8"
-  },
-  {
-    "DisplayName": "Adobe After Effects",
     "PSComputerName": "wsx2"
   },
   {
@@ -485,23 +445,27 @@
   },
   {
     "DisplayName": "Adobe After Effects",
-    "PSComputerName": "wsx10"
+    "PSComputerName": "wsx8"
   },
   {
     "DisplayName": "Adobe Media Encoder",
-    "PSComputerName": "wsx10"
+    "PSComputerName": "wsx8"
   },
   {
     "DisplayName": "Adobe Photoshop",
-    "PSComputerName": "wsx10"
+    "PSComputerName": "wsx8"
   },
   {
     "DisplayName": "Adobe Premiere Pro",
-    "PSComputerName": "wsx10"
+    "PSComputerName": "wsx8"
   },
   {
-    "DisplayName": "Fusion",
-    "PSComputerName": "wsx10"
+    "DisplayName": "Adobe Acrobat",
+    "PSComputerName": "wsx8"
+  },
+  {
+    "DisplayName": "Chrome",
+    "PSComputerName": "wsx8"
   },
   {
     "DisplayName": "Python",
@@ -541,6 +505,26 @@
   },
   {
     "DisplayName": "Adobe After Effects",
+    "PSComputerName": "wsx6"
+  },
+  {
+    "DisplayName": "Adobe Media Encoder",
+    "PSComputerName": "wsx6"
+  },
+  {
+    "DisplayName": "Adobe Photoshop",
+    "PSComputerName": "wsx6"
+  },
+  {
+    "DisplayName": "Adobe Premiere Pro",
+    "PSComputerName": "wsx6"
+  },
+  {
+    "DisplayName": "Chrome",
+    "PSComputerName": "wsx6"
+  },
+  {
+    "DisplayName": "Adobe After Effects",
     "PSComputerName": "wsx20"
   },
   {
@@ -562,25 +546,5 @@
   {
     "DisplayName": "Chrome",
     "PSComputerName": "wsx20"
-  },
-  {
-    "DisplayName": "Adobe After Effects",
-    "PSComputerName": "wsx6"
-  },
-  {
-    "DisplayName": "Adobe Media Encoder",
-    "PSComputerName": "wsx6"
-  },
-  {
-    "DisplayName": "Adobe Photoshop",
-    "PSComputerName": "wsx6"
-  },
-  {
-    "DisplayName": "Adobe Premiere Pro",
-    "PSComputerName": "wsx6"
-  },
-  {
-    "DisplayName": "Chrome",
-    "PSComputerName": "wsx6"
   }
 ]
