@@ -14,7 +14,7 @@ $AtTime = $using:AtTime
 if (!$AtTime){
     $AtTime = $(Get-Date -Format HH:mm)
 }
-# List os custom objects, containing the parameters for each installer
+# List of custom objects, containing the parameters for each installer
 $parameters = @(
     [pscustomobject]@{Name = "Python"; Index = 1; PathToInstaller = "\\rs1\shared\Python\python-3.9.1-amd64.exe"; TaskName = "Install Python"; Arguments = "/quiet TargetDir=C:\Python39 InstallAllUsers=1 PrependPath=1 Include_test=0"},
     [pscustomobject]@{Name = "Firefox"; Index = 2; PathToInstaller = "\\rs1\shared\Firefox\firefox.exe"; TaskName = "Install Firefox"; Arguments = "/S"},
