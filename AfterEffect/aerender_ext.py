@@ -31,6 +31,7 @@ def submit_to_deadline(file_path):
     script_path = r'T:\_Pipeline\cobopipe_v02-001\AfterEffect\AE_Scripts\submit_render_to_deadline_externally.jsx'
     executable = r'"C:\Program Files\Adobe\Adobe After Effects 2023\Support Files\AfterFX.exe"'
     arguments = f'"{file_path}"'
+    arguments = f'{arguments} -noui'
     arguments = f' {arguments} -r "{script_path}"'
     command = f'{executable} {arguments}'
     process = subprocess.Popen(command, shell=True, env=run_env)
