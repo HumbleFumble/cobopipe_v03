@@ -107,11 +107,11 @@ function loadConfigJson(){
 
 function GetProjectSettings(){
     try{
-	var config = loadConfigJson();
-	return config.project_settings;
+		var config = loadConfigJson();
+		return config.project_settings;
 	}
-	catch(err){
-	return null
+		catch(err){
+		return null
 	}
 }
 
