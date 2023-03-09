@@ -148,25 +148,29 @@ function ExportSceneData()
     var sequence = splitSceneName[1];
     var shot = splitSceneName[2];
     var project_paths = GetProjectPaths();
-    var path_a = project_paths.shot_path;
-    var path_b = path_a.replace("<seq_path>", project_paths.seq_path)
-    var path_c = path_b.replace("<episode_path>", project_paths.episode_path)
-    var path_d = path_c.replace("<film_path>", project_paths.film_path)
-    var path_e = path_d.replace("<base_path>", project_paths.base_path)
-    var path_f = path_e.replace(/\<episode_name>/g, episode)
-    var path_g = path_f.replace(/\<seq_name>/g, sequence)
-    var path_h = path_g.replace(/\<shot_name>/g, shot)
-    var directory = new Dir(path_h)
-    if(directory.fileExists(path_h)){
-        var path_i = project_paths.shot_comp_folder
-        var path_j = path_i.replace('<shot_path>', path_h)
-        var comp_directory = new Dir(path_j);
-        comp_directory.mkdirs();
-        var filename = path_j + "/" + episode + "_" + sequence + "_" + shot + "_SceneData.jsonx"
+    if(project_paths != null){
+        var path_a = project_paths.shot_path;
+        var path_b = path_a.replace("<seq_path>", project_paths.seq_path)
+        var path_c = path_b.replace("<episode_path>", project_paths.episode_path)
+        var path_d = path_c.replace("<film_path>", project_paths.film_path)
+        var path_e = path_d.replace("<base_path>", project_paths.base_path)
+        var path_f = path_e.replace(/\<episode_name>/g, episode)
+        var path_g = path_f.replace(/\<seq_name>/g, sequence)
+        var path_h = path_g.replace(/\<shot_name>/g, shot)
+        var directory = new Dir(path_h)
+        if(directory.fileExists(path_h)){
+            var path_i = project_paths.shot_comp_folder
+            var path_j = path_i.replace('<shot_path>', path_h)
+            var comp_directory = new Dir(path_j);
+            comp_directory.mkdirs();
+            var filename = path_j + "/" + episode + "_" + sequence + "_" + shot + "_SceneData.jsonx"
+        } else {
+            var filename = FileDialog.getSaveFileName("*.jsonx", "Please select the export filename");
+        }
     } else {
         var filename = FileDialog.getSaveFileName("*.jsonx", "Please select the export filename");
     }
-   
+
     if (!filename)
     {
         MessageLog.trace("No filename specified. Aborting.");

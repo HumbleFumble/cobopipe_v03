@@ -1924,6 +1924,39 @@ class FrontController(QtCore.QObject):
 				pool.wait()
 			print('\n >> Rendering! <<')
 
+	def aeSubmitToDeadlineExternally(self, nodes, wait=False):
+		import AfterEffect.aerender_ext as aer
+
+		shots = []
+		for node in nodes:
+			if not node.getType() in ["episode","seq"]:
+				shots.append(node)
+			else:
+				shots.extend(node.getAllChildren())
+		pool = ThreadPool2.ThreadPool()
+		pool.setMaxThreads(1)
+		workers = []
+		for shot in shots:
+
+			scene_folder = CC.get_shot_comp_folder(**shot.getInfoDict())
+			if os.path.exists(scene_folder):
+				find_version = self.FindVersion(name_list=os.listdir(scene_folder),
+												file_regex="(%s)*?" % shot.getName().lower(), file_ext=".aep")
+				if find_version:
+					scene_path = "%s/%s" % (scene_folder, find_version[0])
+
+			if scene_path:
+				worker = None
+				worker = ThreadPool2.Worker(aer.submit_to_deadline, scene_path)
+				if worker:
+					pool.addWorker(worker)
+					workers.append(worker)
+
+		if workers:
+			pool.run()
+			if wait == True:
+				pool.wait()
+
 	def createCompPreview(self, nodes, force):
 		from Preview.general import getPreview
 		shots = []
@@ -2810,6 +2843,7 @@ class MainWindow(QtWidgets.QWidget):
 						create_menu.addSeparator()
 					if comp_style in ["AE"]:
 						create_menu.addAction("Render Comp Externally")
+						create_menu.addAction("Submit Comp Externally")
 					menu.addSeparator()
 					if node.getType() == "shot":
 						menu.addMenu(view_menu)
@@ -2973,6 +3007,8 @@ class MainWindow(QtWidgets.QWidget):
 						self.ctrl.toonboomRenderExternally(nodes)
 					if action.text() == "Render Comp Externally":
 						self.ctrl.aeRenderExternally(nodes)
+					if action.text() == "Submit Comp Externally":
+						self.ctrl.aeSubmitToDeadlineExternally(nodes)
 					### OPEN PREVIEW ###
 					if action.text() == "Open Anim Preview":
 						self.ctrl.openPreview(node, "anim")
