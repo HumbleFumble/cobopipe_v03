@@ -6,13 +6,14 @@ function Update-CustomFunctions {
                  "Remove-EnvironmentVariable.ps1", 
                  "Rename-File.ps1", 
                  "Set-SecurityLevel.ps1",
+                 "Get-EnvironmentVariable.ps1",
                  "Update-CustomFunctions.ps1"
 
-    $functionsdir = "C:\CopBombay\cobopipe_v02-001\PowerShell\" 
+    $functionsdir = "C:\Users\plp\VsCodeProjects\cobopipe_v02-001\PowerShell\" 
     $functionslist = foreach ($i in $functions){$functionsdir + $i}
-    $functionslist | ForEach-Object {Get-Content $_ | Add-Content "C:\CopBombay\cobopipe_v02-001\PowerShell\Custom-Functions.psm1"}
+    $functionslist | ForEach-Object {Get-Content $_ | Add-Content "C:\Users\plp\VsCodeProjects\cobopipe_v02-001\PowerShell\Custom-Functions.psm1"}
     
-    Import-Module "C:\CopBombay\cobopipe_v02-001\PowerShell\Custom-Functions.psm1"
+    Import-Module "C:\Users\plp\VsCodeProjects\cobopipe_v02-001\PowerShell\Custom-Functions.psm1"
 
     if (Get-Command -module Custom-Functions){
         Write-Host "`nModule `"Custom-Functions`" loaded and ready`n" 
