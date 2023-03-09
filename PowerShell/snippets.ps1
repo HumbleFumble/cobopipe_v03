@@ -14,25 +14,21 @@ foreach ($i in $SwitchList){
     }
 }
 
-# Uninstall Python
-function Uninstall-Python {
-    get-cimInstance -ClassName Win32_Product | Where-Object -Property Name -Match "python ..... tcl*" | Invoke-CimMethod -MethodName Uninstall
-    get-cimInstance -ClassName Win32_Product | Where-Object -Property Name -Match "python ..... pip*" | Invoke-CimMethod -MethodName Uninstall
-    get-cimInstance -ClassName Win32_Product | Where-Object -Property Name -Match "python *" | Invoke-CimMethod -MethodName Uninstall
-}
-$python =  get-cimInstance -ClassName Win32_Product | Where-Object -Property Name -Match "python *"
-$python | Where-Object -Property name -Match "tcl*" | Invoke-CimMethod -MethodName Uninstall
-$python | Where-Object -Property name -Match "pip*" | Invoke-CimMethod -MethodName Uninstall
-$python | Where-Object -Property name -Match "python*" | Invoke-CimMethod -MethodName Uninstall -ErrorAction SilentlyContinue
 
 
-# Create exception list and run it against the list of computers
-$exceplist = "wsx16", "wsx30", "wsx3"
+# -----------------------------------------------------------------------------
+# Run bat files remotely
+#------------------------------------------------------------------------------
+# The drive from which the bat file is being executed needs to be mapped. 
+# The "persit" switch ensures the drive persits in new sessions
+# Make sure PowerShell has been ran as administrator
+# Mapping the drive
+New-PSDrive -Name "T" -Root "\\dumpap3\tools" -PSProvider "FileSystem" -Persist
 
-foreach ($item in $exceplist){
-    foreach($psobject in $newlist){
-        if ($psobject.name -eq $item){
-            $newlist.Remove($psobject)
-        }
-    }
-}
+# Run the file
+& "T:\_Pipeline\cobopipe_v02-001\BAT_files\update_harmony_hotbar.bat"
+
+# Remove-PSDrive -Name "T" -force   # Remove drive
+# Get-PSDrive   # List of currently mapped drives
+# Check if the drive has already been mapped
+# if ((Get-PSDrive).Name.Contains("T")){"It does"}
