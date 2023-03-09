@@ -15,7 +15,7 @@ function Run(file_path){
 	//split filename to find episode and shot number
     var shot_name = base_path.split("/");
     shot_name = shot_name[shot_name.length-1];
-	alert('2')
+	
     render_path = base_path + "/_CompOutput/";
     render_path_folder = new Folder(render_path);
     var file_name = shot_name + "_CompOutput";
