@@ -1953,12 +1953,9 @@ class FrontController(QtCore.QObject):
 					workers.append(worker)
 
 		if workers:
-			pool.signals.finished.connect(createCompPreviewDone)
 			pool.run()
 			if wait == True:
-				print('Trying to wait') 
 				pool.wait()
-			print('\n >> Rendering! <<')
 
 	def createCompPreview(self, nodes, force):
 		from Preview.general import getPreview
@@ -2846,6 +2843,7 @@ class MainWindow(QtWidgets.QWidget):
 						create_menu.addSeparator()
 					if comp_style in ["AE"]:
 						create_menu.addAction("Render Comp Externally")
+						create_menu.addAction("Submit Comp Externally")
 					menu.addSeparator()
 					if node.getType() == "shot":
 						menu.addMenu(view_menu)
