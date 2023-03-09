@@ -234,3 +234,27 @@ function runInTB(){
 
     //"C:\Program Files\Thinkbox\Deadline10\bin\deadline.exe"
     }
+
+//How to get info back frmo process in javascript harmony
+function testQprocess()
+{
+   var p1 = new QProcess;
+   var bin = "/bin/ls";
+   var args = ["-la"];
+   p1.start(bin,args);
+   p1.waitForFinished();
+   var stdout = p1.readAllStandardOutput();
+   var stderr = p1.readAllStandardError();
+   var textStreamStdout = new QTextStream(stdout);
+   var textStreamStderr = new QTextStream(stderr);
+
+//If you need to do some string replacement
+//var response = textStreamStdout.readAll().replace(/\r?\n|\r/g, "");
+//var response = textStreamStdout.readAll().replace(/\r?\n|\r/g, "");
+
+   var resStdOut = textStreamStdout.readAll();
+   var resStdErr = textStreamStderr.readAll();
+   MessageLog.trace("STDOUT: \n" + resStdOut);
+   MessageLog.trace("STDERR: \n" + resStdErr);
+   MessageLog.trace("Done");
+}
