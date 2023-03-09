@@ -32,7 +32,6 @@ function Run(){
 			alert("Can't find '.RENDER' comp to render");
 			}
 
-
 	app.project.save() 
 	// SUBMIT TO DEADLINE
 	var deadlineBin = $.getenv( "DEADLINE_PATH" );
@@ -48,7 +47,8 @@ function Run(){
 	var start_frame = frameOffset + Math.round( displayStartTime / frameDuration ) + Math.round( app.project.renderQueue.item( 1 ).timeSpanStart / frameDuration );
 	var end_frame = start_frame + Math.round( app.project.renderQueue.item( 1 ).timeSpanDuration / frameDuration ) - 1;
 	var output_file = app.project.renderQueue.item(1).outputModule(1).file
-	var submit_file = create_submit_job_file(temp_folder, '.RENDER', start_frame, end_frame, output_file);
+	var jobname = app.project.file.fsName.split('\\')[app.project.file.fsName.split('\\').length-1].replace('.aep', '')
+	var submit_file = create_submit_job_file(temp_folder, jobname, start_frame, end_frame, output_file);
 	var plugin_file = create_plugin_job_file(temp_folder);
 	commandLine = deadline_exe + " \"" + submit_file + "\" \"" + plugin_file +  "\" \"" + app.project.file.fsName.replace('P:\\', '\\\\dumpap3\\production\\') + "\""
 	result = system.callSystem(commandLine)
