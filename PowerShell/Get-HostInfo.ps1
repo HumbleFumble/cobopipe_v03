@@ -1,7 +1,7 @@
 #-------------------------------------------------------------------------------------------------------------------------------------------
 function Get-HostInfo {
     param (
-        [Parameter(Mandatory=$true)][string]$ComputerName,
+        [Parameter(Mandatory=$true)][string[]]$ComputerName,
         [switch]$IPAddress,
         [switch]$CurrentUser,
         [switch]$WinRMStatus
