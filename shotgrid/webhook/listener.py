@@ -28,7 +28,8 @@ def index():
 @app.route("/webhook", methods=["POST"])
 def webhook():
     if request.method == "POST":
-        if validate_sg_secret_token(request):
+        signature = request.headers.get('X-Sg-Signature')
+        if validate_secret_token(request, signature):
             webhook_id = request.headers.get('X-Sg-webhook-id')
             data = request.json.get("data")
             timestamp = request.json.get("timestamp")
@@ -37,13 +38,23 @@ def webhook():
         else:
             return "Token validation failed."
 
+@app.route("/remote", methods=["POST"])
+def remote():
+    if request.method == "POST":
+        signature = request.headers.get('signature')
+        if validate_secret_token(request, signature):
+            print(request.json)
+            return "Webhook received and processed."
+        else:
+            return "Token validation failed."
+            
 
-def validate_sg_secret_token(request):
+
+def validate_secret_token(request, signature):
     # DO NOT TOUCH - PLEASE
     body = request.data
     secret_token = token.encode()
     generated_signature = "sha1=%s" % hmac.new(secret_token, body, hashlib.sha1).hexdigest()
-    signature = request.headers.get('X-Sg-Signature')
     if hmac.compare_digest(signature, generated_signature):
         return True
     return False
