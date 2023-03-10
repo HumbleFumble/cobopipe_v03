@@ -239,8 +239,38 @@ function runInTB(){
 function testQprocess()
 {
    var p1 = new QProcess;
-   var bin = "/bin/ls";
-   var args = ["-la"];
+	//new_env = new QProcess.systemEnvironment()
+	p1.setProcessEnvironment = {"PATH":["C:/Python39/"]};
+	MessageLog.trace("HEY?" + p1.processEnvironment())
+
+	//MessageLog.trace("env?" + p1.setEnvironment())
+   var bin = "C:/Program Files/Thinkbox/Deadline10/bin/deadlinecommand"
+   var args = [ "C:/Users/cg/AppData/Local/Thinkbox/Deadline10/temp/harmony_submit_info.job", "C:/Users/cg/AppData/Local/Thinkbox/Deadline10/temp/harmony_plugin_info.job"];
+	
+   p1.start(bin,args);
+   p1.waitForFinished();
+   var stdout = p1.readAllStandardOutput();
+   var stderr = p1.readAllStandardError();
+   var textStreamStdout = new QTextStream(stdout);
+   var textStreamStderr = new QTextStream(stderr);
+
+//If you need to do some string replacement
+//var response = textStreamStdout.readAll().replace(/\r?\n|\r/g, "");
+//var response = textStreamStdout.readAll().replace(/\r?\n|\r/g, "");
+
+   var resStdOut = textStreamStdout.readAll();
+   var resStdErr = textStreamStderr.readAll();
+   MessageLog.trace("STDOUT: \n" + resStdOut);
+   MessageLog.trace("STDERR: \n" + resStdErr);
+   MessageLog.trace("Done");
+
+}
+
+function pythonQprocess()
+{
+   var p1 = new QProcess;
+   var bin = "python"
+   var args = [ "-s", "C:/Temp/TB_Submit_Test/Harmony_test.py"];
    p1.start(bin,args);
    p1.waitForFinished();
    var stdout = p1.readAllStandardOutput();
