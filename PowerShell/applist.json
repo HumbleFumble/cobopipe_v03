@@ -1,550 +1,2510 @@
 [
   {
+    "DisplayName": "Python 3.9.1 Executables (64-bit)",
+    "DisplayVersion": "3.9.1150.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx29"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2020",
+    "DisplayVersion": "20.4.0.1627",
+    "Status": "Installed",
+    "PSComputerName": "wsx29"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2022",
+    "DisplayVersion": "22.4.0.1583",
+    "Status": "Installed",
+    "PSComputerName": "wsx29"
+  },
+  {
     "DisplayName": "Adobe After Effects",
+    "DisplayVersion": "",
+    "Status": "Missing",
     "PSComputerName": "wsx29"
   },
   {
     "DisplayName": "Adobe Media Encoder",
+    "DisplayVersion": "",
+    "Status": "Missing",
     "PSComputerName": "wsx29"
   },
   {
     "DisplayName": "Adobe Photoshop",
+    "DisplayVersion": "",
+    "Status": "Missing",
     "PSComputerName": "wsx29"
   },
   {
     "DisplayName": "Adobe Premiere Pro",
+    "DisplayVersion": "",
+    "Status": "Missing",
     "PSComputerName": "wsx29"
   },
   {
     "DisplayName": "Adobe Acrobat",
+    "DisplayVersion": "",
+    "Status": "Missing",
     "PSComputerName": "wsx29"
   },
   {
     "DisplayName": "VLC",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx29"
+  },
+  {
+    "DisplayName": "Deadline Client",
+    "DisplayVersion": "10.2.0.10",
+    "Status": "Installed",
     "PSComputerName": "wsx29"
   },
   {
     "DisplayName": "Chrome",
+    "DisplayVersion": "",
+    "Status": "Missing",
     "PSComputerName": "wsx29"
   },
   {
     "DisplayName": "Firefox",
+    "DisplayVersion": "",
+    "Status": "Missing",
     "PSComputerName": "wsx29"
   },
   {
     "DisplayName": "Fusion",
+    "DisplayVersion": "",
+    "Status": "Missing",
     "PSComputerName": "wsx29"
   },
   {
-    "DisplayName": "Adobe After Effects",
-    "PSComputerName": "wsx23"
-  },
-  {
-    "DisplayName": "Adobe Media Encoder",
-    "PSComputerName": "wsx23"
-  },
-  {
-    "DisplayName": "Adobe Photoshop",
-    "PSComputerName": "wsx23"
-  },
-  {
-    "DisplayName": "Adobe Premiere Pro",
-    "PSComputerName": "wsx23"
-  },
-  {
-    "DisplayName": "Adobe Acrobat",
-    "PSComputerName": "wsx23"
-  },
-  {
-    "DisplayName": "Chrome",
-    "PSComputerName": "wsx23"
-  },
-  {
-    "DisplayName": "Firefox",
-    "PSComputerName": "wsx23"
-  },
-  {
-    "DisplayName": "Adobe After Effects",
-    "PSComputerName": "wsx31"
-  },
-  {
-    "DisplayName": "Adobe Media Encoder",
-    "PSComputerName": "wsx31"
-  },
-  {
-    "DisplayName": "Adobe Photoshop",
-    "PSComputerName": "wsx31"
-  },
-  {
-    "DisplayName": "Adobe Premiere Pro",
-    "PSComputerName": "wsx31"
-  },
-  {
-    "DisplayName": "Adobe Acrobat",
-    "PSComputerName": "wsx31"
-  },
-  {
-    "DisplayName": "VLC",
-    "PSComputerName": "wsx31"
-  },
-  {
-    "DisplayName": "Chrome",
-    "PSComputerName": "wsx31"
-  },
-  {
-    "DisplayName": "Firefox",
-    "PSComputerName": "wsx31"
-  },
-  {
-    "DisplayName": "Fusion",
-    "PSComputerName": "wsx31"
-  },
-  {
-    "DisplayName": "Adobe After Effects",
-    "PSComputerName": "wsx27"
-  },
-  {
-    "DisplayName": "Adobe Media Encoder",
-    "PSComputerName": "wsx27"
-  },
-  {
-    "DisplayName": "Adobe Photoshop",
-    "PSComputerName": "wsx27"
-  },
-  {
-    "DisplayName": "Adobe Premiere Pro",
-    "PSComputerName": "wsx27"
-  },
-  {
-    "DisplayName": "Adobe Acrobat",
-    "PSComputerName": "wsx27"
-  },
-  {
-    "DisplayName": "VLC",
-    "PSComputerName": "wsx27"
-  },
-  {
-    "DisplayName": "Chrome",
-    "PSComputerName": "wsx27"
-  },
-  {
-    "DisplayName": "Adobe After Effects",
-    "PSComputerName": "wsx32"
-  },
-  {
-    "DisplayName": "Adobe Media Encoder",
-    "PSComputerName": "wsx32"
-  },
-  {
-    "DisplayName": "Adobe Photoshop",
-    "PSComputerName": "wsx32"
-  },
-  {
-    "DisplayName": "Adobe Premiere Pro",
-    "PSComputerName": "wsx32"
-  },
-  {
-    "DisplayName": "Fusion",
-    "PSComputerName": "wsx32"
-  },
-  {
-    "DisplayName": "Adobe After Effects",
-    "PSComputerName": "wsx26"
-  },
-  {
-    "DisplayName": "Adobe Media Encoder",
-    "PSComputerName": "wsx26"
-  },
-  {
-    "DisplayName": "Adobe Photoshop",
-    "PSComputerName": "wsx26"
-  },
-  {
-    "DisplayName": "Adobe Premiere Pro",
-    "PSComputerName": "wsx26"
-  },
-  {
-    "DisplayName": "Adobe Acrobat",
-    "PSComputerName": "wsx26"
-  },
-  {
-    "DisplayName": "VLC",
-    "PSComputerName": "wsx26"
-  },
-  {
-    "DisplayName": "Chrome",
-    "PSComputerName": "wsx26"
-  },
-  {
-    "DisplayName": "Firefox",
-    "PSComputerName": "wsx26"
-  },
-  {
-    "DisplayName": "Fusion",
-    "PSComputerName": "wsx26"
+    "DisplayName": "Toon Boom Harmony 22 Premium",
+    "DisplayVersion": "22.0.1.19025",
+    "Status": "Installed",
+    "PSComputerName": "wsx29"
   },
   {
     "DisplayName": "Python",
-    "PSComputerName": "wsx4"
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx14"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2020",
+    "DisplayVersion": "20.4.0.1627",
+    "Status": "Installed",
+    "PSComputerName": "wsx14"
   },
   {
     "DisplayName": "Adobe After Effects",
-    "PSComputerName": "wsx4"
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx14"
   },
   {
     "DisplayName": "Adobe Media Encoder",
-    "PSComputerName": "wsx4"
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx14"
   },
   {
     "DisplayName": "Adobe Photoshop",
-    "PSComputerName": "wsx4"
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx14"
   },
   {
     "DisplayName": "Adobe Premiere Pro",
-    "PSComputerName": "wsx4"
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx14"
   },
   {
     "DisplayName": "Adobe Acrobat",
-    "PSComputerName": "wsx4"
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx14"
+  },
+  {
+    "DisplayName": "VLC",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx14"
+  },
+  {
+    "DisplayName": "Deadline Client",
+    "DisplayVersion": "10.2.0.10",
+    "Status": "Installed",
+    "PSComputerName": "wsx14"
+  },
+  {
+    "DisplayName": "Chrome",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx14"
+  },
+  {
+    "DisplayName": "Mozilla Firefox (x64 en-US)",
+    "DisplayVersion": "103.0.1",
+    "Status": "Installed",
+    "PSComputerName": "wsx14"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion",
+    "DisplayVersion": "9.0.2",
+    "Status": "Installed",
+    "PSComputerName": "wsx14"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion",
+    "DisplayVersion": "17.3",
+    "Status": "Installed",
+    "PSComputerName": "wsx14"
+  },
+  {
+    "DisplayName": "Toon Boom",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx14"
+  },
+  {
+    "DisplayName": "Python 3.9.1 Executables (64-bit)",
+    "DisplayVersion": "3.9.1150.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx23"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2020",
+    "DisplayVersion": "20.4.0.1627",
+    "Status": "Installed",
+    "PSComputerName": "wsx23"
+  },
+  {
+    "DisplayName": "Adobe After Effects",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx23"
+  },
+  {
+    "DisplayName": "Adobe Media Encoder",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx23"
+  },
+  {
+    "DisplayName": "Adobe Photoshop",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx23"
+  },
+  {
+    "DisplayName": "Adobe Premiere Pro",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx23"
+  },
+  {
+    "DisplayName": "Adobe Acrobat",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx23"
+  },
+  {
+    "DisplayName": "VLC media player",
+    "DisplayVersion": "3.0.17.4",
+    "Status": "Installed",
+    "PSComputerName": "wsx23"
+  },
+  {
+    "DisplayName": "Deadline Client",
+    "DisplayVersion": "10.2.0.10",
+    "Status": "Installed",
+    "PSComputerName": "wsx23"
+  },
+  {
+    "DisplayName": "Chrome",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx23"
+  },
+  {
+    "DisplayName": "Firefox",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx23"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion Render Node",
+    "DisplayVersion": "16.2.4",
+    "Status": "Installed",
+    "PSComputerName": "wsx23"
+  },
+  {
+    "DisplayName": "Toon Boom Harmony 22 Premium",
+    "DisplayVersion": "22.0.1.19025",
+    "Status": "Installed",
+    "PSComputerName": "wsx23"
+  },
+  {
+    "DisplayName": "Python 3.9.1 Executables (64-bit)",
+    "DisplayVersion": "3.9.1150.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx31"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2020",
+    "DisplayVersion": "20.4.0.1627",
+    "Status": "Installed",
+    "PSComputerName": "wsx31"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2022",
+    "DisplayVersion": "22.4.0.1583",
+    "Status": "Installed",
+    "PSComputerName": "wsx31"
+  },
+  {
+    "DisplayName": "Adobe After Effects",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx31"
+  },
+  {
+    "DisplayName": "Adobe Media Encoder",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx31"
+  },
+  {
+    "DisplayName": "Adobe Photoshop",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx31"
+  },
+  {
+    "DisplayName": "Adobe Premiere Pro",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx31"
+  },
+  {
+    "DisplayName": "Adobe Acrobat",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx31"
+  },
+  {
+    "DisplayName": "VLC",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx31"
+  },
+  {
+    "DisplayName": "Deadline Client",
+    "DisplayVersion": "10.2.0.10",
+    "Status": "Installed",
+    "PSComputerName": "wsx31"
+  },
+  {
+    "DisplayName": "Chrome",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx31"
+  },
+  {
+    "DisplayName": "Firefox",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx31"
+  },
+  {
+    "DisplayName": "Fusion",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx31"
+  },
+  {
+    "DisplayName": "Toon Boom Harmony 22 Premium",
+    "DisplayVersion": "22.0.1.19025",
+    "Status": "Installed",
+    "PSComputerName": "wsx31"
+  },
+  {
+    "DisplayName": "Python 3.9.1 Executables (64-bit)",
+    "DisplayVersion": "3.9.1150.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx28"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2020",
+    "DisplayVersion": "20.4.0.1627",
+    "Status": "Installed",
+    "PSComputerName": "wsx28"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2022",
+    "DisplayVersion": "22.4.0.1583",
+    "Status": "Installed",
+    "PSComputerName": "wsx28"
+  },
+  {
+    "DisplayName": "Adobe After Effects",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx28"
+  },
+  {
+    "DisplayName": "Adobe Media Encoder",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx28"
+  },
+  {
+    "DisplayName": "Adobe Photoshop",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx28"
+  },
+  {
+    "DisplayName": "Adobe Premiere Pro",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx28"
+  },
+  {
+    "DisplayName": "Adobe Acrobat",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx28"
+  },
+  {
+    "DisplayName": "VLC",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx28"
+  },
+  {
+    "DisplayName": "Deadline Client",
+    "DisplayVersion": "10.2.0.10",
+    "Status": "Installed",
+    "PSComputerName": "wsx28"
+  },
+  {
+    "DisplayName": "Chrome",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx28"
+  },
+  {
+    "DisplayName": "Firefox",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx28"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion Render Node",
+    "DisplayVersion": "16.2.4",
+    "Status": "Installed",
+    "PSComputerName": "wsx28"
+  },
+  {
+    "DisplayName": "Toon Boom Harmony 22 Premium",
+    "DisplayVersion": "22.0.1.19025",
+    "Status": "Installed",
+    "PSComputerName": "wsx28"
+  },
+  {
+    "DisplayName": "Python 3.9.1 Executables (64-bit)",
+    "DisplayVersion": "3.9.1150.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx22"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2020",
+    "DisplayVersion": "20.4.0.1627",
+    "Status": "Installed",
+    "PSComputerName": "wsx22"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2022",
+    "DisplayVersion": "22.4.0.1583",
+    "Status": "Installed",
+    "PSComputerName": "wsx22"
+  },
+  {
+    "DisplayName": "Adobe After Effects",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx22"
+  },
+  {
+    "DisplayName": "Adobe Media Encoder",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx22"
+  },
+  {
+    "DisplayName": "Adobe Photoshop",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx22"
+  },
+  {
+    "DisplayName": "Adobe Premiere Pro",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx22"
+  },
+  {
+    "DisplayName": "Adobe Acrobat",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx22"
+  },
+  {
+    "DisplayName": "VLC media player",
+    "DisplayVersion": "3.0.16",
+    "Status": "Installed",
+    "PSComputerName": "wsx22"
+  },
+  {
+    "DisplayName": "Deadline Client",
+    "DisplayVersion": "10.2.0.10",
+    "Status": "Installed",
+    "PSComputerName": "wsx22"
+  },
+  {
+    "DisplayName": "Chrome",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx22"
+  },
+  {
+    "DisplayName": "Firefox",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx22"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion Render Node",
+    "DisplayVersion": "17.3",
+    "Status": "Installed",
+    "PSComputerName": "wsx22"
+  },
+  {
+    "DisplayName": "Toon Boom Harmony 22 Premium",
+    "DisplayVersion": "22.0.1.19025",
+    "Status": "Installed",
+    "PSComputerName": "wsx22"
+  },
+  {
+    "DisplayName": "Python 3.9.1 Executables (64-bit)",
+    "DisplayVersion": "3.9.1150.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx32"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2020",
+    "DisplayVersion": "20.4.0.1627",
+    "Status": "Installed",
+    "PSComputerName": "wsx32"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2022",
+    "DisplayVersion": "22.4.0.1583",
+    "Status": "Installed",
+    "PSComputerName": "wsx32"
+  },
+  {
+    "DisplayName": "Adobe After Effects",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx32"
+  },
+  {
+    "DisplayName": "Adobe Media Encoder",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx32"
+  },
+  {
+    "DisplayName": "Adobe Photoshop",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx32"
+  },
+  {
+    "DisplayName": "Adobe Premiere Pro",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx32"
+  },
+  {
+    "DisplayName": "Adobe Acrobat (64-bit)",
+    "DisplayVersion": "23.001.20064",
+    "Status": "Installed",
+    "PSComputerName": "wsx32"
+  },
+  {
+    "DisplayName": "VLC media player 3.0.17 (64-bit)",
+    "DisplayVersion": "3.0.17.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx32"
+  },
+  {
+    "DisplayName": "Deadline Client",
+    "DisplayVersion": "10.2.0.10",
+    "Status": "Installed",
+    "PSComputerName": "wsx32"
+  },
+  {
+    "DisplayName": "Google Chrome",
+    "DisplayVersion": "110.0.5481.180",
+    "Status": "Installed",
+    "PSComputerName": "wsx32"
+  },
+  {
+    "DisplayName": "Mozilla Firefox (x64 en-US)",
+    "DisplayVersion": "105.0.3",
+    "Status": "Installed",
+    "PSComputerName": "wsx32"
+  },
+  {
+    "DisplayName": "Fusion",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx32"
+  },
+  {
+    "DisplayName": "Toon Boom Harmony 22 Premium",
+    "DisplayVersion": "22.0.1.19025",
+    "Status": "Installed",
+    "PSComputerName": "wsx32"
+  },
+  {
+    "DisplayName": "Python 3.9.1 Executables (64-bit)",
+    "DisplayVersion": "3.9.1150.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx25"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2020",
+    "DisplayVersion": "20.4.0.1627",
+    "Status": "Installed",
+    "PSComputerName": "wsx25"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2022",
+    "DisplayVersion": "22.4.0.1583",
+    "Status": "Installed",
+    "PSComputerName": "wsx25"
+  },
+  {
+    "DisplayName": "Adobe After Effects",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx25"
+  },
+  {
+    "DisplayName": "Adobe Media Encoder",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx25"
+  },
+  {
+    "DisplayName": "Adobe Photoshop",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx25"
+  },
+  {
+    "DisplayName": "Adobe Premiere Pro",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx25"
+  },
+  {
+    "DisplayName": "Adobe Acrobat",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx25"
+  },
+  {
+    "DisplayName": "VLC",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx25"
+  },
+  {
+    "DisplayName": "Deadline Client",
+    "DisplayVersion": "10.2.0.10",
+    "Status": "Installed",
+    "PSComputerName": "wsx25"
+  },
+  {
+    "DisplayName": "Chrome",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx25"
+  },
+  {
+    "DisplayName": "Firefox",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx25"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion Render Node",
+    "DisplayVersion": "16.2.4",
+    "Status": "Installed",
+    "PSComputerName": "wsx25"
+  },
+  {
+    "DisplayName": "Toon Boom Harmony 22 Premium",
+    "DisplayVersion": "22.0.1.19025",
+    "Status": "Installed",
+    "PSComputerName": "wsx25"
+  },
+  {
+    "DisplayName": "Python 3.9.1 Executables (64-bit)",
+    "DisplayVersion": "3.9.1150.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx26"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2020",
+    "DisplayVersion": "20.4.0.1627",
+    "Status": "Installed",
+    "PSComputerName": "wsx26"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2022",
+    "DisplayVersion": "22.4.0.1583",
+    "Status": "Installed",
+    "PSComputerName": "wsx26"
+  },
+  {
+    "DisplayName": "Adobe After Effects",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx26"
+  },
+  {
+    "DisplayName": "Adobe Media Encoder",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx26"
+  },
+  {
+    "DisplayName": "Adobe Photoshop",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx26"
+  },
+  {
+    "DisplayName": "Adobe Premiere Pro",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx26"
+  },
+  {
+    "DisplayName": "Adobe Acrobat",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx26"
+  },
+  {
+    "DisplayName": "VLC",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx26"
+  },
+  {
+    "DisplayName": "Deadline Client",
+    "DisplayVersion": "10.2.0.10",
+    "Status": "Installed",
+    "PSComputerName": "wsx26"
+  },
+  {
+    "DisplayName": "Chrome",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx26"
+  },
+  {
+    "DisplayName": "Firefox",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx26"
+  },
+  {
+    "DisplayName": "Fusion",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx26"
+  },
+  {
+    "DisplayName": "Toon Boom Harmony 22 Premium",
+    "DisplayVersion": "22.0.1.19025",
+    "Status": "Installed",
+    "PSComputerName": "wsx26"
+  },
+  {
+    "DisplayName": "Python 3.9.1 Executables (64-bit)",
+    "DisplayVersion": "3.9.1150.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx33"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2020",
+    "DisplayVersion": "20.4.0.1627",
+    "Status": "Installed",
+    "PSComputerName": "wsx33"
+  },
+  {
+    "DisplayName": "Adobe After Effects",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx33"
+  },
+  {
+    "DisplayName": "Adobe Media Encoder",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx33"
+  },
+  {
+    "DisplayName": "Adobe Photoshop",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx33"
+  },
+  {
+    "DisplayName": "Adobe Premiere Pro",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx33"
+  },
+  {
+    "DisplayName": "Adobe Acrobat",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx33"
+  },
+  {
+    "DisplayName": "VLC media player",
+    "DisplayVersion": "3.0.17.4",
+    "Status": "Installed",
+    "PSComputerName": "wsx33"
+  },
+  {
+    "DisplayName": "Deadline Client",
+    "DisplayVersion": "10.2.0.10",
+    "Status": "Installed",
+    "PSComputerName": "wsx33"
+  },
+  {
+    "DisplayName": "Chrome",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx33"
+  },
+  {
+    "DisplayName": "Mozilla Firefox (x64 en-GB)",
+    "DisplayVersion": "102.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx33"
+  },
+  {
+    "DisplayName": "Fusion",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx33"
+  },
+  {
+    "DisplayName": "Toon Boom Harmony 22 Premium",
+    "DisplayVersion": "22.0.0.18846",
+    "Status": "Installed",
+    "PSComputerName": "wsx33"
+  },
+  {
+    "DisplayName": "Python 3.9.1 Executables (64-bit)",
+    "DisplayVersion": "3.9.1150.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx11"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2020",
+    "DisplayVersion": "20.4.0.1627",
+    "Status": "Installed",
+    "PSComputerName": "wsx11"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2022",
+    "DisplayVersion": "22.4.0.1583",
+    "Status": "Installed",
+    "PSComputerName": "wsx11"
+  },
+  {
+    "DisplayName": "Adobe After Effects",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx11"
+  },
+  {
+    "DisplayName": "Adobe Media Encoder",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx11"
+  },
+  {
+    "DisplayName": "Adobe Photoshop",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx11"
+  },
+  {
+    "DisplayName": "Adobe Premiere Pro",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx11"
+  },
+  {
+    "DisplayName": "Adobe Acrobat",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx11"
+  },
+  {
+    "DisplayName": "VLC",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx11"
+  },
+  {
+    "DisplayName": "Deadline Client",
+    "DisplayVersion": "10.2.0.10",
+    "Status": "Installed",
+    "PSComputerName": "wsx11"
+  },
+  {
+    "DisplayName": "Chrome",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx11"
+  },
+  {
+    "DisplayName": "Firefox",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx11"
+  },
+  {
+    "DisplayName": "Fusion",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx11"
+  },
+  {
+    "DisplayName": "Toon Boom Harmony 22 Premium",
+    "DisplayVersion": "22.0.1.19025",
+    "Status": "Installed",
+    "PSComputerName": "wsx11"
+  },
+  {
+    "DisplayName": "Python 3.9.1 Executables (64-bit)",
+    "DisplayVersion": "3.9.1150.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx19"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2022",
+    "DisplayVersion": "22.4.0.1583",
+    "Status": "Installed",
+    "PSComputerName": "wsx19"
+  },
+  {
+    "DisplayName": "Adobe After Effects",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx19"
+  },
+  {
+    "DisplayName": "Adobe Media Encoder",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx19"
+  },
+  {
+    "DisplayName": "Adobe Photoshop",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx19"
+  },
+  {
+    "DisplayName": "Adobe Premiere Pro",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx19"
+  },
+  {
+    "DisplayName": "Adobe Acrobat",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx19"
+  },
+  {
+    "DisplayName": "VLC",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx19"
+  },
+  {
+    "DisplayName": "Deadline Client",
+    "DisplayVersion": "10.2.0.10",
+    "Status": "Installed",
+    "PSComputerName": "wsx19"
+  },
+  {
+    "DisplayName": "Chrome",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx19"
+  },
+  {
+    "DisplayName": "Mozilla Firefox (x64 da)",
+    "DisplayVersion": "110.0.1",
+    "Status": "Installed",
+    "PSComputerName": "wsx19"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion",
+    "DisplayVersion": "9.0.2",
+    "Status": "Installed",
+    "PSComputerName": "wsx19"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion",
+    "DisplayVersion": "17.3",
+    "Status": "Installed",
+    "PSComputerName": "wsx19"
+  },
+  {
+    "DisplayName": "Toon Boom Harmony 22 Premium",
+    "DisplayVersion": "22.0.1.19025",
+    "Status": "Installed",
+    "PSComputerName": "wsx19"
+  },
+  {
+    "DisplayName": "Python",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx15"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2020",
+    "DisplayVersion": "20.4.0.1627",
+    "Status": "Installed",
+    "PSComputerName": "wsx15"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2022",
+    "DisplayVersion": "22.4.0.1583",
+    "Status": "Installed",
+    "PSComputerName": "wsx15"
+  },
+  {
+    "DisplayName": "Adobe After Effects",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx15"
+  },
+  {
+    "DisplayName": "Adobe Media Encoder",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx15"
+  },
+  {
+    "DisplayName": "Adobe Photoshop",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx15"
+  },
+  {
+    "DisplayName": "Adobe Premiere Pro",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx15"
+  },
+  {
+    "DisplayName": "Adobe Acrobat",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx15"
+  },
+  {
+    "DisplayName": "VLC media player",
+    "DisplayVersion": "3.0.17.4",
+    "Status": "Installed",
+    "PSComputerName": "wsx15"
+  },
+  {
+    "DisplayName": "Deadline Client",
+    "DisplayVersion": "10.2.0.10",
+    "Status": "Installed",
+    "PSComputerName": "wsx15"
+  },
+  {
+    "DisplayName": "Chrome",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx15"
+  },
+  {
+    "DisplayName": "Mozilla Firefox (x64 en-US)",
+    "DisplayVersion": "110.0.1",
+    "Status": "Installed",
+    "PSComputerName": "wsx15"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion",
+    "DisplayVersion": "17.4.3",
+    "Status": "Installed",
+    "PSComputerName": "wsx15"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion Render Node",
+    "DisplayVersion": "17.4.3",
+    "Status": "Installed",
+    "PSComputerName": "wsx15"
+  },
+  {
+    "DisplayName": "Toon Boom Harmony 22 Premium",
+    "DisplayVersion": "22.0.1.19025",
+    "Status": "Installed",
+    "PSComputerName": "wsx15"
+  },
+  {
+    "DisplayName": "Python 3.9.1 Executables (64-bit)",
+    "DisplayVersion": "3.9.1150.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx24"
+  },
+  {
+    "DisplayName": "Python 3.7.0 Executables (64-bit)",
+    "DisplayVersion": "3.7.150.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx24"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2020",
+    "DisplayVersion": "20.0.0.235",
+    "Status": "Installed",
+    "PSComputerName": "wsx24"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2022",
+    "DisplayVersion": "22.4.0.1583",
+    "Status": "Installed",
+    "PSComputerName": "wsx24"
+  },
+  {
+    "DisplayName": "Adobe After Effects",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx24"
+  },
+  {
+    "DisplayName": "Adobe Media Encoder",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx24"
+  },
+  {
+    "DisplayName": "Adobe Photoshop",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx24"
+  },
+  {
+    "DisplayName": "Adobe Premiere Pro",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx24"
+  },
+  {
+    "DisplayName": "Adobe Acrobat (64-bit)",
+    "DisplayVersion": "22.003.20322",
+    "Status": "Installed",
+    "PSComputerName": "wsx24"
+  },
+  {
+    "DisplayName": "VLC",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx24"
+  },
+  {
+    "DisplayName": "Deadline Client",
+    "DisplayVersion": "10.2.0.10",
+    "Status": "Installed",
+    "PSComputerName": "wsx24"
+  },
+  {
+    "DisplayName": "Chrome",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx24"
+  },
+  {
+    "DisplayName": "Firefox",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx24"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion",
+    "DisplayVersion": "17.4.3",
+    "Status": "Installed",
+    "PSComputerName": "wsx24"
+  },
+  {
+    "DisplayName": "Toon Boom Harmony 22 Premium",
+    "DisplayVersion": "22.0.1.19025",
+    "Status": "Installed",
+    "PSComputerName": "wsx24"
+  },
+  {
+    "DisplayName": "Python 3.9.1 Executables (64-bit)",
+    "DisplayVersion": "3.9.1150.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx13"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2020",
+    "DisplayVersion": "20.4.0.1627",
+    "Status": "Installed",
+    "PSComputerName": "wsx13"
+  },
+  {
+    "DisplayName": "Adobe After Effects",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx13"
+  },
+  {
+    "DisplayName": "Adobe Media Encoder",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx13"
+  },
+  {
+    "DisplayName": "Adobe Photoshop",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx13"
+  },
+  {
+    "DisplayName": "Adobe Premiere Pro",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx13"
+  },
+  {
+    "DisplayName": "Adobe Acrobat",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx13"
+  },
+  {
+    "DisplayName": "VLC media player",
+    "DisplayVersion": "3.0.11",
+    "Status": "Installed",
+    "PSComputerName": "wsx13"
+  },
+  {
+    "DisplayName": "Deadline Client",
+    "DisplayVersion": "10.2.0.10",
+    "Status": "Installed",
+    "PSComputerName": "wsx13"
+  },
+  {
+    "DisplayName": "Chrome",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx13"
+  },
+  {
+    "DisplayName": "Firefox",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx13"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion",
+    "DisplayVersion": "9.0.2",
+    "Status": "Installed",
+    "PSComputerName": "wsx13"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion Render Node",
+    "DisplayVersion": "16.2.4",
+    "Status": "Installed",
+    "PSComputerName": "wsx13"
+  },
+  {
+    "DisplayName": "Toon Boom Harmony 22 Premium",
+    "DisplayVersion": "22.0.1.19025",
+    "Status": "Installed",
+    "PSComputerName": "wsx13"
+  },
+  {
+    "DisplayName": "Python 3.9.1 Executables (64-bit)",
+    "DisplayVersion": "3.9.1150.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx9"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2020",
+    "DisplayVersion": "20.4.0.1627",
+    "Status": "Installed",
+    "PSComputerName": "wsx9"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2022",
+    "DisplayVersion": "22.4.0.1583",
+    "Status": "Installed",
+    "PSComputerName": "wsx9"
+  },
+  {
+    "DisplayName": "Adobe After Effects",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx9"
+  },
+  {
+    "DisplayName": "Adobe Media Encoder",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx9"
+  },
+  {
+    "DisplayName": "Adobe Photoshop",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx9"
+  },
+  {
+    "DisplayName": "Adobe Premiere Pro",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx9"
+  },
+  {
+    "DisplayName": "Adobe Acrobat",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx9"
+  },
+  {
+    "DisplayName": "VLC",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx9"
+  },
+  {
+    "DisplayName": "Deadline Client",
+    "DisplayVersion": "10.2.0.10",
+    "Status": "Installed",
+    "PSComputerName": "wsx9"
+  },
+  {
+    "DisplayName": "Chrome",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx9"
+  },
+  {
+    "DisplayName": "Mozilla Firefox (x64 en-US)",
+    "DisplayVersion": "104.0.1",
+    "Status": "Installed",
+    "PSComputerName": "wsx9"
+  },
+  {
+    "DisplayName": "Fusion",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx9"
+  },
+  {
+    "DisplayName": "Toon Boom Harmony 22 Premium",
+    "DisplayVersion": "22.0.1.19025",
+    "Status": "Installed",
+    "PSComputerName": "wsx9"
+  },
+  {
+    "DisplayName": "Python 3.9.1 Executables (64-bit)",
+    "DisplayVersion": "3.9.1150.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx7"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2019",
+    "DisplayVersion": "19.2.0.8774",
+    "Status": "Installed",
+    "PSComputerName": "wsx7"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2020",
+    "DisplayVersion": "20.4.0.1627",
+    "Status": "Installed",
+    "PSComputerName": "wsx7"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2019",
+    "DisplayVersion": "19.2.0.8774",
+    "Status": "Installed",
+    "PSComputerName": "wsx7"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2022",
+    "DisplayVersion": "22.4.0.1583",
+    "Status": "Installed",
+    "PSComputerName": "wsx7"
+  },
+  {
+    "DisplayName": "Adobe After Effects",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx7"
+  },
+  {
+    "DisplayName": "Adobe Media Encoder",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx7"
+  },
+  {
+    "DisplayName": "Adobe Photoshop",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx7"
+  },
+  {
+    "DisplayName": "Adobe Premiere Pro",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx7"
+  },
+  {
+    "DisplayName": "Adobe Acrobat",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx7"
+  },
+  {
+    "DisplayName": "VLC",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx7"
+  },
+  {
+    "DisplayName": "Deadline Client",
+    "DisplayVersion": "10.2.0.10",
+    "Status": "Installed",
+    "PSComputerName": "wsx7"
+  },
+  {
+    "DisplayName": "Chrome",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx7"
+  },
+  {
+    "DisplayName": "Mozilla Firefox (x64 fr)",
+    "DisplayVersion": "94.0.2",
+    "Status": "Installed",
+    "PSComputerName": "wsx7"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion",
+    "DisplayVersion": "9.0.2",
+    "Status": "Installed",
+    "PSComputerName": "wsx7"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion Render Node",
+    "DisplayVersion": "16.2.4",
+    "Status": "Installed",
+    "PSComputerName": "wsx7"
+  },
+  {
+    "DisplayName": "Python 3.9.1 Executables (64-bit)",
+    "DisplayVersion": "3.9.1150.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx21"
+  },
+  {
+    "DisplayName": "Toon Boom Harmony 22 Premium",
+    "DisplayVersion": "22.0.1.19025",
+    "Status": "Installed",
+    "PSComputerName": "wsx7"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2020",
+    "DisplayVersion": "20.4.0.1627",
+    "Status": "Installed",
+    "PSComputerName": "wsx21"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2022",
+    "DisplayVersion": "22.4.0.1583",
+    "Status": "Installed",
+    "PSComputerName": "wsx21"
+  },
+  {
+    "DisplayName": "Adobe After Effects",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx21"
+  },
+  {
+    "DisplayName": "Adobe Media Encoder",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx21"
+  },
+  {
+    "DisplayName": "Adobe Photoshop",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx21"
+  },
+  {
+    "DisplayName": "Adobe Premiere Pro",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx21"
+  },
+  {
+    "DisplayName": "Adobe Acrobat",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx21"
+  },
+  {
+    "DisplayName": "VLC media player",
+    "DisplayVersion": "3.0.12",
+    "Status": "Installed",
+    "PSComputerName": "wsx21"
+  },
+  {
+    "DisplayName": "Deadline Client",
+    "DisplayVersion": "10.2.0.10",
+    "Status": "Installed",
+    "PSComputerName": "wsx21"
+  },
+  {
+    "DisplayName": "Chrome",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx21"
+  },
+  {
+    "DisplayName": "Mozilla Firefox (x64 en-US)",
+    "DisplayVersion": "109.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx21"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion Render Node",
+    "DisplayVersion": "16.2.4",
+    "Status": "Installed",
+    "PSComputerName": "wsx21"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion",
+    "DisplayVersion": "17.3",
+    "Status": "Installed",
+    "PSComputerName": "wsx21"
+  },
+  {
+    "DisplayName": "Toon Boom Harmony 22 Premium",
+    "DisplayVersion": "22.0.1.19025",
+    "Status": "Installed",
+    "PSComputerName": "wsx21"
+  },
+  {
+    "DisplayName": "Python 3.9.1 Executables (64-bit)",
+    "DisplayVersion": "3.9.1150.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx10"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2020",
+    "DisplayVersion": "20.4.0.1627",
+    "Status": "Installed",
+    "PSComputerName": "wsx10"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2022",
+    "DisplayVersion": "22.4.0.1583",
+    "Status": "Installed",
+    "PSComputerName": "wsx10"
+  },
+  {
+    "DisplayName": "Adobe After Effects",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx10"
+  },
+  {
+    "DisplayName": "Adobe Media Encoder",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx10"
+  },
+  {
+    "DisplayName": "Adobe Photoshop",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx10"
+  },
+  {
+    "DisplayName": "Adobe Premiere Pro",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx10"
+  },
+  {
+    "DisplayName": "Adobe Acrobat DC (64-bit)",
+    "DisplayVersion": "22.002.20212",
+    "Status": "Installed",
+    "PSComputerName": "wsx10"
+  },
+  {
+    "DisplayName": "VLC media player 3.0.17 (64-bit)",
+    "DisplayVersion": "3.0.17.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx10"
+  },
+  {
+    "DisplayName": "Deadline Client",
+    "DisplayVersion": "10.2.0.10",
+    "Status": "Installed",
+    "PSComputerName": "wsx10"
+  },
+  {
+    "DisplayName": "Google Chrome",
+    "DisplayVersion": "110.0.5481.180",
+    "Status": "Installed",
+    "PSComputerName": "wsx10"
+  },
+  {
+    "DisplayName": "Mozilla Firefox (x64 en-US)",
+    "DisplayVersion": "109.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx10"
+  },
+  {
+    "DisplayName": "Fusion",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx10"
+  },
+  {
+    "DisplayName": "Toon Boom Harmony 22 Premium",
+    "DisplayVersion": "22.0.1.19025",
+    "Status": "Installed",
+    "PSComputerName": "wsx10"
+  },
+  {
+    "DisplayName": "Python 3.9.1 Executables (64-bit)",
+    "DisplayVersion": "3.9.1150.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx2"
+  },
+  {
+    "DisplayName": "Python 3.7.0 Executables (64-bit)",
+    "DisplayVersion": "3.7.150.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx2"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2020",
+    "DisplayVersion": "20.4.0.1627",
+    "Status": "Installed",
+    "PSComputerName": "wsx2"
+  },
+  {
+    "DisplayName": "Adobe After Effects",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx2"
+  },
+  {
+    "DisplayName": "Adobe Media Encoder",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx2"
+  },
+  {
+    "DisplayName": "Adobe Photoshop",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx2"
+  },
+  {
+    "DisplayName": "Adobe Premiere Pro",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx2"
+  },
+  {
+    "DisplayName": "Adobe Acrobat",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx2"
+  },
+  {
+    "DisplayName": "VLC",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx2"
+  },
+  {
+    "DisplayName": "Deadline Client",
+    "DisplayVersion": "10.2.0.10",
+    "Status": "Installed",
+    "PSComputerName": "wsx2"
+  },
+  {
+    "DisplayName": "Chrome",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx2"
+  },
+  {
+    "DisplayName": "Firefox",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx2"
+  },
+  {
+    "DisplayName": "Fusion",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx2"
+  },
+  {
+    "DisplayName": "Toon Boom Harmony 22 Premium",
+    "DisplayVersion": "22.0.1.19025",
+    "Status": "Installed",
+    "PSComputerName": "wsx2"
+  },
+  {
+    "DisplayName": "Python",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx17"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2020",
+    "DisplayVersion": "20.2.0.881",
+    "Status": "Installed",
+    "PSComputerName": "wsx17"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2022",
+    "DisplayVersion": "22.4.0.1583",
+    "Status": "Installed",
+    "PSComputerName": "wsx17"
+  },
+  {
+    "DisplayName": "Adobe After Effects",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx17"
+  },
+  {
+    "DisplayName": "Adobe Media Encoder",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx17"
+  },
+  {
+    "DisplayName": "Adobe Photoshop",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx17"
+  },
+  {
+    "DisplayName": "Adobe Premiere Pro",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx17"
+  },
+  {
+    "DisplayName": "Adobe Acrobat (64-bit)",
+    "DisplayVersion": "22.003.20322",
+    "Status": "Installed",
+    "PSComputerName": "wsx17"
+  },
+  {
+    "DisplayName": "VLC media player",
+    "DisplayVersion": "3.0.8",
+    "Status": "Installed",
+    "PSComputerName": "wsx17"
+  },
+  {
+    "DisplayName": "Deadline Client",
+    "DisplayVersion": "10.2.0.10",
+    "Status": "Installed",
+    "PSComputerName": "wsx17"
+  },
+  {
+    "DisplayName": "Chrome",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx17"
+  },
+  {
+    "DisplayName": "Mozilla Firefox 79.0 (x64 en-GB)",
+    "DisplayVersion": "79.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx17"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion",
+    "DisplayVersion": "9.0.2",
+    "Status": "Installed",
+    "PSComputerName": "wsx17"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion Render Node",
+    "DisplayVersion": "16.2.4",
+    "Status": "Installed",
+    "PSComputerName": "wsx17"
+  },
+  {
+    "DisplayName": "Toon Boom",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx17"
+  },
+  {
+    "DisplayName": "Python 3.9.1 Executables (64-bit)",
+    "DisplayVersion": "3.9.1150.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx18"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2019",
+    "DisplayVersion": "19.2.0.8774",
+    "Status": "Installed",
+    "PSComputerName": "wsx18"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2020",
+    "DisplayVersion": "20.4.0.1627",
+    "Status": "Installed",
+    "PSComputerName": "wsx18"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2019",
+    "DisplayVersion": "19.2.0.8774",
+    "Status": "Installed",
+    "PSComputerName": "wsx18"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2022",
+    "DisplayVersion": "22.4.0.1583",
+    "Status": "Installed",
+    "PSComputerName": "wsx18"
+  },
+  {
+    "DisplayName": "Adobe After Effects",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx18"
+  },
+  {
+    "DisplayName": "Adobe Media Encoder",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx18"
+  },
+  {
+    "DisplayName": "Adobe Photoshop",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx18"
+  },
+  {
+    "DisplayName": "Adobe Premiere Pro",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx18"
+  },
+  {
+    "DisplayName": "Adobe Acrobat",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx18"
+  },
+  {
+    "DisplayName": "VLC media player",
+    "DisplayVersion": "3.0.11",
+    "Status": "Installed",
+    "PSComputerName": "wsx18"
+  },
+  {
+    "DisplayName": "Deadline Client",
+    "DisplayVersion": "10.2.0.10",
+    "Status": "Installed",
+    "PSComputerName": "wsx18"
+  },
+  {
+    "DisplayName": "Chrome",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx18"
+  },
+  {
+    "DisplayName": "Mozilla Firefox 88.0 (x64 en-GB)",
+    "DisplayVersion": "88.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx18"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion",
+    "DisplayVersion": "9.0.2",
+    "Status": "Installed",
+    "PSComputerName": "wsx18"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion Render Node",
+    "DisplayVersion": "16.2.4",
+    "Status": "Installed",
+    "PSComputerName": "wsx18"
+  },
+  {
+    "DisplayName": "Toon Boom Harmony 22 Premium",
+    "DisplayVersion": "22.0.1.19025",
+    "Status": "Installed",
+    "PSComputerName": "wsx18"
+  },
+  {
+    "DisplayName": "Python 3.9.1 Executables (64-bit)",
+    "DisplayVersion": "3.9.1150.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx20"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2020",
+    "DisplayVersion": "20.4.0.1627",
+    "Status": "Installed",
+    "PSComputerName": "wsx20"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2022",
+    "DisplayVersion": "22.4.0.1583",
+    "Status": "Installed",
+    "PSComputerName": "wsx20"
+  },
+  {
+    "DisplayName": "Adobe After Effects",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx20"
+  },
+  {
+    "DisplayName": "Adobe Media Encoder",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx20"
+  },
+  {
+    "DisplayName": "Adobe Photoshop",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx20"
+  },
+  {
+    "DisplayName": "Adobe Premiere Pro",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx20"
+  },
+  {
+    "DisplayName": "Adobe Acrobat",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx20"
+  },
+  {
+    "DisplayName": "VLC media player",
+    "DisplayVersion": "3.0.16",
+    "Status": "Installed",
+    "PSComputerName": "wsx20"
+  },
+  {
+    "DisplayName": "Deadline Client",
+    "DisplayVersion": "10.2.0.10",
+    "Status": "Installed",
+    "PSComputerName": "wsx20"
+  },
+  {
+    "DisplayName": "Chrome",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx20"
+  },
+  {
+    "DisplayName": "Mozilla Firefox (x64 da)",
+    "DisplayVersion": "110.0.1",
+    "Status": "Installed",
+    "PSComputerName": "wsx20"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion",
+    "DisplayVersion": "9.0.2",
+    "Status": "Installed",
+    "PSComputerName": "wsx20"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion",
+    "DisplayVersion": "17.4.3",
+    "Status": "Installed",
+    "PSComputerName": "wsx20"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion",
+    "DisplayVersion": "16.2.4",
+    "Status": "Installed",
+    "PSComputerName": "wsx20"
+  },
+  {
+    "DisplayName": "Toon Boom Harmony 22 Premium",
+    "DisplayVersion": "22.0.1.19025",
+    "Status": "Installed",
+    "PSComputerName": "wsx20"
+  },
+  {
+    "DisplayName": "Python 3.9.1 Executables (64-bit)",
+    "DisplayVersion": "3.9.1150.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx6"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2020",
+    "DisplayVersion": "20.4.0.1627",
+    "Status": "Installed",
+    "PSComputerName": "wsx6"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2022",
+    "DisplayVersion": "22.4.0.1583",
+    "Status": "Installed",
+    "PSComputerName": "wsx6"
+  },
+  {
+    "DisplayName": "Adobe After Effects",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx6"
+  },
+  {
+    "DisplayName": "Adobe Media Encoder",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx6"
+  },
+  {
+    "DisplayName": "Adobe Photoshop",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx6"
+  },
+  {
+    "DisplayName": "Adobe Premiere Pro",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx6"
+  },
+  {
+    "DisplayName": "Adobe Acrobat (64-bit)",
+    "DisplayVersion": "22.003.20322",
+    "Status": "Installed",
+    "PSComputerName": "wsx6"
+  },
+  {
+    "DisplayName": "VLC media player",
+    "DisplayVersion": "3.0.12",
+    "Status": "Installed",
+    "PSComputerName": "wsx6"
+  },
+  {
+    "DisplayName": "Deadline Client",
+    "DisplayVersion": "10.2.0.10",
+    "Status": "Installed",
+    "PSComputerName": "wsx6"
+  },
+  {
+    "DisplayName": "Chrome",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx6"
+  },
+  {
+    "DisplayName": "Mozilla Firefox (x64 en-US)",
+    "DisplayVersion": "106.0.5",
+    "Status": "Installed",
+    "PSComputerName": "wsx6"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion Render Node",
+    "DisplayVersion": "16.2.4",
+    "Status": "Installed",
+    "PSComputerName": "wsx6"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion",
+    "DisplayVersion": "16.2.4",
+    "Status": "Installed",
+    "PSComputerName": "wsx6"
+  },
+  {
+    "DisplayName": "Toon Boom Harmony 22 Premium",
+    "DisplayVersion": "22.0.1.19025",
+    "Status": "Installed",
+    "PSComputerName": "wsx6"
+  },
+  {
+    "DisplayName": "Python 3.9.1 Executables (64-bit)",
+    "DisplayVersion": "3.9.1150.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx1"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2020",
+    "DisplayVersion": "20.4.0.1627",
+    "Status": "Installed",
+    "PSComputerName": "wsx1"
+  },
+  {
+    "DisplayName": "Adobe After Effects",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx1"
+  },
+  {
+    "DisplayName": "Adobe Media Encoder",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx1"
+  },
+  {
+    "DisplayName": "Adobe Photoshop",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx1"
+  },
+  {
+    "DisplayName": "Adobe Premiere Pro",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx1"
+  },
+  {
+    "DisplayName": "Adobe Acrobat",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx1"
+  },
+  {
+    "DisplayName": "VLC media player",
+    "DisplayVersion": "3.0.12",
+    "Status": "Installed",
+    "PSComputerName": "wsx1"
+  },
+  {
+    "DisplayName": "Deadline Client",
+    "DisplayVersion": "10.2.0.10",
+    "Status": "Installed",
+    "PSComputerName": "wsx1"
+  },
+  {
+    "DisplayName": "Chrome",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx1"
+  },
+  {
+    "DisplayName": "Mozilla Firefox 87.0 (x64 da)",
+    "DisplayVersion": "87.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx1"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion",
+    "DisplayVersion": "9.0.2",
+    "Status": "Installed",
+    "PSComputerName": "wsx1"
+  },
+  {
+    "DisplayName": "Toon Boom",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx1"
+  },
+  {
+    "DisplayName": "Python",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx5"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2020",
+    "DisplayVersion": "20.4.0.1627",
+    "Status": "Installed",
+    "PSComputerName": "wsx5"
+  },
+  {
+    "DisplayName": "Adobe After Effects",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx5"
+  },
+  {
+    "DisplayName": "Adobe Media Encoder",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx5"
+  },
+  {
+    "DisplayName": "Adobe Photoshop",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx5"
+  },
+  {
+    "DisplayName": "Adobe Premiere Pro",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx5"
+  },
+  {
+    "DisplayName": "Adobe Acrobat",
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx5"
+  },
+  {
+    "DisplayName": "VLC media player",
+    "DisplayVersion": "3.0.11",
+    "Status": "Installed",
+    "PSComputerName": "wsx5"
   },
   {
     "DisplayName": "Deadline",
-    "PSComputerName": "wsx4"
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx5"
   },
   {
     "DisplayName": "Chrome",
-    "PSComputerName": "wsx4"
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx5"
+  },
+  {
+    "DisplayName": "Mozilla Firefox (x64 da)",
+    "DisplayVersion": "110.0.1",
+    "Status": "Installed",
+    "PSComputerName": "wsx5"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion",
+    "DisplayVersion": "9.0.2",
+    "Status": "Installed",
+    "PSComputerName": "wsx5"
   },
   {
     "DisplayName": "Toon Boom",
-    "PSComputerName": "wsx4"
-  },
-  {
-    "DisplayName": "Adobe After Effects",
-    "PSComputerName": "wsx19"
-  },
-  {
-    "DisplayName": "Adobe Media Encoder",
-    "PSComputerName": "wsx19"
-  },
-  {
-    "DisplayName": "Adobe Photoshop",
-    "PSComputerName": "wsx19"
-  },
-  {
-    "DisplayName": "Adobe Premiere Pro",
-    "PSComputerName": "wsx19"
-  },
-  {
-    "DisplayName": "Adobe Acrobat",
-    "PSComputerName": "wsx19"
-  },
-  {
-    "DisplayName": "VLC",
-    "PSComputerName": "wsx19"
-  },
-  {
-    "DisplayName": "Chrome",
-    "PSComputerName": "wsx19"
-  },
-  {
-    "DisplayName": "Adobe After Effects",
-    "PSComputerName": "wsx13"
-  },
-  {
-    "DisplayName": "Adobe Media Encoder",
-    "PSComputerName": "wsx13"
-  },
-  {
-    "DisplayName": "Adobe Photoshop",
-    "PSComputerName": "wsx13"
-  },
-  {
-    "DisplayName": "Adobe Premiere Pro",
-    "PSComputerName": "wsx13"
-  },
-  {
-    "DisplayName": "Adobe Acrobat",
-    "PSComputerName": "wsx13"
-  },
-  {
-    "DisplayName": "Chrome",
-    "PSComputerName": "wsx13"
-  },
-  {
-    "DisplayName": "Firefox",
-    "PSComputerName": "wsx13"
-  },
-  {
-    "DisplayName": "Adobe After Effects",
-    "PSComputerName": "wsx9"
-  },
-  {
-    "DisplayName": "Adobe Media Encoder",
-    "PSComputerName": "wsx9"
-  },
-  {
-    "DisplayName": "Adobe Photoshop",
-    "PSComputerName": "wsx9"
-  },
-  {
-    "DisplayName": "Adobe Premiere Pro",
-    "PSComputerName": "wsx9"
-  },
-  {
-    "DisplayName": "Adobe Acrobat",
-    "PSComputerName": "wsx9"
-  },
-  {
-    "DisplayName": "VLC",
-    "PSComputerName": "wsx9"
-  },
-  {
-    "DisplayName": "Chrome",
-    "PSComputerName": "wsx9"
-  },
-  {
-    "DisplayName": "Fusion",
-    "PSComputerName": "wsx9"
-  },
-  {
-    "DisplayName": "Adobe After Effects",
-    "PSComputerName": "wsx24"
-  },
-  {
-    "DisplayName": "Adobe Media Encoder",
-    "PSComputerName": "wsx24"
-  },
-  {
-    "DisplayName": "Adobe Photoshop",
-    "PSComputerName": "wsx24"
-  },
-  {
-    "DisplayName": "Adobe Premiere Pro",
-    "PSComputerName": "wsx24"
-  },
-  {
-    "DisplayName": "VLC",
-    "PSComputerName": "wsx24"
-  },
-  {
-    "DisplayName": "Chrome",
-    "PSComputerName": "wsx24"
-  },
-  {
-    "DisplayName": "Firefox",
-    "PSComputerName": "wsx24"
-  },
-  {
-    "DisplayName": "Adobe After Effects",
-    "PSComputerName": "wsx10"
-  },
-  {
-    "DisplayName": "Adobe Media Encoder",
-    "PSComputerName": "wsx10"
-  },
-  {
-    "DisplayName": "Adobe Photoshop",
-    "PSComputerName": "wsx10"
-  },
-  {
-    "DisplayName": "Adobe Premiere Pro",
-    "PSComputerName": "wsx10"
-  },
-  {
-    "DisplayName": "Fusion",
-    "PSComputerName": "wsx10"
-  },
-  {
-    "DisplayName": "Adobe After Effects",
-    "PSComputerName": "wsx21"
-  },
-  {
-    "DisplayName": "Adobe Media Encoder",
-    "PSComputerName": "wsx21"
-  },
-  {
-    "DisplayName": "Adobe Photoshop",
-    "PSComputerName": "wsx21"
-  },
-  {
-    "DisplayName": "Adobe Premiere Pro",
-    "PSComputerName": "wsx21"
-  },
-  {
-    "DisplayName": "Adobe Acrobat",
-    "PSComputerName": "wsx21"
-  },
-  {
-    "DisplayName": "Chrome",
-    "PSComputerName": "wsx21"
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx5"
   },
   {
     "DisplayName": "Python",
-    "PSComputerName": "wsx17"
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx12"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2020",
+    "DisplayVersion": "20.4.0.1627",
+    "Status": "Installed",
+    "PSComputerName": "wsx12"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2022",
+    "DisplayVersion": "22.4.0.1583",
+    "Status": "Installed",
+    "PSComputerName": "wsx12"
   },
   {
     "DisplayName": "Adobe After Effects",
-    "PSComputerName": "wsx17"
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx12"
   },
   {
     "DisplayName": "Adobe Media Encoder",
-    "PSComputerName": "wsx17"
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx12"
   },
   {
     "DisplayName": "Adobe Photoshop",
-    "PSComputerName": "wsx17"
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx12"
   },
   {
     "DisplayName": "Adobe Premiere Pro",
-    "PSComputerName": "wsx17"
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx12"
+  },
+  {
+    "DisplayName": "Adobe Acrobat (64-bit)",
+    "DisplayVersion": "22.003.20322",
+    "Status": "Installed",
+    "PSComputerName": "wsx12"
+  },
+  {
+    "DisplayName": "VLC media player",
+    "DisplayVersion": "3.0.8",
+    "Status": "Installed",
+    "PSComputerName": "wsx12"
+  },
+  {
+    "DisplayName": "Deadline Client",
+    "DisplayVersion": "10.2.0.10",
+    "Status": "Installed",
+    "PSComputerName": "wsx12"
   },
   {
     "DisplayName": "Chrome",
-    "PSComputerName": "wsx17"
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx12"
   },
   {
-    "DisplayName": "Toon Boom",
-    "PSComputerName": "wsx17"
+    "DisplayName": "Mozilla Firefox (x64 en-GB)",
+    "DisplayVersion": "95.0.2",
+    "Status": "Installed",
+    "PSComputerName": "wsx12"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion",
+    "DisplayVersion": "9.0.2",
+    "Status": "Installed",
+    "PSComputerName": "wsx12"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion Render Node",
+    "DisplayVersion": "16.2.4",
+    "Status": "Installed",
+    "PSComputerName": "wsx12"
+  },
+  {
+    "DisplayName": "Blackmagic Fusion",
+    "DisplayVersion": "17.4.3",
+    "Status": "Installed",
+    "PSComputerName": "wsx12"
+  },
+  {
+    "DisplayName": "Toon Boom Harmony 22 Premium",
+    "DisplayVersion": "22.0.1.19025",
+    "Status": "Installed",
+    "PSComputerName": "wsx12"
+  },
+  {
+    "DisplayName": "Python 3.9.1 Executables (64-bit)",
+    "DisplayVersion": "3.9.1150.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx27"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2020",
+    "DisplayVersion": "20.4.0.1627",
+    "Status": "Installed",
+    "PSComputerName": "wsx27"
   },
   {
     "DisplayName": "Adobe After Effects",
-    "PSComputerName": "wsx8"
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx27"
   },
   {
     "DisplayName": "Adobe Media Encoder",
-    "PSComputerName": "wsx8"
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx27"
   },
   {
     "DisplayName": "Adobe Photoshop",
-    "PSComputerName": "wsx8"
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx27"
   },
   {
     "DisplayName": "Adobe Premiere Pro",
-    "PSComputerName": "wsx8"
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx27"
   },
   {
     "DisplayName": "Adobe Acrobat",
-    "PSComputerName": "wsx8"
-  },
-  {
-    "DisplayName": "Chrome",
-    "PSComputerName": "wsx8"
-  },
-  {
-    "DisplayName": "Adobe After Effects",
-    "PSComputerName": "wsx2"
-  },
-  {
-    "DisplayName": "Adobe Media Encoder",
-    "PSComputerName": "wsx2"
-  },
-  {
-    "DisplayName": "Adobe Photoshop",
-    "PSComputerName": "wsx2"
-  },
-  {
-    "DisplayName": "Adobe Premiere Pro",
-    "PSComputerName": "wsx2"
-  },
-  {
-    "DisplayName": "Adobe Acrobat",
-    "PSComputerName": "wsx2"
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx27"
   },
   {
     "DisplayName": "VLC",
-    "PSComputerName": "wsx2"
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx27"
+  },
+  {
+    "DisplayName": "Deadline Client",
+    "DisplayVersion": "10.2.0.10",
+    "Status": "Installed",
+    "PSComputerName": "wsx27"
   },
   {
     "DisplayName": "Chrome",
-    "PSComputerName": "wsx2"
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx27"
   },
   {
-    "DisplayName": "Firefox",
-    "PSComputerName": "wsx2"
+    "DisplayName": "Mozilla Firefox (x64 en-US)",
+    "DisplayVersion": "110.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx27"
   },
   {
-    "DisplayName": "Fusion",
-    "PSComputerName": "wsx2"
+    "DisplayName": "Blackmagic Fusion Render Node",
+    "DisplayVersion": "16.2.4",
+    "Status": "Installed",
+    "PSComputerName": "wsx27"
   },
   {
-    "DisplayName": "Python",
-    "PSComputerName": "wsx5"
+    "DisplayName": "Toon Boom Harmony 22 Premium",
+    "DisplayVersion": "22.0.1.19025",
+    "Status": "Installed",
+    "PSComputerName": "wsx27"
+  },
+  {
+    "DisplayName": "Python 3.9.1 Executables (64-bit)",
+    "DisplayVersion": "3.9.1150.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx8"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2020",
+    "DisplayVersion": "20.4.0.1627",
+    "Status": "Installed",
+    "PSComputerName": "wsx8"
+  },
+  {
+    "DisplayName": "Autodesk Maya 2022",
+    "DisplayVersion": "22.4.0.1583",
+    "Status": "Installed",
+    "PSComputerName": "wsx8"
   },
   {
     "DisplayName": "Adobe After Effects",
-    "PSComputerName": "wsx5"
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx8"
   },
   {
     "DisplayName": "Adobe Media Encoder",
-    "PSComputerName": "wsx5"
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx8"
   },
   {
     "DisplayName": "Adobe Photoshop",
-    "PSComputerName": "wsx5"
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx8"
   },
   {
     "DisplayName": "Adobe Premiere Pro",
-    "PSComputerName": "wsx5"
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx8"
   },
   {
     "DisplayName": "Adobe Acrobat",
-    "PSComputerName": "wsx5"
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx8"
   },
   {
-    "DisplayName": "Deadline",
-    "PSComputerName": "wsx5"
+    "DisplayName": "VLC media player",
+    "DisplayVersion": "3.0.16",
+    "Status": "Installed",
+    "PSComputerName": "wsx8"
   },
   {
-    "DisplayName": "Chrome",
-    "PSComputerName": "wsx5"
-  },
-  {
-    "DisplayName": "Toon Boom",
-    "PSComputerName": "wsx5"
-  },
-  {
-    "DisplayName": "Adobe After Effects",
-    "PSComputerName": "wsx20"
-  },
-  {
-    "DisplayName": "Adobe Media Encoder",
-    "PSComputerName": "wsx20"
-  },
-  {
-    "DisplayName": "Adobe Photoshop",
-    "PSComputerName": "wsx20"
-  },
-  {
-    "DisplayName": "Adobe Premiere Pro",
-    "PSComputerName": "wsx20"
-  },
-  {
-    "DisplayName": "Adobe Acrobat",
-    "PSComputerName": "wsx20"
+    "DisplayName": "Deadline Client",
+    "DisplayVersion": "10.2.0.10",
+    "Status": "Installed",
+    "PSComputerName": "wsx8"
   },
   {
     "DisplayName": "Chrome",
-    "PSComputerName": "wsx20"
+    "DisplayVersion": "",
+    "Status": "Missing",
+    "PSComputerName": "wsx8"
   },
   {
-    "DisplayName": "Adobe After Effects",
-    "PSComputerName": "wsx6"
+    "DisplayName": "Mozilla Firefox (x64 en-US)",
+    "DisplayVersion": "92.0",
+    "Status": "Installed",
+    "PSComputerName": "wsx8"
   },
   {
-    "DisplayName": "Adobe Media Encoder",
-    "PSComputerName": "wsx6"
+    "DisplayName": "Blackmagic Fusion",
+    "DisplayVersion": "17.3.1",
+    "Status": "Installed",
+    "PSComputerName": "wsx8"
   },
   {
-    "DisplayName": "Adobe Photoshop",
-    "PSComputerName": "wsx6"
+    "DisplayName": "Blackmagic Fusion",
+    "DisplayVersion": "9.0.2",
+    "Status": "Installed",
+    "PSComputerName": "wsx8"
   },
   {
-    "DisplayName": "Adobe Premiere Pro",
-    "PSComputerName": "wsx6"
+    "DisplayName": "Blackmagic Fusion",
+    "DisplayVersion": "16.2.4",
+    "Status": "Installed",
+    "PSComputerName": "wsx8"
   },
   {
-    "DisplayName": "Chrome",
-    "PSComputerName": "wsx6"
+    "DisplayName": "Toon Boom Harmony 22 Premium",
+    "DisplayVersion": "22.0.1.19025",
+    "Status": "Installed",
+    "PSComputerName": "wsx8"
   }
 ]

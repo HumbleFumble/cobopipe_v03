@@ -92,6 +92,8 @@ foreach($item in $using:applist) {
   $allresults
 }
 
-$computers | Where-Object {$_.status -eq "Missing"} | Select-Object -ExcludeProperty RunspaceId, PSShowComputerName, DisplayVersion, Status | ConvertTo-Json -Depth 4 | Out-File -FilePath "C:\Users\plp\VsCodeProjects\cobopipe_v02-001\PowerShell\applist.json"
+
+$computers | Select-Object -ExcludeProperty RunspaceId, PSShowComputerName | ConvertTo-Json -Depth 4 | Out-File -FilePath "C:\Users\plp\VsCodeProjects\cobopipe_v02-001\PowerShell\applist.json"
+# $computers | Where-Object {$_.status -eq "Missing"} | Select-Object -ExcludeProperty RunspaceId, PSShowComputerName, DisplayVersion, Status | ConvertTo-Json -Depth 4 | Out-File -FilePath "C:\Users\plp\VsCodeProjects\cobopipe_v02-001\PowerShell\applist.json"
 # $computers | where {$_.status -eq "Installed" -and $_.displayname -eq "Toon Boom Harmony 22 Premium*"} | select DisplayName,  PSComputerName
 # $computers | ft

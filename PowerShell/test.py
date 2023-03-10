@@ -17,7 +17,7 @@ def RunPSScript(script_path):
     process = subprocess.Popen(["pwsh", "C:\\Users\\" + user + script_path])
     process.wait()
 
-# RunPSScript("\\VsCodeProjects\\cobopipe_v02-001\\PowerShell\\ScriptBlocks\\GetHostInfo_SB.ps1")
+RunPSScript("\\VsCodeProjects\\cobopipe_v02-001\\PowerShell\\ScriptBlocks\\GetHostInfo_SB.ps1")
 
 
 # Run GetHostInfo if there is a change in the list of available computers, for example if a computer had to be turned on
@@ -30,10 +30,10 @@ ps_data = json.loads(file_contents)
 for item in ps_data:
     host_info[item["Name"]] = item['WinRMStatus']
 
-for key, value in host_info.items():
-    print(key, value)
+# for key, value in host_info.items():
+#     print(key, value)
 
-exclude_list = [1, 3, 7, 12, 14, 15, 16, 18, 25, 28, 30, 33]
+exclude_list = [3, 4, 16, 30]
 new_list = []
 
 unavailable_list = []
@@ -90,5 +90,6 @@ for i in app_dict.values():
     for j in i:
         del j['PSComputerName']
 
+# Print all results
 for i, j in app_dict.items():
     print(i, j)
