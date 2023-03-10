@@ -239,8 +239,8 @@ function runInTB(){
 function testQprocess()
 {
    var p1 = new QProcess;
-   var bin = "/bin/ls";
-   var args = ["-la"];
+   var bin = "C:/Program Files/Thinkbox/Deadline10/bin/deadlinecommand"
+   var args = [ "C:/Users/cg/AppData/Local/Thinkbox/Deadline10/temp/harmony_submit_info.job", "C:/Users/cg/AppData/Local/Thinkbox/Deadline10/temp/harmony_plugin_info.job"];
    p1.start(bin,args);
    p1.waitForFinished();
    var stdout = p1.readAllStandardOutput();
