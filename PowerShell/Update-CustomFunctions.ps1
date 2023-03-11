@@ -11,9 +11,9 @@ function Update-CustomFunctions {
 
     $functionsdir = "C:\Users\plp\VsCodeProjects\cobopipe_v02-001\PowerShell\" 
     $functionslist = foreach ($i in $functions){$functionsdir + $i}
-    $functionslist | ForEach-Object {Get-Content $_ | Add-Content "C:\Users\plp\VsCodeProjects\cobopipe_v02-001\PowerShell\Custom-Functions.psm1"}
+    $functionslist | ForEach-Object {Get-Content $_ | Add-Content "C:\Users\$env:username\VsCodeProjects\cobopipe_v02-001\PowerShell\Custom-Functions.psm1"}
     
-    Import-Module "C:\Users\plp\VsCodeProjects\cobopipe_v02-001\PowerShell\Custom-Functions.psm1"
+    Import-Module "C:\Users\$env:username\VsCodeProjects\cobopipe_v02-001\PowerShell\Custom-Functions.psm1"
 
     if (Get-Command -module Custom-Functions){
         Write-Host "`nModule `"Custom-Functions`" loaded and ready`n" 
