@@ -262,6 +262,14 @@ function QuickSlider(min,max){
 //        scale_sub_attributes[4].setValue(new_scale_Y);
 //    	scene.endUndoRedoAccum();
         }
+    function reset_peg_function(my_peg){
+        node.setTextAttr(my_peg,"POSITION.x",frame.current(),String(0));
+        node.setTextAttr(my_peg,"POSITION.y",frame.current(),String(0));
+        node.setTextAttr(my_peg,"POSITION.z",frame.current(),String(0));
+        node.setTextAttr(my_peg,"SCALE.x",frame.current(),String(0));
+        node.setTextAttr(my_peg,"SCALE.y",frame.current(),String(0));
+
+    }
 
     createSlider.prototype = new QWidget;
     function createSlider(parent,name, min,max){
@@ -292,12 +300,14 @@ function QuickSlider(min,max){
 
 
         this.bttn = new QPushButton("Select");
+        this.reset_bttn = new QPushButton("Reset")
     //    frame.setLayout(QHBoxLayout())
         this.f_layout.addWidget(this.label,1,1);
         this.f_layout.addWidget(this.slider,0,1);
         this.f_layout.addWidget(this.number_value,0,1);
         this.f_layout.addSpacing(20);
         this.f_layout.addWidget(this.bttn,0,1);
+        this.f_layout.addWidget(this.reset_bttn,0,1);
 
     //    this..resize(400,50);
 
@@ -322,6 +332,10 @@ function QuickSlider(min,max){
 //        scene.endUndoRedoAccum()
         selection.clearSelection();
         selection.addNodeToSelection(this.name);
+    }
+    createSlider.prototype.reset_bttn_func = function(){
+        MessageLog.trace(this.name)
+        reset_peg_function(this.name)
     }
 
     createSlider.prototype.startUndo = function(){
