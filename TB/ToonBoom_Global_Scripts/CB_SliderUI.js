@@ -41,14 +41,27 @@ function QuickSlider(min,max){
 	this.camera_lay = new QHBoxLayout();
 	this.slider_lay = new QVBoxLayout();
 	this.base_lay.addLayout(this.top_lay,0)
+	this.base_lay.addLayout(this.camera_lay,0)
 	this.base_lay.addLayout(this.slider_lay,1)
 	this.setLayout(this.base_lay);
+
 	this.zero_check = new QCheckBox("Camera Based");
 	this.zero_check.checked = 1
-	this.frame_refrence_check = new QCheckBox("Lock parallax on frame:")
-    this.frame_reference_edit = new QLineEdit()
+
+	this.frame_int_val = new QIntValidator()
+	this.frame_reference_check = new QCheckBox("Lock parallax on frame:")
+	this.frame_reference_check.checked = 0
+    this.frame_reference_edit = new QLineEdit("1")
+    this.frame_reference_edit.setValidator(this.frame_int_val)
+
+    this.camera_lay.addWidget(this.zero_check,0,1)
+    this.camera_lay.addWidget(this.frame_reference_check,1,1)
+    this.camera_lay.addWidget(this.frame_reference_edit,0,1)
+
+
 
     this.intVal = new QIntValidator(this.min,this.max)
+
     this.min_label = new QLabel("Min:")
     this.max_label = new QLabel("Max:")
 
@@ -76,7 +89,6 @@ function QuickSlider(min,max){
     this.top_lay.addWidget(this.select_bttn,1,1);
     this.top_lay.addWidget(this.loadState,1,1);
     this.top_lay.addWidget(this.saveState,1,1);
-    this.top_lay.addWidget(this.zero_check,0,1);
     this.edit_max_value.text = this.max;
     this.edit_min_value.text = this.min;
     this.init_bttn.clicked.connect(this, this.init_func);
@@ -204,14 +216,16 @@ function QuickSlider(min,max){
         return Math.abs(parseInt(value))
     }
 
-    function updatePeg(my_peg,my_value,cam){
-
+    function updatePeg(my_peg,my_value,cam,frame_lock){
         var z_units = scene.numberOfUnitsZ();
         //var cam = false; //this.cam_check.checked
         //MessageLog.trace(cam)
-    //
+        var cam_frame = frame.current()
         if(cam){
-            var camera_matrix = scene.getCameraMatrix(frame.current());
+            if(frame_lock){
+                var cam_frame = frame_lock
+            }
+            var camera_matrix = scene.getCameraMatrix(cam_frame);
             var camera_position = camera_matrix.extractPosition();
         }else{
             var camera_position = new Point3d(0.0,0.0,scene.toOGLZ(z_units));
@@ -270,9 +284,8 @@ function QuickSlider(min,max){
         node.setTextAttr(my_peg,"POSITION.x",frame.current(),String(0));
         node.setTextAttr(my_peg,"POSITION.y",frame.current(),String(0));
         node.setTextAttr(my_peg,"POSITION.z",frame.current(),String(0));
-        node.setTextAttr(my_peg,"SCALE.x",frame.current(),String(0));
-        node.setTextAttr(my_peg,"SCALE.y",frame.current(),String(0));
-
+        node.setTextAttr(my_peg,"SCALE.x",frame.current(),String(1));
+        node.setTextAttr(my_peg,"SCALE.y",frame.current(),String(1));
     }
 
     createSlider.prototype = new QWidget;
@@ -326,6 +339,7 @@ function QuickSlider(min,max){
 
         this.number_value.editingFinished.connect(this,this.number_func)
         this.bttn.clicked.connect(this,this.bttn_func)
+        this.reset_bttn.clicked.connect(this,this.reset_bttn_func)
 
         return this
     }
@@ -354,7 +368,11 @@ function QuickSlider(min,max){
     createSlider.prototype.slider_func = function(v){
         scene.beginUndoRedoAccum("slider move");
         this.number_value.text = v;
-        updatePeg(this.name, this.slider.value,this.parent.zero_check.checked)
+        if(this.parent.frame_reference_check.checked){
+          updatePeg(this.name, this.slider.value,this.parent.zero_check.checked,parseInt(this.parent.frame_reference_edit.text))
+        }else{
+        updatePeg(this.name, this.slider.value,this.parent.zero_check.checked,false)
+        }
         scene.endUndoRedoAccum();
     }
     createSlider.prototype.number_func = function(){

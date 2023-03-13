@@ -240,8 +240,8 @@ function testQprocess()
 {
    var p1 = new QProcess;
 	//new_env = new QProcess.systemEnvironment()
-	p1.setProcessEnvironment = {"PATH":["C:/Python39/"]};
-	MessageLog.trace("HEY?" + p1.processEnvironment())
+	p1.setProcessEnvironment({"PATH=C:/Python39/"});
+	//MessageLog.trace("HEY?" + p1.processEnvironment())
 
 	//MessageLog.trace("env?" + p1.setEnvironment())
    var bin = "C:/Program Files/Thinkbox/Deadline10/bin/deadlinecommand"
