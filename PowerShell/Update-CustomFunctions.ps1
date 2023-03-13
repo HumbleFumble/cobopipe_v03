@@ -7,9 +7,10 @@ function Update-CustomFunctions {
                  "Rename-File.ps1", 
                  "Set-SecurityLevel.ps1",
                  "Get-EnvironmentVariable.ps1",
+                 "Set-ComputersList.ps1",
                  "Update-CustomFunctions.ps1"
 
-    $functionsdir = "C:\Users\plp\VsCodeProjects\cobopipe_v02-001\PowerShell\" 
+    $functionsdir = "C:\Users\$env:username\VsCodeProjects\cobopipe_v02-001\PowerShell\" 
     $functionslist = foreach ($i in $functions){$functionsdir + $i}
     $functionslist | ForEach-Object {Get-Content $_ | Add-Content "C:\Users\$env:username\VsCodeProjects\cobopipe_v02-001\PowerShell\Custom-Functions.psm1"}
     
@@ -21,4 +22,5 @@ function Update-CustomFunctions {
         Write-Host "`nModule `"Custom-Functions`" could not be loaded`n" -ForegroundColor Red
     }
 
+    pwsh
 }
