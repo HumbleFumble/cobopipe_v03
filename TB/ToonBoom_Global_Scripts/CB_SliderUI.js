@@ -270,9 +270,8 @@ function QuickSlider(min,max){
         node.setTextAttr(my_peg,"POSITION.x",frame.current(),String(0));
         node.setTextAttr(my_peg,"POSITION.y",frame.current(),String(0));
         node.setTextAttr(my_peg,"POSITION.z",frame.current(),String(0));
-        node.setTextAttr(my_peg,"SCALE.x",frame.current(),String(0));
-        node.setTextAttr(my_peg,"SCALE.y",frame.current(),String(0));
-
+        node.setTextAttr(my_peg,"SCALE.x",frame.current(),String(1));
+        node.setTextAttr(my_peg,"SCALE.y",frame.current(),String(1));
     }
 
     createSlider.prototype = new QWidget;
@@ -326,6 +325,7 @@ function QuickSlider(min,max){
 
         this.number_value.editingFinished.connect(this,this.number_func)
         this.bttn.clicked.connect(this,this.bttn_func)
+        this.reset_bttn.clicked.connect(this,this.reset_bttn_func)
 
         return this
     }
