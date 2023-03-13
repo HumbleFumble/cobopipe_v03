@@ -38,12 +38,16 @@ function QuickSlider(min,max){
 	this.parent = getParentWidget();
 	this.base_lay = new QVBoxLayout();
 	this.top_lay = new QHBoxLayout();
+	this.camera_lay = new QHBoxLayout();
 	this.slider_lay = new QVBoxLayout();
 	this.base_lay.addLayout(this.top_lay,0)
 	this.base_lay.addLayout(this.slider_lay,1)
 	this.setLayout(this.base_lay);
 	this.zero_check = new QCheckBox("Camera Based");
 	this.zero_check.checked = 1
+	this.frame_refrence_check = new QCheckBox("Lock parallax on frame:")
+    this.frame_reference_edit = new QLineEdit()
+
     this.intVal = new QIntValidator(this.min,this.max)
     this.min_label = new QLabel("Min:")
     this.max_label = new QLabel("Max:")
@@ -56,11 +60,11 @@ function QuickSlider(min,max){
     this.edit_max_value.setValidator(this.intVal);
     this.edit_max_value.setFixedWidth(40);
 
-    this.init_bttn = new QPushButton("Load Selection");
+    this.init_bttn = new QPushButton("Load Current Selection");
     this.init_bttn.objectName = "loadBttn";
     this.select_bttn = new QPushButton("Select All");
-    this.loadState = new QPushButton("Load State");
-    this.saveState = new QPushButton("Save State");
+    this.loadState = new QPushButton("Load Saved selection");
+    this.saveState = new QPushButton("Save Current selection");
 
 
     this.top_lay.addWidget(this.min_label,0,1);
