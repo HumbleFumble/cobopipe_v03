@@ -33,6 +33,7 @@ New-PSDrive -Name "T" -Root "\\dumpap3\tools" -PSProvider "FileSystem" -Persist
 # Check if the drive has already been mapped
 # if ((Get-PSDrive).Name.Contains("T")){"It does"}
 
+
 # Get remaining space on "C:\" drive
 # -------------------------------------------------------------------------------------------------------------
 [string][math]::Round((Get-Volume -DriveLetter "C").SizeRemaining/1GB, 2) + "GB"

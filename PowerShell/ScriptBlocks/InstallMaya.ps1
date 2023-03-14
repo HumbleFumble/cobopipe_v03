@@ -1,12 +1,4 @@
-# Uninstall any previously installed Python version
-$python =  Get-CimInstance -ClassName Win32_Product | Where-Object -Property Name -Match "python *"
-$python | Where-Object -Property Name -Match "python ..... tcl*" | Invoke-CimMethod -MethodName Uninstall
-$python | Where-Object -Property Name -Match "python ..... pip*" | Invoke-CimMethod -MethodName Uninstall
-$python | Where-Object -Property Name -Match "python *" | Invoke-CimMethod -MethodName Uninstall -ErrorAction SilentlyContinue
-
-# Update!
-# $PathToInstaller = "\\dumpap3\tools\_Pipeline\cobopipe_v02-001\PowerShell\ScriptBlocks\installPython
-$parameters = [pscustomobject]@{Name = "Python"; PathToInstaller = "\\dumpap3\tools\_Software\Python\python-3.9.1-amd64.exe"; TaskName = "Install Python"; Arguments = "/quiet TargetDir=C:\Python39 InstallAllUsers=1 PrependPath=1 Include_test=0"}
+$parameters = [pscustomobject]@{Name = "Maya"; PathToInstaller = "\\dumpap3\tools\_Software\Maya\Maya2022-4\Maya2022extracted\Setup.exe"; TaskName = "Install Maya"; Arguments = "--silent"}
 $AtTime = Get-Date -Format "HH:mm"
 function Install-App { 
 
