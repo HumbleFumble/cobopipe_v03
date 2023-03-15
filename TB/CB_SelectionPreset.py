@@ -636,7 +636,12 @@ class FrontController(QObject):
 			return {}
 
 	# def createSubnodeList(self):
-
+	def getTBselection(self):
+		for n in self.scene.selection.nodes:
+			log(n.name)
+		for c in self.scene.columns:
+			log(c)
+	# 	Check nodes + columns in selection
 	def createDictFromTBSelection(self,nodes=[]):
 		return_dict = {}
 		if not nodes and in_toonboom:
@@ -710,6 +715,7 @@ class SelectionPreset_UI(QDialog):
 		self.select_bttn = QPushButton("Select")
 		self.save_preset_bttn = QPushButton("Save to file")
 		self.load_preset_bttn = QPushButton("Load from file")
+		self.remove_key_bttn = QPushButton("Remove Key")
 
 
 		self.menu_bar.addWidget(self.create_coll_bttn)
@@ -720,6 +726,8 @@ class SelectionPreset_UI(QDialog):
 		self.menu_bar.addSeparator()
 		self.menu_bar.addWidget(self.save_preset_bttn)
 		self.menu_bar.addWidget(self.load_preset_bttn)
+		self.menu_bar.addWidget(self.remove_key_bttn)
+
 
 		self.create_bttn.clicked.connect(self.createPreset)
 		self.create_coll_bttn.clicked.connect(self.createCollection)
@@ -728,6 +736,7 @@ class SelectionPreset_UI(QDialog):
 
 		self.save_preset_bttn.clicked.connect(self.saveAsFile)
 		self.load_preset_bttn.clicked.connect(self.loadFromFile)
+		self.remove_key_bttn.clicked.connect(self.getCurrentSelection)
 
 		self.tree = QTreeView(self)
 
@@ -747,7 +756,10 @@ class SelectionPreset_UI(QDialog):
 
 		self.layout_top.addWidget(self.menu_bar)
 		self.layout_top.addWidget(self.tree)
-
+	def getCurrentSelection(self):
+		self._ctrl.getTBselection()
+		# self._ctrl.
+		pass
 	def getTVNodes(self):
 		return_list = []
 		root = self.tree_model.getRootNode()

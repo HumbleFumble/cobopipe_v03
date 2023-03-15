@@ -10,6 +10,8 @@ class MainWindow():
 
         #preset combo?? Like "Transfer from FTP" or ""
         #Explaining label ? Like FTP location should be "drive/project/User/TO_CB/Episode/sequence/Shot"
+        #inputs: user. If footage, then it needs to be episode/sequence/shot info.
+
         #this should be connected to the shotbrowser??
         #file browser + label + line edit for source
 
