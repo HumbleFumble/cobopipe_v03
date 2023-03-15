@@ -1,5 +1,5 @@
 <settings>
     <computers>
-        <ExcludeList>3,4,16,30</ExcludeList>
+        <ExcludeList>3,4,16,30,15,</ExcludeList>
     </computers>
 </settings>

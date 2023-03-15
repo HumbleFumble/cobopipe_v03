@@ -13,7 +13,7 @@
   },
   {
     "Name": "wsx4",
-    "WinRMStatus": ""
+    "WinRMStatus": "Available"
   },
   {
     "Name": "wsx5",
@@ -57,7 +57,7 @@
   },
   {
     "Name": "wsx15",
-    "WinRMStatus": "Available"
+    "WinRMStatus": ""
   },
   {
     "Name": "wsx16",

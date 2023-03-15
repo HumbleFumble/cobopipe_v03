@@ -240,11 +240,12 @@ function testQprocess()
 {
    var p1 = new QProcess;
 	//new_env = new QProcess.systemEnvironment()
-	p1.setProcessEnvironment({"PATH=C:/Python39/"});
+	//p1.setProcessEnvironment({"PATH=C:/Python39/"});
 	//MessageLog.trace("HEY?" + p1.processEnvironment())
 
 	//MessageLog.trace("env?" + p1.setEnvironment())
-   var bin = "C:/Program Files/Thinkbox/Deadline10/bin/deadlinecommand"
+   var bin = "C:/Program Files/Thinkbox/Deadline10/bin/deadlinecommand";
+	//var args = ["-version"]
    var args = [ "C:/Users/cg/AppData/Local/Thinkbox/Deadline10/temp/harmony_submit_info.job", "C:/Users/cg/AppData/Local/Thinkbox/Deadline10/temp/harmony_plugin_info.job"];
 	
    p1.start(bin,args);

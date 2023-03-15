@@ -2,7 +2,7 @@
 function Set-ComputersList {
     [CmdletBinding()]
     param (
-        [Parameter][string[]]$ExcludeList
+        [Parameter()][string[]]$ExcludeList
     )
 
     $numbers = @()
