@@ -188,14 +188,18 @@ function Remove-EnvironmentVariable {
      if ($FromSystemEnvironment){
           $envmachine = [Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::Machine)
           if (($envmachine -split ";").Contains($Variable)){
-            [Environment]::SetEnvironmentVariable("Path", $($envmachine.Replace($Variable, "")), [EnvironmentVariableTarget]::Machine)
+               [Environment]::SetEnvironmentVariable("Path", $($envmachine.Replace($Variable, "")), [EnvironmentVariableTarget]::Machine)
+          }elseif (($envmachine -split ";").Contains($Variable + "\")) {
+               [Environment]::SetEnvironmentVariable("Path", $($envmachine.Replace($Variable, "")), [EnvironmentVariableTarget]::Machine)
           }
      }
      if ($FromUserEnvironment){
           $envuser = [Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::User)
           if (($envuser -split ";").Contains($Variable)){
-              [Environment]::SetEnvironmentVariable("Path", $($envuser.Replace($Variable, "")), [EnvironmentVariableTarget]::User)
-          }
+               [Environment]::SetEnvironmentVariable("Path", $($envuser.Replace($Variable, "")), [EnvironmentVariableTarget]::User)
+          }elseif (($envuser -split ";").Contains($Variable + "\")){
+               [Environment]::SetEnvironmentVariable("Path", $($envuser.Replace($Variable, "")), [EnvironmentVariableTarget]::User)
+           }
      }
 }
 #-------------------------------------------------------------------------------------------------------------------------------------------
@@ -294,13 +298,17 @@ function Get-EnvironmentVariable {
         [switch]$FromUserEnvironment
     )
     if ($FromSystemEnvironment){
-    $envmachine = [Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::Machine) 
-    $envmachinesplit = $envmachine -split ";"
-    if ($envmachinesplit.Contains($Variable)){
-        Write-Output "Variable found in system path"
-    }else {
-        Write-Output "Variable not found system path"
-    }
+        $envmachine = [Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::Machine) 
+        $envmachinesplit = $envmachine -split ";"
+        if ($envmachinesplit.Contains($Variable)){
+            Write-Output "Variable FOUND in system path"
+        }
+        elseif ($envmachinesplit.Contains($Variable + "\")) {
+            Write-Output "Variable FOUND in system path"
+        }
+        else {
+            Write-Output "Variable NOT FOUND in system path"
+        }
     }elseif ($FromUserEnvironment) {
         
         $envuser = [Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::User) 
