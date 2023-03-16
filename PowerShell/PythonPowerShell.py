@@ -92,7 +92,7 @@ host_info = {}
 for item in ps_data:
     host_info[item["Name"]] = item['WinRMStatus']
 
-exclude_computer_number = [3, 4, 16, 30]
+exclude_computer_number = [3, 4, 5, 12]
 
 
 # Import xml file
@@ -103,6 +103,8 @@ root = tree.getroot()
 # Update Get-InstalledApps2_config.xml with the final list and save. This config will be read by the GetInstalledApps2
 root[0][0].text = GetList(exclude_computer_number)
 tree.write(xmlfile)
+
+print(GetList(exclude_computer_number))
 
 with open("C:\\Users\\" + user + "\\VsCodeProjects\\cobopipe_v02-001\\PowerShell\\applist.json") as user_file:
     file_contents = user_file.read()
