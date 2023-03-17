@@ -71,7 +71,7 @@ if (! ($AtTime)){
     }
 }
 
-$parameters = [pscustomobject]@{Name = "Maya"; PathToInstaller = "\\dumpap3\tools\_Software\Maya\Maya2022-4\Maya2022extracted\Setup.exe"; TaskName = "Install Maya"; Arguments = "--silent"}
+$parameters = [pscustomobject]@{Name = "AdobeCC"; PathToInstaller = "\\dumpap3\tools\_Software\Adobe\AdobeInstaller_AE-Prem-PhotoSh\Build\setup.exe"; TaskName = "Install AdobeCC"; Arguments = "--silent"}
 
 Set-SecurityLevel -Low
 Install-App -PathToInstaller $parameters.PathToInstaller -Arguments $parameters.Arguments -TaskName $parameters.TaskName
