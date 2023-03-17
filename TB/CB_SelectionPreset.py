@@ -638,8 +638,8 @@ class FrontController(QObject):
 	# def createSubnodeList(self):
 	def removeKeyOnSelection(self):
 		current_frame = self.scene.selection.frame_start
+		log(current_frame)
 		for n in self.scene.selection.nodes:
-			log(n.name)
 			for a in self.getAllAtributes(n.attributes):
 				if a.column:
 					c = a.column
@@ -648,13 +648,13 @@ class FrontController(QObject):
 	# 	Check nodes + columns in selection
 	def addKeyOnSelection(self):
 		current_frame = self.scene.selection.frame_start
+		log(current_frame)
 		for n in self.scene.selection.nodes:
-			log(n.name)
 			for a in self.getAllAtributes(n.attributes):
 				if a.column:
 					c = a.column
-					if c.keyframe_exists(current_frame):
-						c.keyframe_create(current_frame)
+					c.keyframe_create(current_frame)
+
 	# 	Check nodes + columns in selection
 	def getAllAtributes(self, attr_list):
 		return_list = []
@@ -760,7 +760,8 @@ class SelectionPreset_UI(QDialog):
 
 		self.save_preset_bttn.clicked.connect(self.saveAsFile)
 		self.load_preset_bttn.clicked.connect(self.loadFromFile)
-		self.remove_key_bttn.clicked.connect(self.getCurrentSelection)
+		self.remove_key_bttn.clicked.connect(self.removeKeyCall)
+		self.add_key_bttn.clicked.connect(self.addKeyCall)
 
 		self.tree = QTreeView(self)
 
@@ -780,10 +781,11 @@ class SelectionPreset_UI(QDialog):
 
 		self.layout_top.addWidget(self.menu_bar)
 		self.layout_top.addWidget(self.tree)
-	def getCurrentSelection(self):
+	def removeKeyCall(self):
 		self._ctrl.removeKeyOnSelection()
-		# self._ctrl.
-		pass
+
+	def addKeyCall(self):
+		self._ctrl.addKeyOnSelection()
 	def getTVNodes(self):
 		return_list = []
 		root = self.tree_model.getRootNode()
