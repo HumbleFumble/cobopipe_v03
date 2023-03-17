@@ -160,52 +160,25 @@ function Get-HostInfo {
 # }
 # $PSCustomObject
 #-------------------------------------------------------------------------------------------------------------------------------------------
-# $InstallScriptBlock = .\InstallScriptBlock.ps1
+function Install-App { 
 
-# # List of computers to run scriptblock agains
-# $ComputersList = "vm2", "vm3"
+param (
+    [Parameter()][string]$PathToInstaller,
+    [Parameter()][string]$Arguments,
+    [Parameter()][string]$TaskName
 
-# Run the scriptblock on remote computer
-# Invoke-Command -ComputerName $ComputersList -ScriptBlock $InstallScriptBlock
+)
+# Set up scheduled task for each set of parameters and run it
+#--------------------------------------------------------------------------------------------------------------------------------------------
 
-# Or use session to send the command 
-# $creds = Get-Credential -UserName vmnet\admin
-# $session = New-PSSession -ComputerName $computerslist -Credential $creds
-# Invoke-Command -Session  $session -ScriptBlock $InstallScriptBlock
-
-# function Install-App {
-#     param (
-#         [Parameter(Mandatory)][string[]]$ComputersList,
-#         [Parameter(Mandatory)][scriptblock]$InstallScriptBlock,
-#         [string]$AtTime
-#     )
-#     Invoke-Command -ComputerName $ComputersList -ScriptBlock $InstallScriptBlock
-# }
-
-# Install-App -ComputersList $ComputersList -InstallScriptBlock $InstallScriptBlock
-#
-
-# List of computers to run scriptblock agains
-# $ComputersList = "vm2", "vm3"
-
-function Install-App {
-    param (
-        [Parameter(Mandatory)][string[]]$ComputersList,
-        [scriptblock]$InstallScriptBlock,
-        [string]$FilePath,
-        [string]$AtTime
-    )
-    if ($InstallScriptBlock){
-        Invoke-Command -ComputerName $ComputersList -ScriptBlock $InstallScriptBlock
-    } elseif ($FilePath) {
-        Invoke-Command -FilePath $FilePath -ComputerName $ComputersList 
-    }
-    
+    $Action = New-ScheduledTaskAction -Execute $PathToInstaller -Argument $Arguments
+    $Trigger = New-ScheduledTaskTrigger -Once -At $AtTime
+    $Settings = New-ScheduledTaskSettingsSet
+    $Task = New-ScheduledTask -Action $Action -Trigger $Trigger -Settings $Settings
+    Register-ScheduledTask -TaskName $TaskName -InputObject $Task -User 'System'
+    Start-ScheduledTask -TaskName $TaskName
+    Unregister-ScheduledTask -TaskName $TaskName -Confirm:$False
 }
-
-# Install-App -ComputersList $ComputersList -FilePath 'C:\users\admin\desktop\InstallScriptBlock.ps1'
-
-# or Install-App -ComputersList $ComputersList -InstallScriptBlock $InstallScriptBlock
 function Remove-EnvironmentVariable {
      param (
      [Parameter(Mandatory=$true)][string]$Variable,
@@ -215,14 +188,18 @@ function Remove-EnvironmentVariable {
      if ($FromSystemEnvironment){
           $envmachine = [Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::Machine)
           if (($envmachine -split ";").Contains($Variable)){
-            [Environment]::SetEnvironmentVariable("Path", $($envmachine.Replace($Variable, "")), [EnvironmentVariableTarget]::Machine)
+               [Environment]::SetEnvironmentVariable("Path", $($envmachine.Replace($Variable, "")), [EnvironmentVariableTarget]::Machine)
+          }elseif (($envmachine -split ";").Contains($Variable + "\")) {
+               [Environment]::SetEnvironmentVariable("Path", $($envmachine.Replace($Variable, "")), [EnvironmentVariableTarget]::Machine)
           }
      }
      if ($FromUserEnvironment){
           $envuser = [Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::User)
           if (($envuser -split ";").Contains($Variable)){
-              [Environment]::SetEnvironmentVariable("Path", $($envuser.Replace($Variable, "")), [EnvironmentVariableTarget]::User)
-          }
+               [Environment]::SetEnvironmentVariable("Path", $($envuser.Replace($Variable, "")), [EnvironmentVariableTarget]::User)
+          }elseif (($envuser -split ";").Contains($Variable + "\")){
+               [Environment]::SetEnvironmentVariable("Path", $($envuser.Replace($Variable, "")), [EnvironmentVariableTarget]::User)
+           }
      }
 }
 #-------------------------------------------------------------------------------------------------------------------------------------------
@@ -321,13 +298,17 @@ function Get-EnvironmentVariable {
         [switch]$FromUserEnvironment
     )
     if ($FromSystemEnvironment){
-    $envmachine = [Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::Machine) 
-    $envmachinesplit = $envmachine -split ";"
-    if ($envmachinesplit.Contains($Variable)){
-        Write-Output "Variable found in system path"
-    }else {
-        Write-Output "Variable not found system path"
-    }
+        $envmachine = [Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::Machine) 
+        $envmachinesplit = $envmachine -split ";"
+        if ($envmachinesplit.Contains($Variable)){
+            Write-Output "Variable FOUND in system path"
+        }
+        elseif ($envmachinesplit.Contains($Variable + "\")) {
+            Write-Output "Variable FOUND in system path"
+        }
+        else {
+            Write-Output "Variable NOT FOUND in system path"
+        }
     }elseif ($FromUserEnvironment) {
         
         $envuser = [Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::User) 
