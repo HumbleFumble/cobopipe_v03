@@ -1,5 +1,6 @@
 function call_CB_SelectionPreset(){
 
+
     const subselection_obj = new Object()
     subselection_obj.get_selection =function(){
         var obj_list = []
@@ -36,5 +37,6 @@ function call_CB_SelectionPreset(){
 
     var myPythonObject = PythonManager.createPyObject(System.getenv("BOM_PIPE_PATH")+"/TB/CB_SelectionPreset.py");
     myPythonObject.setObject("js_select",subselection_obj);
+    myPythonObject.setObject("js_frame",frame)
     myPythonObject.py.run();
 }

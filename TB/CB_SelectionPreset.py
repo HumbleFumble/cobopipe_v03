@@ -637,7 +637,7 @@ class FrontController(QObject):
 
 	# def createSubnodeList(self):
 	def removeKeyOnSelection(self):
-		current_frame = self.scene.selection.frame_start
+		current_frame = int(js_frame.current())
 		log(current_frame)
 		for n in self.scene.selection.nodes:
 			for a in self.getAllAtributes(n.attributes):
@@ -647,13 +647,15 @@ class FrontController(QObject):
 						c.keyframe_remove(current_frame)
 	# 	Check nodes + columns in selection
 	def addKeyOnSelection(self):
-		current_frame = self.scene.selection.frame_start
+		# current_frame = self.scene.selection.frame_start
+		current_frame = int(js_frame.current())
 		log(current_frame)
 		for n in self.scene.selection.nodes:
 			for a in self.getAllAtributes(n.attributes):
 				if a.column:
 					c = a.column
-					c.keyframe_create(current_frame)
+					if not c.keyframe_exists(current_frame):
+						c.keyframe_create(current_frame)
 
 	# 	Check nodes + columns in selection
 	def getAllAtributes(self, attr_list):
