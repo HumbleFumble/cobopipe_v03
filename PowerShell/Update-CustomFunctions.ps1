@@ -1,14 +1,3 @@
-"################################################
-  _____      ______      ______ _            
- /  __ \     | ___ \     | ___ (_)           
- | /  \/ ___ | |_/ / ___ | |_/ /_ _ __   ___ 
- | |    / _ \| ___ \/ _ \|  __/| | '_ \ / _ \
- | \__/\ (_) | |_/ / (_) | |   | | |_) |  __/
- \____/\___/\____/ \___/\_|   |_| .__/ \___|
-                               | |         
-                               |_|        
-#################################################
-"
 function Update-CustomFunctions {
     $functions = "Add-EnvironmentVariable.ps1", 
                  "Enter-RemoteSession.ps1", 
@@ -26,23 +15,11 @@ function Update-CustomFunctions {
     if ((Get-CimInstance -Namespace root/CIMV2 -ClassName Win32_ComputerSystem).Domain){
         $functionsdir = "T:\_Pipeline\cobopipe_v02-001\PowerShell\"
     }
-
-    if (!(Get-PSDrive -Name "T")){
-        New-PSDrive -Name "T" -Root "\\dumpap3\tools" -PSProvider "FileSystem" -Scope Global
-    }
     
+    Clear-Content "T:\_Pipeline\cobopipe_v02-001\PowerShell\Custom-Functions.psm1"
+
     $functionslist = foreach ($i in $functions){$functionsdir + $i}
     $functionslist | ForEach-Object {Get-Content $_ | Add-Content ($functionsdir + "Custom-Functions.psm1")}
     
-
-    if (Get-Command -module Custom-Functions){
-        Get-Command -Module  Custom-Functions
-        Write-Host "`nModule `"Custom-Functions`" successfully loaded `n" -ForegroundColor Green
-    }else{
-        Write-Host "`nModule `"Custom-Functions`" could not be loaded`n" -ForegroundColor Red
-    }
     
 }
-
-Import-Module "T:\_Pipeline\cobopipe_v02-001\PowerShell\Custom-Functions.psm1"
-Update-CustomFunctions
