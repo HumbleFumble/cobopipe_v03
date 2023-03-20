@@ -55,7 +55,8 @@ $allresults
 
 # ----------------------------------------------------------------------------------------------------------------------------------
 
-New-PSDrive -Name "T" -Root "\\dumpap3\tools" -PSProvider "FileSystem" -Persist
+$creds = Get-Credential -UserName domain\username
+New-PSDrive -Name "T" -Root "\\dumpap3\tools" -PSProvider "FileSystem" -Persist -Credential $creds
 T:\_Pipeline\cobopipe_v02-001\BAT_files\update_harmony_hotbar.bat
 
 
