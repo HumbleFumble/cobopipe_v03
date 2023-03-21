@@ -81,17 +81,8 @@
       ]
     },
     "Char": {
-      "Model": [
-        "Model"
-      ],
-      "Blendshape": [
-        "Blendshape"
-      ],
-      "Rig": [
+      "Base": [
         "Anim",
-        "Rig"
-      ],
-      "Shading": [
         "Render"
       ]
     },
@@ -127,9 +118,7 @@
   },
   "ref_order": {
     "Char": [
-      "Model",
-      "Rig",
-      "Shading"
+      "Base"
     ],
     "Set": [
       "Base"
