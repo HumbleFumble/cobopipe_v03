@@ -81,7 +81,7 @@ class ConfigClass():
         
         self.local_vars=['TOONBOOM_GLOBAL_SCRIPT_LOCATION', 'PYTHONPATH']
         
-        self.users={'Animation': ['August', 'Paprika', 'Camilla', 'Jean', 'Louise', 'Nicoline', 'Tue', 'Anne', 'Edgar', 'Jamie', 'Lars', 'Amalie', 'Kristoffer', 'Gill'], 'Render': ['Christian', 'Cedric', 'Mads', 'Simon', 'Kaare', 'Jesper', 'Alexandra', 'Johanna', 'Bernardo']}
+        self.users={'Animation': ['Camilla', 'Louise', 'Thomas'], 'Render': ['Christian']}
         
         self.ref_order={'Char': ['Model', 'Rig', 'Shading'], 'Set': ['Base'], 'Setdress': ['Base'], 'Prop': ['Base'], 'RigModule': ['Base'], 'FX': ['Base']}
         

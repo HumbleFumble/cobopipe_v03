@@ -30,7 +30,8 @@ class ShelfCreator:
         self.iconPath = iconPath
         self.labelBackground = (0.2, 0.2, 0.2, 0.5)
         self.labelColour = (.9, .9, .9)
-
+        if "-" in self.name:
+            self.name = self.name.replace("-", "_")
         if build_dict:
             logger.debug("Build-dict available")
             self._cleanOldShelf(overwrite)
