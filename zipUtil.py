@@ -33,6 +33,11 @@ def zip(source, destination):
     return zipFile
 
 
+def unzip(source, destination):
+    with zipfile.ZipFile(source, 'r') as compressed_data:
+        compressed_data.extractall(destination)
+
+
 if __name__ == '__main__':
     if len(sys.argv) > 2:
         zip(sys.argv[1:-1], sys.argv[-1])

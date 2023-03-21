@@ -1053,7 +1053,8 @@ class FrontController(QtCore.QObject):
 						r'\\archivesrv': r'\\192.168.0.227'
 					}
 					pool = 'hoj'
-					arguments = f'"{source}" "{CC.get_shot_sound_file(**info)}" {dest}'
+					arguments = f'"{CC.get_python_path()}zipUtil.py" "{source}" "{CC.get_shot_sound_file(**info)}" {dest}'
+					print(arguments)
 					for x, y in replace_dictionary.items():
 						arguments = arguments.replace(x, y)
 					send_webhook(
@@ -1094,6 +1095,80 @@ class FrontController(QtCore.QObject):
 					# RoyalRender.submit.batchScriptSubmit(batchPath, project_name=project_name, client_pool=client_pool, user_name=user_name, priority=90,episode="zip")
 
 		print(' >> BATCH DONE << \n')
+
+	def unpack_zip(self, nodes, destination=None, user_name="zip", local=False):
+		if local:
+			import zipUtil
+   
+		shots = []
+		for node in nodes:
+			if node.getType() == 'episode':
+				for sequence in node.getChildren():
+					for shot in sequence.getChildren():
+						shots.append(shot)
+			elif node.getType() == 'seq':
+				for shot in node.getChildren():
+					shots.append(shot)
+			else:
+				shots.append(node)
+
+		for shot in shots:
+			print(shot.getName())
+
+		# print('')
+		# for shot in shots:
+		# 	if shot.getCompStyle() == 'AE':
+		# 		info = shot.getInfoDict()
+		# 		shot_path = CC.get_shot_path(**info)
+		# 		shot_content = os.listdir(shot_path)
+		# 		shot_folders = []
+
+		# 		for s_con in shot_content:
+		# 			s_path = "%s/%s" % (shot_path, s_con)
+		# 			if os.path.isdir(s_path):
+		# 				shot_folders.append(s_con)
+		# 		folder = self.FindVersion(name_list=shot_folders, file_regex="(%s)" % shot.getName().lower(),
+		# 										file_ext="")[0]
+				
+		# 		source = shot_path + '/' + folder
+		# 		if not destination:
+		# 			dest = source + '.zip'
+		# 		else:
+		# 			dest = destination + '/' + folder + '.zip'
+
+		# 		if local:
+		# 			zipUtil.zip([source, CC.get_shot_sound_file(**info)], dest)
+		# 			print(' >> Done zipping ' + source + '\n')
+		# 		else:
+		# 			from shotgrid.webhook.send_webhook import send_webhook
+		# 			replace_dictionary = {
+		# 				r'P:': r'\\192.168.0.225\production',
+		# 				r'W:': r'\\192.168.0.225\WFH',
+		# 				r'T:': r'\\192.168.0.225\tools',
+		# 				r'\\dumpap3': r'\\192.168.0.225',
+		# 				r'\\archivesrv': r'\\192.168.0.227'
+		# 			}
+		# 			pool = 'hoj'
+		# 			arguments = f'"{CC.get_python_path()}zipUtil.py" "{source}" "{CC.get_shot_sound_file(**info)}" {dest}'
+		# 			print(arguments)
+		# 			for x, y in replace_dictionary.items():
+		# 				arguments = arguments.replace(x, y)
+		# 			send_webhook(
+		# 				{
+		# 					'hook': 'submit_zip',
+		# 					'args': [],
+		# 					'kwargs': {
+		# 						'executable': r'\\192.168.0.225\tools\_Executables\python\Python310\python.exe',
+		# 						'arguments': arguments,
+		# 						'pool': pool,
+		# 						'group': 'python',
+		# 						'priority': 50,
+		# 						'name': folder + '.zip'
+		# 					}
+		# 				},
+		# 				vpn = True
+		# 			)
+
 
 	def refreshThumbs(self, cur_nodes=[], overwrite=True, overwrite_cache=False, use_threads=True):
 		"""Finds the paths to the highest level of thumbnail, then creates a pixmap from that.
@@ -2903,6 +2978,7 @@ class MainWindow(QtWidgets.QWidget):
 						create_menu.addAction("Zip Anim Folder to FTP")
 						create_menu.addAction("Zip Anim Folder (Local)")
 						create_menu.addAction("Zip Anim Folder to FTP (Local)")
+						create_menu.addAction("Unpack Anim Folder (Local)")
 					create_menu.addAction("Rebuild Anim Publish Report")
 					create_menu.addSeparator()
 					create_menu.addAction("Rebuild Thumbnails")
@@ -2980,6 +3056,8 @@ class MainWindow(QtWidgets.QWidget):
 						self.ctrl.zipFolders(nodes,user_name=self.user_combobox.currentText(), local=True)
 					if action.text() == "Zip Anim Folder to FTP (Local)":
 						self.ctrl.zipFolders(nodes, destination=self.ctrl.get_ftp_directory(self.user_combobox.currentText()),user_name=self.user_combobox.currentText(), local=True)
+					if action.text() == "Unpack Anim Folder (Local)":
+						self.ctrl.unpack_zip(nodes, user_name=self.user_combobox.currentText(), local=True)
 					if action.text() == "Rebuild Anim Publish Report":
 						cur_list = nodes
 						if node.getType() in ["episode","seq"]:
