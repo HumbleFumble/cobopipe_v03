@@ -13,10 +13,10 @@ function Update-CustomFunctions {
 
     
     if ((Get-CimInstance -Namespace root/CIMV2 -ClassName Win32_ComputerSystem).Domain){
-        $functionsdir = "T:\_Pipeline\cobopipe_v02-001\PowerShell\"
+        $functionsdir = "C:\Users\plp\VsCodeProjects\cobopipe_v02-001\PowerShell\"
     }
     
-    Clear-Content "T:\_Pipeline\cobopipe_v02-001\PowerShell\Custom-Functions.psm1"
+    Clear-Content "C:\Users\plp\VsCodeProjects\cobopipe_v02-001\PowerShell\Custom-Functions.psm1"
 
     $functionslist = foreach ($i in $functions){$functionsdir + $i}
     $functionslist | ForEach-Object {Get-Content $_ | Add-Content ($functionsdir + "Custom-Functions.psm1")}
