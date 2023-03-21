@@ -83,9 +83,9 @@ class ConfigClass():
         
         self.users={'Animation': ['Camilla', 'Louise', 'Thomas'], 'Render': ['Christian']}
         
-        self.ref_order={'Char': ['Model', 'Rig', 'Shading'], 'Set': ['Base'], 'Setdress': ['Base'], 'Prop': ['Base'], 'RigModule': ['Base'], 'FX': ['Base']}
+        self.ref_order={'Char': ['Base'], 'Set': ['Base'], 'Setdress': ['Base'], 'Prop': ['Base'], 'RigModule': ['Base'], 'FX': ['Base']}
         
-        self.ref_steps={'Prop': {'Base': ['Anim', 'Render']}, 'Char': {'Model': ['Model'], 'Blendshape': ['Blendshape'], 'Rig': ['Anim', 'Rig'], 'Shading': ['Render']}, 'Setdress': {'Base': ['Proxy', 'Ingest', 'Render']}, 'Set': {'Base': ['Anim', 'Render']}, 'RigModule': {'Base': ['Rig']}, 'FX': {'Base': ['Anim', 'Render']}}
+        self.ref_steps={'Prop': {'Base': ['Anim', 'Render']}, 'Char': {'Base': ['Anim', 'Render']}, 'Setdress': {'Base': ['Proxy', 'Ingest', 'Render']}, 'Set': {'Base': ['Anim', 'Render']}, 'RigModule': {'Base': ['Rig']}, 'FX': {'Base': ['Anim', 'Render']}}
         
         self.project_settings={'fps': '25fps', 'cmEnabled': 1, 'cmViewTransform': 'sRGB gamma', 'tb_width': 1920, 'tb_height': 1080, 'tb_size_multi': 1.0, 'tb_output_format': 'PNG4', 'tb_number_padding': '3'}
         
