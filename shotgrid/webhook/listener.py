@@ -5,7 +5,7 @@ if path not in sys.path:
     sys.path.append(path)
 from flask import Flask, request
 from waitress import serve
-import shotgrid.webhook.handler as handler
+from shotgrid.webhook.handler import cb_handler, sg_handler
 import hmac
 import hashlib
 
@@ -33,7 +33,7 @@ def webhook():
             webhook_id = request.headers.get('X-Sg-webhook-id')
             data = request.json.get("data")
             timestamp = request.json.get("timestamp")
-            handler.run(webhook_id, data, timestamp)
+            sg_handler(webhook_id, data, timestamp)
             return "Webhook received and processed."
         else:
             return "Token validation failed."
@@ -43,7 +43,7 @@ def remote():
     if request.method == "POST":
         signature = request.headers.get('signature')
         if validate_secret_token(request, signature):
-            print(request.json)
+            cb_handler(request.json)
             return "Webhook received and processed."
         else:
             return "Token validation failed."

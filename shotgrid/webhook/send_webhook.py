@@ -6,12 +6,13 @@ import hashlib
 
 token = '97806dc14d1045b4adabbbb7fd90f193'
 
-def send_webhook():
-    url = "http://192.168.0.89:21225/remote"
-    # path = os.path.abspath(os.path.join(__file__, '..', 'data.json'))
-    # data = get_json(path)
+def send_webhook(data, vpn=False):
+    url = "http://192.168.0.4:21224/remote"
+    
+    if not vpn:
+        url = "http://178.249.49.18:21224/remote"
+        
     headers = {'content-type': 'application/json; charset=utf-8'}
-    data = {"Test": "This is a test"}
     body = json.dumps(data)
     headers['signature'] = generate_signature(body)
     requests.post(url, json=data, headers=headers)

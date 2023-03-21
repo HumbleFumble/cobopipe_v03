@@ -1003,11 +1003,9 @@ class FrontController(QtCore.QObject):
 		QtGui.QPixmapCache.clear()
 		self.__threadPool.cancelBatch()
 
-	def zipFolders(self, nodes, destination=None, user_name="zip", local=True):
+	def zipFolders(self, nodes, destination=None, user_name="zip", local=False):
 		if local:
 			import zipUtil
-		else:
-			import RoyalRender.submit
 		
 		shots = []
 		for node in nodes:
@@ -1046,27 +1044,54 @@ class FrontController(QtCore.QObject):
 					zipUtil.zip([source, CC.get_shot_sound_file(**info)], dest)
 					print(' >> Done zipping ' + source + '\n')
 				else:
-					_string = "@echo off\n\npython "+ CC.get_python_path() +"zipUtil.py " + source + ' ' + CC.get_shot_sound_file(**info) + ' ' + dest + "\n\nEXIT /B 0"
-					_string = _string.replace('T:/', '\\\\192.168.0.225/tools/')
-					if CC.project_name in ['MiasMagic2', 'Boerste-Season2']:
-						_string = _string.replace('P:/', '\\\\192.168.0.235/projekter/')
-					else:
-						_string = _string.replace('P:/', '\\\\192.168.0.225/production/')
+					from shotgrid.webhook.send_webhook import send_webhook
+					replace_dictionary = {
+						r'P:': r'\\192.168.0.225\production',
+						r'W:': r'\\192.168.0.225\WFH',
+						r'T:': r'\\192.168.0.225\tools',
+						r'\\dumpap3': r'\\192.168.0.225',
+						r'\\archivesrv': r'\\192.168.0.227'
+					}
+					pool = 'hoj'
+					arguments = f'"{source}" "{CC.get_shot_sound_file(**info)}" {dest}'
+					for x, y in replace_dictionary.items():
+						arguments = arguments.replace(x, y)
+					send_webhook(
+						{
+							'hook': 'submit_zip',
+							'args': [],
+							'kwargs': {
+								'executable': r'\\192.168.0.225\tools\_Executables\python\Python310\python.exe',
+								'arguments': arguments,
+								'pool': pool,
+								'group': 'python',
+								'priority': 50,
+								'name': folder + '.zip'
+							}
+						},
+						vpn = True
+					)
+					# _string = "@echo off\n\npython "+ CC.get_python_path() +"zipUtil.py " + source + ' ' + CC.get_shot_sound_file(**info) + ' ' + dest + "\n\nEXIT /B 0"
+					# _string = _string.replace('T:/', '\\\\192.168.0.225/tools/')
+					# if CC.project_name in ['MiasMagic2', 'Boerste-Season2']:
+					# 	_string = _string.replace('P:/', '\\\\192.168.0.235/projekter/')
+					# else:
+					# 	_string = _string.replace('P:/', '\\\\192.168.0.225/production/')
 
-					temp_folder = shot_path
-					if not os.path.exists(temp_folder):
-						os.mkdir(temp_folder)
-					batchPath = os.path.join(temp_folder + '/' + shot.getName() + '_Zip.bat')
-					batchPath = os.path.abspath(batchPath).replace(os.sep, '/')
-					logger.debug(_string)
-					with open(batchPath, 'w') as batchFile:
-						batchFile.write(_string)
+					# temp_folder = shot_path
+					# if not os.path.exists(temp_folder):
+					# 	os.mkdir(temp_folder)
+					# batchPath = os.path.join(temp_folder + '/' + shot.getName() + '_Zip.bat')
+					# batchPath = os.path.abspath(batchPath).replace(os.sep, '/')
+					# logger.debug(_string)
+					# with open(batchPath, 'w') as batchFile:
+					# 	batchFile.write(_string)
 
-					project_name = CC.project_name
-					# client_pool = 'ALL'
-					client_pool = 'PythonJobs' # TODO: CREATE RR POOL
-					user_name = 'zip'
-					RoyalRender.submit.batchScriptSubmit(batchPath, project_name=project_name, client_pool=client_pool, user_name=user_name, priority=90,episode="zip")
+					# project_name = CC.project_name
+					# # client_pool = 'ALL'
+					# client_pool = 'PythonJobs' # TODO: CREATE RR POOL
+					# user_name = 'zip'
+					# RoyalRender.submit.batchScriptSubmit(batchPath, project_name=project_name, client_pool=client_pool, user_name=user_name, priority=90,episode="zip")
 
 		print(' >> BATCH DONE << \n')
 
@@ -2874,8 +2899,8 @@ class MainWindow(QtWidgets.QWidget):
 					menu.addSeparator()
 
 					if animation_style == "Toonboom":
-						#create_menu.addAction("Zip Anim Folder")
-						#create_menu.addAction("Zip Anim Folder to FTP")
+						create_menu.addAction("Zip Anim Folder")
+						create_menu.addAction("Zip Anim Folder to FTP")
 						create_menu.addAction("Zip Anim Folder (Local)")
 						create_menu.addAction("Zip Anim Folder to FTP (Local)")
 					create_menu.addAction("Rebuild Anim Publish Report")

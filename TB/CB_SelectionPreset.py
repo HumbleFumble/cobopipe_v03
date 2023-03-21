@@ -636,12 +636,36 @@ class FrontController(QObject):
 			return {}
 
 	# def createSubnodeList(self):
-	def getTBselection(self):
+	def removeKeyOnSelection(self):
+		current_frame = int(js_frame.current())
+		log(current_frame)
 		for n in self.scene.selection.nodes:
-			log(n.name)
-		for c in self.scene.columns:
-			log(c)
+			for a in self.getAllAtributes(n.attributes):
+				if a.column:
+					c = a.column
+					if c.keyframe_exists(current_frame):
+						c.keyframe_remove(current_frame)
 	# 	Check nodes + columns in selection
+	def addKeyOnSelection(self):
+		# current_frame = self.scene.selection.frame_start
+		current_frame = int(js_frame.current())
+		log(current_frame)
+		for n in self.scene.selection.nodes:
+			for a in self.getAllAtributes(n.attributes):
+				if a.column:
+					c = a.column
+					if not c.keyframe_exists(current_frame):
+						c.keyframe_create(current_frame)
+
+	# 	Check nodes + columns in selection
+	def getAllAtributes(self, attr_list):
+		return_list = []
+		for a in attr_list:
+			return_list.append(a)
+			if a.subattributes:
+				return_list.extend(self.getAllAtributes(a.subattributes))
+		return return_list
+
 	def createDictFromTBSelection(self,nodes=[]):
 		return_dict = {}
 		if not nodes and in_toonboom:
@@ -715,6 +739,7 @@ class SelectionPreset_UI(QDialog):
 		self.select_bttn = QPushButton("Select")
 		self.save_preset_bttn = QPushButton("Save to file")
 		self.load_preset_bttn = QPushButton("Load from file")
+		self.add_key_bttn = QPushButton("Set Key")
 		self.remove_key_bttn = QPushButton("Remove Key")
 
 
@@ -726,6 +751,7 @@ class SelectionPreset_UI(QDialog):
 		self.menu_bar.addSeparator()
 		self.menu_bar.addWidget(self.save_preset_bttn)
 		self.menu_bar.addWidget(self.load_preset_bttn)
+		self.menu_bar.addWidget(self.add_key_bttn)
 		self.menu_bar.addWidget(self.remove_key_bttn)
 
 
@@ -736,7 +762,8 @@ class SelectionPreset_UI(QDialog):
 
 		self.save_preset_bttn.clicked.connect(self.saveAsFile)
 		self.load_preset_bttn.clicked.connect(self.loadFromFile)
-		self.remove_key_bttn.clicked.connect(self.getCurrentSelection)
+		self.remove_key_bttn.clicked.connect(self.removeKeyCall)
+		self.add_key_bttn.clicked.connect(self.addKeyCall)
 
 		self.tree = QTreeView(self)
 
@@ -756,10 +783,11 @@ class SelectionPreset_UI(QDialog):
 
 		self.layout_top.addWidget(self.menu_bar)
 		self.layout_top.addWidget(self.tree)
-	def getCurrentSelection(self):
-		self._ctrl.getTBselection()
-		# self._ctrl.
-		pass
+	def removeKeyCall(self):
+		self._ctrl.removeKeyOnSelection()
+
+	def addKeyCall(self):
+		self._ctrl.addKeyOnSelection()
 	def getTVNodes(self):
 		return_list = []
 		root = self.tree_model.getRootNode()
