@@ -60,7 +60,7 @@ class ConfigClass():
         self.cryptomatte_list="<base_path>/Pipeline/cryptomatteList.json"
         self.episode_info_file="<episode_path>/<episode_name>_BrowserInfo.json"
         self.python3="T:/_Executables/python/Python310/python.exe"
-        self.ftp_path="\\\\archivesrv/ftpprod/HOJ_FTP"
+        self.ftp_path="\\\\192.168.0.227/ftpprod/HOJ_FTP"
         self.premiere_sqpreset="T:/_Pipeline/cobopipe_v02-001/PremierePro/sequencePresets/1920x1080-25fps.sqpreset"
         
         
@@ -78,7 +78,7 @@ class ConfigClass():
         
         self.ref_steps={'Prop': {'Base': ['Anim', 'Render']}, 'Char': {'Model': ['Model'], 'Blendshape': ['Blendshape'], 'Rig': ['Anim', 'Rig'], 'Shading': ['Render']}, 'Setdress': {'Base': ['Proxy', 'Ingest', 'Render']}, 'Set': {'Base': ['Anim', 'Render']}, 'RigModule': {'Base': ['Rig']}, 'FX': {'Base': ['Anim', 'Render']}}
         
-        self.project_settings={'fps': '25fps', 'tb_width': 1920, 'tb_height': 1080, 'tb_size_multi': 1.1, 'tb_output_format': 'TGA4', 'tb_number_padding': '3'}
+        self.project_settings={'fps': '25fps', 'tb_width': 1920, 'tb_height': 1080, 'tb_size_multi': 1.1, 'tb_output_format': 'TGA4', 'tb_number_padding': '3', 'deadline_pool': 'hoj'}
         
         self.project_style={'animation_style': ['AE', 'Toonboom'], 'comp_style': ['AE'], 'default_animation_style': 'Toonboom', 'default_comp_style': 'AE'}
         
@@ -281,7 +281,7 @@ class ConfigClass():
 
 
     def get_ftp_path(self):
-        to_return = "\\\\archivesrv/ftpprod/HOJ_FTP"
+        to_return = "\\\\192.168.0.227/ftpprod/HOJ_FTP"
         return to_return
 
 

@@ -715,8 +715,7 @@ class FrontController(QtCore.QObject):
 								if set_info == "animation_style":
 									info_node.setAnimationStyle(ep_info_dict[info_node_name][set_info])
 									if info_node_dict["type"] == "seq":
-										self.setInfoOnChildren(info_node, "animation_style",
-															   ep_info_dict[info_node_name][set_info])
+										self.setInfoOnChildren(info_node, "animation_style", ep_info_dict[info_node_name][set_info])
 								if set_info == "comp_style":
 									info_node.setCompStyle(ep_info_dict[info_node_name][set_info])
 									if info_node_dict["type"] == "seq":
@@ -740,10 +739,13 @@ class FrontController(QtCore.QObject):
 						os.makedirs(path)
 					except:
 						logger.warning("Can't access " + path)
+				else:
+					logger.warning(f"Path does not exist: {path}")
 
 			return from_path
 
 		else:
+			logger.warning(f"Path does not exist: {ftp_folder}")
 			return None
 
  
@@ -1052,8 +1054,7 @@ class FrontController(QtCore.QObject):
 						r'\\dumpap3': r'\\192.168.0.225',
 						r'\\archivesrv': r'\\192.168.0.227'
 					}
-					pool = 'hoj'
-					arguments = f'"{CC.get_python_path()}zipUtil.py" "{source}" "{CC.get_shot_sound_file(**info)}" {dest}'
+					arguments = f'"{CC.get_python_path()}zipUtil.py" "zip" "{source}" "{CC.get_shot_sound_file(**info)}" "{dest}"'
 					print(arguments)
 					for x, y in replace_dictionary.items():
 						arguments = arguments.replace(x, y)
@@ -1064,42 +1065,21 @@ class FrontController(QtCore.QObject):
 							'kwargs': {
 								'executable': r'\\192.168.0.225\tools\_Executables\python\Python310\python.exe',
 								'arguments': arguments,
-								'pool': pool,
+								'pool': CC.project_settings.get('deadline_pool'),
 								'group': 'python',
 								'priority': 50,
-								'name': folder + '.zip'
+								'name': f'Zipping {folder}.zip'
 							}
 						},
 						vpn = True
 					)
-					# _string = "@echo off\n\npython "+ CC.get_python_path() +"zipUtil.py " + source + ' ' + CC.get_shot_sound_file(**info) + ' ' + dest + "\n\nEXIT /B 0"
-					# _string = _string.replace('T:/', '\\\\192.168.0.225/tools/')
-					# if CC.project_name in ['MiasMagic2', 'Boerste-Season2']:
-					# 	_string = _string.replace('P:/', '\\\\192.168.0.235/projekter/')
-					# else:
-					# 	_string = _string.replace('P:/', '\\\\192.168.0.225/production/')
-
-					# temp_folder = shot_path
-					# if not os.path.exists(temp_folder):
-					# 	os.mkdir(temp_folder)
-					# batchPath = os.path.join(temp_folder + '/' + shot.getName() + '_Zip.bat')
-					# batchPath = os.path.abspath(batchPath).replace(os.sep, '/')
-					# logger.debug(_string)
-					# with open(batchPath, 'w') as batchFile:
-					# 	batchFile.write(_string)
-
-					# project_name = CC.project_name
-					# # client_pool = 'ALL'
-					# client_pool = 'PythonJobs' # TODO: CREATE RR POOL
-					# user_name = 'zip'
-					# RoyalRender.submit.batchScriptSubmit(batchPath, project_name=project_name, client_pool=client_pool, user_name=user_name, priority=90,episode="zip")
 
 		print(' >> BATCH DONE << \n')
 
 	def unpack_zip(self, nodes, destination=None, user_name="zip", local=False):
 		if local:
 			import zipUtil
-   
+
 		shots = []
 		for node in nodes:
 			if node.getType() == 'episode':
@@ -1112,8 +1092,44 @@ class FrontController(QtCore.QObject):
 			else:
 				shots.append(node)
 
+		ftp_folder = f'{CC.get_ftp_path()}/_ANIMATION/{user_name}/TO_CB'
 		for shot in shots:
-			print(shot.getName())
+			for item in os.listdir(ftp_folder):
+				if shot.getName() in item and item.endswith('.zip'):
+					source = os.path.join(ftp_folder, item)
+					destination = CC.get_shot_path(**shot.getInfoDict())
+					if local:
+						zipUtil.unzip(source, destination, overwrite=False)
+					else:
+						from shotgrid.webhook.send_webhook import send_webhook
+						replace_dictionary = {
+							r'P:': r'\\192.168.0.225\production',
+							r'W:': r'\\192.168.0.225\WFH',
+							r'T:': r'\\192.168.0.225\tools',
+							r'\\dumpap3': r'\\192.168.0.225',
+							r'\\archivesrv': r'\\192.168.0.227'
+						}
+						pool = CC.project_settings.get('deadline_pool')
+						arguments = f'"{CC.get_python_path()}zipUtil.py" "unzip" "{source}" "{destination}"'
+						for x, y in replace_dictionary.items():
+							arguments = arguments.replace(x, y)
+						print(arguments)
+						zip_file = os.path.basename(source)
+						send_webhook(
+							{
+								'hook': 'submit_zip_unpack',
+								'args': [],
+								'kwargs': {
+									'executable': r'\\192.168.0.225\tools\_Executables\python\Python310\python.exe',
+									'arguments': arguments,
+									'pool': pool,
+									'group': 'python',
+									'priority': 50,
+									'name': f'Unpacking {zip_file}'
+								}
+							},
+							vpn = True
+						)
 
 		# print('')
 		# for shot in shots:
@@ -2888,6 +2904,7 @@ class MainWindow(QtWidgets.QWidget):
 					# open_menu = QtWidgets.QMenu("Open", menu)
 					view_menu = QtWidgets.QMenu("Previews", menu)
 					create_menu = QtWidgets.QMenu("Create/Build", menu)
+					file_menu = QtWidgets.QMenu("File/Transfer", menu)
 					category_menu = QtWidgets.QMenu("Edit Category", menu)
 					category_add_menu = QtWidgets.QMenu("Add Selection To:", category_menu)
 
@@ -2955,7 +2972,12 @@ class MainWindow(QtWidgets.QWidget):
 						menu.addAction("Set as FROM shot")
 						menu.addAction("Add to (apply) TO shots")
 						menu.addSeparator()
+						menu.addMenu(file_menu)
+						menu.addSeparator()
 						menu.addAction("Create Category")
+
+
+
 						menu.addMenu(category_menu)
 						category_menu.addMenu(category_add_menu)
 						category_menu.addAction("Remove Selection From Category")
@@ -2974,11 +2996,12 @@ class MainWindow(QtWidgets.QWidget):
 					menu.addSeparator()
 
 					if animation_style == "Toonboom":
-						create_menu.addAction("Zip Anim Folder")
-						create_menu.addAction("Zip Anim Folder to FTP")
-						create_menu.addAction("Zip Anim Folder (Local)")
-						create_menu.addAction("Zip Anim Folder to FTP (Local)")
-						create_menu.addAction("Unpack Anim Folder (Local)")
+						file_menu.addAction("Zip Anim Folder")
+						file_menu.addAction("Zip Anim Folder to FTP")
+						file_menu.addAction("Zip Anim Folder (Local)")
+						file_menu.addAction("Zip Anim Folder to FTP (Local)")
+						file_menu.addAction("Unpack Anim Folder")
+						file_menu.addAction("Unpack Anim Folder (Local)")
 					create_menu.addAction("Rebuild Anim Publish Report")
 					create_menu.addSeparator()
 					create_menu.addAction("Rebuild Thumbnails")
@@ -3056,6 +3079,8 @@ class MainWindow(QtWidgets.QWidget):
 						self.ctrl.zipFolders(nodes,user_name=self.user_combobox.currentText(), local=True)
 					if action.text() == "Zip Anim Folder to FTP (Local)":
 						self.ctrl.zipFolders(nodes, destination=self.ctrl.get_ftp_directory(self.user_combobox.currentText()),user_name=self.user_combobox.currentText(), local=True)
+					if action.text() == "Unpack Anim Folder":
+						self.ctrl.unpack_zip(nodes, user_name=self.user_combobox.currentText(), local=False)
 					if action.text() == "Unpack Anim Folder (Local)":
 						self.ctrl.unpack_zip(nodes, user_name=self.user_combobox.currentText(), local=True)
 					if action.text() == "Rebuild Anim Publish Report":
