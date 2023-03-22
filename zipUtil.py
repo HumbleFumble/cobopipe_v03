@@ -61,4 +61,8 @@ if __name__ == "__main__":
             zip(sys.argv[2:-1], sys.argv[-1])
         elif sys.argv[1] == 'unzip':
             print('UNZIPPING')
-            unzip(sys.argv[2], destination=sys.argv[3], overwrite=sys.argv[4])
+            if len(sys.argv) == 4:
+                overwrite = sys.argv[4]
+            else
+                overwrite = False
+            unzip(sys.argv[2], destination=sys.argv[3], overwrite=overwrite)
