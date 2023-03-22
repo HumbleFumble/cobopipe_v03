@@ -1114,6 +1114,7 @@ class FrontController(QtCore.QObject):
 						for x, y in replace_dictionary.items():
 							arguments = arguments.replace(x, y)
 						print(arguments)
+						zip_file = os.path.basename(source)
 						send_webhook(
 							{
 								'hook': 'submit_zip_unpack',
@@ -1124,7 +1125,7 @@ class FrontController(QtCore.QObject):
 									'pool': pool,
 									'group': 'python',
 									'priority': 50,
-									'name': f'Unpacking {source}'
+									'name': f'Unpacking {zip_file}'
 								}
 							},
 							vpn = True
