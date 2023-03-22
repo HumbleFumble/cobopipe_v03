@@ -1068,7 +1068,7 @@ class FrontController(QtCore.QObject):
 								'pool': CC.project_settings.get('deadline_pool'),
 								'group': 'python',
 								'priority': 50,
-								'name': folder + '.zip'
+								'name': f'Zipping {folder}.zip'
 							}
 						},
 						vpn = True
@@ -1114,21 +1114,21 @@ class FrontController(QtCore.QObject):
 						for x, y in replace_dictionary.items():
 							arguments = arguments.replace(x, y)
 						print(arguments)
-						# send_webhook(
-						# 	{
-						# 		'hook': 'submit_zip_unpack',
-						# 		'args': [],
-						# 		'kwargs': {
-						# 			'executable': r'\\192.168.0.225\tools\_Executables\python\Python310\python.exe',
-						# 			'arguments': arguments,
-						# 			'pool': pool,
-						# 			'group': 'python',
-						# 			'priority': 50,
-						# 			'name': folder + '.zip'
-						# 		}
-						# 	},
-						# 	vpn = True
-						# )
+						send_webhook(
+							{
+								'hook': 'submit_zip_unpack',
+								'args': [],
+								'kwargs': {
+									'executable': r'\\192.168.0.225\tools\_Executables\python\Python310\python.exe',
+									'arguments': arguments,
+									'pool': pool,
+									'group': 'python',
+									'priority': 50,
+									'name': f'Unpacking {source}'
+								}
+							},
+							vpn = True
+						)
 
 		# print('')
 		# for shot in shots:
