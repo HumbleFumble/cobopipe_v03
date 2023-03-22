@@ -55,7 +55,7 @@
                  "cryptomatte_list": "<base_path>/Pipeline/cryptomatteList.json",
                  "episode_info_file":"<episode_path>/<episode_name>_BrowserInfo.json",
                  "python3": "T:/_Executables/python/Python310/python.exe",
-                 "ftp_path": "\\\\\\\\archivesrv/ftpprod/HOJ_FTP",
+                 "ftp_path": "\\\\\\\\192.168.0.227/ftpprod/HOJ_FTP",
                  "premiere_sqpreset": "T:/_Pipeline/cobopipe_v02-001/PremierePro/sequencePresets/1920x1080-25fps.sqpreset"
                  },
 "project_name":"Hoj",
@@ -112,6 +112,7 @@
     "tb_height": 1080,
     "tb_size_multi": 1.1,
     "tb_output_format":"TGA4",
-    "tb_number_padding": "3"
+    "tb_number_padding": "3",
+    "deadline_pool": "hoj"
 }
 }

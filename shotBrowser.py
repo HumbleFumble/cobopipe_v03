@@ -740,10 +740,13 @@ class FrontController(QtCore.QObject):
 						os.makedirs(path)
 					except:
 						logger.warning("Can't access " + path)
+				else:
+					logger.warning(f"Path does not exist: {path}")
 
 			return from_path
 
 		else:
+			logger.warning(f"Path does not exist: {ftp_folder}")
 			return None
 
  
@@ -1053,7 +1056,7 @@ class FrontController(QtCore.QObject):
 						r'\\archivesrv': r'\\192.168.0.227'
 					}
 					pool = 'hoj'
-					arguments = f'"{CC.get_python_path()}zipUtil.py" "{source}" "{CC.get_shot_sound_file(**info)}" {dest}'
+					arguments = f'"{CC.get_python_path()}zipUtil.py" "{source}" "{CC.get_shot_sound_file(**info)}" "{dest}"'
 					print(arguments)
 					for x, y in replace_dictionary.items():
 						arguments = arguments.replace(x, y)
@@ -1064,7 +1067,7 @@ class FrontController(QtCore.QObject):
 							'kwargs': {
 								'executable': r'\\192.168.0.225\tools\_Executables\python\Python310\python.exe',
 								'arguments': arguments,
-								'pool': pool,
+								'pool': CC.project_settings.get('deadline_pool'),
 								'group': 'python',
 								'priority': 50,
 								'name': folder + '.zip'
