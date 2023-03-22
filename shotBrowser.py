@@ -1068,7 +1068,7 @@ class FrontController(QtCore.QObject):
 								'pool': CC.project_settings.get('deadline_pool'),
 								'group': 'python',
 								'priority': 50,
-								'name': folder + '.zip'
+								'name': f'Zipping {folder}.zip'
 							}
 						},
 						vpn = True
@@ -1114,21 +1114,21 @@ class FrontController(QtCore.QObject):
 						for x, y in replace_dictionary.items():
 							arguments = arguments.replace(x, y)
 						print(arguments)
-						# send_webhook(
-						# 	{
-						# 		'hook': 'submit_zip_unpack',
-						# 		'args': [],
-						# 		'kwargs': {
-						# 			'executable': r'\\192.168.0.225\tools\_Executables\python\Python310\python.exe',
-						# 			'arguments': arguments,
-						# 			'pool': pool,
-						# 			'group': 'python',
-						# 			'priority': 50,
-						# 			'name': folder + '.zip'
-						# 		}
-						# 	},
-						# 	vpn = True
-						# )
+						send_webhook(
+							{
+								'hook': 'submit_zip_unpack',
+								'args': [],
+								'kwargs': {
+									'executable': r'\\192.168.0.225\tools\_Executables\python\Python310\python.exe',
+									'arguments': arguments,
+									'pool': pool,
+									'group': 'python',
+									'priority': 50,
+									'name': f'Unpacking {source}'
+								}
+							},
+							vpn = True
+						)
 
 		# print('')
 		# for shot in shots:
@@ -2903,6 +2903,7 @@ class MainWindow(QtWidgets.QWidget):
 					# open_menu = QtWidgets.QMenu("Open", menu)
 					view_menu = QtWidgets.QMenu("Previews", menu)
 					create_menu = QtWidgets.QMenu("Create/Build", menu)
+					file_menu = QtWidgets.QMenu("File/Transfer", menu)
 					category_menu = QtWidgets.QMenu("Edit Category", menu)
 					category_add_menu = QtWidgets.QMenu("Add Selection To:", category_menu)
 
@@ -2970,7 +2971,12 @@ class MainWindow(QtWidgets.QWidget):
 						menu.addAction("Set as FROM shot")
 						menu.addAction("Add to (apply) TO shots")
 						menu.addSeparator()
+						menu.addMenu(file_menu)
+						menu.addSeparator()
 						menu.addAction("Create Category")
+
+
+
 						menu.addMenu(category_menu)
 						category_menu.addMenu(category_add_menu)
 						category_menu.addAction("Remove Selection From Category")
@@ -2989,11 +2995,12 @@ class MainWindow(QtWidgets.QWidget):
 					menu.addSeparator()
 
 					if animation_style == "Toonboom":
-						create_menu.addAction("Zip Anim Folder")
-						create_menu.addAction("Zip Anim Folder to FTP")
-						create_menu.addAction("Zip Anim Folder (Local)")
-						create_menu.addAction("Zip Anim Folder to FTP (Local)")
-						create_menu.addAction("Unpack Anim Folder (Local)")
+						file_menu.addAction("Zip Anim Folder")
+						file_menu.addAction("Zip Anim Folder to FTP")
+						file_menu.addAction("Zip Anim Folder (Local)")
+						file_menu.addAction("Zip Anim Folder to FTP (Local)")
+						file_menu.addAction("Unpack Anim Folder")
+						file_menu.addAction("Unpack Anim Folder (Local)")
 					create_menu.addAction("Rebuild Anim Publish Report")
 					create_menu.addSeparator()
 					create_menu.addAction("Rebuild Thumbnails")
@@ -3071,8 +3078,10 @@ class MainWindow(QtWidgets.QWidget):
 						self.ctrl.zipFolders(nodes,user_name=self.user_combobox.currentText(), local=True)
 					if action.text() == "Zip Anim Folder to FTP (Local)":
 						self.ctrl.zipFolders(nodes, destination=self.ctrl.get_ftp_directory(self.user_combobox.currentText()),user_name=self.user_combobox.currentText(), local=True)
-					if action.text() == "Unpack Anim Folder (Local)":
+					if action.text() == "Unpack Anim Folder":
 						self.ctrl.unpack_zip(nodes, user_name=self.user_combobox.currentText(), local=False)
+					if action.text() == "Unpack Anim Folder (Local)":
+						self.ctrl.unpack_zip(nodes, user_name=self.user_combobox.currentText(), local=True)
 					if action.text() == "Rebuild Anim Publish Report":
 						cur_list = nodes
 						if node.getType() in ["episode","seq"]:
