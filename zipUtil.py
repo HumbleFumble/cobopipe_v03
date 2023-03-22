@@ -65,7 +65,7 @@ if __name__ == "__main__":
             print('UNZIPPING')
             overwrite = False
             print(len(sys.argv))
-            if len(sys.argv) == 4:
-                print('OVERWRITE TRUE')
+            if len(sys.argv) == 5:
+                print(f'OVERWRITE: {sys.argv[4]}')
                 overwrite = sys.argv[4]
             unzip(sys.argv[2], destination=sys.argv[3], overwrite=overwrite)
