@@ -55,17 +55,15 @@ def unzip(source, destination=None, overwrite=False):
 
 
 if __name__ == "__main__":
-    for i, arg in enumerate(sys.argv):
-        print(f'{i}: {arg}')
     if len(sys.argv) > 3:
         if sys.argv[1] == 'zip':
-            print('ZIPPING')
             zip(sys.argv[2:-1], sys.argv[-1])
         elif sys.argv[1] == 'unzip':
-            print('UNZIPPING')
             overwrite = False
-            print(len(sys.argv))
-            if len(sys.argv) == 5:
-                print(f'OVERWRITE: {sys.argv[4]}')
+            if len(sys.argv) > 4:
                 overwrite = sys.argv[4]
             unzip(sys.argv[2], destination=sys.argv[3], overwrite=overwrite)
+        else:
+            print('ERROR: function not defined')
+    else:
+        print('ERROR: Insuffecient number of arguments.')
