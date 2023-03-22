@@ -44,3 +44,6 @@ $table
 
 # Install chocolatey
 Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+
+# Remove drive registry key
+Remove-Item -Path $("$Path" + "\" + "$DriveLetter")
