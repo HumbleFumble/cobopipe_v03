@@ -2993,6 +2993,7 @@ class MainWindow(QtWidgets.QWidget):
 						create_menu.addAction("Zip Anim Folder to FTP")
 						create_menu.addAction("Zip Anim Folder (Local)")
 						create_menu.addAction("Zip Anim Folder to FTP (Local)")
+						create_menu.addAction("Unpack Anim Folder")
 						create_menu.addAction("Unpack Anim Folder (Local)")
 					create_menu.addAction("Rebuild Anim Publish Report")
 					create_menu.addSeparator()
@@ -3071,8 +3072,10 @@ class MainWindow(QtWidgets.QWidget):
 						self.ctrl.zipFolders(nodes,user_name=self.user_combobox.currentText(), local=True)
 					if action.text() == "Zip Anim Folder to FTP (Local)":
 						self.ctrl.zipFolders(nodes, destination=self.ctrl.get_ftp_directory(self.user_combobox.currentText()),user_name=self.user_combobox.currentText(), local=True)
-					if action.text() == "Unpack Anim Folder (Local)":
+					if action.text() == "Unpack Anim Folder":
 						self.ctrl.unpack_zip(nodes, user_name=self.user_combobox.currentText(), local=False)
+					if action.text() == "Unpack Anim Folder (Local)":
+						self.ctrl.unpack_zip(nodes, user_name=self.user_combobox.currentText(), local=True)
 					if action.text() == "Rebuild Anim Publish Report":
 						cur_list = nodes
 						if node.getType() in ["episode","seq"]:
