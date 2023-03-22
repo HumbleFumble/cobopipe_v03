@@ -13,7 +13,9 @@ def cb_handler(data):
     if data.get('hook') == 'submit_zip':
         from Deadline.submit.CommandLine import submit_command_line_job
         submit_command_line_job( *data.get('args'), **data.get('kwargs') )
-    elif data.get('hook') == 'submit_unpack'
+    elif data.get('hook') == 'submit_zip_unpack':
+        from Deadline.submit.CommandLine import submit_command_line_job
+        submit_command_line_job( *data.get('args'), **data.get('kwargs') )
 
 def status_updated_to_approve(data):       
     if not data.get("event_type") == "Shotgun_Task_Change":
