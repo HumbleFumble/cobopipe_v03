@@ -55,7 +55,7 @@ def unzip(source, destination=None, overwrite=False):
 
 
 if __name__ == "__main__":
-    for i, arg in enuemrate(sys.argv):
+    for i, arg in enumerate(sys.argv):
         print(f'{i}: {arg}')
     if len(sys.argv) > 3:
         if sys.argv[1] == 'zip':
