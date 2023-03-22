@@ -740,10 +740,13 @@ class FrontController(QtCore.QObject):
 						os.makedirs(path)
 					except:
 						logger.warning("Can't access " + path)
+				else:
+					logger.warning(f"Path does not exist: {path}")
 
 			return from_path
 
 		else:
+			logger.warning(f"Path does not exist: {ftp_folder}")
 			return None
 
  
