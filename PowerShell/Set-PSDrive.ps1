@@ -1,16 +1,14 @@
 
 param(
-    [string]$DriveLetter
+    [string]$DriveLetter = "T"
 )
-if (! $DriveLetter){
-$DriveLetter = "T"
-}
 
 $whoami = whoami
-$user = whoami /user
-$sid = ($user -match $env:USERDOMAIN)[0].Replace($whoami + " ", "")
+
+$SID = (Get-CimInstance -ClassName Win32_UserAccount -Filter "LocalAccount = false" | Where-Object {$_.Caption -eq $whoami} | Select-Object SID).SID
+
 $DrivePath = "\\dumpap3\tools"
-$Path = "REGISTRY::HKEY_USERS\$sid\Network"
+$Path = "REGISTRY::HKEY_USERS\$SID\Network"
 
 if (! (Get-Item -Path $($Path + "\" + $DriveLetter) -ErrorAction SilentlyContinue)){
     New-Item -Path $Path -Name $DriveLetter
