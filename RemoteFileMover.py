@@ -36,8 +36,8 @@ class MainUI(QtWidgets.QWidget):
         self.context_combo = QtWidgets.QComboBox() #This should say Shot-Anim/Shot-Comp/BG
         self.context_combo.addItems(["Shot-Anim","Shot-Comp","Background"])
 
-        self.from_preset_combo = QtWidgets.QComboBox()  # This should preset where to look for things, like ftp or shot
-        self.from_preset_combo.addItems(["From FTP: Unpack Zip",
+        self.preset_combo = QtWidgets.QComboBox()  # This should preset where to look for things, like ftp or shot
+        self.preset_combo.addItems(["From FTP: Unpack Zip",
                                          "From FTP: Move File",
                                          "From Project: Zip File",
                                          "From Project: Move File"])
@@ -47,7 +47,8 @@ class MainUI(QtWidgets.QWidget):
 
         self.main_lay.addLayout(self.context_lay)
         self.main_lay.addWidget(self.context_combo)
-        self.main_lay.addWidget(self.from_preset_combo)
+        self.main_lay.addWidget(self.preset_combo)
+
         self.main_lay.addWidget(self.from_path_line)
         self.main_lay.addWidget(self.from_browse_bttn)
         self.setLayout(self.main_lay)
