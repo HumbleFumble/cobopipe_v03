@@ -12,12 +12,16 @@ class Controller:
         super(Controller, self).__init__()
 
 
+
 class MainUI(QtWidgets.QWidget):
 
-    def __init__(self, parent=None):
+    def __init__(self, parent=None,user=None,project=None):
         self.ctrl = Controller()
         super(MainUI, self).__init__(parent)
+        self.project = project
+        self.user = user
         self.BuildUI()
+        self.preset_changed()
 
     def BuildUI(self):
         self.main_lay = QtWidgets.QVBoxLayout()
@@ -74,9 +78,12 @@ class MainUI(QtWidgets.QWidget):
         self.overwrite_check = QtWidgets.QCheckBox("Overwrite")
         self.zip_check = QtWidgets.QCheckBox("Zip Source")
         self.unpack_check = QtWidgets.QCheckBox("Unpack Destination")
+        self.create_history_check = QtWidgets.QCheckBox("Place Destination in _History folder")
         self.options_lay.addWidget(self.overwrite_check)
         self.options_lay.addWidget(self.zip_check)
         self.options_lay.addWidget(self.unpack_check)
+        self.options_lay.addWidget(self.create_history_check)
+
 
         self.run_bttn = QtWidgets.QPushButton("RUN")
 
@@ -90,7 +97,23 @@ class MainUI(QtWidgets.QWidget):
         self.main_lay.addWidget(self.run_bttn)
 
         self.setLayout(self.main_lay)
+        self.preset_combo.currentTextChanged.connect(self.preset_changed)
 
+
+    def preset_changed(self):
+        state = self.preset_combo.currentText()
+        if state == "From FTP: Unpack Zip":
+            self.zip_check.setChecked(False)
+            self.unpack_check.setChecked(True)
+        if state == "From FTP: Move File":
+            self.unpack_check.setChecked(False)
+            self.zip_check.setChecked(False)
+        if state == "From Project: Zip File":
+            self.zip_check.setChecked(True)
+            self.unpack_check.setChecked(False)
+        if state == "From Project: Move File":
+            self.unpack_check.setChecked(False)
+            self.zip_check.setChecked(False)
 
 
 
