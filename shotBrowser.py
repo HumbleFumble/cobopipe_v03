@@ -18,8 +18,8 @@ import os
 # import ClearImportedModules as CIM
 # CIM.dropCachedImports("CategoryHandler","ffmpeg_wrapper","Multiplicity.Signals","CheckAudioVisual","PixmapUtil","getConfig","ClearImportedModules")
 
-from Log.CoboLoggers import getLogger
-logger = getLogger()
+# from Log.CoboLoggers import getLogger
+# logger = getLogger()
 
 from getConfig import getConfigClass
 CC = getConfigClass()
