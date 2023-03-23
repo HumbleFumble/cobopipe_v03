@@ -4,7 +4,7 @@
 $creds = Get-Credential -UserName cphbom\deadline -Message:$false
 #Start-Process pwsh -Credential $creds
 
-$numbers = 1..33
+$numbers = 15..15
 # Declare new array
 $ComputersList = @()
 # Add "wsx" to each item and create new array. This creates array with the computer names
