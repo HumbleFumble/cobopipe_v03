@@ -20,5 +20,5 @@ $parameters = [pscustomobject]@{Name = "AdobeCC"; PathToInstaller = "T:\_Softwar
 
 Install-App -PathToInstaller $parameters.PathToInstaller -Arguments $parameters.Arguments -TaskName $parameters.TaskName
 Start-Sleep 10
-Get-Process setup -ErrorAction SilentlyContinue | Wait-Process 
+
 Set-SecurityLevel -High
