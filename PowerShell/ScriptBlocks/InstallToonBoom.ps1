@@ -1,5 +1,7 @@
-# Script parameters. This script can be called with parameters
+# Set temporarily admnistrator check (UAC) to none
+Set-SecurityLevel -Low
 
+# Script parameters. $AtTime can be used to install Python at given time. Use as script parameter to set scheduled time
 param (
     [string]$AtTime,
     [string]$user = (whoami.exe)
@@ -14,64 +16,7 @@ if (! ($AtTime)){
     }
 }
 
-function Set-SecurityLevel{
-    param (
-        [switch]$High,
-        [switch]$Low
-    )
-    $path = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
-    if ($High -and $Low){
-        Write-Host "Conflicting parameters. Choose either 'High' or 'Low'" -ForegroundColor Red
-    }else {
-        if ($Low){
-            Set-ExecutionPolicy Bypass -Confirm:$False
-            New-ItemProperty -Path $path -Name 'ConsentPromptBehaviorAdmin' -Value 0 -PropertyType DWORD -Force | Out-Null
-            New-ItemProperty -Path $path -Name 'ConsentPromptBehaviorUser' -Value 3 -PropertyType DWORD -Force | Out-Null
-            New-ItemProperty -Path $path -Name 'EnableInstallerDetection' -Value 1 -PropertyType DWORD -Force | Out-Null
-            New-ItemProperty -Path $path -Name 'EnableLUA' -Value 1 -PropertyType DWORD -Force | Out-Null
-            New-ItemProperty -Path $path -Name 'EnableVirtualization' -Value 0 -PropertyType DWORD -Force | Out-Null
-            New-ItemProperty -Path $path -Name 'PromptOnSecureDesktop' -Value 0 -PropertyType DWORD -Force | Out-Null
-            New-ItemProperty -Path $path -Name 'ValidateAdminCodeSignatures' -Value 0 -PropertyType DWORD -Force | Out-Null
-            New-ItemProperty -Path $path -Name 'FilterAdministratorToken' -Value 0 -PropertyType DWORD -Force | Out-Null
-            Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3' -Name 1806 -Value 0
-        }
-        elseif ($High){
-            Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3' -Name 1806 -Value 1
-            New-ItemProperty -Path $path -Name 'ConsentPromptBehaviorAdmin' -Value 5 -PropertyType DWORD -Force | Out-Null
-            New-ItemProperty -Path $path -Name 'ConsentPromptBehaviorUser' -Value 3 -PropertyType DWORD -Force | Out-Null
-            New-ItemProperty -Path $path -Name 'EnableInstallerDetection' -Value 1 -PropertyType DWORD -Force | Out-Null
-            New-ItemProperty -Path $path -Name 'EnableLUA' -Value 1 -PropertyType DWORD -Force | Out-Null
-            New-ItemProperty -Path $path -Name 'EnableVirtualization' -Value 1 -PropertyType DWORD -Force | Out-Null
-            New-ItemProperty -Path $path -Name 'PromptOnSecureDesktop' -Value 1 -PropertyType DWORD -Force | Out-Null
-            New-ItemProperty -Path $path -Name 'ValidateAdminCodeSignatures' -Value 0 -PropertyType DWORD -Force | Out-Null
-            New-ItemProperty -Path $path -Name 'FilterAdministratorToken' -Value 0 -PropertyType DWORD -Force | Out-Null
-            Set-ExecutionPolicy Restricted -Confirm:$false
-        }
-    }
-}
-# END Set-SecurityLevel
-#-------------------------------------------------------------------------------------------------------------------------------------------
 
-function Install-App { 
-
-param (
-    [Parameter()][string]$PathToInstaller,
-    [Parameter()][string]$Arguments,
-    [Parameter()][string]$TaskName
-
-)
-# Set up scheduled task for each set of parameters and run it
-#--------------------------------------------------------------------------------------------------------------------------------------------
-    
-    $Action = New-ScheduledTaskAction -Execute $PathToInstaller -Argument $Arguments
-    $principal = New-ScheduledTaskPrincipal -UserId $user -RunLevel Highest
-    $Trigger = New-ScheduledTaskTrigger -Once -At $AtTime
-    $Settings = New-ScheduledTaskSettingsSet
-    $Task = New-ScheduledTask -Action $Action -Trigger $Trigger -Settings $Settings -Principal $principal
-    Register-ScheduledTask -TaskName $TaskName -InputObject $Task
-    Start-ScheduledTask -TaskName $TaskName
-    Unregister-ScheduledTask -TaskName $TaskName -Confirm:$False
-}
 function Install-Shortcut {
     [CmdletBinding()]
     param (
@@ -94,7 +39,7 @@ $shortcut.IconLocation = $parameters.IconLocation
 $shortcut.Save()
 }
 
-Set-SecurityLevel -Low
+
 Install-App -PathToInstaller "\\dumpap3\tools\_Software\Toonboom\HAR22-PRM-win-19025.exe" -Arguments '/S /v"/qn"' -TaskName "Harmony" 
 
 #----------------------------------------------------------------------------------------------------------
@@ -134,4 +79,5 @@ foreach ($i in $ShortCutArray){
     Install-Shortcut $parameters
     }
 
+# Set UAC back to normal
 Set-SecurityLevel -High

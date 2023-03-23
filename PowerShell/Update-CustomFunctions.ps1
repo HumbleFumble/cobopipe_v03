@@ -8,7 +8,8 @@ function Update-CustomFunctions {
                  "Set-SecurityLevel.ps1",
                  "Get-EnvironmentVariable.ps1",
                  "Set-ComputersList.ps1",
-                 "Update-CustomFunctions.ps1"
+                 "Update-CustomFunctions.ps1",
+                 "Get-FreeSpace.ps1"
 
 
     

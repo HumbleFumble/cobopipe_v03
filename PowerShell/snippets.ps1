@@ -43,7 +43,26 @@ $table = [pscustomobject]@{FreeSpaceGB = "$remaining"}
 $table
 
 # Install chocolatey
+#-----------------------------------------------------------------------------------------------------------------------
 Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
 
+
 # Remove drive registry key
+#-----------------------------------------------------------------------------------------------------------------------
 Remove-Item -Path $("$Path" + "\" + "$DriveLetter")
+
+
+# Get remaining free space
+#-----------------------------------------------------------------------------------------------------------------------
+(get-ciminstance -ClassName Win32_LogicalDisk -Filter "DeviceID='C:'").FreeSpace /1gb -as [int]
+
+
+# Script template for running remote installations
+#-----------------------------------------------------------------------------------------------------------------------
+$creds = Get-Credential -UserName cphbom\plp -Message:$false
+
+Invoke-Command -ComputerName wsx2 -ScriptBlock { 
+New-PSDrive -Name "T" -PSProvider FileSystem -Root "\\dumpap3\tools" -Persist -Credential $using:creds
+Import-Module "T:\_Pipeline\cobopipe_v02-001\PowerShell\Custom-Functions.psm1"
+
+}
