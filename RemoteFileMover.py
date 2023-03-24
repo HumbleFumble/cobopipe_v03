@@ -15,13 +15,14 @@ class Controller:
 
 class MainUI(QtWidgets.QWidget):
 
-    def __init__(self, parent=None,user=None,project=None):
+    def __init__(self, parent=None,user=None,project=None,info=None):
         self.ctrl = Controller()
-        super(MainUI, self).__init__(parent)
+        super(MainUI, self).__init__(parent,user,project,info)
         self.project = project
         self.user = user
         self.BuildUI()
         self.preset_changed()
+        self.preset_dict = {"Shot-Anim":{"FTP":"get_anim_shot"},"Shot-Comp":"get_shot_comp_folder"}
 
     def BuildUI(self):
         self.main_lay = QtWidgets.QVBoxLayout()
