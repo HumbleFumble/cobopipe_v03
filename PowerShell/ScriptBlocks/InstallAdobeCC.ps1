@@ -22,3 +22,4 @@ Install-App -PathToInstaller $parameters.PathToInstaller -Arguments $parameters.
 Start-Sleep 10
 
 Set-SecurityLevel -High
+
