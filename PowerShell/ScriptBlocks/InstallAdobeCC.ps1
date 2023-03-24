@@ -18,8 +18,14 @@ if (! ($AtTime)){
 
 $parameters = [pscustomobject]@{Name = "AdobeCC"; PathToInstaller = "T:\_Software\Adobe\AdobeInstaller_AE-Prem-PhotoSh\Build\setup.exe"; TaskName = "Install AdobeCC"; Arguments = "--silent"}
 
+# If ascheduled task with the same name has been setup already, remove it
+if (Get-ScheduledTask | Where-Object {$_.TaskName -match $parameters.$TaskName}){
+    Unregister-ScheduledTask -TaskName $parameters.$TaskName -Confirm:$False
+}
+
+
 Install-App -PathToInstaller $parameters.PathToInstaller -Arguments $parameters.Arguments -TaskName $parameters.TaskName
 Start-Sleep 10
-
+Get-Process setup | Wait-Process
 Set-SecurityLevel -High
 

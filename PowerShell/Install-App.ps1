@@ -15,4 +15,5 @@ param (
     $Task = New-ScheduledTask -Action $Action -Trigger $Trigger -Settings $Settings
     Register-ScheduledTask -TaskName $TaskName -InputObject $Task #-User 'System'
     Start-ScheduledTask -TaskName $TaskName
+
 }

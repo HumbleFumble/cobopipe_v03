@@ -54,6 +54,7 @@ foreach($item in $using:applist) {
     function Find-App {
     param (
         [switch]$Maya,
+        [switch]$Adobe,
         [switch]$Default
     )
     if ($Maya){
@@ -71,18 +72,29 @@ foreach($item in $using:applist) {
             $result | Add-Member -MemberType NoteProperty -Name Status -Value "Installed"
         }
         $result
-    }else {
+    }elseif ($Adobe) {
         $result = Get-ChildItem $Wow6432Node | Get-ItemProperty | Where-Object {$_.DisplayName -Match $item.Regex} | Select-Object Displayname, DisplayVersion
         if (!$result){$result = [pscustomobject]@{DisplayName =  $item.Name; DisplayVersion = ""; Status = "Missing"}
         }else{
             $result | Add-Member -MemberType NoteProperty -Name Status -Value "Installed"
         }
         $result
-            }
+    }else{
+        $result = Get-ChildItem $Microsoft | Get-ItemProperty | Where-Object {$_.DisplayName -Match $item.Regex} | Select-Object Displayname, DisplayVersion
+        if (!$result){$result = [pscustomobject]@{DisplayName =  $item.Name; DisplayVersion = ""; Status = "Missing"}
+        }else{
+            $result | Add-Member -MemberType NoteProperty -Name Status -Value "Installed"
         }
+        $result
+        }    
+    }
         
         switch ($item.Name){
-            "Adobe" {Find-App}
+            "Adobe After Effects" {Find-App -Adobe}
+            "Adobe Media Encoder" {Find-App -Adobe}
+            "Adobe Photoshop" {Find-App -Adobe}
+            "Adobe Premiere Pro" {Find-App -Adobe}
+            "Adobe Acrobat" {Find-App -Adobe}
             "VLC" {Find-App -Default}
             "Toon Boom" {Find-App}
             "Maya" {Find-App -Maya}
