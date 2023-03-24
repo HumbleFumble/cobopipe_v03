@@ -38,7 +38,7 @@ $parameters = @(
 # If ascheduled task with the same name has been setup already, remove it
 if (Get-ScheduledTask | Where-Object {$_.TaskName -match $parameters.$TaskName[0]}){
     Unregister-ScheduledTask -TaskName $parameters.$TaskName[0] -Confirm:$False
-}
+    }
 
 # Install Python
 Install-App -PathToInstaller $parameters.PathToInstaller[0] -Arguments $parameters.Arguments[0] -TaskName $parameters.TaskName[0]
