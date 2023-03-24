@@ -371,4 +371,3 @@ $FreeSpace = (get-ciminstance -ClassName Win32_LogicalDisk -Filter "DeviceID='C:
 $table = [pscustomobject]@{FreeSpace = "$FreeSpace"; Unit = "GB"}
 $table
 }
-
