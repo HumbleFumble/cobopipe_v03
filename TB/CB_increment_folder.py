@@ -27,11 +27,14 @@ def increment_tb_folder(file):
     else:
         folder = f'{folder}_{new_version}'
 
-    print(folder)
     project.save_as(folder)
+    new_file = folder.split('/')[-1] + '.xstage'
+    new_path = f'{folder}/{new_file}'
+    return new_path
 
 
 if __name__ == '__main__':
     sys.path.append(sys.argv[1])
     from ToonBoom import harmony
-    increment_tb_folder(sys.argv[2])
+    result = increment_tb_folder(sys.argv[2])
+    print(result)
