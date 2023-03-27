@@ -14,6 +14,7 @@ def zip(source, destination):
     destDir = os.path.dirname(destination)
     compress_type = zipfile.ZIP_DEFLATED
 
+    print(destDir)
     os.chdir(destDir)
     zipFile = zipfile.ZipFile(zipName, "w")
 
