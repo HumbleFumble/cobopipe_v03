@@ -1,4 +1,4 @@
-﻿#------------------------------------------------------------------------------------------------------------------
+#------------------------------------------------------------------------------------------------------------------
 #   Software Auto-Install PowerShell script
 #------------------------------------------------------------------------------------------------------------------
 
@@ -47,7 +47,7 @@ $installPackFolder = $PackFolder + $packFolderName
 $global:installLog = $null
 $result = $null
 
-function Get-Install {
+function Check-Install {
 
     param (
         [string]$package
@@ -252,7 +252,7 @@ Start-Sleep 3
 
 Write-Host "Installing Harmony Toon Boom...`n"
 
-function Install-Shortcut {
+function Make-Shortcut {
         [CmdletBinding()]
         param (
             [PSCustomObject]$parameters
@@ -280,20 +280,20 @@ Start-Process -FilePath ($installPackFolder + $applist.ChildNodes.App[6].Path) -
     # Create necessary directories
     #----------------------------------------------------------------------------------------------------------
 
-    New-Item -Path "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Harmony 22 Premium" -ItemType Directory -Name "Documentation"
-    New-Item -Path "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Harmony 22 Premium" -ItemType Directory -Name "Tools"
+    New-Item -Path "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Harmony 21 Premium" -ItemType Directory -Name "Documentation"
+    New-Item -Path "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Harmony 21 Premium" -ItemType Directory -Name "Tools"
     
     #----------------------------------------------------------------------------------------------------------
     # Create PSCustomObject with all shortcuts that need to be created and feed it as argument to the function
     #----------------------------------------------------------------------------------------------------------
     
-    $startmenu = "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Harmony 22 Premium"
-    $installfolder = "C:\Program Files (x86)\Toon Boom Animation\Toon Boom Harmony 22 Premium"
+    $startmenu = "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Harmony 21 Premium"
+    $installfolder = "C:\Program Files (x86)\Toon Boom Animation\Toon Boom Harmony 21 Premium"
     
     $shortCutArray = @(
-            [pscustomobject]@{FilePath = $installfolder + "\win64\bin\wstart.exe"; shortCutFolder = "C:\Users\Public\Desktop"; shortCutName = "Harmony 22 Premium"; Arguments = "HarmonyPremium.exe"; IconLocation = $installfolder + "\win64\bin\HarmonyPremium.ico"}
+            [pscustomobject]@{FilePath = $installfolder + "\win64\bin\wstart.exe"; shortCutFolder = "C:\Users\Public\Desktop"; shortCutName = "Harmony 21.1 Premium"; Arguments = "HarmonyPremium.exe"; IconLocation = $installfolder + "\win64\bin\HarmonyPremium.ico"}
             [pscustomobject]@{FilePath = $installfolder + "\win64\bin\wstart.exe"; shortCutFolder = $startmenu; shortCutName = "Control Center"; Arguments = "ControlCenter.exe"; IconLocation = $installfolder + "\win64\bin\ControlCenter.ico"}
-            [pscustomobject]@{FilePath = $installfolder + "\win64\bin\wstart.exe"; shortCutFolder = $startmenu; shortCutName = "Harmony 22 Premium"; Arguments = "HarmonyPremium.exe"; IconLocation = $installfolder + "\win64\bin\HarmonyPremium.ico"}
+            [pscustomobject]@{FilePath = $installfolder + "\win64\bin\wstart.exe"; shortCutFolder = $startmenu; shortCutName = "Harmony 21.1 Premium"; Arguments = "HarmonyPremium.exe"; IconLocation = $installfolder + "\win64\bin\HarmonyPremium.ico"}
             [pscustomobject]@{FilePath = $installfolder + "\win64\bin\wstart.exe"; shortCutFolder = $startmenu; shortCutName = "Paint"; Arguments = "HarmonyPremium.exe -paint"; IconLocation = $installfolder + "\win64\bin\HarmonyPremiumPaint.ico"}
             [pscustomobject]@{FilePath = $installfolder + "\win64\bin\wstart.exe"; shortCutFolder = $startmenu; shortCutName = "Play"; Arguments = "Play.exe"; IconLocation = $installfolder + "\win64\bin\HarmonyPlay.ico"}
             [pscustomobject]@{FilePath = $installfolder + "\win64\bin\wstart.exe"; shortCutFolder = $startmenu; shortCutName = "Scan"; Arguments = "Scan.exe -indirect"; IconLocation = $installfolder + "\win64\bin\Scan.ico"}

@@ -8,18 +8,20 @@ function Update-CustomFunctions {
                  "Set-SecurityLevel.ps1",
                  "Get-EnvironmentVariable.ps1",
                  "Set-ComputersList.ps1",
+                 "Get-FreeSpace.ps1",
                  "Update-CustomFunctions.ps1"
 
-
-    
-    if ((Get-CimInstance -Namespace root/CIMV2 -ClassName Win32_ComputerSystem).Domain){
-        $functionsdir = "C:\Users\plp\VsCodeProjects\cobopipe_v02-001\PowerShell\"
-    }
-    
-    Clear-Content "C:\Users\plp\VsCodeProjects\cobopipe_v02-001\PowerShell\Custom-Functions.psm1"
-
+    $functionsdir = "C:\Users\$env:username\VsCodeProjects\cobopipe_v02-001\PowerShell\" 
     $functionslist = foreach ($i in $functions){$functionsdir + $i}
-    $functionslist | ForEach-Object {Get-Content $_ | Add-Content ($functionsdir + "Custom-Functions.psm1")}
+    $functionslist | ForEach-Object {Get-Content $_ | Add-Content "C:\Users\$env:username\VsCodeProjects\cobopipe_v02-001\PowerShell\Custom-Functions.psm1"}
     
-    
+    Import-Module "C:\Users\$env:username\VsCodeProjects\cobopipe_v02-001\PowerShell\Custom-Functions.psm1"
+
+    if (Get-Command -module Custom-Functions){
+        Write-Host "`nModule `"Custom-Functions`" loaded and ready`n" 
+    }else{
+        Write-Host "`nModule `"Custom-Functions`" could not be loaded`n" -ForegroundColor Red
+    }
+
+    pwsh
 }

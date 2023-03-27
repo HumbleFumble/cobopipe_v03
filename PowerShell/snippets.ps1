@@ -42,5 +42,5 @@ $remaining = [math]::Round((Get-Volume -DriveLetter "C").SizeRemaining/1GB, 2)
 $table = [pscustomobject]@{FreeSpaceGB = "$remaining"}
 $table
 
-# Install chocolatey
-Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+$DriveLetter = "C"
+[math]::Round((Get-PSDrive $DriveLetter).Free /1GB, 2)

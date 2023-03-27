@@ -77,4 +77,4 @@ Set-SecurityLevel -Low
 Install-App -PathToInstaller $parameters.PathToInstaller -Arguments $parameters.Arguments -TaskName $parameters.TaskName
 Start-Sleep 3
 Get-Process setup | Wait-Process
-Set-SecurityLevel -High
+Set-UAC -On

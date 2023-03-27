@@ -72,13 +72,13 @@ class ConfigClass():
         
         self.local_vars=['TOONBOOM_GLOBAL_SCRIPT_LOCATION', 'TB_EXTERNAL_SCRIPT_PACKAGES_FOLDER', 'PYTHONPATH']
         
-        self.users={'Animation': ['Anna', 'Teo', 'Daniel', 'Elliot', 'Otto', 'Lho', 'Kristoffer', 'Jamie', 'Julia', 'Tue', 'Fanny', 'Julie', 'Louise', 'Mik', 'Mikkel', 'Gustavo', 'Sabrina', 'James', 'Bernardo', 'Christian', 'Mads', 'Vedel', 'Conor'], 'Render': ['Adalstein', 'James', 'Bernardo', 'Christian', 'Christian', 'Mads']}
+        self.users={'Animation': ['Anna', 'Teo', 'Daniel', 'Elliot', 'Otto', 'Lho', 'Kristoffer', 'Jamie', 'Julia', 'Tue', 'Fanny', 'Julie', 'Louise', 'Mik', 'Mikkel', 'Gustavo', 'Sabrina', 'James', 'Bernardo', 'Christian', 'Mads', 'Vedel', 'Conor', 'Petra'], 'Render': ['Alexandre', 'James', 'Bernardo', 'Christian', 'Mads']}
         
         self.ref_order={}
         
         self.ref_steps={'Prop': {'Base': ['Anim', 'Render']}, 'Char': {'Model': ['Model'], 'Blendshape': ['Blendshape'], 'Rig': ['Anim', 'Rig'], 'Shading': ['Render']}, 'Setdress': {'Base': ['Proxy', 'Ingest', 'Render']}, 'Set': {'Base': ['Anim', 'Render']}, 'RigModule': {'Base': ['Rig']}, 'FX': {'Base': ['Anim', 'Render']}}
         
-        self.project_settings={'fps': '25fps', 'tb_width': 1920, 'tb_height': 1080, 'tb_size_multi': 1.1, 'tb_output_format': 'TGA4', 'tb_number_padding': '3', 'deadline_pool': 'hoj'}
+        self.project_settings={'fps': '25fps', 'tb_width': 1920, 'tb_height': 1080, 'tb_size_multi': 1.1, 'tb_output_format': 'TGA4', 'tb_number_padding': '3', 'deadline_pool': 'hoj', 'ftp_host': '178.249.49.18', 'ftp_local_host': '192.168.0.6', 'ftp_username': 'HOJ_FTP', 'ftp_password': 'valhalla', 'ftp_port': 2121}
         
         self.project_style={'animation_style': ['AE', 'Toonboom'], 'comp_style': ['AE'], 'default_animation_style': 'Toonboom', 'default_comp_style': 'AE'}
         
