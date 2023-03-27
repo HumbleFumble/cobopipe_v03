@@ -1,6 +1,7 @@
 import sys
 import os
 import zipfile
+import subprocess
 
 
 def zip(source, destination):
@@ -37,6 +38,18 @@ def zip(source, destination):
     return zipFile
 
 
+def zip_7z(source, destination):
+    if type(source) == str:
+        source = [source]
+
+    if not type(source) == list:
+        raise TypeError
+
+    path_7z = r"C:\Program Files\7-Zip\7z.exe"
+    arguments = [path_7z, "a", "-tzip", destination, *source]
+    subprocess.check_output(arguments)
+
+
 def unzip(source, destination=None, overwrite=False):
     if not destination:
         destination = os.path.dirname(source)
@@ -53,16 +66,29 @@ def unzip(source, destination=None, overwrite=False):
 
     return compressed_data
 
+def unzip_7z(source, destination=None):
+    if not type(source) == str:
+        raise TypeError
+
+    path_7z = r"C:\Program Files\7-Zip\7z.exe"
+    arguments = [path_7z, "x", "-y", source]
+    if destination:
+        arguments.append(f'-o{destination}')
+    subprocess.check_output(arguments)
 
 if __name__ == "__main__":
     if len(sys.argv) > 3:
         if sys.argv[1] == 'zip':
             zip(sys.argv[2:-1], sys.argv[-1])
+        elif sys.argv[1] == 'zip_7z':
+            zip_7z(sys.argv[2:-1], sys.argv[-1])
         elif sys.argv[1] == 'unzip':
             overwrite = False
             if len(sys.argv) > 4:
                 overwrite = sys.argv[4]
             unzip(sys.argv[2], destination=sys.argv[3], overwrite=overwrite)
+        elif sys.argv[1] == 'unzip_7z':
+            unzip_7z(sys.argv[2], sys.argv[3])
         else:
             print('ERROR: function not defined')
     else:
