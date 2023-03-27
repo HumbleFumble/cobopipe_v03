@@ -9,13 +9,26 @@ def increment_tb_folder(file):
     harmony.open_project(file)
     session = harmony.session()
     project = session.project
-    #scene = project.scene
-    folder = project.project_path 
-    print(folder.split('/')[-1].split('_')[-1])
-    if re.match('V\d\d\d', folder.split('/')[-1].split('_')[-1]):
-        print(folder)
+    scene = project.scene
+    folder = project.project_path
+    current_folder_version = folder.split('/')[-1].split('_')[-1]
+    current_version = project.version_name.split('_')[-1]
+    if re.match('V\d\d\d', current_version):
+        new_version = int(current_version[1:]) + 1
+        new_version = f'V{new_version:03}'
     else:
-        print('FUCK')
+        new_version = 'V001'
+        
+    if re.match('V\d\d\d', current_folder_version):
+        folder = folder.replace(current_folder_version, new_version)
+        # new_version = int(cur_version.replace('V', '')) + 1 # Convert to integer and increment.
+        # new_version = f'V{new_version:03}' # Convert to string, adding V and padding.
+        # folder = folder.replace(cur_version, new_version)
+    else:
+        folder = f'{folder}_{new_version}'
+
+    print(folder)
+    project.save_as(folder)
 
 
 if __name__ == '__main__':

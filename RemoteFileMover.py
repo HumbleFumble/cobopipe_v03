@@ -207,31 +207,29 @@ class ReturnAnim(QtWidgets.QWidget):
             return False
 
         file = self.browse_input.text()
-        # if not os.path.exists(file):
-        #     alert(self, message='Please enter a valid file path.')
-        #     return False
 
-        #         harmonypremium = (
-        #             subprocess.check_output(["where", "harmonypremium.exe"])
-        #             .decode("UTF-8")
-        #             .replace("\n", "")
-        #             .replace("\r", "")
-        #         )
+        # python "C:\Users\mha\Projects\cobopipe_v02-001\TB\CB_increment_folder.py" "C:\Program Files (x86)\Toon Boom Animation\Toon Boom Harmony 22 Premium\win64\bin\python-packages" "P:\930462_HOJ_Project\Production\Film\S107\S107_SQ010\S107_SQ010_SH010\S107_SQ010_SH010_V002\S107_SQ010_SH010_V002.xstage"
+        
+        if not os.path.exists(file):
+            alert(self, message='Please enter a valid file path.')
+            return False
 
-        #         if not os.path.exists(harmonypremium):
-        #             alert(self, message="Cannot find Harmony Premium executable.")
-        #             return False
+        harmonypremium = (
+            subprocess.check_output(["where", "harmonypremium.exe"])
+            .decode("UTF-8")
+            .replace("\n", "")
+            .replace("\r", "")
+        )
 
-        #         harmony_python_packages = os.path.join(
-        #             os.path.dirname(harmonypremium), "python-packages"
-        #         )
+        if not os.path.exists(harmonypremium):
+            alert(self, message="Cannot find Harmony Premium executable.")
+            return False
 
-        #         script = f"""
-        # import sys
-        # sys.path.append(r'{harmony_python_packages}')
-        # from ToonBoom import harmony
-        # harmony.open_project(r'{file}')
-        # """
+        harmony_python_packages = os.path.join(
+            os.path.dirname(harmonypremium), "python-packages"
+        )
+
+        subprocess.Run(f'python "" "{}" "{}"')
 
         from getConfig import getConfigClass
 
