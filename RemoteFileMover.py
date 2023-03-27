@@ -206,11 +206,11 @@ class ReturnAnim(QtWidgets.QWidget):
             alert(self, message="Please enter a valid project.")
             return False
 
-        file = self.browse_input.text()
+        selected_file = self.browse_input.text()
 
         # python "C:\Users\mha\Projects\cobopipe_v02-001\TB\CB_increment_folder.py" "C:\Program Files (x86)\Toon Boom Animation\Toon Boom Harmony 22 Premium\win64\bin\python-packages" "P:\930462_HOJ_Project\Production\Film\S107\S107_SQ010\S107_SQ010_SH010\S107_SQ010_SH010_V002\S107_SQ010_SH010_V002.xstage"
         
-        if not os.path.exists(file):
+        if not os.path.exists(selected_file):
             alert(self, message='Please enter a valid file path.')
             return False
 
@@ -229,23 +229,27 @@ class ReturnAnim(QtWidgets.QWidget):
             os.path.dirname(harmonypremium), "python-packages"
         )
 
+        popup, msg = alert(self, message='Wait.. Saving new version in a folder.')        
         script_path = r'\\192.168.0.225\tools\_Pipeline\cobopipe_v02-001\TB\CB_increment_folder.py'
-        command = f'python "{script_path}" "{harmony_python_packages}" "{file}"'
-        print(command)
-        subprocess.Run(command)
-        
+        command = f'python "{script_path}" "{harmony_python_packages}" "{selected_file}"'
+        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = process.communicate()
+        stdout = stdout.decode('UTF-8').replace('\r', '')
+        stderr = stderr.decode('UTF-8').replace('\r', '')
 
-        from getConfig import getConfigClass
-
-        CC = getConfigClass(project_name=self.project_input.text())
+        file = stdout.split('\n')[-2]
         folder = os.path.dirname(file)
         zip_file = f"{folder}.zip"
 
-        popup, msg = alert(self, message='Wait.. File is currently being compressed.')
+        
+        msg.setText('Wait.. File is currently being compressed.')
+        QtWidgets.QApplication.processEvents()
         import zipUtil
         zipUtil.zip(folder, zip_file)
         msg.setText('Wait.. File is currently being uploaded to FTP.')
         QtWidgets.QApplication.processEvents()
+        from getConfig import getConfigClass
+        CC = getConfigClass(project_name=self.project_input.text())
         import ftpUtil
         files_objects = [
             {
@@ -259,6 +263,7 @@ class ReturnAnim(QtWidgets.QWidget):
             CC.project_settings.get("ftp_username"),
             CC.project_settings.get("ftp_password"),
         )
+        os.remove(zip_file)
         if result:
             popup.setWindowTitle('Success')
             msg.setText('File has finished uploading.')

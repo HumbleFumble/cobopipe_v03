@@ -1,1 +1,15 @@
-list_of_archived_projects = ["HOJ-Pilot","KDH-Jenny","KDH-Lis","KDH-Nina", "KDH-Else", "KDH-Asta", "KiwiStrit2", "MiasMagic", "Mumsi","KiwiStrit3", "MiniSjang-MinSang"]
+list_of_archived_projects = [
+    "HOJ-Pilot",
+    "KDH-Jenny",
+    "KDH-Lis",
+    "KDH-Nina",
+    "KDH-Else",
+    "KDH-Asta",
+    "KiwiStrit2",
+    "MiasMagic",
+    "Mumsi",
+    "KiwiStrit3",
+    "MiniSjang-MinSang",
+    "DenSaerligeMester",
+    "MiasMagic2"
+]
