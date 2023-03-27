@@ -229,7 +229,11 @@ class ReturnAnim(QtWidgets.QWidget):
             os.path.dirname(harmonypremium), "python-packages"
         )
 
-        subprocess.Run(f'python "" "{}" "{}"')
+        script_path = r'\\192.168.0.225\toosl\_Pipeline\cobopipe_v02-001\TB\CB_increment_folder.py'
+        command = f'python "{script_path}" "{harmony_python_packages}" "{file}"'
+        print(command)
+        # subprocess.Run(command)
+        
 
         from getConfig import getConfigClass
 
