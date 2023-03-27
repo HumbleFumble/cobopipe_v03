@@ -1,14 +1,8 @@
 from PySide6 import QtWidgets, QtCore, QtGui
 import os
 import sys
+import json
 import subprocess
-
-
-# from getConfig import getConfigClass
-# CC = getConfigClass()
-#
-# from runtimeEnv import getRuntimeEnvFromConfig
-# run_env = getRuntimeEnvFromConfig(config_class=CC)
 
 
 class Controller:
@@ -126,10 +120,10 @@ class MainUI(QtWidgets.QWidget):
 
 
 class ReturnAnim(QtWidgets.QWidget):
-    def __init__(self, parent=None, user=None, project=None):
+    def __init__(self, parent=None):
         super(ReturnAnim, self).__init__(parent)
-        self.user = user
-        self.project = project
+        self.settings_file_path = r"C:\Temp\ReturnAnim\settings.json"
+        self.user, self.project = self.get_settings()
         self.build_ui()
 
     def build_ui(self):
@@ -198,6 +192,18 @@ class ReturnAnim(QtWidgets.QWidget):
 
         self.setLayout(self.main_layout)
 
+    def get_settings(self):
+        if not os.path.exists(self.settings_file_path):
+            os.makedirs(os.path.dirname(self.settings_file_path))
+            settings = {"user": None, "project": None}
+            saveJson(self.settings_file_path, settings)
+        else:
+            settings = loadJson(self.settings_file_path)
+        return settings.get("user"), settings.get("project")
+
+    def set_settings(self, settings):
+        saveJson(self.settings_file_path, settings)
+
     def submit(self):
         if not self.user_input.text():
             alert(self, message="Please enter a valid user.")
@@ -206,12 +212,14 @@ class ReturnAnim(QtWidgets.QWidget):
             alert(self, message="Please enter a valid project.")
             return False
 
-        file = self.browse_input.text()
+        self.set_settings(
+            {"user": self.user_input.text(), "project": self.project_input.text()}
+        )
 
-        # python "C:\Users\mha\Projects\cobopipe_v02-001\TB\CB_increment_folder.py" "C:\Program Files (x86)\Toon Boom Animation\Toon Boom Harmony 22 Premium\win64\bin\python-packages" "P:\930462_HOJ_Project\Production\Film\S107\S107_SQ010\S107_SQ010_SH010\S107_SQ010_SH010_V002\S107_SQ010_SH010_V002.xstage"
-        
-        if not os.path.exists(file):
-            alert(self, message='Please enter a valid file path.')
+        selected_file = self.browse_input.text()
+
+        if not os.path.exists(selected_file):
+            alert(self, message="Please enter a valid file path.")
             return False
 
         harmonypremium = (
@@ -229,44 +237,68 @@ class ReturnAnim(QtWidgets.QWidget):
             os.path.dirname(harmonypremium), "python-packages"
         )
 
-        script_path = r'\\192.168.0.225\tools\_Pipeline\cobopipe_v02-001\TB\CB_increment_folder.py'
-        command = f'python "{script_path}" "{harmony_python_packages}" "{file}"'
-        print(command)
-        subprocess.Run(command)
+        popup, msg = alert(self, message="Wait.. Saving new version in a folder.")
+        script_path = r"\\192.168.0.225\tools\_Pipeline\cobopipe_v02-001\TB\CB_increment_folder.py"
+        command = (
+            f'python "{script_path}" "{harmony_python_packages}" "{selected_file}"'
+        )
         
+        process = subprocess.Popen(
+            command, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
+        
+        stdout, stderr = process.communicate()
+        stdout = stdout.decode("UTF-8").replace("\r", "")
+        stderr = stderr.decode("UTF-8").replace("\r", "")
 
-        from getConfig import getConfigClass
-
-        CC = getConfigClass(project_name=self.project_input.text())
+        file = stdout.split("\n")[-2]
+        if not os.path.exists(file):
+            msg.setText('Error: Failed to increment version.\nCheck for naming issues or contact a TD.')
+            QtWidgets.QApplication.processEvents()
+            return False
+        
         folder = os.path.dirname(file)
         zip_file = f"{folder}.zip"
 
-        popup, msg = alert(self, message='Wait.. File is currently being compressed.')
-        import zipUtil
-        zipUtil.zip(folder, zip_file)
-        msg.setText('Wait.. File is currently being uploaded to FTP.')
+        msg.setText("Wait.. File is currently being compressed.")
         QtWidgets.QApplication.processEvents()
+        import zipUtil
+
+        zipUtil.zip(folder, zip_file)
+        msg.setText("Wait.. File is currently being uploaded to FTP.")
+        QtWidgets.QApplication.processEvents()
+        from getConfig import getConfigClass
+
+        CC = getConfigClass(project_name=self.project_input.text())
         import ftpUtil
+
         files_objects = [
             {
                 "file": zip_file,
                 "destination": f"_ANIMATION/{self.user_input.text()}/TO_CB/",
             }
         ]
-        result = ftpUtil.upload(
-            files_objects,
-            CC.project_settings.get("ftp_local_host"),
-            CC.project_settings.get("ftp_username"),
-            CC.project_settings.get("ftp_password"),
-        )
-        if result:
-            popup.setWindowTitle('Success')
-            msg.setText('File has finished uploading.')
+        try:
+            result = ftpUtil.upload(
+                files_objects,
+                CC.project_settings.get("ftp_local_host"),
+                CC.project_settings.get("ftp_username"),
+                CC.project_settings.get("ftp_password"),
+            )
+
+            os.remove(zip_file)
+            if result:
+                popup.setWindowTitle("Success")
+                msg.setText("File has finished uploading.")
+                QtWidgets.QApplication.processEvents()
+            else:
+                popup.setWindowTitle("Error")
+                msg.setText("An error has occurred.\nTry Again or contact a TD.")
+                QtWidgets.QApplication.processEvents()
+        except Exception as e:
+            msg.setText("Error: Failed to upload to FTP.\nTry again or contact a TD.")
             QtWidgets.QApplication.processEvents()
-        else:
-            popup.setWindowTitle('Error')
-            msg.setText('An error has occurred.\nTry Again or contact a TD.')
-            QtWidgets.QApplication.processEvents()
+            os.remove(zip_file)
 
 
 def alert(parent, title="Alert", message=""):
@@ -290,6 +322,27 @@ class Popup(QtWidgets.QDialog):
         self.setWindowFlags(flags)
 
 
+def saveJson(save_location, save_info):
+    import json
+
+    with open(save_location, "w+") as saveFile:
+        json.dump(obj=save_info, fp=saveFile, indent=4, sort_keys=True)
+    saveFile.close()
+
+
+def loadJson(save_location):
+    import json
+
+    if os.path.isfile(save_location):
+        with open(save_location, "r") as saveFile:
+            loadedSettings = json.load(saveFile)
+        if loadedSettings:
+            return loadedSettings
+    else:
+        logger.warning("not a file")
+    return None
+
+
 if __name__ == "__main__":
     import sys
 
@@ -299,7 +352,7 @@ if __name__ == "__main__":
         app = QtWidgets.QApplication.instance()
     # mainWin = MainUI()
     # mainWin.show()
-    window = ReturnAnim(user="Mads", project="Hoj")
+    window = ReturnAnim()
     window.show()
 
     app.exec()
