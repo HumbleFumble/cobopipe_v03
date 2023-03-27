@@ -252,8 +252,12 @@ class ReturnAnim(QtWidgets.QWidget):
         stderr = stderr.decode("UTF-8").replace("\r", "")
 
         file = stdout.split("\n")[-2]
+        if not os.path.exists(file):
+            msg.setText('Error: Failed to increment version.\nCheck for naming issues or contact a TD.')
+            QtWidgets.QApplication.processEvents()
+            return False
+        
         folder = os.path.dirname(file)
-        print(folder)
         zip_file = f"{folder}.zip"
 
         msg.setText("Wait.. File is currently being compressed.")

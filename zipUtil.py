@@ -1,7 +1,6 @@
 import sys
 import os
 import zipfile
-import time
 
 
 def zip(source, destination):
@@ -15,8 +14,6 @@ def zip(source, destination):
     destDir = os.path.dirname(destination)
     compress_type = zipfile.ZIP_DEFLATED
 
-    print(destDir)
-    time.sleep(500)
     os.chdir(destDir)
     zipFile = zipfile.ZipFile(zipName, "w")
 
