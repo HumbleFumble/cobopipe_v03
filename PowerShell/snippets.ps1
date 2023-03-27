@@ -40,4 +40,7 @@ New-PSDrive -Name "T" -Root "\\dumpap3\tools" -PSProvider "FileSystem" -Persist
 # Or create object and use it with Invoke-Command -ComputerName <computer> -ScriptBlock {<command>}
 $remaining = [math]::Round((Get-Volume -DriveLetter "C").SizeRemaining/1GB, 2)
 $table = [pscustomobject]@{FreeSpaceGB = "$remaining"}
-$table 
+$table
+
+$DriveLetter = "C"
+[math]::Round((Get-PSDrive $DriveLetter).Free /1GB, 2)

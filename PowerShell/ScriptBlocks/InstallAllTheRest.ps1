@@ -1,3 +1,4 @@
+Set-UAC -Off
 Start-Transcript -path C:\Users\$env:USERNAME\Desktop\autoInstallLog.txt -append
 
 # Powershell silent web install
@@ -14,9 +15,11 @@ Start-Sleep 5
 
 choco install nuget.commandline
 choco install dotnet-6.0-sdk -y
-nuget help | select -First 1
+nuget help | Select-Object -First 1
 choco install vlc -y
 choco install GoogleChrome -y
 choco install firefox -y
 choco install QuickTime -y
 choco install winrar -y
+
+Set-UAC -On

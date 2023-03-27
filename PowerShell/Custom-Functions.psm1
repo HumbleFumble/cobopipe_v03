@@ -254,14 +254,14 @@ function Rename-File {
 #-------------------------------------------------------------------------------------------------------------------------------------------
 function Set-UAC {
     param (
-        [switch]$High,
-        [switch]$Low
+        [switch]$On,
+        [switch]$Off
     )
     $path = "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System"
-    if ($High -and $Low){
+    if ($On -and $Off){
         Write-Host "Conflicting parameters. Choose either 'High' or 'Low'" -ForegroundColor Red
     }else {
-        if ($Low){
+        if ($Off){
             Set-ExecutionPolicy Bypass -Confirm:$False
             New-ItemProperty -Path $path -Name 'ConsentPromptBehaviorAdmin' -Value 0 -PropertyType DWORD -Force | Out-Null
             New-ItemProperty -Path $path -Name 'ConsentPromptBehaviorUser' -Value 3 -PropertyType DWORD -Force | Out-Null
@@ -273,7 +273,7 @@ function Set-UAC {
             New-ItemProperty -Path $path -Name 'FilterAdministratorToken' -Value 0 -PropertyType DWORD -Force | Out-Null
             Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3' -Name 1806 -Value 0
         }
-        elseif ($High){
+        elseif ($On){
             Set-ItemProperty -Path 'HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Internet Settings\Zones\3' -Name 1806 -Value 1
             New-ItemProperty -Path $path -Name 'ConsentPromptBehaviorAdmin' -Value 5 -PropertyType DWORD -Force | Out-Null
             New-ItemProperty -Path $path -Name 'ConsentPromptBehaviorUser' -Value 3 -PropertyType DWORD -Force | Out-Null
@@ -340,6 +340,18 @@ function Set-ComputersList {
     }
     $ComputersList
 }
+function Get-FreeSpace {
+    
+    param (
+        [string]$DriveLetter
+    )
+    
+    if (!($DriveLetter)){
+        $DriveLetter = "C"
+    }
+    [math]::Round((Get-PSDrive $DriveLetter).Free /1GB, 2)
+
+}
 function Update-CustomFunctions {
     $functions = "Add-EnvironmentVariable.ps1", 
                  "Enter-RemoteSession.ps1", 
@@ -367,8 +379,3 @@ function Update-CustomFunctions {
 
     pwsh
 }
-function Get-FreeSpace {
-    $FreeSpace = (get-ciminstance -ClassName Win32_LogicalDisk -Filter "DeviceID='C:'").FreeSpace /1gb -as [int]
-    $table = [pscustomobject]@{FreeSpace = "$FreeSpace"; Unit = "GB"}
-    $table
-    }
