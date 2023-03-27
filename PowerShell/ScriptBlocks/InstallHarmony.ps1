@@ -1,11 +1,11 @@
-# Set temporarily admnistrator check (UAC) to none
-Set-UAC -Off
-
 # Script parameters. $AtTime can be used to install Python at given time. Use as script parameter to set scheduled time
 param (
     [string]$AtTime,
     [string]$user = (whoami.exe)
 )
+
+# Set temporarily admnistrator check (UAC) to none
+Set-UAC -Off
 
 if (! ($AtTime)){
     $AtTime = Get-Date -Format "HH:mm"
