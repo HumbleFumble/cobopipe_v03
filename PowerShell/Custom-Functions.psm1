@@ -379,4 +379,3 @@ function Update-CustomFunctions {
 
     pwsh
 }
-
