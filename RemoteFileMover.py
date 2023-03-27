@@ -257,21 +257,28 @@ class ReturnAnim(QtWidgets.QWidget):
                 "destination": f"_ANIMATION/{self.user_input.text()}/TO_CB/",
             }
         ]
-        result = ftpUtil.upload(
-            files_objects,
-            CC.project_settings.get("ftp_local_host"),
-            CC.project_settings.get("ftp_username"),
-            CC.project_settings.get("ftp_password"),
-        )
-        os.remove(zip_file)
-        if result:
-            popup.setWindowTitle('Success')
-            msg.setText('File has finished uploading.')
+        try: 
+            result = ftpUtil.upload(
+                files_objects,
+                CC.project_settings.get("ftp_local_host"),
+                CC.project_settings.get("ftp_username"),
+                CC.project_settings.get("ftp_password"),
+            )
+
+            os.remove(zip_file)        
+            if result:
+                popup.setWindowTitle('Success')
+                msg.setText('File has finished uploading.')
+                QtWidgets.QApplication.processEvents()
+            else:
+                popup.setWindowTitle('Error')
+                msg.setText('An error has occurred.\nTry Again or contact a TD.')
+                QtWidgets.QApplication.processEvents()
+        except Exception as e:
+            msg.setText('Error: Failed to upload to FTP.\nTry again or contact a TD.')
             QtWidgets.QApplication.processEvents()
-        else:
-            popup.setWindowTitle('Error')
-            msg.setText('An error has occurred.\nTry Again or contact a TD.')
-            QtWidgets.QApplication.processEvents()
+            os.remove(zip_file)
+
 
 
 def alert(parent, title="Alert", message=""):

@@ -27,6 +27,9 @@ def increment_tb_folder(file):
     else:
         folder = f'{folder}_{new_version}'
 
+    if os.path.exists(folder):
+        return False
+    
     project.save_as(folder)
     new_file = folder.split('/')[-1] + '.xstage'
     new_path = f'{folder}/{new_file}'
