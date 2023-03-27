@@ -242,15 +242,18 @@ class ReturnAnim(QtWidgets.QWidget):
         command = (
             f'python "{script_path}" "{harmony_python_packages}" "{selected_file}"'
         )
+        
         process = subprocess.Popen(
             command, stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
+        
         stdout, stderr = process.communicate()
         stdout = stdout.decode("UTF-8").replace("\r", "")
         stderr = stderr.decode("UTF-8").replace("\r", "")
 
         file = stdout.split("\n")[-2]
         folder = os.path.dirname(file)
+        print(folder)
         zip_file = f"{folder}.zip"
 
         msg.setText("Wait.. File is currently being compressed.")
