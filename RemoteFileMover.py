@@ -329,7 +329,6 @@ class Popup(QtWidgets.QDialog):
 def saveJson(save_location, save_info):
     with open(save_location, "w+") as saveFile:
         json.dump(obj=save_info, fp=saveFile, indent=4, sort_keys=True)
-    saveFile.close()
 
 
 def loadJson(save_location):

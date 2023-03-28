@@ -1,6 +1,7 @@
-#target.aftereffects
+#target.aftereffects;
 
 function Run(){
+	get_config()
 	//Try to find episode and shot number from scene name
 	//var base_path = "P:/_WFH_Projekter/930448_MSP_academy/Film/";
 	//var watchfolder_path = "P:/_WFH_Projekter/930448_MSP_academy/Film/WatchFolder/";
