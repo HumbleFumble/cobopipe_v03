@@ -48,7 +48,13 @@ function Run(){
 	var end_frame = start_frame + Math.round( app.project.renderQueue.item( 1 ).timeSpanDuration / frameDuration ) - 1;
 	var output_file = app.project.renderQueue.item(1).outputModule(1).file
 	var jobname = app.project.file.fsName.split('\\')[app.project.file.fsName.split('\\').length-1].replace('.aep', '')
-	var submit_file = create_submit_job_file(temp_folder, jobname, start_frame, end_frame, output_file);
+	var project_name = $.getenv( "BOM_PROJECT_NAME" )
+	if(project_name === 'Hoj'){
+		var pool = 'hoj'
+	} else {
+		var pool = null
+	}
+	var submit_file = create_submit_job_file(temp_folder, jobname, pool, start_frame, end_frame, output_file);
 	var plugin_file = create_plugin_job_file(temp_folder);
 	commandLine = deadline_exe + " \"" + submit_file + "\" \"" + plugin_file +  "\" \"" + app.project.file.fsName.replace('P:\\', '\\\\dumpap3\\production\\') + "\""
 	result = system.callSystem(commandLine)
@@ -133,7 +139,7 @@ function my_window(){
 	return my_window;
 }
 
-function create_submit_job_file(tempFolder, jobName, start_frame, end_frame, output_file){
+function create_submit_job_file(tempFolder, jobName, pool, start_frame, end_frame, output_file){
 	// Create the submission info file
 	// These settings are specific for hoj and prores
 	var submitInfoFilename = tempFolder + "ae_submit_info.job";
@@ -144,7 +150,9 @@ function create_submit_job_file(tempFolder, jobName, start_frame, end_frame, out
 	submitInfoFile.writeln( "Comment=" );
 	submitInfoFile.writeln( "Department=Comp" );
 	submitInfoFile.writeln( "Group=after_effects" );
-	submitInfoFile.writeln( "Pool=hoj" );
+	if(pool != null){
+		submitInfoFile.writeln( "Pool=" + pool );
+	}
 	submitInfoFile.writeln( "SecondaryPool=" );
 	submitInfoFile.writeln( "Priority=" + Math.round( 50 ) );
 	submitInfoFile.writeln( "TaskTimeoutMinutes=" + Math.round( 0 ) );
