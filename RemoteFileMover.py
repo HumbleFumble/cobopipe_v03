@@ -238,6 +238,7 @@ class ReturnAnim(QtWidgets.QWidget):
         )
 
         popup, msg = alert(self, message="Wait.. Saving new version in a folder.")
+        QtWidgets.QApplication.processEvents()
         script_path = r"\\192.168.0.225\tools\_Pipeline\cobopipe_v02-001\TB\CB_increment_folder.py"
         command = (
             f'python "{script_path}" "{harmony_python_packages}" "{selected_file}"'
@@ -264,7 +265,10 @@ class ReturnAnim(QtWidgets.QWidget):
         QtWidgets.QApplication.processEvents()
         import zipUtil
 
-        zipUtil.zip(folder, zip_file)
+        if os.path.exists(r"C:\Program Files\7-Zip\7z.exe"):
+            zipUtil.zip_7z(folder, zip_file)
+        else:
+            zipUtil.zip(folder, zip_file)
         msg.setText("Wait.. File is currently being uploaded to FTP.")
         QtWidgets.QApplication.processEvents()
         from getConfig import getConfigClass
@@ -323,29 +327,21 @@ class Popup(QtWidgets.QDialog):
 
 
 def saveJson(save_location, save_info):
-    import json
-
     with open(save_location, "w+") as saveFile:
         json.dump(obj=save_info, fp=saveFile, indent=4, sort_keys=True)
     saveFile.close()
 
 
 def loadJson(save_location):
-    import json
-
     if os.path.isfile(save_location):
         with open(save_location, "r") as saveFile:
             loadedSettings = json.load(saveFile)
         if loadedSettings:
             return loadedSettings
-    else:
-        logger.warning("not a file")
     return None
 
 
 if __name__ == "__main__":
-    import sys
-
     if not QtWidgets.QApplication.instance():
         app = QtWidgets.QApplication(sys.argv)
     else:
