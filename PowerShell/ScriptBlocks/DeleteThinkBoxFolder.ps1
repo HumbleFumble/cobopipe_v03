@@ -1,6 +1,6 @@
 
 param (
-    [Parameter(Position = 0)][string[]]$ComputerName
+    [Parameter(Mandatory, Position = 0)][string[]]$ComputerName
 )
 Set-ExecutionPolicy Bypass
 
