@@ -67,7 +67,7 @@ class ReturnAnim(QtWidgets.QWidget):
 
         # CONNECTING
         self.browse_button.clicked.connect(
-            lambda: self.browse_input.insert(
+            lambda: self.browse_input.setText(
                 QtWidgets.QFileDialog.getOpenFileName(
                     parent=self, caption="Select File", filter="XSTAGE File (*.xstage)"
                 )[0]
