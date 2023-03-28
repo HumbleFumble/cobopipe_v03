@@ -327,16 +327,12 @@ class Popup(QtWidgets.QDialog):
 
 
 def saveJson(save_location, save_info):
-    import json
-
     with open(save_location, "w+") as saveFile:
         json.dump(obj=save_info, fp=saveFile, indent=4, sort_keys=True)
     saveFile.close()
 
 
 def loadJson(save_location):
-    import json
-
     if os.path.isfile(save_location):
         with open(save_location, "r") as saveFile:
             loadedSettings = json.load(saveFile)
@@ -346,8 +342,6 @@ def loadJson(save_location):
 
 
 if __name__ == "__main__":
-    import sys
-
     if not QtWidgets.QApplication.instance():
         app = QtWidgets.QApplication(sys.argv)
     else:
