@@ -123,6 +123,7 @@ class ReturnAnim(QtWidgets.QWidget):
         )
 
         popup, msg = alert(self, message="Wait.. Saving new version in a folder.")
+        QtWidgets.QApplication.processEvents()
         script_path = r"\\192.168.0.225\tools\_Pipeline\cobopipe_v02-001\TB\CB_increment_folder.py"
         command = (
             f'python "{script_path}" "{harmony_python_packages}" "{selected_file}"'
@@ -149,7 +150,10 @@ class ReturnAnim(QtWidgets.QWidget):
         QtWidgets.QApplication.processEvents()
         import zipUtil
 
-        zipUtil.zip(folder, zip_file)
+        if os.path.exists(r"C:\Program Files\7-Zip\7z.exe"):
+            zipUtil.zip_7z(folder, zip_file)
+        else:
+            zipUtil.zip(folder, zip_file)
         msg.setText("Wait.. File is currently being uploaded to FTP.")
         QtWidgets.QApplication.processEvents()
         from getConfig import getConfigClass

@@ -1043,9 +1043,9 @@ class FrontController(QtCore.QObject):
 					dest = destination + '/' + folder + '.zip'
 
 				if local:
-					try:
+					if os.path.exists(r"C:\Program Files\7-Zip\7z.exe"):
 						zipUtil.zip_7z([source, CC.get_shot_sound_file(**info)], dest)
-					except:
+					else:
 						zipUtil.zip([source, CC.get_shot_sound_file(**info)], dest)
 					print(' >> Done zipping ' + source + '\n')
 				else:
@@ -1102,10 +1102,10 @@ class FrontController(QtCore.QObject):
 					source = os.path.join(ftp_folder, item)
 					destination = CC.get_shot_path(**shot.getInfoDict())
 					if local:
-						try:
+						if os.path.exists(r"C:\Program Files\7-Zip\7z.exe"):
 							zipUtil.unzip_7z(source, destination, overwrite=False)
-						except:
-							zipUtil.unzip(source, destination, overwrite=False)
+						else:
+         					 zipUtil.unzip(source, destination, overwrite=False)
 					else:
 						from shotgrid.webhook.send_webhook import send_webhook
 						replace_dictionary = {
