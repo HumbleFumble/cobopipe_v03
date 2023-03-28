@@ -6,6 +6,7 @@ function Install-App {
         [Parameter()][string]$TaskName
     
     )
+
     # Set up scheduled task for each set of parameters and run it
     #--------------------------------------------------------------------------------------------------------------------------------------------
     

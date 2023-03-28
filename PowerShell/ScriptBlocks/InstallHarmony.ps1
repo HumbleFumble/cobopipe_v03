@@ -16,7 +16,6 @@ if (! ($AtTime)){
     }
 }
 
-
 function Install-Shortcut {
     [CmdletBinding()]
     param (
