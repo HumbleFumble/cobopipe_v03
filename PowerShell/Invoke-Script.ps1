@@ -22,7 +22,6 @@ Invoke-Command -ComputerName $ComputerName -ScriptBlock {
     }
         Set-ExecutionPolicy Bypass
         New-PSDrive -Name "T" -PSProvider FileSystem -Root "\\dumpap3\tools" -Persist -Credential $using:creds
-        Import-Module "T:\_Pipeline\cobopipe_v02-001\PowerShell\Custom-Functions.psm1"
         & $using:ScriptPath -AtTime $using:AtTime
     
     }

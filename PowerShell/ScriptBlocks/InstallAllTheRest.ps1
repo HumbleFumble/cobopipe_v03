@@ -1,5 +1,9 @@
 Set-UAC -Off
+
+#Log 
 Start-Transcript -path C:\Users\$env:USERNAME\Desktop\autoInstallLog.txt -append
+
+Import-Module "C:\Program Files\PowerShell\7\Modules\Custom-Functions"
 
 # Powershell silent web install
 if (! (Test-Path -Path "C:\Program Files\PowerShell\7\pwsh.exe")){

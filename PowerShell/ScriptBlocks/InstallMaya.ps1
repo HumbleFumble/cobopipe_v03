@@ -8,6 +8,7 @@ param (
 # Set temporarily admnistrator check (UAC) to none
 Set-UAC -Off
 
+Import-Module "C:\Program Files\PowerShell\7\Modules\Custom-Functions"
 
 if (! ($AtTime)){
     $AtTime = Get-Date -Format "HH:mm"
@@ -22,11 +23,13 @@ $parameters = [pscustomobject]@{Name = "Maya"; PathToInstaller = "\\dumpap3\tool
 
 Set-UAC -Off
 
-if (Get-ScheduledTask | Where-Object {$_.TaskName -match $p.TaskName} -ErrorAction SilentlyContinue){
-    Unregister-ScheduledTask -TaskName $p.TaskName -Confirm:$False
+if (Get-ScheduledTask | Where-Object {$_.TaskName -match $parameters.TaskName} -ErrorAction SilentlyContinue){
+    Unregister-ScheduledTask -TaskName $parameters.TaskName -Confirm:$False
     }
 
 Install-App -PathToInstaller $parameters.PathToInstaller -Arguments $parameters.Arguments -TaskName $parameters.TaskName
 Start-Sleep 3
 Get-Process setup | Wait-Process
+
+Unregister-ScheduledTask -TaskName $parameters.TaskName -Confirm:$False
 Set-UAC -On

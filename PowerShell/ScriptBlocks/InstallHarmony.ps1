@@ -7,6 +7,8 @@ param (
 # Set temporarily admnistrator check (UAC) to none
 Set-UAC -Off
 
+Import-Module "C:\Program Files\PowerShell\7\Modules\Custom-Functions"
+
 if (! ($AtTime)){
     $AtTime = Get-Date -Format "HH:mm"
 }else{

@@ -21,5 +21,7 @@ Set-UAC -Off
 Install-App -PathToInstaller $parameters.PathToInstaller -Arguments $parameters.Arguments -TaskName $parameters.TaskName
 Start-Sleep 3
 Get-Process setup | Wait-Process
+
+Unregister-ScheduledTask -TaskName $parameters.TaskName -Confirm:$False
 Set-UAC -On
 
