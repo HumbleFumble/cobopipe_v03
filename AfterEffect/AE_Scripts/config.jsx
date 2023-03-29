@@ -108,19 +108,20 @@ function get_config_options(hide_archived){
     var projects = [];
     // alert('get_config_options 04')
 
-    alert('01')
+    // alert('01')
     for(var i in files){
-        alert('02')
+        // alert('02')
+        alert(files[i].fsName)
         if(files[i].fsName.substr(-5, 5) == '.json'){
-            alert('03')
+            // alert('03')
             filename = files[i].fsName.split('\\')[files[i].fsName.split('\\').length-1];
-            alert('04')
+            // alert('04')
             if(filename.substr(0, 7) == 'Config_'){
-                alert('05')
+                // alert('05')
                 filename = filename.replace('Config_', '').replace('.json', '');
-                alert('06')
+                // alert('06')
                 projects.push(filename);
-                alert('07')
+                // alert('07')
             }
         }
     }
