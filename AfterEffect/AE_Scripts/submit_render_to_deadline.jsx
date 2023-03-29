@@ -2,40 +2,28 @@
 #include "includes/config.jsx";
 
 function Run(){
+	// FETCHING CONFIG
 	var config = get_config();
-	
-	//Try to find episode and shot number from scene name
-	//var base_path = "P:/_WFH_Projekter/930448_MSP_academy/Film/";
-	//var watchfolder_path = "P:/_WFH_Projekter/930448_MSP_academy/Film/WatchFolder/";
     
+	// PREPARING RENDER QUEUE
     var split_path = app.project.file.path.split("/Comp");
     var base_path = split_path[0];
-    
-    
 	var comp_name = ".RENDER";
 	var output_module = "Comp_Render";
-	//split filename to find episode and shot number
     var shot_name = base_path.split("/");
     shot_name = shot_name[shot_name.length-1];
-
     render_path = base_path + "/_CompOutput/";
     render_path_folder = new Folder(render_path);
     var file_name = shot_name + "_CompOutput";
-    // alert("render_path: " + render_path + "\nFilename:" + file_name);
-	//var file_name = shot  + "_[####]"; //USE FOR FRAME STACKS
-    
-	//var episode_name = "E"+ Pad(scene,3);
-	//var shot_name = Pad(cur_shot,3);
 	var render_comp = FindOutputComp(comp_name);
-
-    
 	if(render_comp){
 		SetupRenderQueue(render_comp, render_path, file_name, output_module);
 		}else{
 			alert("Can't find '.RENDER' comp to render");
 			}
-
 	app.project.save() 
+
+
 	// SUBMIT TO DEADLINE
 	var deadlineBin = $.getenv( "DEADLINE_PATH" );
 	var deadline_exe = "\"" + deadlineBin + "\\deadlinecommand.exe\"";
@@ -203,7 +191,5 @@ function getPosition(string, subString, index) {
   return string.split(subString, index).join(subString).length;
 }
 
-
 import_UI = my_window();
 import_UI.show();
-//LoadWindow(import_UI);

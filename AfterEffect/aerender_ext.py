@@ -4,6 +4,7 @@ from runtimeEnv import getRuntimeEnvFromConfig
 from getConfig import getConfigClass
 CC = getConfigClass()
 run_env = getRuntimeEnvFromConfig(config_class=CC)
+from config import REPOSITORY_DIRECTORY
 
 def render(file_path):
     if not os.path.exists(file_path):
@@ -28,10 +29,11 @@ def submit_to_deadline(file_path):
     if not os.path.isfile(file_path):
         return None
 
-    script_path = r'T:\_Pipeline\cobopipe_v02-001\AfterEffect\submit_render_to_deadline_externally.jsx'
+    script_path = REPOSITORY_DIRECTORY + '/AfterEffect/submit_render_to_deadline_externally.jsx'
     executable = r'AfterFX'
-    arguments = f"-noui -s \"#include {script_path.replace(os.sep, '/')};Run('{file_path.replace(os.sep, '/')}')\""
+    arguments = f"-noui -s \"#include {script_path};Main('{file_path.replace(os.sep, '/')}')\""
     command = f'{executable} {arguments}'
+    print(command)
     # print(f'command: {command}')
     process = subprocess.Popen(command, shell=True, env=run_env)
     stdout, stderr = process.communicate()
