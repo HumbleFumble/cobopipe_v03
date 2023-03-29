@@ -1,6 +1,9 @@
 #target.aftereffects;
+#include "config.jsx";
 
 function Run(){
+	var config = get_config();
+	
 	//Try to find episode and shot number from scene name
 	//var base_path = "P:/_WFH_Projekter/930448_MSP_academy/Film/";
 	//var watchfolder_path = "P:/_WFH_Projekter/930448_MSP_academy/Film/WatchFolder/";
@@ -48,17 +51,16 @@ function Run(){
 	var end_frame = start_frame + Math.round( app.project.renderQueue.item( 1 ).timeSpanDuration / frameDuration ) - 1;
 	var output_file = app.project.renderQueue.item(1).outputModule(1).file
 	var jobname = app.project.file.fsName.split('\\')[app.project.file.fsName.split('\\').length-1].replace('.aep', '')
-	var project_name = $.getenv( "BOM_PROJECT_NAME" )
-	if(project_name === 'Hoj'){
-		var pool = 'hoj'
-	} else {
-		var pool = null
+	var pool = null;
+	var config_pool = config.project_settings.deadline_pool;
+	if(config_pool != undefined){
+		pool = config_pool
 	}
 	var submit_file = create_submit_job_file(temp_folder, jobname, pool, start_frame, end_frame, output_file);
 	var plugin_file = create_plugin_job_file(temp_folder);
 	commandLine = deadline_exe + " \"" + submit_file + "\" \"" + plugin_file +  "\" \"" + app.project.file.fsName.replace('P:\\', '\\\\dumpap3\\production\\') + "\""
-	result = system.callSystem(commandLine)
-	alert(result)
+	// result = system.callSystem(commandLine)
+	// alert(result)
 }
 
 function Pad(n, width, z) {

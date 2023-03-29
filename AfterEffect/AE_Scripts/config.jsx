@@ -55,7 +55,7 @@ function populate_dropdown(dropdown, hide_archived){
 function get_config(){
 	var project = get_project();
     var config_path = 'T:/_Pipeline/cobopipe_v02-001/Configs/Config_' + project + '.json';
-    return config;
+    return loadJson(config_path);
 }
 
 function get_project(){
