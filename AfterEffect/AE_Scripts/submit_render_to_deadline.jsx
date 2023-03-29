@@ -111,23 +111,23 @@ function SetupRenderQueue(render_comp, out_folder, out_name, out_module){
 
 }
 
-function my_window(){
-	var my_source = "window {text: 'Submit Deadline Job', alignChildren: 'left' , alignment: ['top','fill'],preferredSize: [400,150],\
-			shot_panel: Panel {text: 'INFO:', \
-				alignment:['fill','top'], alignChildren: 'left',\
-				st2: StaticText{text: 'This script saves your file, so make sure you are okay with that before running it' ,},\
-				st3: StaticText{text: 'Make sure you have an output module called Comp_Render, as this scripts assigns it to render' ,},\
-				}\
-			queue_panel: Panel {text: 'Click to send .Render to renderQueue : ', alignChildren: 'left' ,\
-				buttonQ_group: Group{ orientation:'row', runQ_button: Button{ text: 'Submit'},},\
-			} \
-		}";
+// function my_window(){
+// 	var my_source = "window {text: 'Submit Deadline Job', alignChildren: 'left' , alignment: ['top','fill'],preferredSize: [400,150],\
+// 			shot_panel: Panel {text: 'INFO:', \
+// 				alignment:['fill','top'], alignChildren: 'left',\
+// 				st2: StaticText{text: 'This script saves your file, so make sure you are okay with that before running it' ,},\
+// 				st3: StaticText{text: 'Make sure you have an output module called Comp_Render, as this scripts assigns it to render' ,},\
+// 				}\
+// 			queue_panel: Panel {text: 'Click to send .Render to renderQueue : ', alignChildren: 'left' ,\
+// 				buttonQ_group: Group{ orientation:'row', runQ_button: Button{ text: 'Submit'},},\
+// 			} \
+// 		}";
 		
-	var my_window = new Window(my_source);
-	my_window.queue_panel.buttonQ_group.runQ_button.onClick = Run;
+// 	var my_window = new Window(my_source);
+// 	my_window.queue_panel.buttonQ_group.runQ_button.onClick = Run;
 
-	return my_window;
-}
+// 	return my_window;
+// }
 
 function create_submit_job_file(tempFolder, jobName, pool, start_frame, end_frame, output_file){
 	// Create the submission info file
@@ -191,5 +191,5 @@ function getPosition(string, subString, index) {
   return string.split(subString, index).join(subString).length;
 }
 
-import_UI = my_window();
-import_UI.show();
+// import_UI = my_window();
+// import_UI.show();
