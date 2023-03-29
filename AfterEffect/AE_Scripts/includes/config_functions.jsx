@@ -1,4 +1,4 @@
-#include T:/_Pipeline/cobopipe_v02-001/AfterEffect/includes/json2.js
+#include 'json2.js';
 //#include C:/Users/cg/PycharmProjects/cobopipe_v02-001/AfterEffect/includes/json2.js
 ////CONFIG INFO
 
