@@ -46,7 +46,6 @@ function reg_replace(path){
         return []
         }
     return m
-
 }
 
 function clean_key_func(key){
@@ -55,7 +54,7 @@ function clean_key_func(key){
     return key
     }
 
-function dict_replace(dict,path){
+function dict_replace(dict, path){
     var no_keys = [];
     var key_list = reg_replace(path)
     for(i=0;i<key_list.length;i++){

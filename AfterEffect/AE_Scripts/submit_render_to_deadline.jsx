@@ -1,5 +1,5 @@
 #target.aftereffects;
-#include "config.jsx";
+#include "includes/config.jsx";
 
 function Run(){
 	var config = get_config();
@@ -58,7 +58,7 @@ function Run(){
 	}
 	var submit_file = create_submit_job_file(temp_folder, jobname, pool, start_frame, end_frame, output_file);
 	var plugin_file = create_plugin_job_file(temp_folder);
-	commandLine = deadline_exe + " \"" + submit_file + "\" \"" + plugin_file +  "\" \"" + app.project.file.fsName.replace('P:\\', '\\\\dumpap3\\production\\') + "\""
+	commandLine = deadline_exe + " \"" + submit_file + "\" \"" + plugin_file +  "\" \"" + app.project.file.fsName + "\""
 	result = system.callSystem(commandLine)
 	alert(result)
 }

@@ -52,7 +52,8 @@ function populate_dropdown(dropdown, hide_archived){
 
 function get_config(){
 	var project = get_project();
-    var config_path = 'T:/_Pipeline/cobopipe_v02-001/Configs/Config_' + project + '.json';
+    var pipeline_path = get_pipeline_path();
+    var config_path = pipeline_path + '/Configs/Config_' + project + '.json';
     return loadJson(config_path);
 }
 
@@ -70,8 +71,17 @@ function get_project(){
     }
 }
 
+function get_pipeline_path(){
+    var path = $.getenv("BOM_PIPE_PATH")
+    if(!path){
+        path = "T:/_Pipeline/cobopipe_v02-001"
+    }
+    return path
+}
+
 function get_config_options(hide_archived){
-    var config_folder = Folder('T:/_Pipeline/cobopipe_v02-001/Configs');
+    var pipeline_path = get_pipeline_path();
+    var config_folder = Folder(pipeline_path + '/Configs');
     var files = config_folder.getFiles();
     var projects = [];
 
@@ -87,7 +97,7 @@ function get_config_options(hide_archived){
         }
     }
     
-    var archived_projects = loadJson('T:/_Pipeline/cobopipe_v02-001/Configs/archivesProjects.json');
+    var archived_projects = loadJson(pipeline_path + '/Configs/archivesProjects.json');
     if(hide_archived == true){
         var non_archived_projects = [];
         for(var i in projects){
@@ -113,4 +123,71 @@ function loadJson(path){
     var data = scriptFile.read();
     scriptFile.close();
     return JSON.parse(data);
+}
+
+function log(msg){
+$.writeln(msg)
+}
+
+function unpack_config(object){
+    var update_object = {};
+
+    for(key in object){
+        if(typeof object[key] === 'object' && !(object[key] instanceof Array) && object[key] != null){
+            var output = unpack_config(object[key]);
+            for(output_key in output){
+                if(!(output_key in update_object)){
+                    update_object[output_key] = output[output_key]
+                }
+            }
+        } else {
+            update_object[key] = object[key]
+        }
+    }
+    return update_object;
+}
+
+function pack_config(ref_object, object){
+
+    for(key in ref_object){
+        if(typeof ref_object[key] === 'object' && !(ref_object[key] instanceof Array) && ref_object[key] != null){
+            var output = pack_config(ref_object[key], object);
+            for(output_key in output){
+                if(output_key in ref_object){
+                    ref_object[key] = output[output_key]
+                }
+            }
+        } else {
+            ref_object[key] = object[key] 
+        }
+
+
+    }
+    
+    return ref_object;
+}
+
+function process_config(object){
+    var update_object = unpack_config(object)
+
+    var number_of_updates = 1
+    while(number_of_updates > 0){
+        number_of_updates = 0
+        for(key in update_object){
+            if(typeof update_object[key] === 'string'){
+                if(update_object[key].indexOf('<') > -1){
+                    var start_index = update_object[key].indexOf('<') + 1 
+                    var end_index = update_object[key].indexOf('>') - 1
+                    var replace_key = update_object[key].substr(start_index, end_index)
+
+                    if(replace_key in update_object){
+                        update_object[key] = update_object[key].replace("<" + replace_key + ">", update_object[replace_key])
+                        number_of_updates = ++number_of_updates
+                    }
+                }
+            }
+        }
+    }
+
+    return pack_config(object, update_object)
 }
