@@ -59,8 +59,8 @@ function Run(){
 	var submit_file = create_submit_job_file(temp_folder, jobname, pool, start_frame, end_frame, output_file);
 	var plugin_file = create_plugin_job_file(temp_folder);
 	commandLine = deadline_exe + " \"" + submit_file + "\" \"" + plugin_file +  "\" \"" + app.project.file.fsName.replace('P:\\', '\\\\dumpap3\\production\\') + "\""
-	// result = system.callSystem(commandLine)
-	// alert(result)
+	result = system.callSystem(commandLine)
+	alert(result)
 }
 
 function Pad(n, width, z) {
