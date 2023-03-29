@@ -2011,7 +2011,7 @@ class FrontController(QtCore.QObject):
 			print('\n >> Done updating harmony palettes <<')
 
 	def aeRenderExternally(self, nodes, wait=False):
-		import AfterEffect.aerender_ext as aer
+		import AfterEffect.AE_render_externally as aer
 
 		shots = []
 		for node in nodes:
@@ -2047,7 +2047,7 @@ class FrontController(QtCore.QObject):
 			print('\n >> Rendering! <<')
 
 	def aeSubmitToDeadlineExternally(self, nodes, wait=False):
-		import AfterEffect.aerender_ext as aer
+		import AfterEffect.AE_render_externally as aer
 
 		shots = []
 		for node in nodes:
