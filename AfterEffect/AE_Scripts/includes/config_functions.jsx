@@ -86,13 +86,7 @@ function getPreviewDict(cfgp,f_dict){
         }
     return preview_obj
 }
-function getConfig(){
-    cfg = loadConfigJson()
-    cfgp = cfg.project_paths
-    f_dict = cfg.preview_dict
-    var t = getPreviewDict(cfgp,f_dict)
-    return cfg
-}
+
 function return_preview_keys(cfg){
     var return_list = []
     var t = cfg.preview_dict
@@ -101,3 +95,12 @@ function return_preview_keys(cfg){
     }
     return return_list
 }
+
+function PrepareForPreviews(){
+    cfg = loadConfigJson()
+    cfgp = cfg.project_paths
+    f_dict = cfg.preview_dict
+    var t = getPreviewDict(cfgp,f_dict)
+    return cfg
+}
+

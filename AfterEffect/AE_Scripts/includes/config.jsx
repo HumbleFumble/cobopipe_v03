@@ -1,4 +1,4 @@
- #include "json2.js";
+﻿ #include "json2.js";
 
 function config_prompt(){
 	var ui_script = "dialog { \
@@ -191,3 +191,41 @@ function process_config(object){
 
     return pack_config(object, update_object)
 }
+
+
+function reg_replace(path){
+    //returns a list of strings found between < >, including the < >
+    //log("replace" + path);
+    var t = new RegExp('\<(.*?)\>','g')
+    var m = path.match(t,path)
+    if(!m){
+        return []
+        }
+    return m
+}
+
+function clean_key_func(key){
+     key = key.replace("<","")
+     key = key.replace(">","")
+    return key
+    }
+
+function process_path(path,info_dict){
+    var no_keys = [];
+    var key_list = reg_replace(path)
+    for(i=0;i<key_list.length;i++){
+         var c_key = key_list[i]
+         var clean_key = clean_key_func(c_key)
+         if(clean_key in info_dict){
+             path = path.replace(c_key,info_dict[clean_key])
+             }
+         else{
+             no_keys.push(c_key)
+             }
+         }
+     var more_keys = reg_replace(path);
+     if(more_keys.length!=no_keys.length){
+         path = process_path(info_dict,path)
+     }
+     return path
+    }
