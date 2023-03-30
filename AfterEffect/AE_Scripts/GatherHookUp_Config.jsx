@@ -1,6 +1,6 @@
 ﻿
 #target.aftereffects
-#include json2.js
+#include "includes/json2.js"
 #include "includes/config.jsx"
 
 //var base_project_path = "P:/_WFH_Projekter/930486_MiaMagicPlayground_S3-4/4_Production/Film/"
