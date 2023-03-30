@@ -1,9 +1,9 @@
 ﻿#target AfterEffects
-#include "includes/config_functions.jsx";
+#include "includes/config.jsx";
 //include C:/Users/cg/PycharmProjects/cobopipe_v02-001/AfterEffect/includes/config_functions.jsx
 
-cc = getConfig()
-var base_project_path = dict_replace(cc.project_paths,cc.project_paths["film_path"])
+cc = get_config()
+var base_project_path = process_path(cc.project_paths["film_path"], cc.project_paths)
 var template_path = base_project_path + "/_Comp_Templates/_AE_CharTemplates";
 
 
