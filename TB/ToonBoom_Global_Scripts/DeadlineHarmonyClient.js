@@ -1,7 +1,8 @@
 submissionDir = callDeadlineCommand( ["-GetRepositoryPath", "submission/Harmony/Main"] )
 scriptPath = trim(submissionDir) + "/SubmitHarmonyToDeadline.js";
 
-include( scriptPath );
+//include( scriptPath );
+include ("SubmitHarmonyToDeadline.js")
 
 function callDeadlineCommand( args )
 {
@@ -36,7 +37,7 @@ function callDeadlineCommand( args )
 		commandArgs[commandArgIndex++] = args[arg];
 	}
 	MessageLog.trace(commandLine)
-	MessageLog.trace(String(typeof(commandArgs)))
+	MessageLog.trace(String(commandArgs))
 	var result = runQprocess(commandLine,commandArgs)
 	//var status = new Process2("ipconfig");
 
@@ -47,12 +48,21 @@ function callDeadlineCommand( args )
 	// var mOut = Process.stdout;
 //	var mOut = status.launch();
 //	var result = mOut;
+	MessageLog.trace(result)
 	return result;
 }
 
 function runQprocess(call,list_of_args)
 {
    var p1 = new QProcess;
+
+   var new_env = new QProcessEnvironment()
+   os_var = ["PATH","DEADLINE_PATH","SYSTEMROOT","SYSTEMDRIVE"]
+	for(i=0;i<os_var.length;i++){
+	    new_env.insert(os_var[i],System.getenv(os_var[i]))
+    }
+	p1.setProcessEnvironment(new_env)
+
    //var bin = "/bin/ls";
    //var args = ["-la"];
    p1.start(call,list_of_args);
@@ -94,8 +104,4 @@ function SubmitToDeadline()
 		InnerSubmitToDeadline( submissionDir );
 	}
 	
-}
-
-function testRun(){
-    status = runQprocess("ipconfig")
 }
