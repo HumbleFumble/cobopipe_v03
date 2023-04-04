@@ -1060,9 +1060,7 @@ class FrontController(QtCore.QObject):
 						r'\\dumpap3': r'\\192.168.0.225',
 						r'\\archivesrv': r'\\192.168.0.227'
 					}
-					arguments = f'"{CC.get_python_path()}zipUtil.py" "zip_7z" "{source}" "{sound_file}" "{dest}"'
 
-					unc = None
 					if unc:
 						for cur in [source,sound_file]:
 							for x, y in replace_dictionary.items():
@@ -1076,10 +1074,11 @@ class FrontController(QtCore.QObject):
 							if x in dest:
 								dest.replace(x, y)
 						unc = unc.replace("\\","\\\\")
-						unc_arguments = f'"{CC.get_python_path()}zipUtil.py" "zip_7z_with_unc" "{source}" "{sound_file}" "{dest}" "{unc}"'
+						arguments = f'"{CC.get_python_path()}zipUtil.py" "zip_7z_with_unc" "{source}" "{sound_file}" "{dest}" "{unc}"'
 
-					print(arguments)
 					if not unc:
+						arguments = f'"{CC.get_python_path()}zipUtil.py" "zip_7z" "{source}" "{sound_file}" "{dest}"'
+						print(arguments)
 						for x, y in replace_dictionary.items():
 							arguments = arguments.replace(x, y)
 					send_webhook(
@@ -3025,6 +3024,8 @@ class MainWindow(QtWidgets.QWidget):
 					if animation_style == "Toonboom":
 						file_menu.addAction("Zip Anim Folder")
 						file_menu.addAction("Zip Anim Folder to FTP")
+						file_menu.addAction("Zip Anim Folder with project root")
+						file_menu.addAction("Zip Anim Folder with project root to FTP")
 						file_menu.addAction("Zip Anim Folder (Local)")
 						file_menu.addAction("Zip Anim Folder to FTP (Local)")
 						file_menu.addAction("Zip Anim Folder with project root (Local)")
@@ -3104,6 +3105,12 @@ class MainWindow(QtWidgets.QWidget):
 						self.ctrl.zipFolders(nodes,user_name=self.user_combobox.currentText(), local=False)
 					if action.text() == "Zip Anim Folder to FTP":
 						self.ctrl.zipFolders(nodes, destination=self.ctrl.get_ftp_directory(self.user_combobox.currentText()),user_name=self.user_combobox.currentText(), local=False)
+
+					if action.text() == "Zip Anim Folder with project root":
+						self.ctrl.zipFolders(nodes,user_name=self.user_combobox.currentText(), local=False,unc=True)
+					if action.text() == "Zip Anim Folder with project root to FTP":
+						self.ctrl.zipFolders(nodes, destination=self.ctrl.get_ftp_directory(self.user_combobox.currentText()),user_name=self.user_combobox.currentText(), local=False,unc=True)
+
 					if action.text() == "Zip Anim Folder (Local)":
 						self.ctrl.zipFolders(nodes,user_name=self.user_combobox.currentText(), local=True)
 					if action.text() == "Zip Anim Folder to FTP (Local)":
