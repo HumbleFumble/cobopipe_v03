@@ -1,8 +1,8 @@
 submissionDir = callDeadlineCommand( ["-GetRepositoryPath", "submission/Harmony/Main"] )
 scriptPath = trim(submissionDir) + "/SubmitHarmonyToDeadline.js";
 
-//include( scriptPath );
-include ("SubmitHarmonyToDeadline.js")
+include( scriptPath );
+//include ("SubmitHarmonyToDeadline.js")
 
 function callDeadlineCommand( args )
 {
