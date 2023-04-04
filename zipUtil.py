@@ -38,7 +38,7 @@ def zip(source, destination):
     return zipFile
 
 
-def zip_7z(source, destination):
+def zip_7z(source, destination,unc=None):
     if type(source) == str:
         source = [source]
 
@@ -46,8 +46,20 @@ def zip_7z(source, destination):
         raise TypeError
 
     path_7z = r"C:\Program Files\7-Zip\7z.exe"
-    arguments = [path_7z, "a", "-tzip", destination, *source]
-    subprocess.check_output(arguments)
+    source_as_string = ' '.join(f'"{w}"' for w in source)
+
+    if not unc:
+        cmd = f'"{path_7z}" a -tzip "{destination}" {source_as_string}'
+        # arguments = [path_7z, "a", "-tzip", destination, *source]
+    else:
+        cmd = f'pushd {unc} & "{path_7z}" a -tzip "{destination}" -spf2 {source_as_string}'
+
+    c = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    #
+    o, e = c.communicate()
+    print(o.decode("UTF-8"),e.decode("UTF-8"))
+
+    # subprocess.check_output(arguments)
 
 
 def unzip(source, destination=None, overwrite=False):
@@ -77,9 +89,13 @@ def unzip_7z(source, destination=None):
     subprocess.check_output(arguments)
 
 if __name__ == "__main__":
+    # zip_7z(["\\930462_HOJ_Project\\Production\\Film\\S100\\S100_SQ020\\S100_SQ020_SH050\\S100_SQ020_SH050","\\930462_HOJ_Project\\Production\\Film\\S100\\S100_SQ020\\S100_SQ020_SH050\\S100_SQ020_SH050_Sound.wav"],
+    #        "P:\\930462_HOJ_Project\\Production\\Film\\S100\\S100_SQ020\\S100_SQ020_SH050\\S100_SQ020_SH050.zip",unc="\\\\192.168.0.225\\production")
     if len(sys.argv) > 3:
         if sys.argv[1] == 'zip':
             zip(sys.argv[2:-1], sys.argv[-1])
+        elif sys.argv[1] == 'zip_7z_with_unc':
+            zip_7z(sys.argv[2:-2], sys.argv[-2],unc=sys.argv[-1])
         elif sys.argv[1] == 'zip_7z':
             zip_7z(sys.argv[2:-1], sys.argv[-1])
         elif sys.argv[1] == 'unzip':

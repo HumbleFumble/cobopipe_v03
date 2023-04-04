@@ -1005,7 +1005,7 @@ class FrontController(QtCore.QObject):
 		QtGui.QPixmapCache.clear()
 		self.__threadPool.cancelBatch()
 
-	def zipFolders(self, nodes, destination=None, user_name="zip", local=False):
+	def zipFolders(self, nodes, destination=None, user_name="zip", local=False,unc=None):
 		if local:
 			import zipUtil
 		
@@ -1041,12 +1041,15 @@ class FrontController(QtCore.QObject):
 					dest = source + '.zip'
 				else:
 					dest = destination + '/' + folder + '.zip'
-
+				sound_file = CC.get_shot_sound_file(**info)
 				if local:
 					if os.path.exists(r"C:\Program Files\7-Zip\7z.exe"):
-						zipUtil.zip_7z([source, CC.get_shot_sound_file(**info)], dest)
+						if unc:
+							zipUtil.zip_7z([source, sound_file], dest,unc=source[0:2])
+						else:
+							zipUtil.zip_7z([source, sound_file], dest)
 					else:
-						zipUtil.zip([source, CC.get_shot_sound_file(**info)], dest)
+						zipUtil.zip([source, sound_file], dest)
 					print(' >> Done zipping ' + source + '\n')
 				else:
 					from shotgrid.webhook.send_webhook import send_webhook
@@ -1057,10 +1060,28 @@ class FrontController(QtCore.QObject):
 						r'\\dumpap3': r'\\192.168.0.225',
 						r'\\archivesrv': r'\\192.168.0.227'
 					}
-					arguments = f'"{CC.get_python_path()}zipUtil.py" "zip_7z" "{source}" "{CC.get_shot_sound_file(**info)}" "{dest}"'
+					arguments = f'"{CC.get_python_path()}zipUtil.py" "zip_7z" "{source}" "{sound_file}" "{dest}"'
+
+					unc = None
+					if unc:
+						for cur in [source,sound_file]:
+							for x, y in replace_dictionary.items():
+								if x in cur:
+									cur.replace(x,"")
+									if "dumpap3" in x:
+										unc = y + "\production"
+									else:
+										unc = y
+						for x, y in replace_dictionary.items():
+							if x in dest:
+								dest.replace(x, y)
+						unc = unc.replace("\\","\\\\")
+						unc_arguments = f'"{CC.get_python_path()}zipUtil.py" "zip_7z_with_unc" "{source}" "{sound_file}" "{dest}" "{unc}"'
+
 					print(arguments)
-					for x, y in replace_dictionary.items():
-						arguments = arguments.replace(x, y)
+					if not unc:
+						for x, y in replace_dictionary.items():
+							arguments = arguments.replace(x, y)
 					send_webhook(
 						{
 							'hook': 'submit_zip',
@@ -3006,6 +3027,8 @@ class MainWindow(QtWidgets.QWidget):
 						file_menu.addAction("Zip Anim Folder to FTP")
 						file_menu.addAction("Zip Anim Folder (Local)")
 						file_menu.addAction("Zip Anim Folder to FTP (Local)")
+						file_menu.addAction("Zip Anim Folder with project root (Local)")
+						file_menu.addAction("Zip Anim Folder with project root to FTP (Local)")
 						file_menu.addAction("Unpack Anim Folder")
 						file_menu.addAction("Unpack Anim Folder (Local)")
 					create_menu.addAction("Rebuild Anim Publish Report")
@@ -3085,6 +3108,11 @@ class MainWindow(QtWidgets.QWidget):
 						self.ctrl.zipFolders(nodes,user_name=self.user_combobox.currentText(), local=True)
 					if action.text() == "Zip Anim Folder to FTP (Local)":
 						self.ctrl.zipFolders(nodes, destination=self.ctrl.get_ftp_directory(self.user_combobox.currentText()),user_name=self.user_combobox.currentText(), local=True)
+					if action.text() == "Zip Anim Folder with project root (Local)":
+						self.ctrl.zipFolders(nodes,user_name=self.user_combobox.currentText(), local=True,unc=True)
+					if action.text() == "Zip Anim Folder with project root to FTP (Local)":
+						self.ctrl.zipFolders(nodes, destination=self.ctrl.get_ftp_directory(self.user_combobox.currentText()),user_name=self.user_combobox.currentText(), local=True,unc=True)
+
 					if action.text() == "Unpack Anim Folder":
 						self.ctrl.unpack_zip(nodes, user_name=self.user_combobox.currentText(), local=False)
 					if action.text() == "Unpack Anim Folder (Local)":
