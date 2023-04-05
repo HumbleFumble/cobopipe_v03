@@ -1,9 +1,9 @@
 
 sceneFile = scene.currentProjectPath() +"/"+ scene.currentVersionName()+".xstage";
 
-function SaveDeadlineJobInfoFile(file_path,jobName,group,pool,start_frame,end_frame,chunkSize,output_dir){
+function SaveDeadlineJobInfoFile(file_path, jobName, group, pool, start_frame, end_frame, chunkSize, output_dir){
 
-    jobInfoFilePath = file_path+"harmony_submit_info.job"
+    jobInfoFilePath = file_path + "harmony_submit_info.job"
     var jobInfoFile = new File( jobInfoFilePath );
     jobInfoFile.open(FileAccess.WriteOnly);
     jobInfoFile.writeLine("Plugin=Harmony")
@@ -11,8 +11,8 @@ function SaveDeadlineJobInfoFile(file_path,jobName,group,pool,start_frame,end_fr
     //jobInfoFile.writeLine( "Comment=" + comment );
     //jobInfoFile.writeLine( "Department=" + department );
 
-    jobInfoFile.writeLine( "Group=" +group );
-    jobInfoFile.writeLine( "Pool=" +pool );
+    jobInfoFile.writeLine( "Group=" + group );
+    jobInfoFile.writeLine( "Pool=" + pool );
 //    jobInfoFile.writeLine( "SecondaryPool=" +secondaryPool );
 //    jobInfoFile.writeLine( "Priority=" +priority );
 //    jobInfoFile.writeLine( "TaskTimeoutMinutes=" +taskTimeout );
@@ -104,7 +104,7 @@ function SavePluginFile(plugin_path,version,resolutionX,resolutionY,resolutionFo
 //    else
 //    {
     pluginInfoFile.writeLine("IsDatabase=False");
-    pluginInfoFile.writeLine("SceneFile="+sceneFile);
+    pluginInfoFile.writeLine("SceneFile=" + sceneFile);
 //    }
 
 //    pluginInfoFile.writeLine("UsingResPreset="+useResName);
@@ -118,9 +118,9 @@ function SavePluginFile(plugin_path,version,resolutionX,resolutionY,resolutionFo
 //    }
 //    else
 //    {
-    pluginInfoFile.writeLine("ResolutionX="+resolutionX);
-    pluginInfoFile.writeLine("ResolutionY="+resolutionY);
-    pluginInfoFile.writeLine("FieldOfView="+resolutionFov);
+    pluginInfoFile.writeLine("ResolutionX=" + resolutionX);
+    pluginInfoFile.writeLine("ResolutionY=" + resolutionY);
+    pluginInfoFile.writeLine("FieldOfView=" + resolutionFov);
 //    }
 
     //pluginInfoFile.writeLine("Camera="+camera);

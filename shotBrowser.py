@@ -1005,7 +1005,7 @@ class FrontController(QtCore.QObject):
 		QtGui.QPixmapCache.clear()
 		self.__threadPool.cancelBatch()
 
-	def zipFolders(self, nodes, destination=None, user_name="zip", local=False,unc=None):
+	def zipFolders(self, nodes, destination=None, user_name="zip", local=False, unc=None):
 		if local:
 			import zipUtil
 		
@@ -1061,26 +1061,24 @@ class FrontController(QtCore.QObject):
 						r'\\archivesrv': r'\\192.168.0.227'
 					}
 
+					for x, y in replace_dictionary.items():
+						source = source.replace(x, y)
+						sound_file = sound_file.replace(x, y)
+						dest = dest.replace(x, y)
+
 					if unc:
-						for cur in [source,sound_file]:
-							for x, y in replace_dictionary.items():
-								if x in cur:
-									cur.replace(x,"")
-									if "dumpap3" in x:
-										unc = y + "\production"
-									else:
-										unc = y
-						for x, y in replace_dictionary.items():
-							if x in dest:
-								dest.replace(x, y)
-						unc = unc.replace("\\","\\\\")
+						for unc_path in [r'\\192.168.0.225\production', r'\\192.168.0.225\WFH']:
+							if source.startswith(unc_path):
+								unc = unc_path
+        
 						arguments = f'"{CC.get_python_path()}zipUtil.py" "zip_7z_with_unc" "{source}" "{sound_file}" "{dest}" "{unc}"'
 
-					if not unc:
+					else:
 						arguments = f'"{CC.get_python_path()}zipUtil.py" "zip_7z" "{source}" "{sound_file}" "{dest}"'
 						print(arguments)
 						for x, y in replace_dictionary.items():
 							arguments = arguments.replace(x, y)
+
 					send_webhook(
 						{
 							'hook': 'submit_zip',
@@ -1125,7 +1123,7 @@ class FrontController(QtCore.QObject):
 						if os.path.exists(r"C:\Program Files\7-Zip\7z.exe"):
 							zipUtil.unzip_7z(source, destination, overwrite=False)
 						else:
-         					 zipUtil.unzip(source, destination, overwrite=False)
+							zipUtil.unzip(source, destination, overwrite=False)
 					else:
 						from shotgrid.webhook.send_webhook import send_webhook
 						replace_dictionary = {
