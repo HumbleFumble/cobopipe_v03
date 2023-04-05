@@ -1,7 +1,7 @@
 include("CB_GetInfo.js")
 
 function SetupRenderInfo_Pathless(){
-	MessageLog.trace("Listing Render Nodes: ");
+	// MessageLog.trace("Listing Render Nodes: ");
 	//prepare render_obj
 	const render_obj = new Object;
     var scene_path = scene.currentProjectPath();
@@ -19,7 +19,7 @@ function SetupRenderInfo_Pathless(){
 }
 
 function SetupRenderInfo_NoRender(){
-	MessageLog.trace("Listing Render Nodes: ");
+	// MessageLog.trace("Listing Render Nodes: ");
 	//prepare render_obj
 	const render_obj = new Object;
     var scene_path = scene.currentProjectPath();
@@ -33,7 +33,7 @@ function SetupRenderInfo_NoRender(){
 	render_obj.list_of_names = [];
 
 	GroupTravel("Top", "WRITE", render_obj);
-	NodeRender();
+	// NodeRender();
 }
 
 
@@ -72,7 +72,7 @@ function incrementName(my_node, render_obj){
 }
 
 function SetWrite(cur_write, render_obj){
-	MessageLog.trace(node.getName(cur_write));
+	// MessageLog.trace(node.getName(cur_write));
 
 	var write_name = node.getName(cur_write);
 
@@ -87,7 +87,7 @@ function SetWrite(cur_write, render_obj){
 		var drawing_type = project_settings.tb_output_format;
 		node.setTextAttr(cur_write, "DRAWING_TYPE", 0, drawing_type); //specify HERE the drawing type
 		var leading_zeros = project_settings.tb_number_padding;
-		MessageLog.trace(leading_zeros);
+		// MessageLog.trace(leading_zeros);
    	node.setTextAttr(cur_write, "LEADING_ZEROS", 0, leading_zeros); //specify HERE the number of leading zeros
    	node.setTextAttr(cur_write, "DRAWING_NAME", 0, final_path);
 	}else{

@@ -7,11 +7,9 @@ function GetInfo(){
 
 function GetProject(){
 	var project_name = System.getenv("BOM_PROJECT_NAME");
-	if(project_name){
-		MessageLog.trace(project_name);
-	}else{
+	if(!project_name){
 		project_name = PickProject();
-	}	
+	}
 	return project_name
 }
 
