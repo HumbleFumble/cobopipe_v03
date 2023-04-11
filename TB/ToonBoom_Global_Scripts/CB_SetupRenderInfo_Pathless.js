@@ -23,7 +23,7 @@ function SetupRenderInfo_NoRender(){
 	//prepare render_obj
 	const render_obj = new Object;
     var scene_path = scene.currentProjectPath();
-	var scene_path_split =scene_path.split("/");
+	var scene_path_split = scene_path.split("/");
 	scene_path_split.pop();
 	scene_path = scene_path_split.join("/") + "/Passes/";
 	var scene_name = scene.currentScene().split("_")[0];

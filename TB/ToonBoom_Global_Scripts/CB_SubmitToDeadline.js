@@ -4,13 +4,14 @@ include("CB_SetupRenderInfo_Pathless.js")
 
 function submit(){
     SetupRenderInfo_NoRender();
+    scene.saveAll();
     var project_settings = GetProjectSettings();
 
-    var jobName = scene.currentScene() + " - "+ scene.currentVersionName();
+    var jobName = scene.currentVersionName();
     var group = 'harmony';
     var pool = project_settings['deadline_pool'];
     var priority = 50;
-    var frameList = 	scene.getStartFrame() + '-' + scene.getStopFrame();
+    var frameList = scene.getStartFrame() + '-' + scene.getStopFrame();
     var chunkSize = 100;
 
     var versionRegex = / (\d+)\.\d+\.\d/;
