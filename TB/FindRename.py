@@ -11,7 +11,9 @@ sys.path.append( r"C:\Program Files (x86)\Toon Boom Animation\Toon Boom Harmony 
 def findMisNamed(scene_file, rename=True):
     from ToonBoom import harmony
     error_dict = {"Guska": {"RENDER_Trin": "RENDER_Guska", "RENDER_Trin_Shadow": "RENDER_Guska_Shadow"},
-                  "Fenja": {"RENDER_Char": "RENDER_Fenja", "RENDER_Shadow": "RENDER_Fenja_Shadow"}}
+                  "Fenja": {"RENDER_Char": "RENDER_Fenja", "RENDER_Shadow": "RENDER_Fenja_Shadow"},
+                  "Knold": {"RENDER_Ull_Skiis": "RENDER_Knold", "RENDER_Ull_Skiis_Shadow": "RENDER_Knold_Shadow"},
+                  "Stub":  {"RENDER_Ull_Skiis": "RENDER_Stub", "RENDER_Ull_Skiis_Shadow": "RENDER_Stub_Shadow"}}
     ignore_list = {"alfarim_Rig":["RENDER_Alpharim","RENDER_Alpharim_shadow"],"Huberts_Theaterwagon_prop":["RENDER_HubertsWagon", "RENDER_HubertsWagon_Shadow"],
                    "Hubert_Hat":["RENDER_Hubert", "RENDER_Hubert_shadow"]}
 
