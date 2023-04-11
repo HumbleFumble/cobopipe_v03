@@ -5,6 +5,7 @@ logger = getLogger()
 import Preview.file_util
 import TB.updatePalettes
 import TB.exportSceneData
+import TB.FindRename
 
 try:
 	import maya.cmds as cmds
@@ -1410,55 +1411,100 @@ class FrontController(QtCore.QObject):
 		logger.warning("Can't find animation file for: %s" % cur_node.getName())
 		return False
 
-	def checkTBRenderNodes(self, node):
-		"""Checks the given scenes for issues with the render nodes
-		Returns a list of shots that are fixed and of shots where other issues are still present -> and what those issues are"""
+	def checkTBRenderNodes(self, nodes):
+		shots = []
+		for node in nodes:
+			if node.getType() == 'episode':
+				for sequence in node.getChildren():
+					for shot in sequence.getChildren():
+						shots.append(shot)
+			elif node.getType() == 'seq':
+				for shot in node.getChildren():
+					shots.append(shot)
+			else:
+				shots.append(node)
 
-		if node.getType() in ["episode", "seq"]:
-			nodes_list = node.getAllChildren()
-		else:
-			nodes_list = [node]
+		print('\n')
 
-		import TB.FindRename
-		result_dict = {}
-		for item in nodes_list:
-			scene_path = self.findToonboomAnimationFile(item)
+		pool = ThreadPool2.ThreadPool()
+		pool.setMaxThreads(12)
+		workers = []
+
+		for shot in shots:
+			scene_path = self.findToonboomAnimationFile(shot)
 			if scene_path:
-				result = (TB.FindRename.findMisNamed(scene_path, rename=True))
-				result_dict[item.getName()] = result
+				worker = None
+				worker = ThreadPool2.Worker(self.checkTBRenderNodes_process, scene_path, rename=True)
+				if worker:
+					pool.addWorker(worker)
+					workers.append(worker)
 
-		for i, j in result_dict.items():
-			print(i + " -", j)
-		print("\n")
-		# Construct separate dictionaries for later use
-		final_dict_for_renamed = {}
-		final_dict_for_misnamed = {}
-		for i in result_dict.keys():
-			in_rename = result_dict[i]["Renamed"]
-			if in_rename:
-				final_dict_for_renamed[i] = in_rename
-			in_misname = result_dict[i]["Misnamed"]
-			if in_misname:
-				final_dict_for_misnamed[i] = in_misname
-		# print(final_dict_for_renamed)
-		# print(final_dict_for_misnamed)
-		# print(f"EVERYTHING: {result_dict}")
+		if workers:
+			pool.signals.finished.connect(TB.FindRename.renameDone)
+			pool.run()
+			pool.wait()
+			print('\n >> Done renaming nodes <<')
 
-		# Save to file
-		node_name = node.getName()
-		location_path = CC.get_base_path() + "/Pipeline/" + node_name + "_TB_Misnamed_Nodes.json"
-		orig_dict = self.loadSettings(location_path)
-		final_dict_for_misnamed.update(orig_dict)
-		self.saveSettings(location_path, final_dict_for_misnamed)
+	def checkTBRenderNodes_process(self, scene_path, rename=True):
+		cmd = f"Python T:/_Pipeline/cobopipe_v02-001/TB/FindRename.py {scene_path} {rename}"
+		process = subprocess.Popen(cmd, shell=True, universal_newlines=True, env=run_env, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		stdout, stderr = process.communicate()
+		result = stdout.split('<RESULT_START>')[-1].split('<RESULT_END>')[0]
+		return json.loads(result)
 
-		location_path = CC.get_base_path() + "/Pipeline/" + node_name + "_TB_Renamed_Nodes.json"
-		orig_dict = self.loadSettings(location_path)
-		final_dict_for_renamed.update(orig_dict)
-		self.saveSettings(location_path, final_dict_for_renamed)
 
-		location_path = CC.get_base_path() + "/Pipeline/" + node_name + "_TB_All_nodes.json"
-		orig_dict = self.loadSettings(location_path)
-		self.saveSettings(location_path, result_dict)
+ 
+	# def checkTBRenderNode(self, node):
+
+		
+	# 	"""Checks the given scenes for issues with the render nodes
+	# 	Returns a list of shots that are fixed and of shots where other issues are still present -> and what those issues are"""
+
+	# 	if node.getType() in ["episode", "seq"]:
+	# 		nodes_list = node.getAllChildren()
+	# 	else:
+	# 		nodes_list = [node]
+
+	# 	import TB.FindRename
+	# 	result_dict = {}
+	# 	for item in nodes_list:
+	# 		scene_path = self.findToonboomAnimationFile(item)
+	# 		if scene_path:
+	# 			result = (TB.FindRename.findMisNamed(scene_path, rename=True))
+	# 			result_dict[item.getName()] = result
+
+	# 	for i, j in result_dict.items():
+	# 		print(i + " -", j)
+	# 	print("\n")
+	# 	# Construct separate dictionaries for later use
+	# 	final_dict_for_renamed = {}
+	# 	final_dict_for_misnamed = {}
+	# 	for i in result_dict.keys():
+	# 		in_rename = result_dict[i]["Renamed"]
+	# 		if in_rename:
+	# 			final_dict_for_renamed[i] = in_rename
+	# 		in_misname = result_dict[i]["Misnamed"]
+	# 		if in_misname:
+	# 			final_dict_for_misnamed[i] = in_misname
+	# 	# print(final_dict_for_renamed)
+	# 	# print(final_dict_for_misnamed)
+	# 	# print(f"EVERYTHING: {result_dict}")
+
+	# 	# Save to file
+	# 	node_name = node.getName()
+	# 	location_path = CC.get_base_path() + "/Pipeline/" + node_name + "_TB_Misnamed_Nodes.json"
+	# 	orig_dict = self.loadSettings(location_path)
+	# 	final_dict_for_misnamed.update(orig_dict)
+	# 	self.saveSettings(location_path, final_dict_for_misnamed)
+
+	# 	location_path = CC.get_base_path() + "/Pipeline/" + node_name + "_TB_Renamed_Nodes.json"
+	# 	orig_dict = self.loadSettings(location_path)
+	# 	final_dict_for_renamed.update(orig_dict)
+	# 	self.saveSettings(location_path, final_dict_for_renamed)
+
+	# 	location_path = CC.get_base_path() + "/Pipeline/" + node_name + "_TB_All_nodes.json"
+	# 	orig_dict = self.loadSettings(location_path)
+	# 	self.saveSettings(location_path, result_dict)
 
 
 	def createPreviewFromToonboom(self,cur_node):
@@ -3262,7 +3308,7 @@ class MainWindow(QtWidgets.QWidget):
 							self.ctrl.saveNodeInfo(cur_node=node, info_keys=["comp_style"])
 					if action.text() == "Check Scene Render Nodes":
 
-						self.ctrl.checkTBRenderNodes(node)
+						self.ctrl.checkTBRenderNodes(nodes)
 
 
 		return QtWidgets.QWidget.eventFilter(self, source, event)

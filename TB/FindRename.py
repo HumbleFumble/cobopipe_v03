@@ -1,5 +1,6 @@
 import sys
 import os
+import json
 from Log.CoboLoggers import getLogger
 
 logger = getLogger()
@@ -16,13 +17,11 @@ def findMisNamed(scene_file, rename=True):
                   "Stub":  {"RENDER_Ull_Skiis": "RENDER_Stub", "RENDER_Ull_Skiis_Shadow": "RENDER_Stub_Shadow"}}
     ignore_list = {"alfarim_Rig":["RENDER_Alpharim","RENDER_Alpharim_shadow"],"Huberts_Theaterwagon_prop":["RENDER_HubertsWagon", "RENDER_HubertsWagon_Shadow"],
                    "Hubert_Hat":["RENDER_Hubert", "RENDER_Hubert_shadow"]}
-
     harmony.open_project( scene_file )                                    #Open an offline Harmony project
     session = harmony.session()                                   #Fetch the currently active session of Harmony
     project = session.project
     scene = project.scene
     allnodes = scene.nodes
-
 
     # Save new version with consecutive number
     path = os.path.splitext(os.path.basename(scene_file))
@@ -37,6 +36,7 @@ def findMisNamed(scene_file, rename=True):
 
     result = {"Shotname": path[0], "Renamed" : [], "Misnamed" : [], "Ignored" : []}
 
+    
     for node in allnodes:
         if 'RENDER_' in node.name and node.type == "WRITE":
             # If the group name is not found in the node name and the node name is not "Top"
@@ -69,7 +69,18 @@ def findMisNamed(scene_file, rename=True):
                 if check:
                     result["Misnamed"].append(node.path)
 
+    
     # Return list with matching results (misnamed nodes)
+    json_str = json.dumps(result)
+    print(f'<RESULT_START>{json_str}<RESULT_END>')
     return result
 
 # print(findMisNamed(r"P:\930462_HOJ_Project\Production\Film\S105\S105_SQ010\S105_SQ010_SH020\S105_SQ010_SH020\S105_SQ010_SH020_V049.xstage", rename=False))
+
+def renameDone(results):
+    for worker, result in results.items():
+        print(result)
+
+
+if __name__ == "__main__":
+    findMisNamed(sys.argv[1], rename=sys.argv[2])
