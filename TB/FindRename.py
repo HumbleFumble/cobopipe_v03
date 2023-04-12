@@ -82,8 +82,26 @@ def findMisNamed(scene_file, rename=True):
 # print(findMisNamed(r"P:\930462_HOJ_Project\Production\Film\S105\S105_SQ010\S105_SQ010_SH020\S105_SQ010_SH020\S105_SQ010_SH020_V049.xstage", rename=False))
 
 def renameDone(results):
+    import pprint
+    pp = pprint.PrettyPrinter(indent=4)
     for worker, result in results.items():
-        print(result)
+        print(f"    {result.get('Shotname')}")
+
+        for key in ['Renamed', 'Misnamed', 'Ignored']:
+        
+            if result.get(key):
+                for i, item in enumerate(result.get(key)):
+                    if i == 0:
+                        print(f"        {key + ':':<12}{item},")
+                    elif len(result.get(key))-1 > i > 0:
+                        print(f"        {'':<12}{item},")
+                    else:
+                        print(f"        {'':<12}{item}")
+                
+            else:
+                print(f"        {key + ':':<12}None")
+            
+        print('')
 
 
 if __name__ == "__main__":
