@@ -14,7 +14,11 @@ def findMisNamed(scene_file, rename=True):
     error_dict = {"Guska": {"RENDER_Trin": "RENDER_Guska", "RENDER_Trin_Shadow": "RENDER_Guska_Shadow"},
                   "Fenja": {"RENDER_Char": "RENDER_Fenja", "RENDER_Shadow": "RENDER_Fenja_Shadow"},
                   "Knold": {"RENDER_Ull_Skiis": "RENDER_Knold", "RENDER_Ull_Skiis_Shadow": "RENDER_Knold_Shadow"},
-                  "Stub":  {"RENDER_Ull_Skiis": "RENDER_Stub", "RENDER_Ull_Skiis_Shadow": "RENDER_Stub_Shadow"}}
+                  "Stub":  {"RENDER_Ull_Skiis": "RENDER_Stub", "RENDER_Ull_Skiis_Shadow": "RENDER_Stub_Shadow"},
+                  "Dwarf_A":  {"RENDER_Ull_Skiis": "RENDER_Dwarf_A", "RENDER_Ull_Skiis_Shadow": "RENDER_Dwarf_A_Shadow"},
+                  "Dwarf_Fem_D":  {"RENDER_Ull_Skiis": "RENDER_Dwarf_Fem_D", "RENDER_Ull_Skiis_Shadow": "RENDER_Dwarf_Fem_D_Shadow"},
+                  "Dwarf_Fem_E":  {"RENDER_Ull_Skiis": "RENDER_Dwarf_Fem_E", "RENDER_Ull_Skiis_Shadow": "RENDER_Dwarf_Fem_E_Shadow"},
+                  "Dwarf_Fem_F":  {"RENDER_Ull_Skiis": "RENDER_Dwarf_Fem_F", "RENDER_Ull_Skiis_Shadow": "RENDER_Dwarf_Fem_F_Shadow"}}
     ignore_list = {"alfarim_Rig":["RENDER_Alpharim","RENDER_Alpharim_shadow"],"Huberts_Theaterwagon_prop":["RENDER_HubertsWagon", "RENDER_HubertsWagon_Shadow"],
                    "Hubert_Hat":["RENDER_Hubert", "RENDER_Hubert_shadow"]}
     harmony.open_project( scene_file )                                    #Open an offline Harmony project
