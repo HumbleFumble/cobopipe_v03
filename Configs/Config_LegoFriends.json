@@ -195,7 +195,7 @@
   "publish_remove_set": "RemoveInPublish",
   "publish_set": "PublishSet",
   "project_settings": {
-    "maya_render": "arnold",
+    "maya_render": "vray",
     "fps": "25fps",
     "cmEnabled": 1,
     "cmViewTransform": "ACES 1.0 SDR-video (sRGB)",

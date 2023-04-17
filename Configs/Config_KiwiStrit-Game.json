@@ -185,6 +185,7 @@
   "publish_set": "PublishSet",
   "project_settings": {
     "fps": "25fps",
+    "maya_render": "vray",
     "cmEnabled": 1,
     "cmViewTransform": "sRGB gamma",
     "tb_width": 1920,
