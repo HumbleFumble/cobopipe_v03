@@ -2,70 +2,70 @@ from PySide6.QtWidgets import *
 from PySide6.QtCore import *
 from PySide6.QtGui import *
 
+import os
 
+if os.environ.get("BOM_PIPE_PATH"):
+    remote = True
+else:
+    remote = False
 
 class PreviewPython_UI(QDialog):
     def __init__(self, parent=None):
         super(PreviewPython_UI, self).__init__(parent)
-        self.setWindowTitle("SetLineThickness_UI")
-        self.setObjectName("SetLineThickness_UI")
+        self.setWindowTitle("Preview")
+        self.setObjectName("Preview")
         self.setWindowFlags(self.windowFlags()|Qt.Window|Qt.WindowStaysOnTopHint)
         self.node_list = []
         self.create_ui()
-        self.toggle_on_off = 0
+        self.show()
 
 
     def create_ui(self):
         self.main_lay = QVBoxLayout()
 
-        # project dropdown and text?
-        # Find projects if there is a config. Otherwise go to custom? which equals Text ?
-        #
-        # user dropdown and text?
-        #
-        # Options
-        # slate checkbox
-        # crop + crop edit that toggles along with checkboxes. Auto sets with project
-        # In-house/remote?
-        # Sound?
+        self.p_lay = QHBoxLayout()
 
+        self.p_dd = QComboBox()
+        self.p_edit = QLineEdit()
+        self.p_lay.addWidget(QLabel("Project: "))
+        self.p_lay.addWidget(self.p_dd)
+        self.p_lay.addWidget(self.p_edit)
 
+        self.u_lay = QHBoxLayout()
 
+        self.u_dd = QComboBox()
+        self.u_edit = QLineEdit()
+        self.u_lay.addWidget(QLabel("User: "))
+        self.u_lay.addWidget(self.u_dd)
+        self.u_lay.addWidget(self.u_edit)
 
-        self.pick_selection_bttn = QPushButton("Set Selection")
-        self.set_selection_bttn = QPushButton("Pick Previous Selection")
-        self.turn_on_off_bttn = QPushButton("Toggle On/Off")
-        self.reset_bttn = QPushButton("Reset all")
-        self.bttn_lay = QHBoxLayout()
-        self.bttn_lay.addWidget(self.turn_on_off_bttn)
-        self.bttn_lay.addWidget(self.reset_bttn)
-        self.slider = QSlider(Qt.Orientation.Horizontal)
-        self.slider_label = QLabel("Value: ")
-        self.slider_value = QLineEdit("0.0")
-        self.slider_value.setFixedWidth(50)
-        self.slider_lay = QHBoxLayout()
-        self.slider_lay.addWidget(self.slider_label)
-        self.slider_lay.addWidget(self.slider)
-        self.slider_lay.addWidget(self.slider_value)
-        self.slider.setMaximum(200)
+        self.slate_check = QCheckBox("Slate")
 
-        # self.slider_int = QDoubleValidator()
-        # self.slider_value.setValidator(self.slider_int)
-        self.slider.valueChanged.connect(self.slider_proc)
+        self.crop_check = QCheckBox("Crop: ")
+        self.crop_edit = QLineEdit("1.1")
 
-        self.slider_value.editingFinished.connect(self.text_proc)
+        self.options_lay = QHBoxLayout()
+        self.options_lay.addWidget(self.slate_check)
+        self.options_lay.addWidget(self.crop_check)
+        self.options_lay.addWidget(self.crop_edit)
 
-
-        self.pick_selection_bttn.clicked.connect(self.pickSelection)
-        self.set_selection_bttn.clicked.connect(self.setSelection)
-        self.reset_bttn.clicked.connect(self.reset_thickness)
-        self.turn_on_off_bttn.clicked.connect(self.turn_on_off)
-        self.scale_check = QCheckBox("Scale Independent")
-
-        self.main_lay.addWidget(self.pick_selection_bttn)
-        self.main_lay.addWidget(self.set_selection_bttn)
-        self.main_lay.addLayout(self.slider_lay)
-        self.main_lay.addWidget(self.scale_check)
-        self.main_lay.addLayout(self.bttn_lay)
-        self.scale_check.setChecked(True)
+        self.main_lay.addLayout(self.p_lay)
+        self.main_lay.addLayout(self.u_lay)
+        self.main_lay.addLayout(self.options_lay)
+        self.run_bttn = QPushButton("Create Preview")
+        self.main_lay.addWidget(self.run_bttn)
         self.setLayout(self.main_lay)
+        self.run_bttn.clicked.connect(self.create_preview)
+
+    def create_preview(self):
+        pass
+
+if __name__ == '__main__':
+    import sys
+    if not QApplication.instance():
+        app = QApplication(sys.argv)
+    else:
+        app = QApplication.instance()
+    t = PreviewPython_UI()
+    t.show()
+    app.exec()
