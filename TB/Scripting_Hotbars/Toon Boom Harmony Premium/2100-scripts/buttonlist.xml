@@ -5,6 +5,7 @@
  <Script function="DupWithInputs" icon="DupWithInputs" file="CB_DuplicateCompoWithInputs.js"/>
  <Script function="SetActiveRenderNodes" icon="SetActiveRenderNodes" file="CB_SetActiveRenderNodes.js"/>
  <Script function="SetupRenderInfo_Pathless" icon="SetupRenderInfo_Pathless" file="CB_SetupRenderInfo_Pathless.js"/>
+ <Script function="submit" file="CB_SubmitToDeadline.js" icon="submit"/>
  <Script function="CustomSaveAs" icon="CustomSaveAs" file="CB_CustomSaveAs.js"/>
  <Script function="Find_And_Replace" icon="Find_And_Replace" file="CB_FindReplace.js"/>
  <Script function="createPreviewDialog" icon="createPreviewDialog" file="CB_CreatePreview.js"/>

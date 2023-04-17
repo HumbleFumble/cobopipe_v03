@@ -15,6 +15,7 @@ function find_path(){
 	return CheckForVersions(cur_full_path, path_split, file_name);
 	
 }
+
 function NextVersion(cur_scene){
 	var cur_scene_split = cur_scene.split("_V");
 	var next_ver = Number(cur_scene_split[1]) + 1;
@@ -64,9 +65,9 @@ function CheckForFolder(cur_path){
 		}
 }
 function Pad(n, width, z) {
-  z = z || '0';
-  n = n + '';
-  return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+	z = z || '0';
+	n = n + '';
+	return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
 }
 
 function CustomSaveAs()
@@ -96,8 +97,6 @@ function CustomSaveAs()
 			scene.saveAsNewVersion(save_path, true);
 			MessageLog.trace("SAVING: " + save_path);
 		}
-		
-		
 	}else{
 		MessageLog.trace("reject");
 	}

@@ -1,4 +1,4 @@
-﻿ #include "json2.js";
+﻿ #include "includes/json2.js";
 
 function loadJson(path){
     var scriptFile = File(path);

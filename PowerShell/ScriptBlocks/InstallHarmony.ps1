@@ -1,11 +1,13 @@
-# Set temporarily admnistrator check (UAC) to none
-Set-SecurityLevel -Low
-
 # Script parameters. $AtTime can be used to install Python at given time. Use as script parameter to set scheduled time
 param (
     [string]$AtTime,
     [string]$user = (whoami.exe)
 )
+
+# Set temporarily admnistrator check (UAC) to none
+Set-UAC -Off
+
+Import-Module "C:\Program Files\PowerShell\7\Modules\Custom-Functions"
 
 if (! ($AtTime)){
     $AtTime = Get-Date -Format "HH:mm"
@@ -15,7 +17,6 @@ if (! ($AtTime)){
     break
     }
 }
-
 
 function Install-Shortcut {
     [CmdletBinding()]
@@ -80,4 +81,4 @@ foreach ($i in $ShortCutArray){
     }
 
 # Set UAC back to normal
-Set-SecurityLevel -High
+Set-UAC -On

@@ -55,14 +55,12 @@ $allresults
 
 # ----------------------------------------------------------------------------------------------------------------------------------
 
-
-$username = "cphbom\plp"
-$creds = Get-Credential -UserName $username -Message:$false
-New-PSDrive -Name "T" -Root "\\dumpap3\tools" -PSProvider "FileSystem" -Persist -Credential $creds
-
+New-PSDrive -Name "T" -Root "\\dumpap3\tools" -PSProvider "FileSystem" -Persist
 T:\_Pipeline\cobopipe_v02-001\BAT_files\update_harmony_hotbar.bat
 
+
 $ttt = Get-Content -Path "C:\Users\plp\VsCodeProjects\cobopipe_v02-001\PowerShell\install_apps.json" | ConvertFrom-Json
+
 
 $applist = @(
     [pscustomobject]@{Name = "Python"; Regex = "Python ..... Executables *"}

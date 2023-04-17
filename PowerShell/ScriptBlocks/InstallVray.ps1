@@ -4,10 +4,7 @@ param (
     [string]$AtTime
 )
 
-
 Set-UAC -Off
-
-Import-Module "C:\Program Files\PowerShell\7\Modules\Custom-Functions"
 
 if (! ($AtTime)){
     $AtTime = Get-Date -Format "HH:mm"
@@ -18,17 +15,13 @@ if (! ($AtTime)){
     }
 }
 
-$parameters = [pscustomobject]@{Name = "AdobeCC"; PathToInstaller = "\\dumpap3\tools\_Software\Adobe\AdobeInstaller_AE-Prem-PhotoSh\Build\setup.exe"; TaskName = "Install AdobeCC"; Arguments = "--silent"}
+$parameters = [pscustomobject]@{Name = "Vray"; PathToInstaller = "T:\_Software\Chaosgroup\vray_adv_52002_maya2022_x64.exe"; TaskName = "Install Vray"; Arguments = "-gui=0 -configFile=T:\_Software\Chaosgroup\config.xml -quiet=1 -auto"}
 
-
-
-if (Get-ScheduledTask | Where-Object {$_.TaskName -match $parameters.TaskName} -ErrorAction SilentlyContinue){
-    Unregister-ScheduledTask -TaskName $parameters.TaskName -Confirm:$False
-    }
-
+Set-UAC -Off
 Install-App -PathToInstaller $parameters.PathToInstaller -Arguments $parameters.Arguments -TaskName $parameters.TaskName
 Start-Sleep 3
 Get-Process setup | Wait-Process
 
 Unregister-ScheduledTask -TaskName $parameters.TaskName -Confirm:$False
 Set-UAC -On
+

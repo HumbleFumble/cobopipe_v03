@@ -1,5 +1,6 @@
 import sys
 import os
+import json
 from Log.CoboLoggers import getLogger
 
 logger = getLogger()
@@ -11,16 +12,20 @@ sys.path.append( r"C:\Program Files (x86)\Toon Boom Animation\Toon Boom Harmony 
 def findMisNamed(scene_file, rename=True):
     from ToonBoom import harmony
     error_dict = {"Guska": {"RENDER_Trin": "RENDER_Guska", "RENDER_Trin_Shadow": "RENDER_Guska_Shadow"},
-                  "Fenja": {"RENDER_Char": "RENDER_Fenja", "RENDER_Shadow": "RENDER_Fenja_Shadow"}}
+                  "Fenja": {"RENDER_Char": "RENDER_Fenja", "RENDER_Shadow": "RENDER_Fenja_Shadow"},
+                  "Knold": {"RENDER_Ull_Skiis": "RENDER_Knold", "RENDER_Ull_Skiis_Shadow": "RENDER_Knold_Shadow"},
+                  "Stub":  {"RENDER_Ull_Skiis": "RENDER_Stub", "RENDER_Ull_Skiis_Shadow": "RENDER_Stub_Shadow"},
+                  "Dwarf_A":  {"RENDER_Ull_Skiis": "RENDER_Dwarf_A", "RENDER_Ull_Skiis_Shadow": "RENDER_Dwarf_A_Shadow"},
+                  "Dwarf_Fem_D":  {"RENDER_Ull_Skiis": "RENDER_Dwarf_Fem_D", "RENDER_Ull_Skiis_Shadow": "RENDER_Dwarf_Fem_D_Shadow"},
+                  "Dwarf_Fem_E":  {"RENDER_Ull_Skiis": "RENDER_Dwarf_Fem_E", "RENDER_Ull_Skiis_Shadow": "RENDER_Dwarf_Fem_E_Shadow"},
+                  "Dwarf_Fem_F":  {"RENDER_Ull_Skiis": "RENDER_Dwarf_Fem_F", "RENDER_Ull_Skiis_Shadow": "RENDER_Dwarf_Fem_F_Shadow"}}
     ignore_list = {"alfarim_Rig":["RENDER_Alpharim","RENDER_Alpharim_shadow"],"Huberts_Theaterwagon_prop":["RENDER_HubertsWagon", "RENDER_HubertsWagon_Shadow"],
                    "Hubert_Hat":["RENDER_Hubert", "RENDER_Hubert_shadow"]}
-
     harmony.open_project( scene_file )                                    #Open an offline Harmony project
     session = harmony.session()                                   #Fetch the currently active session of Harmony
     project = session.project
     scene = project.scene
     allnodes = scene.nodes
-
 
     # Save new version with consecutive number
     path = os.path.splitext(os.path.basename(scene_file))
@@ -35,6 +40,7 @@ def findMisNamed(scene_file, rename=True):
 
     result = {"Shotname": path[0], "Renamed" : [], "Misnamed" : [], "Ignored" : []}
 
+    
     for node in allnodes:
         if 'RENDER_' in node.name and node.type == "WRITE":
             # If the group name is not found in the node name and the node name is not "Top"
@@ -67,7 +73,36 @@ def findMisNamed(scene_file, rename=True):
                 if check:
                     result["Misnamed"].append(node.path)
 
+    
     # Return list with matching results (misnamed nodes)
+    json_str = json.dumps(result)
+    print(f'<RESULT_START>{json_str}<RESULT_END>')
     return result
 
 # print(findMisNamed(r"P:\930462_HOJ_Project\Production\Film\S105\S105_SQ010\S105_SQ010_SH020\S105_SQ010_SH020\S105_SQ010_SH020_V049.xstage", rename=False))
+
+def renameDone(results):
+    import pprint
+    pp = pprint.PrettyPrinter(indent=4)
+    for worker, result in results.items():
+        print(f"    {result.get('Shotname')}")
+
+        for key in ['Renamed', 'Misnamed', 'Ignored']:
+        
+            if result.get(key):
+                for i, item in enumerate(result.get(key)):
+                    if i == 0:
+                        print(f"        {key + ':':<12}{item},")
+                    elif len(result.get(key))-1 > i > 0:
+                        print(f"        {'':<12}{item},")
+                    else:
+                        print(f"        {'':<12}{item}")
+                
+            else:
+                print(f"        {key + ':':<12}None")
+            
+        print('')
+
+
+if __name__ == "__main__":
+    findMisNamed(sys.argv[1], rename=sys.argv[2])

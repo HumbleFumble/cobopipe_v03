@@ -1,39 +1,28 @@
-#target.aftereffects
+#target.aftereffects;
+#include "config.jsx";
 
-function Run(file_path){
-	//Try to find episode and shot number from scene name
-	//var base_path = "P:/_WFH_Projekter/930448_MSP_academy/Film/";
-	//var watchfolder_path = "P:/_WFH_Projekter/930448_MSP_academy/Film/WatchFolder/";
-	app.open(new File(file_path))
-
+function Run(){
+	// FETCHING CONFIG
+	var config = get_config();
+	// PREPARING RENDER QUEUE
     var split_path = app.project.file.path.split("/Comp");
     var base_path = split_path[0];
-    
-    
 	var comp_name = ".RENDER";
 	var output_module = "Comp_Render";
-	//split filename to find episode and shot number
     var shot_name = base_path.split("/");
     shot_name = shot_name[shot_name.length-1];
-	
     render_path = base_path + "/_CompOutput/";
     render_path_folder = new Folder(render_path);
     var file_name = shot_name + "_CompOutput";
-    // alert("render_path: " + render_path + "\nFilename:" + file_name);
-	//var file_name = shot  + "_[####]"; //USE FOR FRAME STACKS
-    
-	//var episode_name = "E"+ Pad(scene,3);
-	//var shot_name = Pad(cur_shot,3);
 	var render_comp = FindOutputComp(comp_name);
-
-    
 	if(render_comp){
 		SetupRenderQueue(render_comp, render_path, file_name, output_module);
 		}else{
 			alert("Can't find '.RENDER' comp to render");
 			}
-
 	app.project.save() 
+
+
 	// SUBMIT TO DEADLINE
 	var deadlineBin = $.getenv( "DEADLINE_PATH" );
 	var deadline_exe = "\"" + deadlineBin + "\\deadlinecommand.exe\"";
@@ -49,16 +38,22 @@ function Run(file_path){
 	var end_frame = start_frame + Math.round( app.project.renderQueue.item( 1 ).timeSpanDuration / frameDuration ) - 1;
 	var output_file = app.project.renderQueue.item(1).outputModule(1).file
 	var jobname = app.project.file.fsName.split('\\')[app.project.file.fsName.split('\\').length-1].replace('.aep', '')
-	var submit_file = create_submit_job_file(temp_folder, jobname, start_frame, end_frame, output_file);
+	var pool = null;
+	var config_pool = config.project_settings.deadline_pool;
+	if(config_pool != undefined){
+		pool = config_pool
+	}
+	var submit_file = create_submit_job_file(temp_folder, jobname, pool, start_frame, end_frame, output_file);
 	var plugin_file = create_plugin_job_file(temp_folder);
-	commandLine = deadline_exe + " \"" + submit_file + "\" \"" + plugin_file +  "\" \"" + app.project.file.fsName.replace('P:\\', '\\\\dumpap3\\production\\') + "\""
+	commandLine = deadline_exe + " \"" + submit_file + "\" \"" + plugin_file +  "\" \"" + app.project.file.fsName + "\""
 	result = system.callSystem(commandLine)
+	alert(result)
 }
 
 function Pad(n, width, z) {
-  z = z || '0';
-  n = n + '';
-  return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+	z = z || '0';
+	n = n + '';
+	return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
 }
 
 //Find Render Comp
@@ -115,7 +110,25 @@ function SetupRenderQueue(render_comp, out_folder, out_name, out_module){
 
 }
 
-function create_submit_job_file(tempFolder, jobName, start_frame, end_frame, output_file){
+// function my_window(){
+// 	var my_source = "window {text: 'Submit Deadline Job', alignChildren: 'left' , alignment: ['top','fill'],preferredSize: [400,150],\
+// 			shot_panel: Panel {text: 'INFO:', \
+// 				alignment:['fill','top'], alignChildren: 'left',\
+// 				st2: StaticText{text: 'This script saves your file, so make sure you are okay with that before running it' ,},\
+// 				st3: StaticText{text: 'Make sure you have an output module called Comp_Render, as this scripts assigns it to render' ,},\
+// 				}\
+// 			queue_panel: Panel {text: 'Click to send .Render to renderQueue : ', alignChildren: 'left' ,\
+// 				buttonQ_group: Group{ orientation:'row', runQ_button: Button{ text: 'Submit'},},\
+// 			} \
+// 		}";
+		
+// 	var my_window = new Window(my_source);
+// 	my_window.queue_panel.buttonQ_group.runQ_button.onClick = Run;
+
+// 	return my_window;
+// }
+
+function create_submit_job_file(tempFolder, jobName, pool, start_frame, end_frame, output_file){
 	// Create the submission info file
 	// These settings are specific for hoj and prores
 	var submitInfoFilename = tempFolder + "ae_submit_info.job";
@@ -126,7 +139,9 @@ function create_submit_job_file(tempFolder, jobName, start_frame, end_frame, out
 	submitInfoFile.writeln( "Comment=" );
 	submitInfoFile.writeln( "Department=Comp" );
 	submitInfoFile.writeln( "Group=after_effects" );
-	submitInfoFile.writeln( "Pool=hoj" );
+	if(pool != null){
+		submitInfoFile.writeln( "Pool=" + pool );
+	}
 	submitInfoFile.writeln( "SecondaryPool=" );
 	submitInfoFile.writeln( "Priority=" + Math.round( 50 ) );
 	submitInfoFile.writeln( "TaskTimeoutMinutes=" + Math.round( 0 ) );
@@ -174,3 +189,6 @@ function create_plugin_job_file(tempFolder){
 function getPosition(string, subString, index) {
   return string.split(subString, index).join(subString).length;
 }
+
+// import_UI = my_window();
+// import_UI.show();

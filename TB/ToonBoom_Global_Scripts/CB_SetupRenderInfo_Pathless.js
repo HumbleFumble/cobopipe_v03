@@ -1,7 +1,7 @@
 include("CB_GetInfo.js")
 
 function SetupRenderInfo_Pathless(){
-	MessageLog.trace("Listing Render Nodes: ");
+	// MessageLog.trace("Listing Render Nodes: ");
 	//prepare render_obj
 	const render_obj = new Object;
     var scene_path = scene.currentProjectPath();
@@ -14,13 +14,31 @@ function SetupRenderInfo_Pathless(){
 	render_obj.scene_path = scene_path;
 	render_obj.list_of_names = [];
 
-	GroupTravel("Top", "WRITE",render_obj);
+	GroupTravel("Top", "WRITE", render_obj);
 	NodeRender();
+}
+
+function SetupRenderInfo_NoRender(){
+	// MessageLog.trace("Listing Render Nodes: ");
+	//prepare render_obj
+	const render_obj = new Object;
+    var scene_path = scene.currentProjectPath();
+	var scene_path_split = scene_path.split("/");
+	scene_path_split.pop();
+	scene_path = scene_path_split.join("/") + "/Passes/";
+	var scene_name = scene.currentScene().split("_")[0];
+
+	render_obj.scene_name = scene_name;
+	render_obj.scene_path = scene_path;
+	render_obj.list_of_names = [];
+
+	GroupTravel("Top", "WRITE", render_obj);
+	// NodeRender();
 }
 
 
 
-function GroupTravel(groupName,my_type,render_obj)
+function GroupTravel(groupName, my_type, render_obj)
   {
     var nNodes = node.numberOfSubNodes(groupName);
 
@@ -39,7 +57,7 @@ function GroupTravel(groupName,my_type,render_obj)
     }
   }
 
-function incrementName(my_node,render_obj){
+function incrementName(my_node, render_obj){
     var write_name = node.getName(my_node);
     var orig_filename = write_name.split("RENDER_")[1];
     var x = 0
@@ -53,8 +71,8 @@ function incrementName(my_node,render_obj){
     render_obj.list_of_names.push(cur_name)
 }
 
-function SetWrite(cur_write,render_obj){
-	MessageLog.trace(node.getName(cur_write));
+function SetWrite(cur_write, render_obj){
+	// MessageLog.trace(node.getName(cur_write));
 
 	var write_name = node.getName(cur_write);
 
@@ -69,7 +87,7 @@ function SetWrite(cur_write,render_obj){
 		var drawing_type = project_settings.tb_output_format;
 		node.setTextAttr(cur_write, "DRAWING_TYPE", 0, drawing_type); //specify HERE the drawing type
 		var leading_zeros = project_settings.tb_number_padding;
-		MessageLog.trace(leading_zeros);
+		// MessageLog.trace(leading_zeros);
    	node.setTextAttr(cur_write, "LEADING_ZEROS", 0, leading_zeros); //specify HERE the number of leading zeros
    	node.setTextAttr(cur_write, "DRAWING_NAME", 0, final_path);
 	}else{

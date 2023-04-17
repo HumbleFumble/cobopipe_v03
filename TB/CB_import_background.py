@@ -1,3 +1,5 @@
+# THIS FILE NEVER AMOUNTED TO ANYTHING BECAUSE THE FUNCTIONALITY WAS MISSING IN THE HARMONY PYTHON API
+
 import sys
 import os
 from Log.CoboLoggers import getLogger
@@ -21,9 +23,7 @@ def print_actions(session):
         print( responder )
         action_list = actions.actions(responder)
         for action in action_list:
-            print( "   %s"%(action) )      
-
-def 
+            print( "   %s"%(action) )
 
 def load_scene(path):
     harmony.open_project(path)                                    #Open an offline Harmony project

@@ -112,6 +112,7 @@
     "tb_height": 1080,
     "tb_size_multi": 1.1,
     "tb_output_format":"TGA4",
-    "tb_number_padding": "3"
+    "tb_number_padding": "3",
+    "deadline_pool": "tv2_avb"
 }
 }

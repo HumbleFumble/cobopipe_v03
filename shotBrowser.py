@@ -5,6 +5,7 @@ logger = getLogger()
 import Preview.file_util
 import TB.updatePalettes
 import TB.exportSceneData
+import TB.FindRename
 
 try:
 	import maya.cmds as cmds
@@ -1005,7 +1006,7 @@ class FrontController(QtCore.QObject):
 		QtGui.QPixmapCache.clear()
 		self.__threadPool.cancelBatch()
 
-	def zipFolders(self, nodes, destination=None, user_name="zip", local=False):
+	def zipFolders(self, nodes, destination=None, user_name="zip", local=False, unc=None):
 		if local:
 			import zipUtil
 		
@@ -1041,9 +1042,15 @@ class FrontController(QtCore.QObject):
 					dest = source + '.zip'
 				else:
 					dest = destination + '/' + folder + '.zip'
-
+				sound_file = CC.get_shot_sound_file(**info)
 				if local:
-					zipUtil.zip([source, CC.get_shot_sound_file(**info)], dest)
+					if os.path.exists(r"C:\Program Files\7-Zip\7z.exe"):
+						if unc:
+							zipUtil.zip_7z([source, sound_file], dest,unc=source[0:2])
+						else:
+							zipUtil.zip_7z([source, sound_file], dest)
+					else:
+						zipUtil.zip([source, sound_file], dest)
 					print(' >> Done zipping ' + source + '\n')
 				else:
 					from shotgrid.webhook.send_webhook import send_webhook
@@ -1054,10 +1061,25 @@ class FrontController(QtCore.QObject):
 						r'\\dumpap3': r'\\192.168.0.225',
 						r'\\archivesrv': r'\\192.168.0.227'
 					}
-					arguments = f'"{CC.get_python_path()}zipUtil.py" "zip" "{source}" "{CC.get_shot_sound_file(**info)}" "{dest}"'
-					print(arguments)
+
 					for x, y in replace_dictionary.items():
-						arguments = arguments.replace(x, y)
+						source = source.replace(x, y)
+						sound_file = sound_file.replace(x, y)
+						dest = dest.replace(x, y)
+
+					if unc:
+						for unc_path in [r'\\192.168.0.225\production', r'\\192.168.0.225\WFH']:
+							if source.startswith(unc_path):
+								unc = unc_path
+        
+						arguments = f'"{CC.get_python_path()}zipUtil.py" "zip_7z_with_unc" "{source}" "{sound_file}" "{dest}" "{unc}"'
+
+					else:
+						arguments = f'"{CC.get_python_path()}zipUtil.py" "zip_7z" "{source}" "{sound_file}" "{dest}"'
+						print(arguments)
+						for x, y in replace_dictionary.items():
+							arguments = arguments.replace(x, y)
+
 					send_webhook(
 						{
 							'hook': 'submit_zip',
@@ -1099,7 +1121,10 @@ class FrontController(QtCore.QObject):
 					source = os.path.join(ftp_folder, item)
 					destination = CC.get_shot_path(**shot.getInfoDict())
 					if local:
-						zipUtil.unzip(source, destination, overwrite=False)
+						if os.path.exists(r"C:\Program Files\7-Zip\7z.exe"):
+							zipUtil.unzip_7z(source, destination, overwrite=False)
+						else:
+							zipUtil.unzip(source, destination, overwrite=False)
 					else:
 						from shotgrid.webhook.send_webhook import send_webhook
 						replace_dictionary = {
@@ -1110,7 +1135,7 @@ class FrontController(QtCore.QObject):
 							r'\\archivesrv': r'\\192.168.0.227'
 						}
 						pool = CC.project_settings.get('deadline_pool')
-						arguments = f'"{CC.get_python_path()}zipUtil.py" "unzip" "{source}" "{destination}"'
+						arguments = f'"{CC.get_python_path()}zipUtil.py" "unzip_7z" "{source}" "{destination}"'
 						for x, y in replace_dictionary.items():
 							arguments = arguments.replace(x, y)
 						print(arguments)
@@ -1386,55 +1411,100 @@ class FrontController(QtCore.QObject):
 		logger.warning("Can't find animation file for: %s" % cur_node.getName())
 		return False
 
-	def checkTBRenderNodes(self, node):
-		"""Checks the given scenes for issues with the render nodes
-		Returns a list of shots that are fixed and of shots where other issues are still present -> and what those issues are"""
+	def checkTBRenderNodes(self, nodes):
+		shots = []
+		for node in nodes:
+			if node.getType() == 'episode':
+				for sequence in node.getChildren():
+					for shot in sequence.getChildren():
+						shots.append(shot)
+			elif node.getType() == 'seq':
+				for shot in node.getChildren():
+					shots.append(shot)
+			else:
+				shots.append(node)
 
-		if node.getType() in ["episode", "seq"]:
-			nodes_list = node.getAllChildren()
-		else:
-			nodes_list = [node]
+		print('\n')
 
-		import TB.FindRename
-		result_dict = {}
-		for item in nodes_list:
-			scene_path = self.findToonboomAnimationFile(item)
+		pool = ThreadPool2.ThreadPool()
+		pool.setMaxThreads(12)
+		workers = []
+
+		for shot in shots:
+			scene_path = self.findToonboomAnimationFile(shot)
 			if scene_path:
-				result = (TB.FindRename.findMisNamed(scene_path, rename=True))
-				result_dict[item.getName()] = result
+				worker = None
+				worker = ThreadPool2.Worker(self.checkTBRenderNodes_process, scene_path, rename=True)
+				if worker:
+					pool.addWorker(worker)
+					workers.append(worker)
 
-		for i, j in result_dict.items():
-			print(i + " -", j)
-		print("\n")
-		# Construct separate dictionaries for later use
-		final_dict_for_renamed = {}
-		final_dict_for_misnamed = {}
-		for i in result_dict.keys():
-			in_rename = result_dict[i]["Renamed"]
-			if in_rename:
-				final_dict_for_renamed[i] = in_rename
-			in_misname = result_dict[i]["Misnamed"]
-			if in_misname:
-				final_dict_for_misnamed[i] = in_misname
-		# print(final_dict_for_renamed)
-		# print(final_dict_for_misnamed)
-		# print(f"EVERYTHING: {result_dict}")
+		if workers:
+			pool.signals.finished.connect(TB.FindRename.renameDone)
+			pool.run()
+			pool.wait()
+			print('\n >> Done renaming nodes <<')
 
-		# Save to file
-		node_name = node.getName()
-		location_path = CC.get_base_path() + "/Pipeline/" + node_name + "_TB_Misnamed_Nodes.json"
-		orig_dict = self.loadSettings(location_path)
-		final_dict_for_misnamed.update(orig_dict)
-		self.saveSettings(location_path, final_dict_for_misnamed)
+	def checkTBRenderNodes_process(self, scene_path, rename=True):
+		cmd = f"Python T:/_Pipeline/cobopipe_v02-001/TB/FindRename.py {scene_path} {rename}"
+		process = subprocess.Popen(cmd, shell=True, universal_newlines=True, env=run_env, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+		stdout, stderr = process.communicate()
+		result = stdout.split('<RESULT_START>')[-1].split('<RESULT_END>')[0]
+		return json.loads(result)
 
-		location_path = CC.get_base_path() + "/Pipeline/" + node_name + "_TB_Renamed_Nodes.json"
-		orig_dict = self.loadSettings(location_path)
-		final_dict_for_renamed.update(orig_dict)
-		self.saveSettings(location_path, final_dict_for_renamed)
 
-		location_path = CC.get_base_path() + "/Pipeline/" + node_name + "_TB_All_nodes.json"
-		orig_dict = self.loadSettings(location_path)
-		self.saveSettings(location_path, result_dict)
+ 
+	# def checkTBRenderNode(self, node):
+
+		
+	# 	"""Checks the given scenes for issues with the render nodes
+	# 	Returns a list of shots that are fixed and of shots where other issues are still present -> and what those issues are"""
+
+	# 	if node.getType() in ["episode", "seq"]:
+	# 		nodes_list = node.getAllChildren()
+	# 	else:
+	# 		nodes_list = [node]
+
+	# 	import TB.FindRename
+	# 	result_dict = {}
+	# 	for item in nodes_list:
+	# 		scene_path = self.findToonboomAnimationFile(item)
+	# 		if scene_path:
+	# 			result = (TB.FindRename.findMisNamed(scene_path, rename=True))
+	# 			result_dict[item.getName()] = result
+
+	# 	for i, j in result_dict.items():
+	# 		print(i + " -", j)
+	# 	print("\n")
+	# 	# Construct separate dictionaries for later use
+	# 	final_dict_for_renamed = {}
+	# 	final_dict_for_misnamed = {}
+	# 	for i in result_dict.keys():
+	# 		in_rename = result_dict[i]["Renamed"]
+	# 		if in_rename:
+	# 			final_dict_for_renamed[i] = in_rename
+	# 		in_misname = result_dict[i]["Misnamed"]
+	# 		if in_misname:
+	# 			final_dict_for_misnamed[i] = in_misname
+	# 	# print(final_dict_for_renamed)
+	# 	# print(final_dict_for_misnamed)
+	# 	# print(f"EVERYTHING: {result_dict}")
+
+	# 	# Save to file
+	# 	node_name = node.getName()
+	# 	location_path = CC.get_base_path() + "/Pipeline/" + node_name + "_TB_Misnamed_Nodes.json"
+	# 	orig_dict = self.loadSettings(location_path)
+	# 	final_dict_for_misnamed.update(orig_dict)
+	# 	self.saveSettings(location_path, final_dict_for_misnamed)
+
+	# 	location_path = CC.get_base_path() + "/Pipeline/" + node_name + "_TB_Renamed_Nodes.json"
+	# 	orig_dict = self.loadSettings(location_path)
+	# 	final_dict_for_renamed.update(orig_dict)
+	# 	self.saveSettings(location_path, final_dict_for_renamed)
+
+	# 	location_path = CC.get_base_path() + "/Pipeline/" + node_name + "_TB_All_nodes.json"
+	# 	orig_dict = self.loadSettings(location_path)
+	# 	self.saveSettings(location_path, result_dict)
 
 
 	def createPreviewFromToonboom(self,cur_node):
@@ -2005,7 +2075,7 @@ class FrontController(QtCore.QObject):
 			print('\n >> Done updating harmony palettes <<')
 
 	def aeRenderExternally(self, nodes, wait=False):
-		import AfterEffect.aerender_ext as aer
+		import AfterEffect.AE_render_externally as aer
 
 		shots = []
 		for node in nodes:
@@ -2041,7 +2111,7 @@ class FrontController(QtCore.QObject):
 			print('\n >> Rendering! <<')
 
 	def aeSubmitToDeadlineExternally(self, nodes, wait=False):
-		import AfterEffect.aerender_ext as aer
+		import AfterEffect.AE_render_externally as aer
 
 		shots = []
 		for node in nodes:
@@ -2998,8 +3068,12 @@ class MainWindow(QtWidgets.QWidget):
 					if animation_style == "Toonboom":
 						file_menu.addAction("Zip Anim Folder")
 						file_menu.addAction("Zip Anim Folder to FTP")
+						file_menu.addAction("Zip Anim Folder with project root")
+						file_menu.addAction("Zip Anim Folder with project root to FTP")
 						file_menu.addAction("Zip Anim Folder (Local)")
 						file_menu.addAction("Zip Anim Folder to FTP (Local)")
+						file_menu.addAction("Zip Anim Folder with project root (Local)")
+						file_menu.addAction("Zip Anim Folder with project root to FTP (Local)")
 						file_menu.addAction("Unpack Anim Folder")
 						file_menu.addAction("Unpack Anim Folder (Local)")
 					create_menu.addAction("Rebuild Anim Publish Report")
@@ -3075,10 +3149,21 @@ class MainWindow(QtWidgets.QWidget):
 						self.ctrl.zipFolders(nodes,user_name=self.user_combobox.currentText(), local=False)
 					if action.text() == "Zip Anim Folder to FTP":
 						self.ctrl.zipFolders(nodes, destination=self.ctrl.get_ftp_directory(self.user_combobox.currentText()),user_name=self.user_combobox.currentText(), local=False)
+
+					if action.text() == "Zip Anim Folder with project root":
+						self.ctrl.zipFolders(nodes,user_name=self.user_combobox.currentText(), local=False,unc=True)
+					if action.text() == "Zip Anim Folder with project root to FTP":
+						self.ctrl.zipFolders(nodes, destination=self.ctrl.get_ftp_directory(self.user_combobox.currentText()),user_name=self.user_combobox.currentText(), local=False,unc=True)
+
 					if action.text() == "Zip Anim Folder (Local)":
 						self.ctrl.zipFolders(nodes,user_name=self.user_combobox.currentText(), local=True)
 					if action.text() == "Zip Anim Folder to FTP (Local)":
 						self.ctrl.zipFolders(nodes, destination=self.ctrl.get_ftp_directory(self.user_combobox.currentText()),user_name=self.user_combobox.currentText(), local=True)
+					if action.text() == "Zip Anim Folder with project root (Local)":
+						self.ctrl.zipFolders(nodes,user_name=self.user_combobox.currentText(), local=True,unc=True)
+					if action.text() == "Zip Anim Folder with project root to FTP (Local)":
+						self.ctrl.zipFolders(nodes, destination=self.ctrl.get_ftp_directory(self.user_combobox.currentText()),user_name=self.user_combobox.currentText(), local=True,unc=True)
+
 					if action.text() == "Unpack Anim Folder":
 						self.ctrl.unpack_zip(nodes, user_name=self.user_combobox.currentText(), local=False)
 					if action.text() == "Unpack Anim Folder (Local)":
@@ -3223,7 +3308,7 @@ class MainWindow(QtWidgets.QWidget):
 							self.ctrl.saveNodeInfo(cur_node=node, info_keys=["comp_style"])
 					if action.text() == "Check Scene Render Nodes":
 
-						self.ctrl.checkTBRenderNodes(node)
+						self.ctrl.checkTBRenderNodes(nodes)
 
 
 		return QtWidgets.QWidget.eventFilter(self, source, event)

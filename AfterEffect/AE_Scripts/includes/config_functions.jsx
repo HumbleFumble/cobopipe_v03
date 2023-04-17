@@ -1,4 +1,4 @@
-#include T:/_Pipeline/cobopipe_v02-001/AfterEffect/includes/json2.js
+#include 'json2.js';
 //#include C:/Users/cg/PycharmProjects/cobopipe_v02-001/AfterEffect/includes/json2.js
 ////CONFIG INFO
 
@@ -46,7 +46,6 @@ function reg_replace(path){
         return []
         }
     return m
-
 }
 
 function clean_key_func(key){
@@ -55,7 +54,7 @@ function clean_key_func(key){
     return key
     }
 
-function dict_replace(dict,path){
+function dict_replace(dict, path){
     var no_keys = [];
     var key_list = reg_replace(path)
     for(i=0;i<key_list.length;i++){
@@ -87,13 +86,7 @@ function getPreviewDict(cfgp,f_dict){
         }
     return preview_obj
 }
-function getConfig(){
-    cfg = loadConfigJson()
-    cfgp = cfg.project_paths
-    f_dict = cfg.preview_dict
-    var t = getPreviewDict(cfgp,f_dict)
-    return cfg
-}
+
 function return_preview_keys(cfg){
     var return_list = []
     var t = cfg.preview_dict
@@ -102,3 +95,12 @@ function return_preview_keys(cfg){
     }
     return return_list
 }
+
+function PrepareForPreviews(){
+    cfg = loadConfigJson()
+    cfgp = cfg.project_paths
+    f_dict = cfg.preview_dict
+    var t = getPreviewDict(cfgp,f_dict)
+    return cfg
+}
+
