@@ -3,6 +3,8 @@ from PySide6.QtCore import *
 from PySide6.QtGui import *
 
 import os
+import ffmpeg
+
 
 if os.environ.get("BOM_PIPE_PATH"):
     remote = True
@@ -39,12 +41,17 @@ class PreviewPython_UI(QDialog):
         self.u_lay.addWidget(self.u_dd)
         self.u_lay.addWidget(self.u_edit)
 
+        self.blocking_check = QCheckBox("Blocking")
+        self.render_check = QCheckBox("Render Quailty")
         self.slate_check = QCheckBox("Slate")
 
         self.crop_check = QCheckBox("Crop: ")
         self.crop_edit = QLineEdit("1.1")
+        self.crop_edit.setFixedWidth(40)
 
         self.options_lay = QHBoxLayout()
+        self.options_lay.addWidget(self.blocking_check)
+        self.options_lay.addWidget(self.render_check)
         self.options_lay.addWidget(self.slate_check)
         self.options_lay.addWidget(self.crop_check)
         self.options_lay.addWidget(self.crop_edit)
@@ -59,6 +66,70 @@ class PreviewPython_UI(QDialog):
 
     def create_preview(self):
         pass
+    def create_crop_locally(self,stream, width=1920, height=1080,factor=1.1):
+        x = ((width*factor) - width) / 2
+        y = ((height*factor) - height) / 2
+        return ffmpeg.filter(stream, "crop", w=width, h=height, x=str(x), y=str(y))
+    def create_slate_locally(self,video, title=None, frameCount=True, timecode=False, date=True,user=None):
+        import datetime
+        font = '/Windows/Fonts/Arial.ttf'
+
+        if title:
+            video = ffmpeg.drawtext(video, text=title, fontfile=font, x='w-(text_w+20)', y='20', fontsize='24',
+                                    fontcolor='white', shadowcolor='black', shadowx=2, shadowy=2)
+        if user:
+            video = ffmpeg.drawtext(video, text='Made by: %s' % user, fontfile=font, x='20', y='20', fontsize='24',
+                                    fontcolor='white', shadowcolor='black', shadowx=2, shadowy=2)
+        if frameCount:
+            video = ffmpeg.drawtext(video, '%{eif:n:d:5}', start_number=1, fontfile=font, x='w-(text_w+20)', y='50',
+                                    fontsize='24', fontcolor='white', escape_text=False, shadowcolor='black',
+                                    shadowx=1.5, shadowy=1.5)
+        if timecode:
+            video = ffmpeg.drawtext(video, timecode='00:00:00:00', timecode_rate=25, start_number=0, fontfile=font,
+                                    x='20', y='h-(text_h+20)', fontsize='24', fontcolor='white',
+                                    shadowcolor='black', shadowx=2, shadowy=2)
+        if date:
+            timestamp = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M")
+            video = ffmpeg.drawtext(video, text=timestamp, fontfile=font, x='w-(text_w+20)', y='h-(text_h+20)',
+                                    fontsize='24', fontcolor='white', shadowcolor='black', shadowx=2, shadowy=2)
+        return video
+    def create_preview_locally_func(self,input_path="", output_path="", title=None, slate=True,crop=False,audio=None):
+    # def createPreview_2D(shot, inputPath='', output_path='', audioPath='', crop=False, cropWidth=1920, cropHeight=1080, title=True, frameCount=True, timecode=False, date=True, useAudioFile=False, runCmd=True,build_slate=True,user=None):
+
+        stream = ffmpeg.input(input_path).video
+
+        if audio:
+            if os.path.exists(audio):
+                audio = ffmpeg.input(audio).audio
+                audio_check = preview_util.needAudioCheck(video_path=input_path,audio_path=audioPath)
+                if audio_check:
+                    if audio_check < 0:
+                        dur = preview_util.probeDuration(input_path, codec_type="video")
+                        audio = audio.filter("atrim",duration=dur)
+
+        if not useAudioFile:
+            audio_check = preview_util.needAudioCheck(input_path)
+            if audio_check:
+                audio = preview_util.readySoundStream(input_path, input_path)
+            else:
+                audio = ffmpeg.input(input_path).audio
+        if crop:
+            stream = preview_util.CropIn(input_path, stream, width=cropWidth, height=cropHeight)
+
+        if slate:
+            stream = self.create_slate_locally(stream, title=title, frameCount=True, timecode=True, date=True,user=user)
+
+        audio = audio.filter('asetpts', expr='PTS-STARTPTS')
+        stream = ffmpeg.output(audio, stream, output_path, acodec='pcm_s16le', pix_fmt='yuv420p')
+
+        _string = ' '.join(ffmpeg.compile(stream, overwrite_output=True))
+        try:
+            print('::::>> RUNNING:\n' + _string)
+            ffmpeg.run(stream, overwrite_output=True)
+        except Exception as e:
+            print(e)
+
+        return _string
 
 if __name__ == '__main__':
     import sys
