@@ -5,8 +5,16 @@ from PySide6.QtGui import *
 import os
 import ffmpeg
 
-
+os.environ["BOM_PIPE_PATH"] = os.path.abspath(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 if os.environ.get("BOM_PIPE_PATH"):
+    import sys
+    sys.path.append(os.environ["BOM_PIPE_PATH"])
+    from getConfig import getConfigClass
+    CC = getConfigClass()
+
+
+
+
     remote = True
 else:
     remote = False
@@ -19,8 +27,28 @@ class PreviewPython_UI(QDialog):
         self.setWindowFlags(self.windowFlags()|Qt.Window|Qt.WindowStaysOnTopHint)
         self.node_list = []
         self.create_ui()
-        self.show()
+        if remote:
+            self.config_info()
 
+        self.show()
+    def projectChanged(self):
+        self.p_edit.setText(self.p_dd.currentText())
+    def userChanged(self):
+        self.u_edit.setText(self.u_dd.currentText())
+    def config_info(self):
+        all_users = []
+        for k in CC.users:
+            all_users.extend(CC.users[k])
+        all_users = sorted(list(set(all_users)))
+        project_list = []
+        for con in os.listdir(f"{os.environ['BOM_PIPE_PATH']}/Configs"):
+            if "Config_" in con and not ".pyc" in con:
+                project_list.append(con.split("Config_")[-1].split(".")[0])
+        self.p_dd.addItems(project_list)
+        self.u_dd.addItems(all_users)
+
+    def crop_toggle(self):
+        self.crop_edit.setEnabled(self.crop_check.isChecked())
 
     def create_ui(self):
         self.main_lay = QVBoxLayout()
@@ -63,6 +91,12 @@ class PreviewPython_UI(QDialog):
         self.main_lay.addWidget(self.run_bttn)
         self.setLayout(self.main_lay)
         self.run_bttn.clicked.connect(self.create_preview)
+        self.p_dd.currentTextChanged.connect(self.projectChanged)
+        self.u_dd.currentTextChanged.connect(self.userChanged)
+        self.crop_check.clicked.connect(self.crop_toggle)
+
+
+
 
     def create_preview(self):
         pass
