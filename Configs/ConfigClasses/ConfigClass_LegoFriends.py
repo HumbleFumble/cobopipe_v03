@@ -87,7 +87,7 @@ class ConfigClass():
         
         self.ref_steps={'Prop': {'Base': ['Anim', 'Render']}, 'Char': {'Model': ['Model'], 'Blendshape': ['Blendshape'], 'Rig': ['Anim', 'Rig'], 'Shading': ['Render']}, 'Setdress': {'Base': ['Proxy', 'Ingest', 'Render']}, 'Set': {'Base': ['Anim', 'Render']}, 'RigModule': {'Base': ['Rig']}, 'FX': {'Base': ['Anim', 'Render']}}
         
-        self.project_settings={'maya_render': 'arnold', 'fps': '25fps', 'cmEnabled': 1, 'cmViewTransform': 'ACES 1.0 SDR-video (sRGB)', 'cmRenderingSpaceName': 'ACEScg', 'tb_width': 1920, 'tb_height': 1080, 'tb_size_multi': 1.1, 'tb_output_format': 'PNG4', 'tb_number_padding': '3'}
+        self.project_settings={'maya_render': 'vray', 'fps': '25fps', 'cmEnabled': 1, 'cmViewTransform': 'ACES 1.0 SDR-video (sRGB)', 'cmRenderingSpaceName': 'ACEScg', 'tb_width': 1920, 'tb_height': 1080, 'tb_size_multi': 1.1, 'tb_output_format': 'PNG4', 'tb_number_padding': '3'}
         
         self.project_style={'animation_style': ['Maya', 'Toonboom'], 'comp_style': ['Fusion', 'AE'], 'default_animation_style': 'Maya', 'default_comp_style': 'Fusion'}
         
