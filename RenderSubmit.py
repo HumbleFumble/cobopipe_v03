@@ -54,6 +54,7 @@ import getpass
 from shutil import copyfile
 import subprocess
 import re
+import users
 
 # Get renderer
 if "maya_render" in CC.project_settings.keys():
@@ -74,9 +75,8 @@ class MainWindow(QtWidgets.QWidget):
         self.presets_folder = CC.get_render_presets() #cfg_util.CreatePathFromDict(cfg.project_paths["render_presets"]) # self.presets_folder = "%sPipeline/RenderSettings_Presets/" % self.base_path
         self.preset_config_file = CC.get_render_preset_config() #cfg_util.CreatePathFromDict(cfg.project_paths["render_preset_config"]) # self.preset_config_file = "%sPipeline/Preset_Config.json" % self.base_path
         self.user_save_file = "C:/Temp/%s/Render_User.json" % CC.project_name
-        if "users" in CC.__dict__.keys():
-            self.user_list = CC.users["Render"]
-        else:
+        self.user_list = users.get_users('Render')
+        if not self.user_list:
             self.user_list = ["UserA","UserB","UserC"]
 
         self.onlyInt = QtGui.QIntValidator()
@@ -139,12 +139,16 @@ class MainWindow(QtWidgets.QWidget):
 
         # USER SETTINGS
         self.user_group = QtWidgets.QGroupBox("User:")
-        self.user_layout = QtWidgets.QVBoxLayout()
+        self.user_layout = QtWidgets.QHBoxLayout()
         self.user_dd = QtWidgets.QComboBox()
+        self.addUser_button = QtWidgets.QPushButton('Add')
+        self.addUser_button.setMaximumWidth(50)
         self.user_layout.addWidget(self.user_dd)
+        self.user_layout.addWidget(self.addUser_button)
         self.user_group.setLayout(self.user_layout)
         self.user_dd.addItems(sorted(self.user_list))
         self.user_dd.currentIndexChanged.connect(self.SaveUser)
+        self.addUser_button.clicked.connect(self.add_user_popup)
 
         # RoyalRender Settings
         self.rr_group = QtWidgets.QGroupBox("Royal Render:")
@@ -641,6 +645,23 @@ class MainWindow(QtWidgets.QWidget):
             json.dump(user_save_dict, saveFile)
         saveFile.close()
 
+    def add_user_popup(self):
+        self.addUserPopup = users.add_user_ui(parent=self)
+        self.addUserPopup.signals.add.connect(self.add_user)
+        self.addUserPopup.show()
+
+    def add_user(self, user):
+        user = user.title()
+        users.add_to_users_json('Render', user)
+        self.user_list = users.get_users('Render')
+        self.user_dd.clear()
+        self.user_dd.addItems(sorted(self.user_list))
+        index = self.user_dd.findText(user, QtCore.Qt.MatchFixedString)
+        if index >= 0:
+            self.user_dd.setCurrentIndex(index)
+        
+        
+    
     def CreateNewPreset(self):
         cur_presets = {}
         # cur_presets = self.LoadSettings()

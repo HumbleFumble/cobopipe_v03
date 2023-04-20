@@ -62,6 +62,7 @@ class ConfigClass():
         self.python3="T:/_Executables/python/Python310/python.exe"
         self.ftp_path="\\\\192.168.0.227/ftpprod/HOJ_FTP"
         self.premiere_sqpreset="T:/_Pipeline/cobopipe_v02-001/PremierePro/sequencePresets/1920x1080-25fps.sqpreset"
+        self.users_json="<base_path>/Pipeline/users.json"
         
         
         self.episode_regex="^(s)\d{3}"
@@ -736,6 +737,11 @@ class ConfigClass():
 
     def get_update_log_path(self):
         to_return = "C:/Temp/Update_Log.txt"
+        return to_return
+
+
+    def get_users_json(self):
+        to_return = "P:/930462_HOJ_Project/Production/Pipeline/users.json"
         return to_return
 
 
