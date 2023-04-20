@@ -95,6 +95,33 @@ class ConfigClass():
         logger.debug("No such key found! This function only takes: []")
         return False
         
+    def get_users(self, key=None):
+        users = []
+        for key, value in self.users.items():
+            if type(value) == list:
+                users = users + value
+        
+        import os
+        users_json_path = self.users_json.replace('<base_path>', self.base_path)
+        folder_path = os.path.dirname(users_json_path)
+        
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+            
+        if not os.path.exists(users_json_path):
+            empty_dict = {}
+            for key in self.users.keys():
+                empty_dict[key] = []
+            self.util.saveSettings(users_json_path, empty_dict)
+        else:
+            users_file_dictionary = self.util.loadSettings(users_json_path)
+            for key, value in users_file_dictionary.items():
+                if type(value) == list:
+                    users = users + value
+
+        users = sorted(list(set(users)))
+        return users
+            
     def getByKey_thumbnail_paths(self,call_key=None,**kwords):
         
         if call_key == 'asset_thumbnail_path':

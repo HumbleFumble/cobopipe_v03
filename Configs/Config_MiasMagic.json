@@ -34,7 +34,8 @@
                      "light_export_folder":"<base_path>/Assets/Light_Setups/Light_Export_Groups/",
                      "contact_sheet_category_file":"<base_path>/Pipeline/contact_sheet_category.json",
                      "module_path":"",
-                     "python_path": "P:/tools/_Scripts/Production_scripts/_base_production/"
+                     "python_path": "P:/tools/_Scripts/Production_scripts/_base_production/",
+                     "users_json": "<base_path>/Pipeline/users.json"
                      },
     
     "project_name":"MiasMagic",

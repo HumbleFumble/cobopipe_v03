@@ -51,7 +51,8 @@
                  "project_shelf_json": "<base_path>/Pipeline/Maya_Shelves/build_shelf_dict.json",
                  "cryptomatte_list": "<base_path>/Pipeline/cryptomatteList.json",
                  "episode_info_file":"<episode_path>/<episode_name>_BrowserInfo.json",
-                  "python3": "T:/_Executables/python/Python310/python.exe"
+                 "python3": "T:/_Executables/python/Python310/python.exe",
+                 "users_json": "<base_path>/Pipeline/users.json"
                  },
 "project_name":"DenSaerligeMester",
 "old_project":null,

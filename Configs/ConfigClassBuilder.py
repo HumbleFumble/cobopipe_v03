@@ -1,6 +1,6 @@
 import re
 import os
-
+import users
 from Log.CoboLoggers import getLogger
 logger = getLogger()
 import json
@@ -132,6 +132,7 @@ class Builder():
         project_settings = self.Build_ClassVariableString({"project_settings": self.base_config["project_settings"]})
         thumbnail_paths_func = self.Build_getFunctionByKey("thumbnail_paths", self.base_config["thumbnail_paths"])
         preview_dict = self.Build_ClassDict("preview_dict")
+        get_user_func = self.Build_getUsers()
 
 
         class_string = """
@@ -155,6 +156,7 @@ class ConfigClass():
 
 
     {ref_paths_func}
+    {get_user_func}
     {thumbnail_paths_func}\n""".format(project_name=self.base_config["project_name"],
                                        class_attributes=project_path_attributes,
                                        ref_path_attributes=ref_path_attributes,
@@ -165,7 +167,7 @@ class ConfigClass():
                                        project_settings=project_settings, style_attributes=style_attributes,
                                        old_class=old_class, ref_order=ref_order, ref_steps=ref_steps,
                                        ref_paths_func=ref_paths_func, thumbnail_paths_func=thumbnail_paths_func,
-                                       preview_dict=preview_dict)
+                                       preview_dict=preview_dict, get_user_func=get_user_func)
         function_project_paths = self.Build_ConfigClassFunctionsWithoutUtil(self.base_config["project_paths"])
         function_refs_paths = self.Build_ConfigClassFunctionsWithoutUtil(self.base_config["ref_paths"])
         function_thumb_paths = self.Build_ConfigClassFunctionsWithoutUtil(self.base_config["thumbnail_paths"])
@@ -264,6 +266,42 @@ class ConfigClass():
         return to_return\n\n""".format(function_name=function_name, k_out=full_string)
         return function_string
 
+    def Build_getUsers(self):
+        user_list = users.get_users()
+        
+        if self.base_config['project_paths'].get('users_json'):
+            user_json_string = f"""
+        import os
+        users_json_path = self.users_json.replace('<base_path>', self.base_path)
+        folder_path = os.path.dirname(users_json_path)
+        
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+            
+        if not os.path.exists(users_json_path):
+            empty_dict = {{}}
+            for key in self.users.keys():
+                empty_dict[key] = []
+            self.util.saveSettings(users_json_path, empty_dict)
+        else:
+            users_file_dictionary = self.util.loadSettings(users_json_path)
+            for key, value in users_file_dictionary.items():
+                if type(value) == list:
+                    users = users + value\n"""
+        else:
+            user_json_string = ""
+        
+        _string = f"""def get_users(self, key=None):
+        users = []
+        for key, value in self.users.items():
+            if type(value) == list:
+                users = users + value
+        {user_json_string}
+        users = sorted(list(set(users)))
+        return users
+            """
+
+        return _string
 
 ##TESTING
 def saveSettings(save_location, save_content):
@@ -296,7 +334,7 @@ def FindEpisode(content,ep_reg):
 
 # cfg = json.load(cur_file,object_hook=lambda d: SimpleNamespace(**d))
 
-if __name__ == "__main__":
+if __name__ == "__main__":    
     import Configs.ConfigUtil_Json as jcfg
     config_json = "%s/Config_LegoFriends.json" % os.path.dirname(os.path.realpath(__file__))
     b = Builder(config_json)

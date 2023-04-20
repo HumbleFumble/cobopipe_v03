@@ -281,6 +281,18 @@ class JsonConfigUtilClass():
             path_dict = None  # clean up?
             return cur_string
 
+    def loadSettings(self, load_file):
+        if os.path.isfile(load_file):
+            with open(load_file, 'r') as cur_file:
+                return json.load(cur_file)
+        else:
+            return {}
+
+    def saveSettings(self, save_location, save_content):
+        with open(save_location, 'w+') as saveFile:
+            json.dump(obj=save_content, fp=saveFile,indent=4, sort_keys=True)
+        saveFile.close()
+
 if __name__ == "__main__":
     # import Configs.Config_MiasMagic2 as cfg
     pass

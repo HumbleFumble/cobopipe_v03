@@ -49,7 +49,8 @@
                    "shot_publish_report_file":"<shot_publish_path>/<episode_name>/<episode_name>_<seq_name>/<episode_name>_<seq_name>_<shot_name>.json",
                    "project_shelf_json": "<base_path>/Pipeline/Maya_Shelves/build_shelf_dict.json",
                    "cryptomatte_list": "<base_path>/Pipeline/cryptomatteList.json",
-                   "episode_info_file":"<episode_path>/<episode_name>_BrowserInfo.json"
+                   "episode_info_file":"<episode_path>/<episode_name>_BrowserInfo.json",
+                   "users_json": "<base_path>/Pipeline/users.json"
                    },
   "project_name":"KDH-Nina",
   "old_project":null,
