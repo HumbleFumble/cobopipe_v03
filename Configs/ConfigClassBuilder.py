@@ -1,6 +1,6 @@
 import re
 import os
-import users
+
 from Log.CoboLoggers import getLogger
 logger = getLogger()
 import json
@@ -267,8 +267,6 @@ class ConfigClass():
         return function_string
 
     def Build_getUsers(self):
-        user_list = users.get_users()
-        
         if self.base_config['project_paths'].get('users_json'):
             user_json_string = f"""
         import os

@@ -75,7 +75,7 @@ class MainWindow(QtWidgets.QWidget):
         self.presets_folder = CC.get_render_presets() #cfg_util.CreatePathFromDict(cfg.project_paths["render_presets"]) # self.presets_folder = "%sPipeline/RenderSettings_Presets/" % self.base_path
         self.preset_config_file = CC.get_render_preset_config() #cfg_util.CreatePathFromDict(cfg.project_paths["render_preset_config"]) # self.preset_config_file = "%sPipeline/Preset_Config.json" % self.base_path
         self.user_save_file = "C:/Temp/%s/Render_User.json" % CC.project_name
-        self.user_list = users.get_users('Render')
+        self.user_list = CC.get_users('Render')
         if not self.user_list:
             self.user_list = ["UserA","UserB","UserC"]
 
@@ -653,7 +653,7 @@ class MainWindow(QtWidgets.QWidget):
     def add_user(self, user):
         user = user.title()
         users.add_to_users_json('Render', user)
-        self.user_list = users.get_users('Render')
+        self.user_list = CC.get_users('Render')
         self.user_dd.clear()
         self.user_dd.addItems(sorted(self.user_list))
         index = self.user_dd.findText(user, QtCore.Qt.MatchFixedString)

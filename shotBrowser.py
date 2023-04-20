@@ -3347,10 +3347,7 @@ class MainWindow(QtWidgets.QWidget):
 		self.progress_bar_label.setText("\n".join(self.current_progress))
 
 	def populateUser(self):
-		animation_list = users.get_users('Animation')
-		render_list = users.get_users('Render')
-		user_list = animation_list + render_list
-		user_list = sorted(list(set(user_list)))
+		user_list = CC.get_users()
 		self.user_combobox.clear()
 		self.user_combobox.addItems(user_list)
 		cur_dict = self.loadSettings(self.user_save_file)
