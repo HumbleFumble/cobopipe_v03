@@ -1,9 +1,14 @@
+import sys
+sys.path.append( r"C:\Program Files (x86)\Toon Boom Animation\Toon Boom Harmony 22 Premium\win64\bin\python-packages" )
+
 from PySide6.QtWidgets import *
 from PySide6.QtCore import *
 from PySide6.QtGui import *
 
 import os
 import ffmpeg
+
+
 
 os.environ["BOM_PIPE_PATH"] = os.path.abspath(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 if os.environ.get("BOM_PIPE_PATH"):
@@ -15,9 +20,9 @@ if os.environ.get("BOM_PIPE_PATH"):
 
 
 
-    remote = True
+    use_config = True
 else:
-    remote = False
+    use_config = False
 
 class PreviewPython_UI(QDialog):
     def __init__(self, parent=None):
@@ -27,12 +32,21 @@ class PreviewPython_UI(QDialog):
         self.setWindowFlags(self.windowFlags()|Qt.Window|Qt.WindowStaysOnTopHint)
         self.node_list = []
         self.create_ui()
-        if remote:
+        if use_config:
             self.config_info()
 
         self.show()
     def projectChanged(self):
         self.p_edit.setText(self.p_dd.currentText())
+        if use_config:
+            CC = getConfigClass(project_name=self.p_dd.currentText())
+            if CC.project_settings.get("tb_size_multi"):
+                self.crop_check.setChecked(True)
+                self.crop_edit.setText(str(CC.project_settings.get("tb_size_multi")))
+            else:
+                self.crop_check.setChecked(False)
+
+
     def userChanged(self):
         self.u_edit.setText(self.u_dd.currentText())
     def config_info(self):
@@ -46,6 +60,8 @@ class PreviewPython_UI(QDialog):
                 project_list.append(con.split("Config_")[-1].split(".")[0])
         self.p_dd.addItems(project_list)
         self.u_dd.addItems(all_users)
+        self.p_dd.setCurrentText(CC.project_name)
+
 
     def crop_toggle(self):
         self.crop_edit.setEnabled(self.crop_check.isChecked())
@@ -90,16 +106,31 @@ class PreviewPython_UI(QDialog):
         self.run_bttn = QPushButton("Create Preview")
         self.main_lay.addWidget(self.run_bttn)
         self.setLayout(self.main_lay)
+        self.crop_check.setChecked(True)
+        self.slate_check.setChecked(True)
         self.run_bttn.clicked.connect(self.create_preview)
         self.p_dd.currentTextChanged.connect(self.projectChanged)
         self.u_dd.currentTextChanged.connect(self.userChanged)
-        self.crop_check.clicked.connect(self.crop_toggle)
+        self.crop_check.stateChanged.connect(self.crop_toggle)
 
-
+    def findPassesFolder(self):
+        sess = harmony.session()  # Fetch the currently active session of Harmony
+        project = sess.project  # The project that is already loaded.
+        scene_dir = project.project_path
+        passes_dir = "%s/Passes/" % "/".join(scene_dir.split("/")[0:-1])
+        if not os.path.exists(passes_dir):
+            os.mkdir(passes_dir)
+        return passes_dir
 
 
     def create_preview(self):
-        pass
+
+        if use_config:
+            pass
+        else:
+            #gather info like
+            pass
+
     def create_crop_locally(self,stream, width=1920, height=1080,factor=1.1):
         x = ((width*factor) - width) / 2
         y = ((height*factor) - height) / 2
