@@ -13,15 +13,20 @@ try:
 	in_toonboom = True
 except Exception as e:
 	in_toonboom = False
+import sys
 
 os.environ["BOM_PIPE_PATH"] = os.path.abspath(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 if os.environ.get("BOM_PIPE_PATH"):
-    import sys
     sys.path.append(os.environ["BOM_PIPE_PATH"])
     from getConfig import getConfigClass
     CC = getConfigClass()
+    import Preview.anim as PA
+    import Preview.ffmpeg_util as ffmpeg_util
     use_config = True
 else:
+    sys.path.append(os.path.abspath(os.path.dirname(os.path.realpath(__file__)))) #Same dir as this script
+    # sys.path.append(os.environ)
+    import ffmpeg_util
     use_config = False
 
 class PreviewPython_UI(QDialog):
@@ -150,6 +155,7 @@ class PreviewPython_UI(QDialog):
                                              self.render_width, self.render_height)
         log("HEY??")
         if not use_config:
+            # TODO Please input pipeline slate stuff here.
             log("WENT HERE?")
             pass
         else:
@@ -172,16 +178,16 @@ class PreviewPython_UI(QDialog):
 
         if audio:
             audio_stream = ffmpeg.input(audio).audio
-            audio_check = self.needAudioCheck(video_path=input_path,audio_path=audio)
+            audio_check = ffmpeg_util.needAudioCheck(video_path=input_path,audio_path=audio)
             if audio_check:
                 if audio_check < 0:
-                    dur = self.probeDuration(input_path, codec_type="video")
+                    dur = ffmpeg_util.probeDuration(input_path, codec_type="video")
                     audio_stream = audio_stream.filter("atrim",duration=dur)
 
         else:
-            audio_check = self.needAudioCheck(input_path)
+            audio_check = ffmpeg_util.needAudioCheck(input_path)
             if audio_check:
-                audio = preview_util.readySoundStream(input_path, input_path)
+                audio = ffmpeg_util.readySoundStream(input_path, input_path)
             else:
                 audio = ffmpeg.input(input_path).audio
         if crop:
@@ -209,6 +215,7 @@ class PreviewPython_UI(QDialog):
         y = ((height*factor) - height) / 2
         log("CROPPING")
         return ffmpeg.filter(stream, "crop", w=width, h=height, x=str(x), y=str(y))
+
     def create_slate_locally(self,video, title=None, frameCount=True, timecode=False, date=True,user=None):
         import datetime
         font = '/Windows/Fonts/Arial.ttf'
@@ -232,33 +239,33 @@ class PreviewPython_UI(QDialog):
             video = ffmpeg.drawtext(video, text=timestamp, fontfile=font, x='w-(text_w+20)', y='h-(text_h+20)',
                                     fontsize='24', fontcolor='white', shadowcolor='black', shadowx=2, shadowy=2)
         return video
-
-    def needAudioCheck(self,video_path=None, audio_path=None):
-        video = self.probeDuration(video_path, codec_type="video")
-        audio = self.probeDuration(audio_path, codec_type="audio")
-        print("Video: %s - Audio: %s for %s" % (video, audio, video_path))
-        if not audio:
-            return True
-        if video:
-            if not float(video) == float(audio):
-                return float(video) - float(audio)
-        return False
-
-    def probeDuration(self,path, index=0, codec_type=None):
-        """
-        Checks the duration of the index in the given input path
-        :param path:
-        :return:
-        """
-        probe_streams = ffmpeg.probe(path)
-
-        to_return = probe_streams["streams"][index]["duration"]
-        if codec_type:
-            for i in probe_streams["streams"]:
-                if i["codec_type"] == codec_type:
-                    to_return = i["duration"]
-                    break
-        return to_return
+    #
+    # def needAudioCheck(self,video_path=None, audio_path=None):
+    #     video = self.probeDuration(video_path, codec_type="video")
+    #     audio = self.probeDuration(audio_path, codec_type="audio")
+    #     print("Video: %s - Audio: %s for %s" % (video, audio, video_path))
+    #     if not audio:
+    #         return True
+    #     if video:
+    #         if not float(video) == float(audio):
+    #             return float(video) - float(audio)
+    #     return False
+    #
+    # def probeDuration(self,path, index=0, codec_type=None):
+    #     """
+    #     Checks the duration of the index in the given input path
+    #     :param path:
+    #     :return:
+    #     """
+    #     probe_streams = ffmpeg.probe(path)
+    #
+    #     to_return = probe_streams["streams"][index]["duration"]
+    #     if codec_type:
+    #         for i in probe_streams["streams"]:
+    #             if i["codec_type"] == codec_type:
+    #                 to_return = i["duration"]
+    #                 break
+    #     return to_return
 
 
 def log(message):

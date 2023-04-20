@@ -1,25 +1,29 @@
 # from getConfig import getConfigClass
 # CC = getConfigClass()
 
-from Log.CoboLoggers import getLogger
-logger = getLogger()
-
 import ffmpeg
 import datetime
+
 import os
 
+remote = True
+if os.environ.get("BOM_PIPE_PATH"):
+    from Log.CoboLoggers import getLogger
+    logger = getLogger()
+    remote =False
 
 ffmpeg_exe = 'T:/_Executables/ffmpeg/bin/ffmpeg.exe'
-if not os.path.exists(ffmpeg_exe):
+if not os.path.exists(ffmpeg_exe) or remote:
     ffmpeg_exe = 'ffmpeg'
     
 ffprobe_exe = 'T:/_Executables/ffmpeg/bin/ffprobe.exe'
-if not os.path.exists(ffprobe_exe):
+if not os.path.exists(ffprobe_exe) or remote:
     ffprobe_exe = 'ffprobe'
 
 ffplay_exe = 'T:/_Executables/ffmpeg/bin/ffplay.exe'
-if not os.path.exists(ffplay_exe):
+if not os.path.exists(ffplay_exe) or remote:
     ffplay_exe = "ffplay"
+
 
 def CropIn(path, stream, width=1920, height=1080):
     current_width, current_height = probeResolution(path)
