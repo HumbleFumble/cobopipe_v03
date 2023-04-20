@@ -41,6 +41,7 @@ from Multiplicity.Signals import Signals
 import CheckAudioVisual
 from PixmapUtil import PixmapUtil
 from CategoryHandler import CategoryHandler
+import users
 
 
 from functools import partial
@@ -2675,9 +2676,16 @@ class MainWindow(QtWidgets.QWidget):
 		self.user_label = QtWidgets.QLabel(" USER: ")
 		self.user_combobox = QtWidgets.QComboBox()
 		self.user_combobox.setMinimumWidth(150)
+		self.add_user_button = QtWidgets.QPushButton('Add')
+		self.add_user_button.setMaximumWidth(50)
+		self.add_user_button.clicked.connect(self.add_user_popup)
+		self.stretch_item = QtWidgets.QWidget()
+		self.stretch_item.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
 		self.top_row.addWidget(self.user_label)
 		self.top_row.addWidget(self.user_combobox)
+		self.top_row.addWidget(self.add_user_button)
 		self.top_row.addSeparator()
+		self.top_row.addWidget(self.stretch_item)
 
 		self.thumb_label = QtWidgets.QLabel(" Thumbnail Stage: ")
 
@@ -2812,6 +2820,20 @@ class MainWindow(QtWidgets.QWidget):
 			logger.debug(cur_node.getName())
 			if cur_node.getType() == "seq":
 				self.ctrl.refreshThumbs(cur_node.getChildren(), overwrite=False)
+
+	def add_user_popup(self):
+		ui = users.add_user_ui(parent=self)
+		ui.signals.add.connect(self.add_new_user)
+		ui.show()
+
+
+	def add_new_user(self, user):
+		user = user.title()
+		users.add_to_users_json('Animation', user)
+		self.populateUser()
+		index = self.user_combobox.findText(user, QtCore.Qt.MatchFixedString)
+		if index >= 0:
+			self.user_combobox.setCurrentIndex(index)
 
 	def __setPalette(self):
 		#TODO setting palette in maya does NOT look great
@@ -3325,10 +3347,11 @@ class MainWindow(QtWidgets.QWidget):
 		self.progress_bar_label.setText("\n".join(self.current_progress))
 
 	def populateUser(self):
-		user_list = []
-		for temp_list in CC.users.values():
-			user_list.extend(temp_list)
+		animation_list = users.get_users('Animation')
+		render_list = users.get_users('Render')
+		user_list = animation_list + render_list
 		user_list = sorted(list(set(user_list)))
+		self.user_combobox.clear()
 		self.user_combobox.addItems(user_list)
 		cur_dict = self.loadSettings(self.user_save_file)
 		if cur_dict:
