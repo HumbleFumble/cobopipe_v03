@@ -35,10 +35,18 @@ class add_user_ui(QtWidgets.QDialog):
         self.close()
 
 
-def get_users(key):
-    key = key.title()
-    config_users = CC.users.get(key)
-    users_json_users = get_users_json().get(key)
+def get_users(key=None):
+    if not key:
+        config_users = []
+        users_json_users = []
+        for key, value in CC.users.items():
+            config_users = config_users + value
+        for key, value in get_users_json().items():
+            users_json_users = users_json_users + value
+    else:
+        key = key.title()
+        config_users = CC.users.get(key)
+        users_json_users = get_users_json().get(key)
     users = config_users + users_json_users
     users = set(users)
     users = list(users)
@@ -79,5 +87,4 @@ def get_users_json():
 
 
 if __name__ == "__main__":
-    users = get_users("animation")
-    print(users)
+    print(CC.get_users())
