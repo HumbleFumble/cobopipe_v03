@@ -40,12 +40,8 @@ class PreviewPython_UI(QDialog):
         self.height = 720
 
         self.create_ui()
-        if use_config:
-            self.config_info()
-        self.checkSettings()
-        if use_config:
-            if os.environ.get("BOM_USER"):
-                self.u_edit.setText(os.environ["BOM_USER"])
+
+        self.checkAndApplySettings()
 
         self.show()
     def projectChanged(self):
@@ -127,7 +123,9 @@ class PreviewPython_UI(QDialog):
         self.u_dd.currentTextChanged.connect(self.userChanged)
         self.crop_check.stateChanged.connect(self.crop_toggle)
 
-    def checkSettings(self):
+    def checkAndApplySettings(self):
+        if use_config:
+            self.config_info()
         load_dict = self.loadJson(self.save_location)
         if load_dict:
             self.slate_check.setChecked(load_dict["slate_check"])
@@ -136,6 +134,10 @@ class PreviewPython_UI(QDialog):
             self.u_edit.setText(load_dict["user"])
             self.blocking_check.setChecked(load_dict["blocking_check"])
             self.render_check.setChecked(load_dict["render_check"])
+        if use_config:
+            if os.environ.get("BOM_USER"):
+                self.u_edit.setText(os.environ["BOM_USER"])
+
 
     def loadJson(self,load_file):
         if os.path.isfile(load_file):
