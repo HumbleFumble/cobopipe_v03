@@ -70,12 +70,13 @@ class MainWindow(QtWidgets.QWidget):
         self.setObjectName("RenderSubmit")
         self.setWindowTitle("RenderSubmit")
         self.setWindowFlags(QtCore.Qt.Window)
+        self.set_palette()
 
         self.base_path = CC.get_base_path() #cfg.project_paths["base_path"] # self.base_path = "P:/930382_Kiwi&Strit_2/Production/"
         self.presets_folder = CC.get_render_presets() #cfg_util.CreatePathFromDict(cfg.project_paths["render_presets"]) # self.presets_folder = "%sPipeline/RenderSettings_Presets/" % self.base_path
         self.preset_config_file = CC.get_render_preset_config() #cfg_util.CreatePathFromDict(cfg.project_paths["render_preset_config"]) # self.preset_config_file = "%sPipeline/Preset_Config.json" % self.base_path
         self.user_save_file = "C:/Temp/%s/Render_User.json" % CC.project_name
-        self.user_list = users.get_users('Render')
+        self.user_list = CC.get_users('Render')
         if not self.user_list:
             self.user_list = ["UserA","UserB","UserC"]
 
@@ -116,6 +117,29 @@ class MainWindow(QtWidgets.QWidget):
             self.doubleSkyCheck()
             self.checkDefaultRenderLayerError()
     
+    def set_palette(self):
+		#TODO setting palette in maya does NOT look great
+        if not in_maya:
+            magenta = {"R": 142, "G": 45, "B": 197}
+            blue = {"R": 50, "G": 50, "B": 255}
+
+            hi_lgt = blue
+            palette = QtGui.QPalette()
+            palette.setColor(QtGui.QPalette.Window, QtGui.QColor(53, 53, 53))
+            palette.setColor(QtGui.QPalette.WindowText, QtCore.Qt.white)
+            palette.setColor(QtGui.QPalette.Base, QtGui.QColor(40, 40, 40))
+            palette.setColor(QtGui.QPalette.AlternateBase, QtGui.QColor(53, 53, 53))
+            palette.setColor(QtGui.QPalette.ToolTipBase, QtCore.Qt.white)
+            palette.setColor(QtGui.QPalette.ToolTipText, QtCore.Qt.white)
+            palette.setColor(QtGui.QPalette.Text, QtCore.Qt.lightGray)
+            palette.setColor(QtGui.QPalette.Button, QtGui.QColor(53, 53, 53))
+            palette.setColor(QtGui.QPalette.ButtonText, QtCore.Qt.white)
+            palette.setColor(QtGui.QPalette.BrightText, QtCore.Qt.red)
+            palette.setColor(QtGui.QPalette.Highlight, QtGui.QColor(hi_lgt["R"], hi_lgt["G"], hi_lgt["B"]).lighter(100))
+            palette.setColor(QtGui.QPalette.HighlightedText, QtCore.Qt.white)
+            self.setPalette(palette)
+            QtWidgets.QApplication.instance().setStyle('Fusion')
+
     # This function creates grid layout from the values in grid_x and grid_y
     def GridLayout(self):
         
@@ -653,7 +677,7 @@ class MainWindow(QtWidgets.QWidget):
     def add_user(self, user):
         user = user.title()
         users.add_to_users_json('Render', user)
-        self.user_list = users.get_users('Render')
+        self.user_list = CC.get_users('Render')
         self.user_dd.clear()
         self.user_dd.addItems(sorted(self.user_list))
         index = self.user_dd.findText(user, QtCore.Qt.MatchFixedString)
