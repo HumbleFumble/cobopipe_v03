@@ -16,7 +16,6 @@ except Exception as e:
 	in_toonboom = False
 import sys
 
-os.environ["BOM_PIPE_PATH"] = os.path.abspath(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 if os.environ.get("BOM_PIPE_PATH"):
     sys.path.append(os.environ["BOM_PIPE_PATH"])
     from getConfig import getConfigClass
@@ -44,6 +43,9 @@ class PreviewPython_UI(QDialog):
         if use_config:
             self.config_info()
         self.checkSettings()
+        if use_config:
+            if os.environ.get("BOM_USER"):
+                self.u_edit.setText(os.environ["BOM_USER"])
 
         self.show()
     def projectChanged(self):
@@ -64,12 +66,14 @@ class PreviewPython_UI(QDialog):
         for k in CC.users:
             all_users.extend(CC.users[k])
         all_users = sorted(list(set(all_users)))
+
         project_list = []
         for con in os.listdir(f"{os.environ['BOM_PIPE_PATH']}/Configs"):
             if "Config_" in con and not ".pyc" in con:
                 project_list.append(con.split("Config_")[-1].split(".")[0])
         self.p_dd.addItems(project_list)
         self.u_dd.addItems(all_users)
+
         self.p_dd.setCurrentText(CC.project_name)
 
 
