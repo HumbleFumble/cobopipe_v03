@@ -7,6 +7,7 @@ from PySide6.QtGui import *
 
 import os
 import ffmpeg
+import json
 
 try:
 	from ToonBoom import harmony
@@ -35,7 +36,7 @@ class PreviewPython_UI(QDialog):
         self.setWindowTitle("Preview")
         self.setObjectName("Preview")
         self.setWindowFlags(self.windowFlags()|Qt.Window|Qt.WindowStaysOnTopHint)
-        self.node_list = []
+        self.save_location = "C:/Temp/TB/PythonPreview.json"
         self.width = 1280
         self.height = 720
         self.findSceneInfo()
@@ -43,6 +44,7 @@ class PreviewPython_UI(QDialog):
         self.create_ui()
         if use_config:
             self.config_info()
+        self.checkSettings()
 
         self.show()
     def projectChanged(self):
@@ -122,6 +124,36 @@ class PreviewPython_UI(QDialog):
         self.u_dd.currentTextChanged.connect(self.userChanged)
         self.crop_check.stateChanged.connect(self.crop_toggle)
 
+    def checkSettings(self):
+        load_dict = self.loadJson(self.save_location)
+        if load_dict:
+            self.slate_check.setChecked(load_dict["slate_check"])
+            self.u_edit.setText(load_dict["user"])
+            self.blocking_check.setChecked(load_dict["blocking_check"])
+            self.render_check.setChecked(load_dict["render_check"])
+
+    def loadJson(self,load_file):
+        if os.path.isfile(load_file):
+            with open(load_file, 'r') as cur_file:
+                return json.load(cur_file)
+        else:
+            return {}
+
+    def saveJson(self, save_location, save_info):
+        with open(save_location, 'w+') as saveFile:
+            json.dump(save_info, saveFile)
+        saveFile.close()
+
+    def closeEvent(self,event):
+
+        save_dict = {"slate_check":self.slate_check.isChecked(),
+                     "user":self.u_edit.text(),
+                     "blocking_check":self.blocking_check.isChecked(),
+                     "render_check":self.render_check.isChecked()}
+        self.saveJson(self.save_location,save_dict)
+        super(PreviewPython_UI, self).closeEvent(event)
+
+
     def findSceneInfo(self):
         sess = harmony.session()  # Fetch the currently active session of Harmony
         project = sess.project  # The project that is already loaded.
@@ -153,13 +185,29 @@ class PreviewPython_UI(QDialog):
         else:
             js_exporter.exportOGLToQuicktime(self.preview_name + "_Temp", "C:/Temp/temp_previews/", -1, -1,
                                              self.render_width, self.render_height)
-        log("HEY??")
-        if not use_config:
-            # TODO Please input pipeline slate stuff here.
-            log("WENT HERE?")
-            pass
+        if use_config:
+            log("Pipeline slate")
+            use_audio = False
+            if self.sound_file:
+                use_audio =True
+            PA.createPreview_2D(self.scene_name,
+                                inputPath=self.temp_path,
+                                outputPath=self.preview_final,
+                                audioPath=self.sound_file,
+                                crop=self.crop_check.isChecked(),
+                                cropWidth=self.render_width,
+                                cropHeight=self.render_height,
+                                title=self.scene_name,
+                                frameCount=True,
+                                timecode=True,
+                                date=True,
+                                useAudioFile=use_audio,
+                                runCmd=True,
+                                build_slate=True,
+                                user=self.u_edit.text())
+
         else:
-            log("CREATING SLATE")
+            log("CREATING REMOTE SLATE")
             self.create_preview_locally_func(input_path=self.temp_path,
                                              output_path=self.preview_final,
                                              title=self.preview_name,
