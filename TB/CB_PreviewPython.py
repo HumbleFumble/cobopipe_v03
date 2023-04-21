@@ -14,6 +14,14 @@ try:
 	in_toonboom = True
 except Exception as e:
 	in_toonboom = False
+
+def log(message):
+	if in_toonboom:
+		sess = harmony.session()
+		sess.log(str(message))
+	else:
+		print(message)
+
 import sys
 
 if os.environ.get("BOM_PIPE_PATH"):
@@ -24,7 +32,9 @@ if os.environ.get("BOM_PIPE_PATH"):
     import Preview.ffmpeg_util as ffmpeg_util
     use_config = True
 else:
-    sys.path.append(os.path.abspath(os.path.dirname(os.path.realpath(__file__)))) #Same dir as this script
+    script_path = os.path.expandvars("%APPDATA%/Toon Boom Animation/Toon Boom Harmony Premium/2200-scripts/")
+    log(script_path)
+    sys.path.append(script_path) #Same dir as this script
     # sys.path.append(os.environ)
     import ffmpeg_util
     use_config = False
@@ -296,12 +306,7 @@ class PreviewPython_UI(QDialog):
                                     fontsize='24', fontcolor='white', shadowcolor='black', shadowx=2, shadowy=2)
         return video
 
-def log(message):
-	if in_toonboom:
-		sess = harmony.session()
-		sess.log(str(message))
-	else:
-		print(message)
+
 
 def run():
     global preview_ui
