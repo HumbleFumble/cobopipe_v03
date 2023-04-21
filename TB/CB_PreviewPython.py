@@ -39,7 +39,6 @@ class PreviewPython_UI(QDialog):
         self.save_location = "C:/Temp/TB/PythonPreview.json"
         self.width = 1280
         self.height = 720
-        self.findSceneInfo()
 
         self.create_ui()
         if use_config:
@@ -128,6 +127,8 @@ class PreviewPython_UI(QDialog):
         load_dict = self.loadJson(self.save_location)
         if load_dict:
             self.slate_check.setChecked(load_dict["slate_check"])
+            if self.u_dd.findText(load_dict["user"])>-1:
+                self.u_dd.setCurrentText(load_dict["user"])
             self.u_edit.setText(load_dict["user"])
             self.blocking_check.setChecked(load_dict["blocking_check"])
             self.render_check.setChecked(load_dict["render_check"])
@@ -162,9 +163,9 @@ class PreviewPython_UI(QDialog):
         self.preview_name = self.scene_name
         self.preview_path = "%s/_Preview/" % scene_dir.split(self.scene_name)[0]
 
-        # if self.blocking_check.isChecked():
-        #     self.preview_path = "%s/Blocking/" % self.preview_path
-        #     self.preview_name = "%s_Blocking" % self.preview_name
+        if self.blocking_check.isChecked():
+            self.preview_path = "%s/Blocking/" % self.preview_path
+            self.preview_name = "%s_Blocking" % self.preview_name
         if not os.path.exists(self.preview_path):
             os.makedirs(self.preview_path)
         self.temp_path = "C:/Temp/temp_previews/%s_Temp.mov" % self.scene_name
@@ -177,9 +178,11 @@ class PreviewPython_UI(QDialog):
 
 
     def create_preview(self):
+        self.findSceneInfo()
         self.render_height = float(self.crop_edit.text())*self.height
         self.render_width = float(self.crop_edit.text()) * self.width
-        # self.findSceneInfo()
+
+
         if self.render_check.isChecked():
             js_exporter.exportToQuicktime("", -1, -1, True, self.render_width, self.render_height, self.temp_path, "", False,1)
         else:
@@ -195,15 +198,15 @@ class PreviewPython_UI(QDialog):
                                 outputPath=self.preview_final,
                                 audioPath=self.sound_file,
                                 crop=self.crop_check.isChecked(),
-                                cropWidth=self.render_width,
-                                cropHeight=self.render_height,
+                                cropWidth=self.width,
+                                cropHeight=self.height,
                                 title=self.scene_name,
                                 frameCount=True,
                                 timecode=True,
                                 date=True,
                                 useAudioFile=use_audio,
                                 runCmd=True,
-                                build_slate=True,
+                                build_slate=self.slate_check.isChecked(),
                                 user=self.u_edit.text())
 
         else:
@@ -213,14 +216,13 @@ class PreviewPython_UI(QDialog):
                                              title=self.preview_name,
                                              slate=self.slate_check.isChecked(),
                                              crop=self.crop_check.isChecked(),
-                                             crop_w=int(self.render_width),
-                                             crop_h=int(self.render_height),
+                                             crop_w=int(self.width),
+                                             crop_h=int(self.height),
                                              audio=self.sound_file,
                                              user=self.u_edit.text())
 
 
     def create_preview_locally_func(self,input_path="", output_path="", title=None, slate=True,crop=False,crop_w=1920,crop_h=1080,audio=None,user=None):
-    # def createPreview_2D(shot, inputPath='', output_path='', audioPath='', crop=False, cropWidth=1920, cropHeight=1080, title=True, frameCount=True, timecode=False, date=True, useAudioFile=False, runCmd=True,build_slate=True,user=None):
 
         stream = ffmpeg.input(input_path).video
 
@@ -258,9 +260,9 @@ class PreviewPython_UI(QDialog):
 
         return _string
 
-    def create_crop_locally(self,stream, width=1920, height=1080,factor=1.1):
-        x = ((width*factor) - width) / 2
-        y = ((height*factor) - height) / 2
+    def create_crop_locally(self,stream, width=1920, height=1080):
+        x = (self.render_width - width) / 2
+        y = (self.render_height - height) / 2
         log("CROPPING")
         return ffmpeg.filter(stream, "crop", w=width, h=height, x=str(x), y=str(y))
 
@@ -287,34 +289,6 @@ class PreviewPython_UI(QDialog):
             video = ffmpeg.drawtext(video, text=timestamp, fontfile=font, x='w-(text_w+20)', y='h-(text_h+20)',
                                     fontsize='24', fontcolor='white', shadowcolor='black', shadowx=2, shadowy=2)
         return video
-    #
-    # def needAudioCheck(self,video_path=None, audio_path=None):
-    #     video = self.probeDuration(video_path, codec_type="video")
-    #     audio = self.probeDuration(audio_path, codec_type="audio")
-    #     print("Video: %s - Audio: %s for %s" % (video, audio, video_path))
-    #     if not audio:
-    #         return True
-    #     if video:
-    #         if not float(video) == float(audio):
-    #             return float(video) - float(audio)
-    #     return False
-    #
-    # def probeDuration(self,path, index=0, codec_type=None):
-    #     """
-    #     Checks the duration of the index in the given input path
-    #     :param path:
-    #     :return:
-    #     """
-    #     probe_streams = ffmpeg.probe(path)
-    #
-    #     to_return = probe_streams["streams"][index]["duration"]
-    #     if codec_type:
-    #         for i in probe_streams["streams"]:
-    #             if i["codec_type"] == codec_type:
-    #                 to_return = i["duration"]
-    #                 break
-    #     return to_return
-
 
 def log(message):
 	if in_toonboom:
