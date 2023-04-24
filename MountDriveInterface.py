@@ -62,6 +62,8 @@ class DriveDialog(QtWidgets.QDialog):
                                   "info": "A drive for finished productions"}
         self.drive_dict["finals"] = {"letter": "z", "win_path": r"\\192.168.0.225\finals",
                                   "info": "A drive that contains only the delivery and PR files for each finished project"}
+        self.drive_dict["tools"] = {"letter": "t", "win_path": r"\\192.168.0.225\tools",
+                                     "info": "A place for all technical resources, such as pipeline and software"}
 
         self.createWindow()
         self.populate()
