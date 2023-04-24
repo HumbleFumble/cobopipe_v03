@@ -7,10 +7,10 @@ import datetime
 import os
 
 remote = True
+
 if os.environ.get("BOM_PIPE_PATH"):
-    from Log.CoboLoggers import getLogger
-    logger = getLogger()
     remote =False
+
 
 ffmpeg_exe = 'T:/_Executables/ffmpeg/bin/ffmpeg.exe'
 if not os.path.exists(ffmpeg_exe) or remote:
@@ -45,8 +45,6 @@ def probeResolution(path):
         if s["codec_type"] == "video":
             w = s["width"]
             h = s["height"]
-    if not w:
-        logger.error("Can't find video stream to get resolution from, for: %s" % path)
     return w, h
 
 
@@ -180,8 +178,6 @@ def probeDuration(path,index=0,codec_type=None):
     :param path:
     :return:
     """
-    logger.info("Probe for duration: %s" % path)
-    logger.info(ffprobe_exe)
     probe_streams = ffmpeg.probe(path, cmd=ffprobe_exe)
 
     to_return = probe_streams["streams"][index]["duration"]
