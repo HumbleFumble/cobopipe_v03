@@ -46,6 +46,8 @@ class PreviewPython_UI(QDialog):
         self.setObjectName("Preview")
         self.setWindowFlags(self.windowFlags()|Qt.Window|Qt.WindowStaysOnTopHint)
         self.save_location = "C:/Temp/TB/PythonPreview.json"
+        if not os.path.exists(os.path.dirname(self.save_location)):
+            os.makedirs(os.path.dirname(self.save_location))
         self.width = 1280
         self.height = 720
 
