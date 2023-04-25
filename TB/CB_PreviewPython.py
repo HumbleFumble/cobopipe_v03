@@ -95,7 +95,9 @@ class PreviewPython_UI(QDialog):
 
         self.p_dd = QComboBox()
         self.p_edit = QLineEdit()
-        self.p_lay.addWidget(QLabel("Project: "))
+        self.p_label = QLabel("Project: ")
+        self.p_label.setFixedWidth(45)
+        self.p_lay.addWidget(self.p_label)
         self.p_lay.addWidget(self.p_dd)
         self.p_lay.addWidget(self.p_edit)
 
@@ -103,7 +105,9 @@ class PreviewPython_UI(QDialog):
 
         self.u_dd = QComboBox()
         self.u_edit = QLineEdit()
-        self.u_lay.addWidget(QLabel("User: "))
+        self.u_label = QLabel("User: ")
+        self.u_label.setFixedWidth(45)
+        self.u_lay.addWidget(self.u_label)
         self.u_lay.addWidget(self.u_dd)
         self.u_lay.addWidget(self.u_edit)
 
@@ -238,6 +242,8 @@ class PreviewPython_UI(QDialog):
                                              crop_h=int(self.height),
                                              audio=self.sound_file,
                                              user=self.u_edit.text())
+        log("Finished")
+        os.startfile(self.preview_final)
 
 
     def create_preview_locally_func(self,input_path="", output_path="", title=None, slate=True,crop=False,crop_w=1920,crop_h=1080,audio=None,user=None):
