@@ -186,18 +186,6 @@ class FrontController(QObject):
 	def openDir(self,node):
 		log("OPENING DIR FROM %s" % node)
 
-	def saveSettings(self, save_location, save_content):
-		with open(save_location, 'w+') as saveFile:
-			json.dump(save_content, saveFile)
-		saveFile.close()
-
-	def loadSettings(self, load_file):
-		if os.path.isfile(load_file):
-			with open(load_file, 'r') as cur_file:
-				return json.load(cur_file)
-		else:
-			return {}
-
 # \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 # FRONTEND |||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
 # ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

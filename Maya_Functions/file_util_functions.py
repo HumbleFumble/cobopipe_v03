@@ -37,23 +37,23 @@ def makeFolder(cur_path):
         os.makedirs(cur_folder)
 
 
-def saveJson(save_location, save_info):
-    import json
-    with open(save_location, 'w+') as saveFile:
-        json.dump(obj=save_info, fp=saveFile,indent=4, sort_keys=True)
-    saveFile.close()
+# def saveJson(save_location, save_info):
+#     import json
+#     with open(save_location, 'w+') as saveFile:
+#         json.dump(obj=save_info, fp=saveFile,indent=4, sort_keys=True)
+#     saveFile.close()
 
 
-def loadJson(save_location):
-    import json
-    if os.path.isfile(save_location):
-        with open(save_location, 'r') as saveFile:
-            loadedSettings = json.load(saveFile)
-        if loadedSettings:
-            return loadedSettings
-    else:
-        logger.warning("not a file")
-    return None
+# def loadJson(save_location):
+#     import json
+#     if os.path.isfile(save_location):
+#         with open(save_location, 'r') as saveFile:
+#             loadedSettings = json.load(saveFile)
+#         if loadedSettings:
+#             return loadedSettings
+#     else:
+#         logger.warning("not a file")
+#     return None
 
 
 def generateID(size=6, chars=string.ascii_uppercase + string.ascii_lowercase + string.digits):

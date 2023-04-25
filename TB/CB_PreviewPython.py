@@ -7,7 +7,8 @@ from PySide6.QtGui import *
 
 import os
 import ffmpeg
-import json
+# import json
+import file_util
 
 try:
 	from ToonBoom import harmony
@@ -142,7 +143,8 @@ class PreviewPython_UI(QDialog):
     def checkAndApplySettings(self):
         if use_config:
             self.config_info()
-        load_dict = self.loadJson(self.save_location)
+        # load_dict = self.loadJson(self.save_location)
+        load_dict = file_util.load_json(self.save_location)
         if load_dict:
             self.slate_check.setChecked(load_dict["slate_check"])
             if self.u_dd.findText(load_dict["user"])>-1:
@@ -155,17 +157,17 @@ class PreviewPython_UI(QDialog):
                 self.u_edit.setText(os.environ["BOM_USER"])
 
 
-    def loadJson(self,load_file):
-        if os.path.isfile(load_file):
-            with open(load_file, 'r') as cur_file:
-                return json.load(cur_file)
-        else:
-            return {}
+    # def loadJson(self,load_file):
+    #     if os.path.isfile(load_file):
+    #         with open(load_file, 'r') as cur_file:
+    #             return json.load(cur_file)
+    #     else:
+    #         return {}
 
-    def saveJson(self, save_location, save_info):
-        with open(save_location, 'w+') as saveFile:
-            json.dump(save_info, saveFile)
-        saveFile.close()
+    # def saveJson(self, save_location, save_info):
+    #     with open(save_location, 'w+') as saveFile:
+    #         json.dump(save_info, saveFile)
+    #     saveFile.close()
 
     def closeEvent(self,event):
 
@@ -173,7 +175,8 @@ class PreviewPython_UI(QDialog):
                      "user":self.u_edit.text(),
                      "blocking_check":self.blocking_check.isChecked(),
                      "render_check":self.render_check.isChecked()}
-        self.saveJson(self.save_location,save_dict)
+        # self.saveJson(self.save_location,save_dict)
+        file_util.save_json(self.save_location, save_dict)
         super(PreviewPython_UI, self).closeEvent(event)
 
 
