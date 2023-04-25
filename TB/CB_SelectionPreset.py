@@ -218,8 +218,11 @@ class TreeModel(QAbstractItemModel):
 
 		if in_toonboom:
 			# self.dir_for_icons =  os.path.dirname(os.path.dirname(os.path.realpath(__file__))).replace(os.sep,"/") + "/icon/" #CC.get_folder_icon_path()
-			self.dir_for_icons = "%s/icon/" % os.environ["BOM_PIPE_PATH"]
-			# log(self.dir_for_icons)
+			if os.environ.get("BOM_PIPE_PATH"):
+				self.dir_for_icons = "%s/icon/" % os.environ["BOM_PIPE_PATH"]
+			else:
+				self.dir_for_icons = "%s/Toon Boom Animation/Toon Boom Harmony Premium/2200-scripts/icon/" % os.path.expandvars("APPDATA")
+
 		else:
 			self.dir_for_icons = os.path.realpath(__file__).split("TB")[0].replace(os.sep,"/") + "/icon/"  # CC.get_folder_icon_path()
 		# log(self.dir_for_icons)
@@ -643,8 +646,9 @@ class FrontController(QObject):
 			for a in self.getAllAtributes(n.attributes):
 				if a.column:
 					c = a.column
-					if c.keyframe_exists(current_frame):
-						c.keyframe_remove(current_frame)
+					if not c.type == "DRAWING":
+						if c.keyframe_exists(current_frame):
+							c.keyframe_remove(current_frame)
 	# 	Check nodes + columns in selection
 	def addKeyOnSelection(self):
 		# current_frame = self.scene.selection.frame_start
@@ -654,8 +658,9 @@ class FrontController(QObject):
 			for a in self.getAllAtributes(n.attributes):
 				if a.column:
 					c = a.column
-					if not c.keyframe_exists(current_frame):
-						c.keyframe_create(current_frame)
+					if not c.type =="DRAWING":
+						if not c.keyframe_exists(current_frame):
+							c.keyframe_create(current_frame)
 
 	# 	Check nodes + columns in selection
 	def getAllAtributes(self, attr_list):

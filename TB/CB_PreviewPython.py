@@ -7,15 +7,23 @@ from PySide6.QtGui import *
 
 import os
 import ffmpeg
+import json
 
 try:
 	from ToonBoom import harmony
 	in_toonboom = True
 except Exception as e:
 	in_toonboom = False
+
+def log(message):
+	if in_toonboom:
+		sess = harmony.session()
+		sess.log(str(message))
+	else:
+		print(message)
+
 import sys
 
-os.environ["BOM_PIPE_PATH"] = os.path.abspath(os.path.dirname(os.path.dirname(os.path.realpath(__file__))))
 if os.environ.get("BOM_PIPE_PATH"):
     sys.path.append(os.environ["BOM_PIPE_PATH"])
     from getConfig import getConfigClass
@@ -24,7 +32,9 @@ if os.environ.get("BOM_PIPE_PATH"):
     import Preview.ffmpeg_util as ffmpeg_util
     use_config = True
 else:
-    sys.path.append(os.path.abspath(os.path.dirname(os.path.realpath(__file__)))) #Same dir as this script
+    script_path = os.path.expandvars("%APPDATA%/Toon Boom Animation/Toon Boom Harmony Premium/2200-scripts/")
+    log(script_path)
+    sys.path.append(script_path) #Same dir as this script
     # sys.path.append(os.environ)
     import ffmpeg_util
     use_config = False
@@ -35,14 +45,15 @@ class PreviewPython_UI(QDialog):
         self.setWindowTitle("Preview")
         self.setObjectName("Preview")
         self.setWindowFlags(self.windowFlags()|Qt.Window|Qt.WindowStaysOnTopHint)
-        self.node_list = []
+        self.save_location = "C:/Temp/TB/PythonPreview.json"
+        if not os.path.exists(os.path.dirname(self.save_location)):
+            os.makedirs(os.path.dirname(self.save_location))
         self.width = 1280
         self.height = 720
-        self.findSceneInfo()
 
         self.create_ui()
-        if use_config:
-            self.config_info()
+
+        self.checkAndApplySettings()
 
         self.show()
     def projectChanged(self):
@@ -63,12 +74,14 @@ class PreviewPython_UI(QDialog):
         for k in CC.users:
             all_users.extend(CC.users[k])
         all_users = sorted(list(set(all_users)))
+
         project_list = []
         for con in os.listdir(f"{os.environ['BOM_PIPE_PATH']}/Configs"):
             if "Config_" in con and not ".pyc" in con:
                 project_list.append(con.split("Config_")[-1].split(".")[0])
         self.p_dd.addItems(project_list)
         self.u_dd.addItems(all_users)
+
         self.p_dd.setCurrentText(CC.project_name)
 
 
@@ -82,7 +95,9 @@ class PreviewPython_UI(QDialog):
 
         self.p_dd = QComboBox()
         self.p_edit = QLineEdit()
-        self.p_lay.addWidget(QLabel("Project: "))
+        self.p_label = QLabel("Project: ")
+        self.p_label.setFixedWidth(45)
+        self.p_lay.addWidget(self.p_label)
         self.p_lay.addWidget(self.p_dd)
         self.p_lay.addWidget(self.p_edit)
 
@@ -90,7 +105,9 @@ class PreviewPython_UI(QDialog):
 
         self.u_dd = QComboBox()
         self.u_edit = QLineEdit()
-        self.u_lay.addWidget(QLabel("User: "))
+        self.u_label = QLabel("User: ")
+        self.u_label.setFixedWidth(45)
+        self.u_lay.addWidget(self.u_label)
         self.u_lay.addWidget(self.u_dd)
         self.u_lay.addWidget(self.u_edit)
 
@@ -122,6 +139,44 @@ class PreviewPython_UI(QDialog):
         self.u_dd.currentTextChanged.connect(self.userChanged)
         self.crop_check.stateChanged.connect(self.crop_toggle)
 
+    def checkAndApplySettings(self):
+        if use_config:
+            self.config_info()
+        load_dict = self.loadJson(self.save_location)
+        if load_dict:
+            self.slate_check.setChecked(load_dict["slate_check"])
+            if self.u_dd.findText(load_dict["user"])>-1:
+                self.u_dd.setCurrentText(load_dict["user"])
+            self.u_edit.setText(load_dict["user"])
+            self.blocking_check.setChecked(load_dict["blocking_check"])
+            self.render_check.setChecked(load_dict["render_check"])
+        if use_config:
+            if os.environ.get("BOM_USER"):
+                self.u_edit.setText(os.environ["BOM_USER"])
+
+
+    def loadJson(self,load_file):
+        if os.path.isfile(load_file):
+            with open(load_file, 'r') as cur_file:
+                return json.load(cur_file)
+        else:
+            return {}
+
+    def saveJson(self, save_location, save_info):
+        with open(save_location, 'w+') as saveFile:
+            json.dump(save_info, saveFile)
+        saveFile.close()
+
+    def closeEvent(self,event):
+
+        save_dict = {"slate_check":self.slate_check.isChecked(),
+                     "user":self.u_edit.text(),
+                     "blocking_check":self.blocking_check.isChecked(),
+                     "render_check":self.render_check.isChecked()}
+        self.saveJson(self.save_location,save_dict)
+        super(PreviewPython_UI, self).closeEvent(event)
+
+
     def findSceneInfo(self):
         sess = harmony.session()  # Fetch the currently active session of Harmony
         project = sess.project  # The project that is already loaded.
@@ -130,9 +185,9 @@ class PreviewPython_UI(QDialog):
         self.preview_name = self.scene_name
         self.preview_path = "%s/_Preview/" % scene_dir.split(self.scene_name)[0]
 
-        # if self.blocking_check.isChecked():
-        #     self.preview_path = "%s/Blocking/" % self.preview_path
-        #     self.preview_name = "%s_Blocking" % self.preview_name
+        if self.blocking_check.isChecked():
+            self.preview_path = "%s/Blocking/" % self.preview_path
+            self.preview_name = "%s_Blocking" % self.preview_name
         if not os.path.exists(self.preview_path):
             os.makedirs(self.preview_path)
         self.temp_path = "C:/Temp/temp_previews/%s_Temp.mov" % self.scene_name
@@ -145,34 +200,53 @@ class PreviewPython_UI(QDialog):
 
 
     def create_preview(self):
+        self.findSceneInfo()
         self.render_height = float(self.crop_edit.text())*self.height
         self.render_width = float(self.crop_edit.text()) * self.width
-        # self.findSceneInfo()
+
+
         if self.render_check.isChecked():
             js_exporter.exportToQuicktime("", -1, -1, True, self.render_width, self.render_height, self.temp_path, "", False,1)
         else:
             js_exporter.exportOGLToQuicktime(self.preview_name + "_Temp", "C:/Temp/temp_previews/", -1, -1,
                                              self.render_width, self.render_height)
-        log("HEY??")
-        if not use_config:
-            # TODO Please input pipeline slate stuff here.
-            log("WENT HERE?")
-            pass
+        if use_config:
+            log("Pipeline slate")
+            use_audio = False
+            if self.sound_file:
+                use_audio =True
+            PA.createPreview_2D(self.scene_name,
+                                inputPath=self.temp_path,
+                                outputPath=self.preview_final,
+                                audioPath=self.sound_file,
+                                crop=self.crop_check.isChecked(),
+                                cropWidth=self.width,
+                                cropHeight=self.height,
+                                title=self.scene_name,
+                                frameCount=True,
+                                timecode=True,
+                                date=True,
+                                useAudioFile=use_audio,
+                                runCmd=True,
+                                build_slate=self.slate_check.isChecked(),
+                                user=self.u_edit.text())
+
         else:
-            log("CREATING SLATE")
+            log("CREATING REMOTE SLATE")
             self.create_preview_locally_func(input_path=self.temp_path,
                                              output_path=self.preview_final,
                                              title=self.preview_name,
                                              slate=self.slate_check.isChecked(),
                                              crop=self.crop_check.isChecked(),
-                                             crop_w=int(self.render_width),
-                                             crop_h=int(self.render_height),
+                                             crop_w=int(self.width),
+                                             crop_h=int(self.height),
                                              audio=self.sound_file,
                                              user=self.u_edit.text())
+        log("Finished")
+        os.startfile(self.preview_final)
 
 
     def create_preview_locally_func(self,input_path="", output_path="", title=None, slate=True,crop=False,crop_w=1920,crop_h=1080,audio=None,user=None):
-    # def createPreview_2D(shot, inputPath='', output_path='', audioPath='', crop=False, cropWidth=1920, cropHeight=1080, title=True, frameCount=True, timecode=False, date=True, useAudioFile=False, runCmd=True,build_slate=True,user=None):
 
         stream = ffmpeg.input(input_path).video
 
@@ -210,9 +284,9 @@ class PreviewPython_UI(QDialog):
 
         return _string
 
-    def create_crop_locally(self,stream, width=1920, height=1080,factor=1.1):
-        x = ((width*factor) - width) / 2
-        y = ((height*factor) - height) / 2
+    def create_crop_locally(self,stream, width=1920, height=1080):
+        x = (self.render_width - width) / 2
+        y = (self.render_height - height) / 2
         log("CROPPING")
         return ffmpeg.filter(stream, "crop", w=width, h=height, x=str(x), y=str(y))
 
@@ -239,41 +313,8 @@ class PreviewPython_UI(QDialog):
             video = ffmpeg.drawtext(video, text=timestamp, fontfile=font, x='w-(text_w+20)', y='h-(text_h+20)',
                                     fontsize='24', fontcolor='white', shadowcolor='black', shadowx=2, shadowy=2)
         return video
-    #
-    # def needAudioCheck(self,video_path=None, audio_path=None):
-    #     video = self.probeDuration(video_path, codec_type="video")
-    #     audio = self.probeDuration(audio_path, codec_type="audio")
-    #     print("Video: %s - Audio: %s for %s" % (video, audio, video_path))
-    #     if not audio:
-    #         return True
-    #     if video:
-    #         if not float(video) == float(audio):
-    #             return float(video) - float(audio)
-    #     return False
-    #
-    # def probeDuration(self,path, index=0, codec_type=None):
-    #     """
-    #     Checks the duration of the index in the given input path
-    #     :param path:
-    #     :return:
-    #     """
-    #     probe_streams = ffmpeg.probe(path)
-    #
-    #     to_return = probe_streams["streams"][index]["duration"]
-    #     if codec_type:
-    #         for i in probe_streams["streams"]:
-    #             if i["codec_type"] == codec_type:
-    #                 to_return = i["duration"]
-    #                 break
-    #     return to_return
 
 
-def log(message):
-	if in_toonboom:
-		sess = harmony.session()
-		sess.log(str(message))
-	else:
-		print(message)
 
 def run():
     global preview_ui
