@@ -24,6 +24,7 @@ def log(message):
 
 import sys
 
+os.environ["BOM_PIPE_PATH"] = "C:/Users/cg/PycharmProjects/cobopipe_v02-001/"
 if os.environ.get("BOM_PIPE_PATH"):
     sys.path.append(os.environ["BOM_PIPE_PATH"])
     from getConfig import getConfigClass
@@ -50,10 +51,13 @@ class PreviewPython_UI(QDialog):
             os.makedirs(os.path.dirname(self.save_location))
         self.width = 1280
         self.height = 720
-
+        self.sound_file = None
         self.create_ui()
-
         self.checkAndApplySettings()
+
+        self.findSceneInfo()
+        self.checkLength()
+
 
         self.show()
     def projectChanged(self):
@@ -94,6 +98,7 @@ class PreviewPython_UI(QDialog):
         self.p_lay = QHBoxLayout()
 
         self.p_dd = QComboBox()
+        self.p_dd.setFixedWidth(150)
         self.p_edit = QLineEdit()
         self.p_label = QLabel("Project: ")
         self.p_label.setFixedWidth(45)
@@ -104,6 +109,7 @@ class PreviewPython_UI(QDialog):
         self.u_lay = QHBoxLayout()
 
         self.u_dd = QComboBox()
+        self.u_dd.setFixedWidth(150)
         self.u_edit = QLineEdit()
         self.u_label = QLabel("User: ")
         self.u_label.setFixedWidth(45)
@@ -199,6 +205,9 @@ class PreviewPython_UI(QDialog):
             log("NO SOUND FILE FOUND")
 
 
+
+
+
     def create_preview(self):
         self.findSceneInfo()
         self.render_height = float(self.crop_edit.text())*self.height
@@ -244,6 +253,20 @@ class PreviewPython_UI(QDialog):
                                              user=self.u_edit.text())
         log("Finished")
         os.startfile(self.preview_final)
+
+    def checkLength(self):
+        sess = harmony.session()
+        project = sess.project
+        scene_length = project.scene.frame_count
+        if self.sound_file:
+            audio_length = ffmpeg_util.probeDuration(self.sound_file, codec_type="audio")
+            audio_frames = int(float(audio_length) * float(project.scene.framerate))
+            if scene_length !=audio_frames:
+                log("ISSUE!: not the same length!")
+                log("%s -> %s" % (audio_frames,scene_length))
+
+        else:
+            log("Can't find any audio file to compare to")
 
 
     def create_preview_locally_func(self,input_path="", output_path="", title=None, slate=True,crop=False,crop_w=1920,crop_h=1080,audio=None,user=None):
