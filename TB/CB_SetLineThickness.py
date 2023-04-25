@@ -3,9 +3,6 @@ from PySide6.QtWidgets import *
 from PySide6.QtCore import *
 from PySide6.QtGui import *
 
-import os
-import json
-
 try:
     from ToonBoom import harmony
     in_toonboom = True

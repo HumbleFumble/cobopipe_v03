@@ -7,7 +7,7 @@ CC = getConfigClass()
 
 from KiwiStrit3.transferAsset import transferAssetClass
 TA = transferAssetClass()
-import json
+# import json
 import os
 
 
@@ -528,20 +528,20 @@ class MainWindow(QtWidgets.QWidget):
 def openFolder(folder_path):
     os.startfile(folder_path)
 
-def SaveSettings(save_location, save_info):
-    with open(save_location, 'w+') as saveFile:
-        json.dump(obj=save_info, fp=saveFile,indent=4, sort_keys=True)
-    saveFile.close()
+# def SaveSettings(save_location, save_info):
+#     with open(save_location, 'w+') as saveFile:
+#         json.dump(obj=save_info, fp=saveFile,indent=4, sort_keys=True)
+#     saveFile.close()
 
-def LoadSettings(save_location):
-    if os.path.isfile(save_location):
-        with open(save_location, 'r') as saveFile:
-            loadedSettings = json.load(saveFile)
-        if loadedSettings:
-            return loadedSettings
-    else:
-        print("not a file")
-    return None
+# def LoadSettings(save_location):
+#     if os.path.isfile(save_location):
+#         with open(save_location, 'r') as saveFile:
+#             loadedSettings = json.load(saveFile)
+#         if loadedSettings:
+#             return loadedSettings
+#     else:
+#         print("not a file")
+#     return None
 
 
 

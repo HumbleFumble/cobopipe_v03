@@ -5,7 +5,6 @@ CC_Old = ConfigClass_KiwiStrit2.ConfigClass()
 
 import transferAsset
 TA = transferAsset.transferAssetClass()
-import json
 import os
 
 #TODO Put in add button for aim(episodes/sequence/shot) and right click functions for adding rules and targets
@@ -471,22 +470,6 @@ class MainWindow(QtWidgets.QWidget):
 
 
         return QtWidgets.QWidget.eventFilter(self, source, event)
-
-
-def SaveSettings(save_location, save_info):
-    with open(save_location, 'w+') as saveFile:
-        json.dump(obj=save_info, fp=saveFile,indent=4, sort_keys=True)
-    saveFile.close()
-
-def LoadSettings(save_location):
-    if os.path.isfile(save_location):
-        with open(save_location, 'r') as saveFile:
-            loadedSettings = json.load(saveFile)
-        if loadedSettings:
-            return loadedSettings
-    else:
-        print("not a file")
-    return None
 
 
 

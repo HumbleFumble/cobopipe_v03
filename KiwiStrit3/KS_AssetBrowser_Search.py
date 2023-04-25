@@ -37,7 +37,8 @@ except:
 	import UtilFunctions as UF
 
 from functools import partial
-import json
+# import json
+import file_util
 import ConfigUtil as cfg_util
 import AssetFunctions as AF
 
@@ -131,7 +132,8 @@ class MainWindow(QtWidgets.QWidget):
 		self.custom_nodes = []
 
 		print("before nodes found: {:.4f}s".format(time.time() - check_time_start))
-		self.all_node_list = self.LoadSettings(self.node_dict_path) #check and load it, if we have a saved json of our nodes
+		# self.all_node_list = self.LoadSettings(self.node_dict_path) #check and load it, if we have a saved json of our nodes
+		self.all_node_list = file_util.load_json(self.node_dict_path) #check and load it, if we have a saved json of our nodes
 		if not self.all_node_list:
 			self.all_node_list = []
 			self.populate() #Go through our asset folder and gather node info into a list

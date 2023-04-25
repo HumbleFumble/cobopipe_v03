@@ -10,21 +10,14 @@ from Log.CoboLoggers import getLogger
 
 logger = getLogger()
 
-import json
-
-
-def loadSettings(load_file):
-    if os.path.isfile(load_file):
-        with open(load_file, 'r') as cur_file:
-            return json.load(cur_file)
-    else:
-        return {}
+import file_util
 
 
 class JsonConfigUtilClass():
     def __init__(self, base_config=None):
         self.json_file = base_config
-        self.base_config = loadSettings(base_config)
+        # self.base_config = loadSettings(base_config)
+        self.base_config = file_util.load_json(base_config)
         self.class_file = "%s/ConfigClasses/ConfigClass_%s.py" % (os.path.dirname(os.path.realpath(__file__)), self.base_config["project_name"])
         # self.checkForClassFile()
 
@@ -282,16 +275,10 @@ class JsonConfigUtilClass():
             return cur_string
 
     def loadSettings(self, load_file):
-        if os.path.isfile(load_file):
-            with open(load_file, 'r') as cur_file:
-                return json.load(cur_file)
-        else:
-            return {}
+        return file_util.load_json(load_file)
 
     def saveSettings(self, save_location, save_content):
-        with open(save_location, 'w+') as saveFile:
-            json.dump(obj=save_content, fp=saveFile,indent=4, sort_keys=True)
-        saveFile.close()
+        file_util.save_json(save_location, save_content)
 
 if __name__ == "__main__":
     # import Configs.Config_MiasMagic2 as cfg

@@ -1,7 +1,7 @@
 from PySide2 import QtWidgets, QtCore, QtGui
 import os
 import sys
-from Maya_Functions.file_util_functions import saveJson, loadJson
+import file_util
 
 
 class ProjectDialog(QtWidgets.QDialog):
@@ -65,7 +65,7 @@ class ProjectDialog(QtWidgets.QDialog):
                 if item not in self.archivedProjects:
                     self.activeProjects.append(item)
             self.config_combo.addItems(self.activeProjects)
-        last_picked = loadJson(self.user_config_data_path)
+        last_picked = file_util.load_json(self.user_config_data_path)
         if last_picked:
             if "last_picked" in last_picked.keys():
                 self.config_combo.setCurrentText(last_picked["last_picked"])
@@ -73,7 +73,7 @@ class ProjectDialog(QtWidgets.QDialog):
 
     def applyClicked(self):
         self.return_value = self.config_combo.currentText()
-        saveJson(self.user_config_data_path,{"last_picked":self.return_value})
+        file_util.save_json(self.user_config_data_path,{"last_picked":self.return_value})
         self.accept()
 
 

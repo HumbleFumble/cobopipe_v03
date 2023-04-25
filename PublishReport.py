@@ -2,7 +2,7 @@ import os
 from datetime import datetime
 from getConfig import getConfigClass
 from Log.CoboLoggers import getLogger
-from Maya_Functions.file_util_functions import saveJson, makeFolder, loadJson
+import file_util
 
 CC = getConfigClass()
 logger = getLogger()
@@ -356,7 +356,7 @@ class PublishReport():
 
         def fetchJSON(self):
             logger.debug('Loading JSON data of PublishReport.Node: ' + self.identity)
-            jsonData = loadJson(save_location=self.path)
+            jsonData = file_util.load_json(save_location=self.path)
             if self.data != jsonData:
                 self.data = jsonData
                 return True

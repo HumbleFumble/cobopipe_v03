@@ -19,8 +19,8 @@ try:
     from PySide2 import QtWidgets, QtCore, QtGui
     import maya.app.renderSetup.views.renderSetupPreferences as prefs
     from maya import OpenMaya as om
+    import Maya_Functions.file_util_functions as fileUtil
     import Maya_Functions.vray_util_functions as vray_util
-    import Maya_Functions.file_util_functions as file_util
     import Maya_Functions.submit_to_deadline as deadline
     import cryptoAttributes
     import maya.app.renderSetup.model.aovs as arnold_aovs
@@ -48,13 +48,14 @@ if in_maya:
 # import ProjectConfig as cfg
 # import ConfigUtil as cfg_util
 
-import json
+# import json
 import os
 import getpass
 from shutil import copyfile
 import subprocess
 import re
 import users
+import file_util
 
 # Get renderer
 if "maya_render" in CC.project_settings.keys():
@@ -95,8 +96,10 @@ class MainWindow(QtWidgets.QWidget):
         self.preset_config = {}
         self.default_values = {}
         self.rf = RenderSubmitFunctions(self)
-        self.preset_config = self.LoadSettings(self.preset_config_file)
-        self.user_dict = self.LoadSettings(self.user_save_file)
+        # self.preset_config = self.LoadSettings(self.preset_config_file)
+        self.preset_config = file_util.load_json(self.preset_config_file)
+        # self.user_dict = self.LoadSettings(self.user_save_file)
+        self.user_dict = self.load_json(self.user_save_file)
         # self.signals = Signals.Signals()
         self.thread_pool = ThreadPool.ThreadPool()
         # self.thread_pool.signals.result.connect(self.printThreadResult)
@@ -656,6 +659,7 @@ class MainWindow(QtWidgets.QWidget):
         self.preset_config.pop(cur_key, None)
         self.preset_dd.removeItem(self.preset_dd.currentIndex())
         self.SaveSettings()
+        
 
     def SaveUser(self):
         cur_user = self.user_dd.currentText()
@@ -665,9 +669,13 @@ class MainWindow(QtWidgets.QWidget):
         if not os.path.exists(os.path.split(self.user_save_file)[0]):
 
             os.mkdir(os.path.split(self.user_save_file)[0])
-        with open(self.user_save_file, 'w+') as saveFile:
-            json.dump(user_save_dict, saveFile)
-        saveFile.close()
+
+        # with open(self.user_save_file, 'w+') as saveFile:
+        #     json.dump(user_save_dict, saveFile)
+        # saveFile.close()
+        
+        file_util.save_json(self.user_save_file, user_save_dict)
+
 
     def add_user_popup(self):
         self.addUserPopup = users.add_user_ui(parent=self)
@@ -886,19 +894,21 @@ class MainWindow(QtWidgets.QWidget):
         return settings_dict
 
     def SaveSettings(self):
-        with open(self.preset_config_file, 'w+') as saveFile:
-            json.dump(self.preset_config, saveFile)
-        saveFile.close()
+        # with open(self.preset_config_file, 'w+') as saveFile:
+        #     json.dump(self.preset_config, saveFile)
+        # saveFile.close()
 
-    def LoadSettings(self, load_file):
-        logger.debug("Loading Settings from %s" % load_file)
-        if os.path.isfile(load_file):
-            with open(load_file, 'r') as cur_file:
-                return json.load(cur_file)
-        # self.preset_config = json.load(saveFile)
-        else:
-            logger.error("Can't find %s file" % load_file)
-            return {}
+        file_util.save_json(self.preset_config_file, self.preset_config)
+
+    # def LoadSettings(self, load_file):
+    #     logger.debug("Loading Settings from %s" % load_file)
+    #     if os.path.isfile(load_file):
+    #         with open(load_file, 'r') as cur_file:
+    #             return json.load(cur_file)
+    #     # self.preset_config = json.load(saveFile)
+    #     else:
+    #         logger.error("Can't find %s file" % load_file)
+    #         return {}
 
     # CALLS TO FUNCTIONS
     def ApplyPresetCall(self):
@@ -918,10 +928,10 @@ class MainWindow(QtWidgets.QWidget):
             self.rf.loadUnloadedChildren() #load unloaded child refs from anim-ref.
             
             if render_type == 'vray':
-                settings = file_util.loadJson(CC.get_render_presets() + self.render_settings_dd.currentText())
+                settings = file_util.load_json(CC.get_render_presets() + self.render_settings_dd.currentText())
                 vray_util.applyRenderSettings(settings)
             elif render_type == 'arnold':
-                settings = file_util.loadJson(CC.get_render_presets() + self.render_settings_dd.currentText())
+                settings = file_util.load_json(CC.get_render_presets() + self.render_settings_dd.currentText())
                 arnold_renderSettings.decode(settings)
                 
 
@@ -1101,8 +1111,8 @@ class MainWindow(QtWidgets.QWidget):
         #self.rf.saveCmdInFile(clear=True)
         self.total = -1
         self.current_count = 0
-        import Maya_Functions.file_util_functions as file_util
-        self.submit_call_id = file_util.generateID()
+        import Maya_Functions.file_util_functions as fileUtil
+        self.submit_call_id = fileUtil.generateID()
 
         for shot in self.shot_list.selectedItems():
             self.SetShotFromList(shot)
@@ -1188,13 +1198,13 @@ class MainWindow(QtWidgets.QWidget):
 
 
     def submitCmdsFromFile(self):
-        import Maya_Functions.file_util_functions as file_util
+        import Maya_Functions.file_util_functions as fileUtil
 
         folder = "C:/Temp/{project_name}/RenderSubmit/{submitCallID}".format(project_name=CC.project_name, submitCallID=self.submit_call_id) #{shotName}___{submitCallID}".format(project_name=CC.project_name,shotName=shotName,submitCallID=submitCallID)
         if os.path.exists(folder):
             for file in os.listdir(folder):
                 filePath = os.path.join(folder, file).replace(os.sep, '/')
-                cmd = file_util.loadJson(filePath)
+                cmd = file_util.load_json(filePath)
                 if cmd:
                     if cmd.startswith('"' + os.path.abspath(os.path.join(os.environ["RR_Root"], 'bin/win64/rrSubmitterconsole.exe')).replace(os.sep, '/').replace('//', os.sep + os.sep) + '"'):
                         self.rf.runRoyalRenderCmd(cmd)
@@ -1544,8 +1554,9 @@ class RenderSubmitFunctions():
         if not aov_file == "None":
             if os.path.exists(aov_file):
                 print("Found it! %s" % aov_file)
-            with open(aov_file, 'r') as aov_file:
-                aovs = json.load(aov_file)
+            # with open(aov_file, 'r') as aov_file:
+            #     aovs = json.load(aov_file)
+            aovs = file_util.load_json(aov_file)
 
             self.CreateRenderElement(aovs["vray"]["renderElements"])
             vray_util.generateOIDandMID()
@@ -1554,7 +1565,7 @@ class RenderSubmitFunctions():
     def ImportAOVsArnold(self, aov_file):
         aovs = cmds.ls(type="aiAOV")
         cmds.delete(aovs)
-        data = file_util.loadJson(aov_file)
+        data = file_util.load_json(aov_file)
         for key in ('drivers', 'filters'):
             data['arnold'][key] = []
         arnold_aovs.decode(data, 0)
@@ -1801,11 +1812,11 @@ class RenderSubmitFunctions():
     maya.standalone.initialize('python')
     import maya.cmds as cmds
     import Maya_Functions.delete_and_clean_up_functions as del_util
-    import Maya_Functions.file_util_functions as file_util
+    import Maya_Functions.file_util_functions as fileUtil
     import Maya_Functions.vray_util_functions as vray_util
     cmds.file('{render_file}', open=True, f=True)
     del_util.DeleteUnknown()
-    file_util.PrepareForSave('{crypto_render_scene}', ma=True)
+    fileUtil.PrepareForSave('{crypto_render_scene}', ma=True)
     vray_util.createCryptomatteScene()
     cmds.setAttr('vraySettings.fileNamePrefix', '{render_output_path}', type='string')
     cmds.setAttr('vraySettings.imgOpt_exr_multiPart', 0)
@@ -1834,10 +1845,10 @@ class RenderSubmitFunctions():
         logger.debug('render_file: ' + str(render_file))
         logger.debug('render_output_path: ' + str(render_output_path))
         import Maya_Functions.delete_and_clean_up_functions as del_util
-        import Maya_Functions.file_util_functions as file_util
+        import Maya_Functions.file_util_functions as fileUtil
         import Maya_Functions.vray_util_functions as vray_util
         del_util.DeleteUnknown()
-        file_util.PrepareForSave(crypto_render_scene, ma=True)
+        fileUtil.PrepareForSave(crypto_render_scene, ma=True)
         vray_util.createCryptomatteScene()
         cmds.setAttr('vraySettings.fileNamePrefix', render_output_path, type='string')
         cmds.setAttr('vraySettings.imgOpt_exr_multiPart', 0)
@@ -1886,13 +1897,13 @@ class RenderSubmitFunctions():
         :return:
         """
         import Maya_Functions.delete_and_clean_up_functions as del_util
-        import Maya_Functions.file_util_functions as file_util
+        import Maya_Functions.file_util_functions as fileUtil
         import Maya_Functions.ref_util_functions as ref_util
         import Maya_Functions.publish_util_functions as publish_util
         import Maya_Functions.general_util_functions as general_util
         logger.info("Running SaveRenderFile: %s" %(render_file))
         del_util.DeleteUnknown()
-        file_util.PrepareForSave(render_file, ma=True)
+        fileUtil.PrepareForSave(render_file, ma=True)
         ref_util.ImportRefs()
         del_util.DeleteDisplayLayers()
         if not render_layer:
@@ -2077,8 +2088,8 @@ class RenderSubmitFunctions():
 
     def saveCmdInFile(self,cmd=None,clear=False, submitCallID='00000', shotName='shotName', suffix='suffix'):
         import os
-        import Maya_Functions.file_util_functions as file_util
-        threadID = file_util.generateID()
+        import Maya_Functions.file_util_functions as fileUtil
+        threadID = fileUtil.generateID()
         cmd_file = "C:/Temp/{project_name}/RenderSubmit/{submitCallID}/{shotName}_{suffix}___{threadID}.json".format(project_name=CC.project_name,
                                                                                                                    submitCallID=submitCallID,
                                                                                                                    shotName=shotName,
@@ -2087,11 +2098,11 @@ class RenderSubmitFunctions():
         #cmd_file = "C:/Temp/{project_name}/{project_name}_SubmitCmds.txt".format(project_name=CC.project_name)
         cmd_folder = os.path.split(cmd_file)[0]
         if not os.path.exists(cmd_folder):
-            file_util.createDirectory(cmd_folder)
+            file_util.create_folder(cmd_folder)
         if clear and os.path.exists(cmd_file):
             os.remove(cmd_file)
         else:
-            file_util.saveJson(cmd_file, cmd)
+            file_util.save_json(cmd_file, cmd)
             #file_util.saveFile(save_location=cmd_file,save_info=cmd,overwrite=False)
 
 
