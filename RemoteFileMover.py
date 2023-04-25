@@ -1,7 +1,7 @@
 from PySide6 import QtWidgets, QtCore, QtGui
 import os
 import sys
-import json
+# import json
 import subprocess
 import file_util
 
@@ -197,13 +197,15 @@ class ReturnAnim(QtWidgets.QWidget):
         if not os.path.exists(self.settings_file_path):
             os.makedirs(os.path.dirname(self.settings_file_path))
             settings = {"user": None, "project": None}
-            saveJson(self.settings_file_path, settings)
+            # saveJson(self.settings_file_path, settings)
+            file_util.save_json(self.settings_file_path, settings)
         else:
             settings = file_util.load_json(self.settings_file_path)
         return settings.get("user"), settings.get("project")
 
     def set_settings(self, settings):
-        saveJson(self.settings_file_path, settings)
+        # saveJson(self.settings_file_path, settings)
+        file_util.save_json(self.settings_file_path, settings)
 
     def submit(self):
         if not self.user_input.text():
@@ -327,18 +329,18 @@ class Popup(QtWidgets.QDialog):
         self.setWindowFlags(flags)
 
 
-def saveJson(save_location, save_info):
-    with open(save_location, "w+") as saveFile:
-        json.dump(obj=save_info, fp=saveFile, indent=4, sort_keys=True)
+# def saveJson(save_location, save_info):
+#     with open(save_location, "w+") as saveFile:
+#         json.dump(obj=save_info, fp=saveFile, indent=4, sort_keys=True)
 
 
-def loadJson(save_location):
-    if os.path.isfile(save_location):
-        with open(save_location, "r") as saveFile:
-            loadedSettings = json.load(saveFile)
-        if loadedSettings:
-            return loadedSettings
-    return None
+# def loadJson(save_location):
+#     if os.path.isfile(save_location):
+#         with open(save_location, "r") as saveFile:
+#             loadedSettings = json.load(saveFile)
+#         if loadedSettings:
+#             return loadedSettings
+#     return None
 
 
 if __name__ == "__main__":

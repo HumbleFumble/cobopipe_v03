@@ -42,7 +42,8 @@ except:
 	in_maya = False
 
 from functools import partial
-import json
+# import json
+import file_util
 import AssetFunctions as AF
 import os
 import subprocess
@@ -1314,7 +1315,8 @@ class MainWindow(QtWidgets.QWidget):
 		# self.tree.setModel(self.tree_model)
 		self.chosen_node = self.tree_model._root
 		self.treeItemClicked()
-		self.SaveSettings(self.node_dict_path, self.all_node_list)
+		# self.SaveSettings(self.node_dict_path, self.all_node_list)
+		file_util.save_json(self.node_dict_path, self.all_node_list)
 
 
 	def populate(self):
@@ -1794,22 +1796,22 @@ cmds.file(save=True,f=True)
 		# duplicate_popup.deleteLater()
 		# return to_return
 
-	def SaveSettings(self, save_location, save_info):
-		with open(save_location, 'w+') as saveFile:
-			json.dump(save_info, saveFile)
-		saveFile.close()
+	# def SaveSettings(self, save_location, save_info):
+	# 	with open(save_location, 'w+') as saveFile:
+	# 		json.dump(save_info, saveFile)
+	# 	saveFile.close()
 
-	def LoadSettings(self, save_location):
+	# def LoadSettings(self, save_location):
 
-		if os.path.isfile(save_location):
-			with open(save_location, 'r') as saveFile:
-				loadedSettings = json.load(saveFile)
-			# if 'selected node' in loadedSettings.keys():
-			if loadedSettings:
-				return loadedSettings
-		else:
-			logger.warning("not a file")
-		return None
+	# 	if os.path.isfile(save_location):
+	# 		with open(save_location, 'r') as saveFile:
+	# 			loadedSettings = json.load(saveFile)
+	# 		# if 'selected node' in loadedSettings.keys():
+	# 		if loadedSettings:
+	# 			return loadedSettings
+	# 	else:
+	# 		logger.warning("not a file")
+	# 	return None
 
 	def closeEvent(self, event):
 		# self.user_data['username'] = self.user_name
@@ -1821,7 +1823,8 @@ cmds.file(save=True,f=True)
 		#Check for folder before saving:
 		if not os.path.exists(os.path.split(self.node_dict_path)[0]):
 			os.mkdir(os.path.split(self.node_dict_path)[0])
-		self.SaveSettings(self.node_dict_path, self.all_node_list)  # Save nodes
+		# self.SaveSettings(self.node_dict_path, self.all_node_list)  # Save nodes
+		file_util.save_json(self.node_dict_path, self.all_node_list)
 		QtGui.QPixmapCache.clear()
 		super(MainWindow, self).closeEvent(event)
 

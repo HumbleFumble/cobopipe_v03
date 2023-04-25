@@ -18,7 +18,8 @@ logger = getLogger()
 
 
 from shutil import copy as shutil_copyfile
-import json
+# import json
+import file_util
 import os
 
 
@@ -132,7 +133,8 @@ class MainWindow(QtWidgets.QWidget):
         self.all_nodes = []
         self.category_dict = self.__getCategoryDict()
 
-        old_node_dict = self.LoadSettings(self.save_path_cameras)
+        # old_node_dict = self.LoadSettings(self.save_path_cameras)
+        old_node_dict = file_util.load_json(self.save_path_cameras)
 
         if old_node_dict:
             for n in old_node_dict.keys():
@@ -247,10 +249,12 @@ class MainWindow(QtWidgets.QWidget):
         self.cat_combo.setCurrentText("All")
 
     def __getCategoryDict(self):
-        return self.LoadSettings(self.save_path_categories)
+        # return self.LoadSettings(self.save_path_categories)
+        return file_util.load_json(self.save_path_categories)
 
     def __populate_CatCombo(self):
-        self.uiUtils.populateCombobox(combobox=self.cat_combo, items=self.LoadSettings(self.save_path_categories), aux=["All"])
+        # self.uiUtils.populateCombobox(combobox=self.cat_combo, items=self.LoadSettings(self.save_path_categories), aux=["All"])
+        self.uiUtils.populateCombobox(combobox=self.cat_combo, items=file_util.load_json(self.save_path_categories), aux=["All"])
 
     def eventFilter(self, source, event):
         if not (event):
@@ -365,7 +369,8 @@ class MainWindow(QtWidgets.QWidget):
         #delete key in dict
         temp_dict = self.UpdateJsonDict(self.save_path_cameras)
         temp_dict.pop(cur_node.GetName())
-        self.SaveSettings(self.save_path_cameras, temp_dict)
+        # self.SaveSettings(self.save_path_cameras, temp_dict)
+        file_util.save_json(self.save_path_cameras, temp_dict)
         self.all_nodes.remove(cur_node)
         self.UpdateThumbView(self.cat_combo.currentText())
         #save dict
@@ -374,7 +379,8 @@ class MainWindow(QtWidgets.QWidget):
         if not os.path.exists(os.path.split(self.save_path_cameras)[0]):
             os.mkdir(os.path.split(self.save_path_cameras)[0])
         # Save all nodes to json file.
-        self.SaveSettings(self.save_path_cameras, self.UpdateJsonDict(self.save_path_cameras))  # Save nodes
+        # self.SaveSettings(self.save_path_cameras, self.UpdateJsonDict(self.save_path_cameras))  # Save nodes
+        file_util.save_json(self.save_path_cameras, self.UpdateJsonDict(self.save_path_cameras)))
         QtGui.QPixmapCache.clear()
         super(MainWindow, self).closeEvent(event)
 
@@ -417,7 +423,8 @@ class MainWindow(QtWidgets.QWidget):
             return
 
         # Get contents of JSON as Dict Example: {"Forest":[node_name, node_name2]}
-        old_info = self.LoadSettings(save_location=self.save_path_categories)
+        # old_info = self.LoadSettings(save_location=self.save_path_categories)
+        old_info = file_util.load_json(self.save_path_categories)
 
         # if LoadSettings return None, Make empty dictionary
         if not old_info:
@@ -436,7 +443,8 @@ class MainWindow(QtWidgets.QWidget):
 
         # Save result to JSON
         logger.debug("Updated Dict: %s" % result)
-        self.SaveSettings(save_location=self.save_path_categories, save_info=result)
+        # self.SaveSettings(save_location=self.save_path_categories, save_info=result)
+        file_util.save_json(self.save_path_categories, result)
         self.category_dict = result
 
         # Update combobox
@@ -449,12 +457,14 @@ class MainWindow(QtWidgets.QWidget):
         current_category = self.cat_combo.currentText()
         if confirmPopup(self, title="Delete Category??", label="This will delete the Category: %s\nDo you want to continue?\nPS: It does not delete the light-exports, only the way of sorting" % current_category):
             # Get dictionary and remove (pop) the category key within
-            cat_dict = self.LoadSettings(self.save_path_categories)
+            # cat_dict = self.LoadSettings(self.save_path_categories)
+            cat_dict = file_util.load_json(self.save_path_categories)
             cat_dict.pop(current_category)
 
             # Save result to JSON
             logger.debug("Updated Dict: %s" % cat_dict)
-            self.SaveSettings(save_location=self.save_path_categories, save_info=cat_dict)
+            # self.SaveSettings(save_location=self.save_path_categories, save_info=cat_dict)
+            file_util.save_json(self.save_path_categories, cat_dict)
             self.category_dict = cat_dict
 
             # Update combobox
@@ -473,7 +483,8 @@ class MainWindow(QtWidgets.QWidget):
         if not category:
             category=self.cat_combo.currentText()
         # Get contents of JSON as Dict Example: {"Forest":[node_name, node_name2]}
-        old_info = self.LoadSettings(save_location=self.save_path_categories)
+        # old_info = self.LoadSettings(save_location=self.save_path_categories)
+        old_info = file_util.load_json(self.save_path_categories)
 
         # if LoadSettings return None, Make empty dictionary
         if not old_info:
@@ -506,7 +517,8 @@ class MainWindow(QtWidgets.QWidget):
 
         # Save result to JSON
         logger.debug("Updated Dict: %s" % result)
-        self.SaveSettings(save_location=self.save_path_categories, save_info=result)
+        # self.SaveSettings(save_location=self.save_path_categories, save_info=result)
+        file_util.save_json(self.save_path_categories, result)
         self.category_dict = result
 
         # Update combobox
@@ -520,7 +532,8 @@ class MainWindow(QtWidgets.QWidget):
         if current_category == "All":
             return
         # Get contents of JSON as Dict
-        old_info = self.LoadSettings(save_location=self.save_path_categories)
+        # old_info = self.LoadSettings(save_location=self.save_path_categories)
+        old_info = file_util.load_json(self.save_path_categories)
         if not old_info:
             old_info = {}
         result = old_info.copy() #Take copy of current category dict
@@ -536,7 +549,8 @@ class MainWindow(QtWidgets.QWidget):
             result[current_category] = list(set(result[current_category]) - set(selection))
 
         # Save result to JSON
-        self.SaveSettings(save_location=self.save_path_categories, save_info=result)
+        # self.SaveSettings(save_location=self.save_path_categories, save_info=result)
+        file_util.save_json(self.save_path_categories, result)
         self.category_dict = result
 
         # Update combobox
@@ -610,7 +624,8 @@ class MainWindow(QtWidgets.QWidget):
         if not current_dict:
             current_dict = self.GetDictFromCurrentNodes()
 
-        new_dict = self.LoadSettings(save_path)
+        # new_dict = self.LoadSettings(save_path)
+        new_dict = file_util.load_json(save_path)
         if new_dict:
             new_dict.update(current_dict)
             return new_dict
@@ -641,21 +656,21 @@ class MainWindow(QtWidgets.QWidget):
                 c_pix = convertPathToPixmap(thumb_path, 160, 90, added_name="", overwrite=True)
 
 
-    def SaveSettings(self, save_location, save_info):
-        with open(save_location, 'w+') as saveFile:
-            json.dump(save_info, saveFile)
-        saveFile.close()
+    # def SaveSettings(self, save_location, save_info):
+    #     with open(save_location, 'w+') as saveFile:
+    #         json.dump(save_info, saveFile)
+    #     saveFile.close()
 
-    def LoadSettings(self, save_location):
-        if os.path.isfile(save_location):
-            with open(save_location, 'r') as saveFile:
-                loadedSettings = json.load(saveFile)
-            # if 'selected node' in loadedSettings.keys():
-            if loadedSettings:
-                return loadedSettings
-        else:
-            logger.debug("not a file")
-        return None
+    # def LoadSettings(self, save_location):
+    #     if os.path.isfile(save_location):
+    #         with open(save_location, 'r') as saveFile:
+    #             loadedSettings = json.load(saveFile)
+    #         # if 'selected node' in loadedSettings.keys():
+    #         if loadedSettings:
+    #             return loadedSettings
+    #     else:
+    #         logger.debug("not a file")
+    #     return None
 
 
 class ThumbModel(QtCore.QAbstractListModel): #Quick Selection mode on type/category selection

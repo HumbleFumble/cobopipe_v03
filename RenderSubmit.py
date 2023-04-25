@@ -48,7 +48,7 @@ if in_maya:
 # import ProjectConfig as cfg
 # import ConfigUtil as cfg_util
 
-import json
+# import json
 import os
 import getpass
 from shutil import copyfile
@@ -96,8 +96,10 @@ class MainWindow(QtWidgets.QWidget):
         self.preset_config = {}
         self.default_values = {}
         self.rf = RenderSubmitFunctions(self)
-        self.preset_config = self.LoadSettings(self.preset_config_file)
-        self.user_dict = self.LoadSettings(self.user_save_file)
+        # self.preset_config = self.LoadSettings(self.preset_config_file)
+        self.preset_config = file_util.load_json(self.preset_config_file)
+        # self.user_dict = self.LoadSettings(self.user_save_file)
+        self.user_dict = self.load_json(self.user_save_file)
         # self.signals = Signals.Signals()
         self.thread_pool = ThreadPool.ThreadPool()
         # self.thread_pool.signals.result.connect(self.printThreadResult)
@@ -657,6 +659,7 @@ class MainWindow(QtWidgets.QWidget):
         self.preset_config.pop(cur_key, None)
         self.preset_dd.removeItem(self.preset_dd.currentIndex())
         self.SaveSettings()
+        
 
     def SaveUser(self):
         cur_user = self.user_dd.currentText()
@@ -666,9 +669,13 @@ class MainWindow(QtWidgets.QWidget):
         if not os.path.exists(os.path.split(self.user_save_file)[0]):
 
             os.mkdir(os.path.split(self.user_save_file)[0])
-        with open(self.user_save_file, 'w+') as saveFile:
-            json.dump(user_save_dict, saveFile)
-        saveFile.close()
+
+        # with open(self.user_save_file, 'w+') as saveFile:
+        #     json.dump(user_save_dict, saveFile)
+        # saveFile.close()
+        
+        file_util.save_json(self.user_save_file, user_save_dict)
+
 
     def add_user_popup(self):
         self.addUserPopup = users.add_user_ui(parent=self)
@@ -887,19 +894,21 @@ class MainWindow(QtWidgets.QWidget):
         return settings_dict
 
     def SaveSettings(self):
-        with open(self.preset_config_file, 'w+') as saveFile:
-            json.dump(self.preset_config, saveFile)
-        saveFile.close()
+        # with open(self.preset_config_file, 'w+') as saveFile:
+        #     json.dump(self.preset_config, saveFile)
+        # saveFile.close()
 
-    def LoadSettings(self, load_file):
-        logger.debug("Loading Settings from %s" % load_file)
-        if os.path.isfile(load_file):
-            with open(load_file, 'r') as cur_file:
-                return json.load(cur_file)
-        # self.preset_config = json.load(saveFile)
-        else:
-            logger.error("Can't find %s file" % load_file)
-            return {}
+        file_util.save_json(self.preset_config_file, self.preset_config)
+
+    # def LoadSettings(self, load_file):
+    #     logger.debug("Loading Settings from %s" % load_file)
+    #     if os.path.isfile(load_file):
+    #         with open(load_file, 'r') as cur_file:
+    #             return json.load(cur_file)
+    #     # self.preset_config = json.load(saveFile)
+    #     else:
+    #         logger.error("Can't find %s file" % load_file)
+    #         return {}
 
     # CALLS TO FUNCTIONS
     def ApplyPresetCall(self):
@@ -1545,8 +1554,9 @@ class RenderSubmitFunctions():
         if not aov_file == "None":
             if os.path.exists(aov_file):
                 print("Found it! %s" % aov_file)
-            with open(aov_file, 'r') as aov_file:
-                aovs = json.load(aov_file)
+            # with open(aov_file, 'r') as aov_file:
+            #     aovs = json.load(aov_file)
+            aovs = file_util.load_json(aov_file)
 
             self.CreateRenderElement(aovs["vray"]["renderElements"])
             vray_util.generateOIDandMID()
