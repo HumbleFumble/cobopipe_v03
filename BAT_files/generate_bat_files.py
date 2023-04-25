@@ -49,7 +49,9 @@ EXIT /B 0""",
 
 'install_shotgrid_regkey.bat': 'T:/_Executables/python/Python310/python.exe T:/_Pipeline/cobopipe_v02-001/shotgrid/install_registry_keys.py',
 
-'runDeleteThinkBox.bat': f'pwsh -Command "Set-ExecutionPolicy Bypass;& \\\\192.168.0.225/tools/_Pipeline/cobopipe_v02-001/PowerShell/ScriptBlocks/DeleteThinkBoxFolder.ps1"\nPAUSE'
+'runDeleteThinkBox.bat': f'pwsh -Command "Set-ExecutionPolicy Bypass;& \\\\192.168.0.225/tools/_Pipeline/cobopipe_v02-001/PowerShell/ScriptBlocks/DeleteThinkBoxFolder.ps1"\nPAUSE',
+
+'ReturnAnim.bat': f'python {repository_directory}/ReturnAnim.py'
 }
     return bat_files_info
 

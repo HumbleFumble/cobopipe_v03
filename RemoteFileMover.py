@@ -3,6 +3,7 @@ import os
 import sys
 import json
 import subprocess
+import file_util
 
 
 class Controller:
@@ -198,7 +199,7 @@ class ReturnAnim(QtWidgets.QWidget):
             settings = {"user": None, "project": None}
             saveJson(self.settings_file_path, settings)
         else:
-            settings = loadJson(self.settings_file_path)
+            settings = file_util.load_json(self.settings_file_path)
         return settings.get("user"), settings.get("project")
 
     def set_settings(self, settings):

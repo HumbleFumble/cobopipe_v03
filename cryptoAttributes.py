@@ -1,6 +1,6 @@
 import maya.cmds as cmds
 import maya.mel as mel
-import Maya_Functions.file_util_functions as fileUtil
+import file_util
 import Maya_Functions.vray_util_functions as vrayUtil
 
 from getConfig import getConfigClass
@@ -156,12 +156,12 @@ def getAssets():
 
 
 def getCryptoTables():
-    cryptoTables = fileUtil.loadJson(CC.get_cryptomatte_list())
+    cryptoTables = file_util.load_json(CC.get_cryptomatte_list())
     return cryptoTables
 
 
 def saveCryptoTables(cryptoTables):
-    fileUtil.saveJson(CC.get_cryptomatte_list(), cryptoTables)
+    file_util.save_json(CC.get_cryptomatte_list(), cryptoTables)
     return True
 
 
