@@ -213,49 +213,51 @@ class PreviewPython_UI(QDialog):
 
     def create_preview(self):
         self.findSceneInfo()
-        self.render_height = float(self.crop_edit.text())*self.height
-        self.render_width = float(self.crop_edit.text()) * self.width
+        if self.checkLength():
+
+            self.render_height = float(self.crop_edit.text())*self.height
+            self.render_width = float(self.crop_edit.text()) * self.width
 
 
-        if self.render_check.isChecked():
-            js_exporter.exportToQuicktime("", -1, -1, True, self.render_width, self.render_height, self.temp_path, "", False,1)
-        else:
-            js_exporter.exportOGLToQuicktime(self.preview_name + "_Temp", "C:/Temp/temp_previews/", -1, -1,
-                                             self.render_width, self.render_height)
-        if use_config:
-            log("Pipeline slate")
-            use_audio = False
-            if self.sound_file:
-                use_audio =True
-            PA.createPreview_2D(self.scene_name,
-                                inputPath=self.temp_path,
-                                outputPath=self.preview_final,
-                                audioPath=self.sound_file,
-                                crop=self.crop_check.isChecked(),
-                                cropWidth=self.width,
-                                cropHeight=self.height,
-                                title=self.scene_name,
-                                frameCount=True,
-                                timecode=True,
-                                date=True,
-                                useAudioFile=use_audio,
-                                runCmd=True,
-                                build_slate=self.slate_check.isChecked(),
-                                user=self.u_edit.text())
+            if self.render_check.isChecked():
+                js_exporter.exportToQuicktime("", -1, -1, True, self.render_width, self.render_height, self.temp_path, "", False,1)
+            else:
+                js_exporter.exportOGLToQuicktime(self.preview_name + "_Temp", "C:/Temp/temp_previews/", -1, -1,
+                                                 self.render_width, self.render_height)
+            if use_config:
+                log("Pipeline slate")
+                use_audio = False
+                if self.sound_file:
+                    use_audio =True
+                PA.createPreview_2D(self.scene_name,
+                                    inputPath=self.temp_path,
+                                    outputPath=self.preview_final,
+                                    audioPath=self.sound_file,
+                                    crop=self.crop_check.isChecked(),
+                                    cropWidth=self.width,
+                                    cropHeight=self.height,
+                                    title=self.scene_name,
+                                    frameCount=True,
+                                    timecode=True,
+                                    date=True,
+                                    useAudioFile=use_audio,
+                                    runCmd=True,
+                                    build_slate=self.slate_check.isChecked(),
+                                    user=self.u_edit.text())
 
-        else:
-            log("CREATING REMOTE SLATE")
-            self.create_preview_locally_func(input_path=self.temp_path,
-                                             output_path=self.preview_final,
-                                             title=self.preview_name,
-                                             slate=self.slate_check.isChecked(),
-                                             crop=self.crop_check.isChecked(),
-                                             crop_w=int(self.width),
-                                             crop_h=int(self.height),
-                                             audio=self.sound_file,
-                                             user=self.u_edit.text())
-        log("Finished")
-        os.startfile(self.preview_final)
+            else:
+                log("CREATING REMOTE SLATE")
+                self.create_preview_locally_func(input_path=self.temp_path,
+                                                 output_path=self.preview_final,
+                                                 title=self.preview_name,
+                                                 slate=self.slate_check.isChecked(),
+                                                 crop=self.crop_check.isChecked(),
+                                                 crop_w=int(self.width),
+                                                 crop_h=int(self.height),
+                                                 audio=self.sound_file,
+                                                 user=self.u_edit.text())
+            log("Finished")
+            os.startfile(self.preview_final)
 
     def checkLength(self):
         sess = harmony.session()
@@ -267,9 +269,16 @@ class PreviewPython_UI(QDialog):
             if scene_length !=audio_frames:
                 log("ISSUE!: not the same length!")
                 log("%s -> %s" % (audio_frames,scene_length))
-
+                buttonReply = QMessageBox.question(self, 'Difference between scene and audio length. Continue?', "Scene: %s - Audio: %s" % (scene_length,audio_frames),
+                                                             QMessageBox.Yes | QMessageBox.No,
+                                                             QMessageBox.No)
+                if buttonReply == QMessageBox.Yes:
+                    return True
+                else:
+                    return False
         else:
             log("Can't find any audio file to compare to")
+            return False
 
 
     def create_preview_locally_func(self,input_path="", output_path="", title=None, slate=True,crop=False,crop_w=1920,crop_h=1080,audio=None,user=None):
