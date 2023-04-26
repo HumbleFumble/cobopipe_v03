@@ -1,5 +1,5 @@
 import os
-from Maya_Functions.file_util_functions import saveJson, loadJson
+import file_util
 from PySide2 import QtWidgets, QtCore, QtGui
 from getConfig import getConfigClass
 
@@ -98,7 +98,7 @@ def add_to_users_json(key, user):
 
     user_list.append(user)
     users[key] = user_list
-    saveJson(CC.get_users_json(), users)
+    file_util.save_json(CC.get_users_json(), users)
 
 
 def get_users_json():
@@ -110,10 +110,10 @@ def get_users_json():
 
     if not os.path.exists(users_json_path):
         data = {"Animation": [], "Render": []}
-        saveJson(users_json_path, data)
+        file_util.save_json(users_json_path, data)
         return data
 
-    return loadJson(users_json_path)
+    return file_util.load_json(users_json_path)
 
 
 if __name__ == "__main__":
