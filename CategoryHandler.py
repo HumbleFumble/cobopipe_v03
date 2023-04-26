@@ -1,4 +1,5 @@
-import json
+# import json
+import file_util
 import os
 
 from PySide2 import QtWidgets, QtCore, QtGui
@@ -11,7 +12,8 @@ class CategoryHandler(object):
         self.category = ""
         self.save_path_categories = CC.get_contact_sheet_category_file()
         self.skip_categories = ["Sync", "Isolate", "Freeze"]
-        self.category_dict = self.LoadSettings(self.save_path_categories)
+        # self.category_dict = self.LoadSettings(self.save_path_categories)
+        self.category_dict = file_util.load_json(self.save_path_categories)
 
     def CheckForSkip(self,category):
         if category in self.skip_categories:
@@ -26,12 +28,16 @@ class CategoryHandler(object):
             return None
 
     def getCategories(self):
-        return self.category_dict.keys()
+        if self.category_dict:
+            return self.category_dict.keys()
+        else:
+            return []
 
     def UpdateJsonDict(self, save_path=None, current_dict=None):
         # if not current_dict:
         #     current_dict = self.GetDictFromCurrentNodes()
-        new_dict = self.LoadSettings(save_path)
+        # new_dict = self.LoadSettings(save_path)
+        new_dict = file_util.load_json(save_path)
         if new_dict:
             new_dict.update(current_dict)
             return new_dict
@@ -40,7 +46,8 @@ class CategoryHandler(object):
 
     def CreateNewCategory(self, category, list_of_nodes=[]):
 
-        old_info = self.LoadSettings(save_location=self.save_path_categories)
+        # old_info = self.LoadSettings(save_location=self.save_path_categories)
+        old_info = file_util.load_json(self.save_path_categories)
 
         # if LoadSettings return None, Make empty dictionary
         if category in old_info:
@@ -52,7 +59,8 @@ class CategoryHandler(object):
                 name = i.getName()  # Gets name of item from QModelIndex data
                 old_info[category].append(name)
 
-        self.SaveSettings(save_location=self.save_path_categories, save_info=old_info)
+        # self.SaveSettings(save_location=self.save_path_categories, save_info=old_info)
+        file_util.save_json(self.save_path_categories, old_info)
         self.category_dict = old_info
 
         return self.category_dict[category]
@@ -60,18 +68,21 @@ class CategoryHandler(object):
 
     def DeleteCategory(self,category=None):
         # Get dictionary and remove (pop) the category key within
-        cat_dict = self.LoadSettings(self.save_path_categories)
+        # cat_dict = self.LoadSettings(self.save_path_categories)
+        cat_dict = file_util.load_json(self.save_path_categories)
         cat_dict.pop(category)
 
         # Save result to JSON
         print("Updated Dict: %s" % cat_dict)
-        self.SaveSettings(save_location=self.save_path_categories, save_info=cat_dict)
+        # self.SaveSettings(save_location=self.save_path_categories, save_info=cat_dict)
+        file_util.save_json(self.save_path_categories, cat_dict)
         self.category_dict = cat_dict
 
     def AddToCategory(self, category=None,list_of_nodes=[]):
 
         # Get contents of JSON as Dict Example: {"Forest":[node_name, node_name2]}
-        file_dict = self.LoadSettings(save_location=self.save_path_categories)
+        # file_dict = self.LoadSettings(save_location=self.save_path_categories)
+        file_dict = file_util.load_json(self.save_path_categories)
 
         # if LoadSettings return None, Make empty dictionary
 
@@ -94,7 +105,8 @@ class CategoryHandler(object):
 
         # Save result to JSON
         print("Updated Dict: %s" % file_dict)
-        self.SaveSettings(save_location=self.save_path_categories, save_info=file_dict)
+        # self.SaveSettings(save_location=self.save_path_categories, save_info=file_dict)
+        file_util.save_json(self.save_path_categories, file_dict)
         self.category_dict = file_dict
 
         return self.category_dict
@@ -104,7 +116,8 @@ class CategoryHandler(object):
         if category == "Sync":
             return
         # Get contents of JSON as Dict
-        old_info = self.LoadSettings(save_location=self.save_path_categories)
+        # old_info = self.LoadSettings(save_location=self.save_path_categories)
+        old_info = file_util.load_json(self.save_path_categories)
         # Put selected indexes of QListView into a list
         selection = []
         for i in list_of_nodes:
@@ -118,26 +131,27 @@ class CategoryHandler(object):
             old_info.pop(category)
 
         # Save result to JSON
-        self.SaveSettings(save_location=self.save_path_categories, save_info=old_info)
+        # self.SaveSettings(save_location=self.save_path_categories, save_info=old_info)
+        file_util.save_json(self.save_path_categories, old_info)
         self.category_dict = old_info
 
         return self.category_dict[category]
 
-    def SaveSettings(self, save_location, save_info):
-        with open(save_location, 'w+') as saveFile:
-            json.dump(save_info, saveFile)
-        saveFile.close()
+    # def SaveSettings(self, save_location, save_info):
+    #     with open(save_location, 'w+') as saveFile:
+    #         json.dump(save_info, saveFile)
+    #     saveFile.close()
 
-    def LoadSettings(self, save_location):
-        if os.path.isfile(save_location):
-            with open(save_location, 'r') as saveFile:
-                loadedSettings = json.load(saveFile)
-            # if 'selected node' in loadedSettings.keys():
-            if loadedSettings:
-                return loadedSettings
-        else:
-            print("no category file found")
-        return {}
+    # def LoadSettings(self, save_location):
+    #     if os.path.isfile(save_location):
+    #         with open(save_location, 'r') as saveFile:
+    #             loadedSettings = json.load(saveFile)
+    #         # if 'selected node' in loadedSettings.keys():
+    #         if loadedSettings:
+    #             return loadedSettings
+    #     else:
+    #         print("no category file found")
+    #     return {}
 
     """
     States of the table:

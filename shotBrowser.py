@@ -47,7 +47,8 @@ import users
 from functools import partial
 # from HookUp import HookUp
 import subprocess
-import json
+# import json
+import file_util
 
 import TB.Harmony_RR_RenderSubmit as SubmitTB
 import TB.HarmonySceneSetup as SetupTB
@@ -705,7 +706,8 @@ class FrontController(QtCore.QObject):
 		if "episode_info_file" in CC.__dict__.keys():
 			for ep in episodes:
 				ep_info_file = CC.get_episode_info_file(episode_name=ep.getName())
-				ep_info_dict = self.loadSettings(ep_info_file)
+				# ep_info_dict = self.loadSettings(ep_info_file)
+				ep_info_dict = file_util.load_json(ep_info_file)
 				if ep_info_dict:
 					for info_node_name in ep_info_dict.keys():
 						info_node_dict = self.repository.GetByName(info_node_name)
@@ -899,17 +901,17 @@ class FrontController(QtCore.QObject):
 		# self.OIDM.CreateRulesFromPublishData(scope=scope,shot_list=shot_list)
 		self.OIDM.CreateSmartRulesFromPublishData(scope=scope, shot_list=shot_list)
 
-	def saveSettings(self, save_location, save_content):
-		with open(save_location, 'w+') as saveFile:
-			json.dump(save_content, saveFile)
-		saveFile.close()
+	# def saveSettings(self, save_location, save_content):
+	# 	with open(save_location, 'w+') as saveFile:
+	# 		json.dump(save_content, saveFile)
+	# 	saveFile.close()
 
-	def loadSettings(self, load_file):
-		if os.path.isfile(load_file):
-			with open(load_file, 'r') as cur_file:
-				return json.load(cur_file)
-		else:
-			return {}
+	# def loadSettings(self, load_file):
+	# 	if os.path.isfile(load_file):
+	# 		with open(load_file, 'r') as cur_file:
+	# 			return json.load(cur_file)
+	# 	else:
+	# 		return {}
 
 	def saveNodeInfo(self, cur_node=None, info_keys=[], clear=False):
 		info_dict = cur_node.getInfoDict()
@@ -921,7 +923,8 @@ class FrontController(QtCore.QObject):
 		#         'comp_style': 'AE'}}
 		# info_dict = cur_node.getInfoDict()
 		ep_info_file = CC.get_episode_info_file(**info_dict)
-		old_dict = self.loadSettings(ep_info_file)
+		# old_dict = self.loadSettings(ep_info_file)
+		old_dict = file_util.load_json(ep_info_file)
 		if not clear:
 			save_content = {}
 			for cur_key in info_keys:
@@ -941,7 +944,8 @@ class FrontController(QtCore.QObject):
 			if name in old_dict.keys():
 				old_dict.pop(name)
 
-		self.saveSettings(ep_info_file, old_dict)
+		# self.saveSettings(ep_info_file, old_dict)
+		file_util.save_json(ep_info_file, old_dict)
 
 	def ThreadPoolFinished(self):
 		# print("FINISHED WITH THREADS")
@@ -3350,7 +3354,8 @@ class MainWindow(QtWidgets.QWidget):
 		user_list = CC.get_users()
 		self.user_combobox.clear()
 		self.user_combobox.addItems(user_list)
-		cur_dict = self.loadSettings(self.user_save_file)
+		# cur_dict = self.loadSettings(self.user_save_file)
+		cur_dict = file_util.load_json(self.user_save_file)
 		if cur_dict:
 			if "CompContactSheet" in cur_dict:
 				if(cur_dict["CompContactSheet"] in user_list):
@@ -3358,14 +3363,14 @@ class MainWindow(QtWidgets.QWidget):
 		run_env["BOM_USER"] = self.user_combobox.currentText()
 		self.user_combobox.currentTextChanged.connect(self.saveUser)
 
-	def loadSettings(self, load_file):
-		logger.info("Loading Settings")
-		if os.path.isfile(load_file):
-			with open(load_file, 'r') as cur_file:
-				return json.load(cur_file)
-		else:
-			logger.warning("Can't find %s file" % load_file)
-			return {}
+	# def loadSettings(self, load_file):
+	# 	logger.info("Loading Settings")
+	# 	if os.path.isfile(load_file):
+	# 		with open(load_file, 'r') as cur_file:
+	# 			return json.load(cur_file)
+	# 	else:
+	# 		logger.warning("Can't find %s file" % load_file)
+	# 		return {}
 
 	def saveUser(self):
 		user = self.user_combobox.currentText()

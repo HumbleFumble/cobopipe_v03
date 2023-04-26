@@ -3,11 +3,13 @@ import os
 
 from Log.CoboLoggers import getLogger
 logger = getLogger()
-import json
+# import json
+import file_util
 
 class Builder():
     def __init__(self, json_config_file=None):
-        self.base_config = loadSettings(json_config_file)
+        # self.base_config = loadSettings(json_config_file)
+        self.base_config = file_util.load_json(json_config_file)
         print(json_config_file)
         if self.base_config:
             self.class_file = "%s/ConfigClasses/ConfigClass_%s.py" % (os.path.dirname(os.path.realpath(__file__)), self.base_config["project_name"])
@@ -301,18 +303,18 @@ class ConfigClass():
 
         return _string
 
-##TESTING
-def saveSettings(save_location, save_content):
-    with open(save_location, 'w+') as saveFile:
-        json.dump(save_content, saveFile)
-    saveFile.close()
+# ##TESTING
+# def saveSettings(save_location, save_content):
+#     with open(save_location, 'w+') as saveFile:
+#         json.dump(save_content, saveFile)
+#     saveFile.close()
 
-def loadSettings(load_file):
-    if os.path.isfile(load_file):
-        with open(load_file, 'r') as cur_file:
-            return json.load(cur_file)
-    else:
-        return {}
+# def loadSettings(load_file):
+#     if os.path.isfile(load_file):
+#         with open(load_file, 'r') as cur_file:
+#             return json.load(cur_file)
+#     else:
+#         return {}
 
 def FindEpisode(content,ep_reg):
     low_case = content.lower()

@@ -7,7 +7,8 @@ from PySide6.QtGui import *
 
 import os
 import ffmpeg
-import json
+# import json
+import file_util
 
 try:
 	from ToonBoom import harmony
@@ -24,6 +25,7 @@ def log(message):
 
 import sys
 
+os.environ["BOM_PIPE_PATH"] = "C:/Users/cg/PycharmProjects/cobopipe_v02-001/"
 if os.environ.get("BOM_PIPE_PATH"):
     sys.path.append(os.environ["BOM_PIPE_PATH"])
     from getConfig import getConfigClass
@@ -50,10 +52,13 @@ class PreviewPython_UI(QDialog):
             os.makedirs(os.path.dirname(self.save_location))
         self.width = 1280
         self.height = 720
-
+        self.sound_file = None
         self.create_ui()
-
         self.checkAndApplySettings()
+
+        self.findSceneInfo()
+        self.checkLength()
+
 
         self.show()
     def projectChanged(self):
@@ -94,6 +99,7 @@ class PreviewPython_UI(QDialog):
         self.p_lay = QHBoxLayout()
 
         self.p_dd = QComboBox()
+        self.p_dd.setFixedWidth(150)
         self.p_edit = QLineEdit()
         self.p_label = QLabel("Project: ")
         self.p_label.setFixedWidth(45)
@@ -104,6 +110,7 @@ class PreviewPython_UI(QDialog):
         self.u_lay = QHBoxLayout()
 
         self.u_dd = QComboBox()
+        self.u_dd.setFixedWidth(150)
         self.u_edit = QLineEdit()
         self.u_label = QLabel("User: ")
         self.u_label.setFixedWidth(45)
@@ -142,7 +149,8 @@ class PreviewPython_UI(QDialog):
     def checkAndApplySettings(self):
         if use_config:
             self.config_info()
-        load_dict = self.loadJson(self.save_location)
+        # load_dict = self.loadJson(self.save_location)
+        load_dict = file_util.load_json(self.save_location)
         if load_dict:
             self.slate_check.setChecked(load_dict["slate_check"])
             if self.u_dd.findText(load_dict["user"])>-1:
@@ -155,17 +163,17 @@ class PreviewPython_UI(QDialog):
                 self.u_edit.setText(os.environ["BOM_USER"])
 
 
-    def loadJson(self,load_file):
-        if os.path.isfile(load_file):
-            with open(load_file, 'r') as cur_file:
-                return json.load(cur_file)
-        else:
-            return {}
+    # def loadJson(self,load_file):
+    #     if os.path.isfile(load_file):
+    #         with open(load_file, 'r') as cur_file:
+    #             return json.load(cur_file)
+    #     else:
+    #         return {}
 
-    def saveJson(self, save_location, save_info):
-        with open(save_location, 'w+') as saveFile:
-            json.dump(save_info, saveFile)
-        saveFile.close()
+    # def saveJson(self, save_location, save_info):
+    #     with open(save_location, 'w+') as saveFile:
+    #         json.dump(save_info, saveFile)
+    #     saveFile.close()
 
     def closeEvent(self,event):
 
@@ -173,7 +181,8 @@ class PreviewPython_UI(QDialog):
                      "user":self.u_edit.text(),
                      "blocking_check":self.blocking_check.isChecked(),
                      "render_check":self.render_check.isChecked()}
-        self.saveJson(self.save_location,save_dict)
+        # self.saveJson(self.save_location,save_dict)
+        file_util.save_json(self.save_location, save_dict)
         super(PreviewPython_UI, self).closeEvent(event)
 
 
@@ -197,6 +206,9 @@ class PreviewPython_UI(QDialog):
         if not os.path.exists(self.sound_file):
             self.sound_file = None
             log("NO SOUND FILE FOUND")
+
+
+
 
 
     def create_preview(self):
@@ -244,6 +256,20 @@ class PreviewPython_UI(QDialog):
                                              user=self.u_edit.text())
         log("Finished")
         os.startfile(self.preview_final)
+
+    def checkLength(self):
+        sess = harmony.session()
+        project = sess.project
+        scene_length = project.scene.frame_count
+        if self.sound_file:
+            audio_length = ffmpeg_util.probeDuration(self.sound_file, codec_type="audio")
+            audio_frames = int(float(audio_length) * float(project.scene.framerate))
+            if scene_length !=audio_frames:
+                log("ISSUE!: not the same length!")
+                log("%s -> %s" % (audio_frames,scene_length))
+
+        else:
+            log("Can't find any audio file to compare to")
 
 
     def create_preview_locally_func(self,input_path="", output_path="", title=None, slate=True,crop=False,crop_w=1920,crop_h=1080,audio=None,user=None):

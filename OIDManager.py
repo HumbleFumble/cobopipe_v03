@@ -7,7 +7,8 @@ try:
 except:
     from PySide2 import QtWidgets, QtCore, QtGui
     in_maya = False
-import json
+# import json
+import file_util
 import os
 import shutil
 
@@ -27,7 +28,8 @@ class OID_Functions(object):
         super(OID_Functions, self).__init__()
         # if not CC.OD_set_rules == "":
         self.save_dict_file = CC.get_OID_set_rules() #cfg_util.CreatePathFromDict(cfg.project_paths["OID_set_rules"])
-        self.rule_rep = self.LoadSettings(self.save_dict_file)
+        # self.rule_rep = self.LoadSettings(self.save_dict_file)
+        self.rule_rep = file_util.load_json(self.save_dict_file)
         self.info_dict = {}
         # self.SetAssetDictFromScene()
         # self.rule_rep = {}
@@ -66,7 +68,8 @@ class OID_Functions(object):
             v_num = '%03d' % (v_num + 1)
             shutil.move(file_path,"%s/%s_V%s.%s" % (history_folder,f_file.split(".")[0],v_num,f_file.split(".")[1]))
 
-        self.SaveSettings(self.save_dict_file, self.rule_rep)
+        # self.SaveSettings(self.save_dict_file, self.rule_rep)
+        file_util.save_json(self.save_dict_file, self.rule_rep)
 
     def AddRule(self, temp_rule_dict,replace=False):
         print("Adding:\n%s\nTO\n%s" % (temp_rule_dict,self.rule_rep))
@@ -222,22 +225,22 @@ class OID_Functions(object):
                 # print("remove %s from %s" %(key,v))
         return dictionary, ignore_list
 
-    def SaveSettings(self, save_location, save_info):
-        with open(save_location, 'w+') as saveFile:
-            json.dump(obj=save_info, fp=saveFile,indent=4, sort_keys=True)
-        saveFile.close()
+    # def SaveSettings(self, save_location, save_info):
+    #     with open(save_location, 'w+') as saveFile:
+    #         json.dump(obj=save_info, fp=saveFile,indent=4, sort_keys=True)
+    #     saveFile.close()
 
-    def LoadSettings(self, save_location):
-        if os.path.isfile(save_location):
-            with open(save_location, 'r') as saveFile:
-                loadedSettings = json.load(saveFile)
+    # def LoadSettings(self, save_location):
+    #     if os.path.isfile(save_location):
+    #         with open(save_location, 'r') as saveFile:
+    #             loadedSettings = json.load(saveFile)
 
-            # if 'selected node' in loadedSettings.keys():
-            if loadedSettings:
-                return loadedSettings
-        else:
-            print("not a file")
-        return None
+    #         # if 'selected node' in loadedSettings.keys():
+    #         if loadedSettings:
+    #             return loadedSettings
+    #     else:
+    #         print("not a file")
+    #     return None
 
 
 def _maya_main_window():

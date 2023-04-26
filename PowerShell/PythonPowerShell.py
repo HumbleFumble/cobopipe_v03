@@ -1,5 +1,6 @@
 import subprocess
-import json
+# import json
+import file_util
 import os
 import xml.etree.ElementTree as et
 
@@ -85,7 +86,8 @@ def GetList(exclude_list):
 # Import computers list json file, produced by GetHostInfo_SB.ps1
 with open("C:\\Users\\" + user + "\\VsCodeProjects\\cobopipe_v02-001\\PowerShell\\complist.json") as user_file:
     file_contents = user_file.read()
-ps_data = json.loads(file_contents)
+# ps_data = json.loads(file_contents)
+ps_data = file_util.load_json(file_contents)
 
 # Create dictionary with available computers and display the result
 host_info = {}
@@ -109,7 +111,8 @@ print(GetList(exclude_computer_number))
 with open("C:\\Users\\" + user + "\\VsCodeProjects\\cobopipe_v02-001\\PowerShell\\applist.json") as user_file:
     file_contents = user_file.read()
 
-app_data = json.loads(file_contents)
+# app_data = json.loads(file_contents)
+app_data = file_util.load_json(file_contents)
 app_dict = {}
 
 # Get unique computer names
@@ -135,5 +138,6 @@ for key, value in result.items():
     print(key, value)
 
 
-with open("C:\\Users\\" + user + "\\VsCodeProjects\\cobopipe_v02-001\\PowerShell\\install_apps.json", "w") as outfile:
-    json.dump(result, outfile)
+# with open("C:\\Users\\" + user + "\\VsCodeProjects\\cobopipe_v02-001\\PowerShell\\install_apps.json", "w") as outfile:
+#     json.dump(result, outfile)
+file_util.save_json("C:\\Users\\" + user + "\\VsCodeProjects\\cobopipe_v02-001\\PowerShell\\install_apps.json", result)

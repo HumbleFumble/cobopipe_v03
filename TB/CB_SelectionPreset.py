@@ -374,7 +374,8 @@ class FrontController(QObject):
 			node_list = self.findLocalNoteNodes()
 			start_text_value = self.scene_note_node.attributes["TEXT"].get_text_value(1)
 			if start_text_value:
-				start_dict = json.loads(start_text_value)
+				start_dict = file_util.loads(start_text_value)
+				# start_dict = json.loads(start_text_value)
 			else:
 				start_dict = {}
 				load_from_sub_data=True

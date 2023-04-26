@@ -1,5 +1,5 @@
 import os
-import json
+import file_util
 
 list_of_archived_projects = [
     "HOJ-Pilot",
@@ -19,5 +19,4 @@ list_of_archived_projects = [
 
 if __name__ == '__main__':
     path = os.path.join(os.path.dirname(__file__), 'archivesProjects.json')
-    with open(path, "w+") as saveFile:
-        json.dump(obj=list_of_archived_projects, fp=saveFile, indent=4, sort_keys=True)
+    file_util.save_json(path, list_of_archived_projects)
