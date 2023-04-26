@@ -28,7 +28,10 @@ class CategoryHandler(object):
             return None
 
     def getCategories(self):
-        return self.category_dict.keys()
+        if self.category_dict:
+            return self.category_dict.keys()
+        else:
+            return []
 
     def UpdateJsonDict(self, save_path=None, current_dict=None):
         # if not current_dict:

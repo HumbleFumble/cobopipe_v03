@@ -20,6 +20,7 @@ def confirmPopup(parent=None, title='Popup', label='Is this a placeholder?'):
     dlg = QtWidgets.QMessageBox(parent)
     dlg.setWindowTitle(title)
     dlg.setText(label)
+    dlg.addButton(retry_button, QtWidgets.QMessageBox.NoRole)
     dlg.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
     dlg.setIcon(QtWidgets.QMessageBox.Question)
     button = dlg.exec_()
@@ -29,7 +30,23 @@ def confirmPopup(parent=None, title='Popup', label='Is this a placeholder?'):
     else:
         return False
 
-    
+def confirmPopupRetry(parent=None, title='Popup', label='Is this a placeholder?', retry_check=None):
+    dlg = QtWidgets.QMessageBox(parent)
+    dlg.setWindowTitle(title)
+    dlg.setText(label)
+    retry_button = QtWidgets.QPushButton('Retry')
+    dlg.addButton(retry_button, QtWidgets.QMessageBox.NoRole)
+    dlg.setStandardButtons(QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No)
+    dlg.setIcon(QtWidgets.QMessageBox.Question)
+    button = dlg.exec_()
+
+    if button == QtWidgets.QMessageBox.Yes:
+        return True
+    elif button == QtWidgets.QMessageBox.No:
+        return False
+    else:
+        return 'Retry'
+
 
 if __name__ == '__main__':
     import sys

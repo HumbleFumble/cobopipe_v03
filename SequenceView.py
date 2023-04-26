@@ -967,13 +967,23 @@ class MainWindow(QtWidgets.QWidget): ### Main UI and Functions
             import Preview.file_util as fileUtil
             if os.path.exists(pb_animatic):
                 if fileUtil.isFileLocked(pb_animatic):
-                    from QtCustomWidgets import confirmPopup
-                    if confirmPopup(self, title='File is locked', label="""The current playblast file is locked and cannot be overwritten.\nPlease check if you or anyone else have the file open.\nIf the problem persists, please contact your local TD.\n\nWould you like to playblast to a temporary file?"""):
-                        import random
-                        import string                   
-                        pb_animatic = "%s/%s_%s_%s_%s.mov" % (_collect_folder, _ep, _seq, _sh, ''.join(random.choice(string.ascii_letters + '0123456789') for i in range(6)))
-                    else:
-                        createPlayblast = False
+                    from QtCustomWidgets import confirmPopupRetry
+                    
+                    for i in range(50):
+                        result = confirmPopupRetry(self, title='File is locked', label="""The current playblast file is locked and cannot be overwritten.\nPlease check if you or anyone else have the file open.\nIf the problem persists, please contact your local TD.\n\nWould you like to playblast to a temporary file?""")
+                        if result == 'Retry':
+                            if not fileUtil.isFileLocked(pb_animatic):
+                                break
+                            
+                        elif result == True:
+                            import random
+                            import string                   
+                            pb_animatic = "%s/%s_%s_%s_%s.mov" % (_collect_folder, _ep, _seq, _sh, ''.join(random.choice(string.ascii_letters + '0123456789') for i in range(6)))
+                            break
+                        
+                        elif result == False:
+                            createPlayblast = False
+                            break
 
             if createPlayblast:
                 # if light:
