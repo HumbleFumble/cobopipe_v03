@@ -1,22 +1,22 @@
 <!DOCTYPE Scripts>
 <Scripts>
- <Script function="ImportAnimatic" icon="ImportAnimatic" file="CB_ImportAnimatic.js"/>
- <Script function="TB_RecolorDrawings" icon="TB_RecolorDrawings" file="CB_RecolorPaletteAllElements.js"/>
- <Script function="DupWithInputs" icon="DupWithInputs" file="CB_DuplicateCompoWithInputs.js"/>
- <Script function="SetActiveRenderNodes" icon="SetActiveRenderNodes" file="CB_SetActiveRenderNodes.js"/>
- <Script function="SetupRenderInfo_Pathless" icon="SetupRenderInfo_Pathless" file="CB_SetupRenderInfo_Pathless.js"/>
- <Script function="submit" file="CB_SubmitToDeadline.js" icon="submit"/>
- <Script function="CustomSaveAs" icon="CustomSaveAs" file="CB_CustomSaveAs.js"/>
- <Script function="Find_And_Replace" icon="Find_And_Replace" file="CB_FindReplace.js"/>
- <Script function="createPreviewDialog" icon="createPreviewDialog" file="CB_CreatePreview.js"/>
- <Script function="submitSceneToRoyalRender" icon="submitSceneToRoyalRender" file="CB_submitToRoyalRender.js"/>
- <Script function="ExportSceneData" icon="ExportSceneData" file="CB_ExportSceneData.js"/>
- <Script function="ANM_Set_Layer_Pivots_At_Center_Of_Drawings" icon="ANM_Set_Layer_Pivots_At_Center_Of_Drawings" file="CB_ANM_Set_Layer_Pivots_At_Center_Of_Drawings.js"/>
- <Script function="CF_CopyPastePivots" icon="CF_CopyPastePivots" file="CB_CF_CopyPastePivots_1.0.1.js"/>
- <Script function="call_CB_SelectionPreset" icon="call_CB_SelectionPreset" file="CB_SelectionPreset_Call.js"/>
- <Script function="TB_RemoveUnusedColors" icon="TB_RemoveUnusedColors" file="CB_TB_RemoveUnusedColors.js"/>
- <Script function="TB_Pose_Copier" icon="TB_Pose_Copier" file="CB_TB_Pose_Copier.js"/>
- <Script function="runQuickSlider" icon="runQuickSlider" file="CB_SliderUI.js"/>
- <Script function="import_background" icon="import_background" file="CB_import_background.js"/>
- <Script function="SetLineThickness" icon="SetLineThickness" file="CB_SetLineThickness_Call.js"/>
+ <Script icon="ImportAnimatic" function="ImportAnimatic" file="CB_ImportAnimatic.js"/>
+ <Script icon="TB_RecolorDrawings" function="TB_RecolorDrawings" file="CB_RecolorPaletteAllElements.js"/>
+ <Script icon="DupWithInputs" function="DupWithInputs" file="CB_DuplicateCompoWithInputs.js"/>
+ <Script icon="SetActiveRenderNodes" function="SetActiveRenderNodes" file="CB_SetActiveRenderNodes.js"/>
+ <Script icon="SetupRenderInfo_Pathless" function="SetupRenderInfo_Pathless" file="CB_SetupRenderInfo_Pathless.js"/>
+ <Script icon="PreviewPythonRun" function="PreviewPythonRun" file="CB_PreviewPython_Call.js"/>
+ <Script icon="submit" function="submit" file="CB_SubmitToDeadline.js"/>
+ <Script icon="CustomSaveAs" function="CustomSaveAs" file="CB_CustomSaveAs.js"/>
+ <Script icon="Find_And_Replace" function="Find_And_Replace" file="CB_FindReplace.js"/>
+ <Script icon="submitSceneToRoyalRender" function="submitSceneToRoyalRender" file="CB_submitToRoyalRender.js"/>
+ <Script icon="ExportSceneData" function="ExportSceneData" file="CB_ExportSceneData.js"/>
+ <Script icon="ANM_Set_Layer_Pivots_At_Center_Of_Drawings" function="ANM_Set_Layer_Pivots_At_Center_Of_Drawings" file="CB_ANM_Set_Layer_Pivots_At_Center_Of_Drawings.js"/>
+ <Script icon="CF_CopyPastePivots" function="CF_CopyPastePivots" file="CB_CF_CopyPastePivots_1.0.1.js"/>
+ <Script icon="call_CB_SelectionPreset" function="call_CB_SelectionPreset" file="CB_SelectionPreset_Call.js"/>
+ <Script icon="TB_RemoveUnusedColors" function="TB_RemoveUnusedColors" file="CB_TB_RemoveUnusedColors.js"/>
+ <Script icon="TB_Pose_Copier" function="TB_Pose_Copier" file="CB_TB_Pose_Copier.js"/>
+ <Script icon="runQuickSlider" function="runQuickSlider" file="CB_SliderUI.js"/>
+ <Script icon="import_background" function="import_background" file="CB_import_background.js"/>
+ <Script icon="SetLineThickness" function="SetLineThickness" file="CB_SetLineThickness_Call.js"/>
 </Scripts>
