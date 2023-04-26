@@ -207,57 +207,74 @@ class PreviewPython_UI(QDialog):
             self.sound_file = None
             log("NO SOUND FILE FOUND")
 
+    def isFileLocked(self,path):
+        renamed_path = "%s_lockCheck." % path.split(".")[0] + path.split(".")[1]
+        try:
+            os.rename(path, renamed_path)
+            os.rename(renamed_path, path)
+            return False
+        except Exception as e:
+            if not str(e) == '[Error 32] The process cannot access the file because it is being used by another process':
+                log(e)
+        return True
 
+    def checkIfLocked(self,path):
+        if os.path.exists(path):
+            if self.isFileLocked(path):
+                QMessageBox.information(self, 'File is locked',
+                                        """The current playblast file is locked and cannot be overwritten.\nPlease check if you or anyone else have the file open.\nIf the problem persists, please contact your local TD.\n""",QMessageBox.Ok,QMessageBox.Ok)
+                return True
+        return False
 
 
 
     def create_preview(self):
         self.findSceneInfo()
         if self.checkLength():
+            if not self.checkIfLocked(self.preview_final):
+                self.render_height = float(self.crop_edit.text())*self.height
+                self.render_width = float(self.crop_edit.text()) * self.width
 
-            self.render_height = float(self.crop_edit.text())*self.height
-            self.render_width = float(self.crop_edit.text()) * self.width
 
+                if self.render_check.isChecked():
+                    js_exporter.exportToQuicktime("", -1, -1, True, self.render_width, self.render_height, self.temp_path, "", False,1)
+                else:
+                    js_exporter.exportOGLToQuicktime(self.preview_name + "_Temp", "C:/Temp/temp_previews/", -1, -1,
+                                                     self.render_width, self.render_height)
+                if use_config:
+                    log("Pipeline slate")
+                    use_audio = False
+                    if self.sound_file:
+                        use_audio =True
+                    PA.createPreview_2D(self.scene_name,
+                                        inputPath=self.temp_path,
+                                        outputPath=self.preview_final,
+                                        audioPath=self.sound_file,
+                                        crop=self.crop_check.isChecked(),
+                                        cropWidth=self.width,
+                                        cropHeight=self.height,
+                                        title=self.scene_name,
+                                        frameCount=True,
+                                        timecode=True,
+                                        date=True,
+                                        useAudioFile=use_audio,
+                                        runCmd=True,
+                                        build_slate=self.slate_check.isChecked(),
+                                        user=self.u_edit.text())
 
-            if self.render_check.isChecked():
-                js_exporter.exportToQuicktime("", -1, -1, True, self.render_width, self.render_height, self.temp_path, "", False,1)
-            else:
-                js_exporter.exportOGLToQuicktime(self.preview_name + "_Temp", "C:/Temp/temp_previews/", -1, -1,
-                                                 self.render_width, self.render_height)
-            if use_config:
-                log("Pipeline slate")
-                use_audio = False
-                if self.sound_file:
-                    use_audio =True
-                PA.createPreview_2D(self.scene_name,
-                                    inputPath=self.temp_path,
-                                    outputPath=self.preview_final,
-                                    audioPath=self.sound_file,
-                                    crop=self.crop_check.isChecked(),
-                                    cropWidth=self.width,
-                                    cropHeight=self.height,
-                                    title=self.scene_name,
-                                    frameCount=True,
-                                    timecode=True,
-                                    date=True,
-                                    useAudioFile=use_audio,
-                                    runCmd=True,
-                                    build_slate=self.slate_check.isChecked(),
-                                    user=self.u_edit.text())
-
-            else:
-                log("CREATING REMOTE SLATE")
-                self.create_preview_locally_func(input_path=self.temp_path,
-                                                 output_path=self.preview_final,
-                                                 title=self.preview_name,
-                                                 slate=self.slate_check.isChecked(),
-                                                 crop=self.crop_check.isChecked(),
-                                                 crop_w=int(self.width),
-                                                 crop_h=int(self.height),
-                                                 audio=self.sound_file,
-                                                 user=self.u_edit.text())
-            log("Finished")
-            os.startfile(self.preview_final)
+                else:
+                    log("CREATING REMOTE SLATE")
+                    self.create_preview_locally_func(input_path=self.temp_path,
+                                                     output_path=self.preview_final,
+                                                     title=self.preview_name,
+                                                     slate=self.slate_check.isChecked(),
+                                                     crop=self.crop_check.isChecked(),
+                                                     crop_w=int(self.width),
+                                                     crop_h=int(self.height),
+                                                     audio=self.sound_file,
+                                                     user=self.u_edit.text())
+                log("Finished")
+                os.startfile(self.preview_final)
 
     def checkLength(self):
         sess = harmony.session()
@@ -279,6 +296,7 @@ class PreviewPython_UI(QDialog):
         else:
             log("Can't find any audio file to compare to")
             return False
+        return True
 
 
     def create_preview_locally_func(self,input_path="", output_path="", title=None, slate=True,crop=False,crop_w=1920,crop_h=1080,audio=None,user=None):
