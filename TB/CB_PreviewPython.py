@@ -25,7 +25,7 @@ def log(message):
 
 import sys
 
-os.environ["BOM_PIPE_PATH"] = "C:/Users/cg/PycharmProjects/cobopipe_v02-001/"
+# os.environ["BOM_PIPE_PATH"] = "C:/Users/cg/PycharmProjects/cobopipe_v02-001/"
 if os.environ.get("BOM_PIPE_PATH"):
     sys.path.append(os.environ["BOM_PIPE_PATH"])
     from getConfig import getConfigClass
