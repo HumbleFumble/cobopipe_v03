@@ -7,8 +7,8 @@ from PySide6.QtGui import *
 
 import os
 import ffmpeg
-# import json
-import file_util
+import json
+# import file_util
 
 try:
 	from ToonBoom import harmony
@@ -150,7 +150,7 @@ class PreviewPython_UI(QDialog):
         if use_config:
             self.config_info()
         # load_dict = self.loadJson(self.save_location)
-        load_dict = file_util.load_json(self.save_location)
+        load_dict = self.load_json(self.save_location)
         if load_dict:
             self.slate_check.setChecked(load_dict["slate_check"])
             if self.u_dd.findText(load_dict["user"])>-1:
@@ -160,20 +160,21 @@ class PreviewPython_UI(QDialog):
             self.render_check.setChecked(load_dict["render_check"])
         if use_config:
             if os.environ.get("BOM_USER"):
+                self.u_dd.setCurrentText(os.environ["BOM_USER"])
                 self.u_edit.setText(os.environ["BOM_USER"])
 
 
-    # def loadJson(self,load_file):
-    #     if os.path.isfile(load_file):
-    #         with open(load_file, 'r') as cur_file:
-    #             return json.load(cur_file)
-    #     else:
-    #         return {}
+    def load_json(self,load_file):
+        if os.path.isfile(load_file):
+            with open(load_file, 'r') as cur_file:
+                return json.load(cur_file)
+        else:
+            return {}
 
-    # def saveJson(self, save_location, save_info):
-    #     with open(save_location, 'w+') as saveFile:
-    #         json.dump(save_info, saveFile)
-    #     saveFile.close()
+    def save_json(self, save_location, save_info):
+        with open(save_location, 'w+') as saveFile:
+            json.dump(save_info, saveFile)
+        saveFile.close()
 
     def closeEvent(self,event):
 
@@ -182,7 +183,7 @@ class PreviewPython_UI(QDialog):
                      "blocking_check":self.blocking_check.isChecked(),
                      "render_check":self.render_check.isChecked()}
         # self.saveJson(self.save_location,save_dict)
-        file_util.save_json(self.save_location, save_dict)
+        self.save_json(self.save_location, save_dict)
         super(PreviewPython_UI, self).closeEvent(event)
 
 
@@ -190,7 +191,11 @@ class PreviewPython_UI(QDialog):
         sess = harmony.session()  # Fetch the currently active session of Harmony
         project = sess.project  # The project that is already loaded.
         scene_dir = project.project_path
-        self.scene_name = project.scene_name
+        self.folder_name = project.scene_name
+        self.scene_name = self.folder_name
+        if "_V" in self.scene_name:
+            self.scene_name = self.scene_name.split("_V")[0]
+
         self.preview_name = self.scene_name
         self.preview_path = "%s/_Preview/" % scene_dir.split(self.scene_name)[0]
 
