@@ -641,7 +641,7 @@ class FrontController(QObject):
 
 	# def createSubnodeList(self):
 	def removeKeyOnSelection(self):
-		pro = self.sess()
+		pro = self.sess.project
 		his = pro.history
 		his.begin("Remove Keys")
 		current_frame = int(js_frame.current())
@@ -656,7 +656,7 @@ class FrontController(QObject):
 		his.end()
 	# 	Check nodes + columns in selection
 	def addKeyOnSelection(self):
-		pro = self.sess()
+		pro = self.sess.project
 		his = pro.history
 		his.begin("Add Keys")
 		# current_frame = self.scene.selection.frame_start
