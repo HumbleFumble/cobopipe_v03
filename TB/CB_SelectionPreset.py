@@ -641,6 +641,9 @@ class FrontController(QObject):
 
 	# def createSubnodeList(self):
 	def removeKeyOnSelection(self):
+		pro = self.sess()
+		his = pro.history
+		his.begin("Remove Keys")
 		current_frame = int(js_frame.current())
 		log(current_frame)
 		for n in self.scene.selection.nodes:
@@ -650,8 +653,12 @@ class FrontController(QObject):
 					if not c.type == "DRAWING":
 						if c.keyframe_exists(current_frame):
 							c.keyframe_remove(current_frame)
+		his.end()
 	# 	Check nodes + columns in selection
 	def addKeyOnSelection(self):
+		pro = self.sess()
+		his = pro.history
+		his.begin("Add Keys")
 		# current_frame = self.scene.selection.frame_start
 		current_frame = int(js_frame.current())
 		log(current_frame)
@@ -662,7 +669,7 @@ class FrontController(QObject):
 					if not c.type =="DRAWING":
 						if not c.keyframe_exists(current_frame):
 							c.keyframe_create(current_frame)
-
+		his.end()
 	# 	Check nodes + columns in selection
 	def getAllAtributes(self, attr_list):
 		return_list = []
