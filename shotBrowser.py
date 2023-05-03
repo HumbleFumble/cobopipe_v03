@@ -3355,6 +3355,7 @@ class MainWindow(QtWidgets.QWidget):
 		self.user_combobox.clear()
 		self.user_combobox.addItems(user_list)
 		# cur_dict = self.loadSettings(self.user_save_file)
+		print(self.user_save_file)
 		cur_dict = file_util.load_json(self.user_save_file)
 		if cur_dict:
 			if "CompContactSheet" in cur_dict:
@@ -3379,9 +3380,10 @@ class MainWindow(QtWidgets.QWidget):
 		# check if a folder exists:
 		if not os.path.exists(os.path.split(self.user_save_file)[0]):
 			os.mkdir(os.path.split(self.user_save_file)[0])
-		with open(self.user_save_file, 'w+') as saveFile:
-			json.dump(user_save_dict, saveFile)
-		saveFile.close()
+		# with open(self.user_save_file, 'w+') as saveFile:
+		# 	json.dump(user_save_dict, saveFile)
+		# saveFile.close()
+		file_util.save_json(self.user_save_file, user_save_dict)
 
 	def tableDoubleClicked(self, cur_index):
 		cur_node = self.table_model.getNode(cur_index)
