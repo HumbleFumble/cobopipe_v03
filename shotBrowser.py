@@ -1455,7 +1455,7 @@ class FrontController(QtCore.QObject):
 		process = subprocess.Popen(cmd, shell=True, universal_newlines=True, env=run_env, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 		stdout, stderr = process.communicate()
 		result = stdout.split('<RESULT_START>')[-1].split('<RESULT_END>')[0]
-		return json.loads(result)
+		return file_util.load_json(result)
 
 
  
@@ -3377,6 +3377,7 @@ class MainWindow(QtWidgets.QWidget):
 		user = self.user_combobox.currentText()
 		run_env["BOM_USER"] = user
 		user_save_dict = {"CompContactSheet": user}
+
 		# check if a folder exists:
 		if not os.path.exists(os.path.split(self.user_save_file)[0]):
 			os.mkdir(os.path.split(self.user_save_file)[0])

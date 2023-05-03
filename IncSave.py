@@ -27,19 +27,25 @@ def getMayaAsciiOrBinary(file_path=None):
     ''''''
     
     file_type = None
-    
-    if os.path.exists(file_path):
-        with open(file_path, "rb") as f:
-            data = f.read().decode("utf-8")
-        f.close()
-                
-        if data.startswith("FOR"):
-            file_type = "mb"
-        
-        if data.startswith("//M"):
-            file_type = "ma"
+    if file_path.endswith(".ma"):
+        file_type = "ma"
+    else:
+        file_type = "mb"
+    try:
+        if os.path.exists(file_path):
+            with open(file_path, "rb") as f:
+                data = f.read().decode("utf-8")
+            f.close()
+
+            if data.startswith("FOR"):
+                file_type = "mb"
+
+            if data.startswith("//M"):
+                file_type = "ma"
+    except Exception as e:
+        print(e)
             
-        return file_type
+    return file_type
 
 def fixMayaExtension(file_path):
     ''''''
