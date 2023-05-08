@@ -27,5 +27,5 @@ def load_json(save_location):
         if loadedSettings:
             return loadedSettings
     else:
-        logger.warning("not a file")
+        logger.debug("not a file: %s" % save_location)
     return None
