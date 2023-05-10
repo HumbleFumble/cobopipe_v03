@@ -1,12 +1,12 @@
 import maya.cmds as cmds
 from getConfig import getConfigClass
-from Maya_Functions.file_util_functions import loadJson
+from file_util import load_json
 from Log.CoboLoggers import getLogger
 logger = getLogger()
 
 CC = getConfigClass()
 print(CC.get_project_shelf_json())
-build_dict = loadJson(save_location=CC.get_project_shelf_json())
+build_dict = load_json(save_location=CC.get_project_shelf_json())
 
 #TODO Add in seperators?
 
@@ -176,7 +176,7 @@ dict example
 def run(overwrite=True):
     shelf_name = "%s_Shelf" % CC.project_name
     if "project_shelf_json" in CC.__dict__:
-        build_dict = loadJson(save_location=CC.get_project_shelf_json())
+        build_dict = load_json(save_location=CC.get_project_shelf_json())
 
         ShelfCreator(
             name=shelf_name,
