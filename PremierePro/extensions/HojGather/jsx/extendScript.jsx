@@ -33,13 +33,12 @@ $.runScript = {
 		var episodeSequenceObject = findSequence(episodeName)
 		var episodeFolder = new Folder(process_path(config.project_paths.episode_path, {"episode_name": episodeName}));
 		var sequenceFolders = episodeFolder.getFiles(episodeName + sequence_prefix_padding[0] + "*");
-		
 
 		for(var i = 0;i < sequenceFolders.length;i++){
 			var sequenceName = getSequenceName(sequenceFolders[i].fsName.substring(sequenceFolders[i].fsName.length - sequence_prefix_padding[1]))
 			importSequence(sequenceFolders[i].fsName);
 
-			
+			// START DEBUGGING HERE DUMBASS
 			var sequenceItem = findFootage(sequenceName)
 			var videoTrack = episodeSequenceObject.videoTracks[0];
 			previousClipEnd = new Time()
@@ -245,7 +244,7 @@ function loadJson(_path){
 
 function importSequence(currentPath){
     var episodeName = getEpisodeName(episode);
-    var sequenceName = getSequenceName(currentPath.substring(currentPath.length - sequence_prefix_padding[1]))
+    var sequenceName = getSequenceName(currentPath.substring(currentPath.length - sequence_prefix_padding[1]));
     var sequenceFolder = new Folder(currentPath);
 
     if(binExists(sequenceName, null) == false){
@@ -280,7 +279,6 @@ function importSequence(currentPath){
     for(var j = 0;j < shotFolders.length;j++){
         var currentPath = shotFolders[j].fullName;
         if(currentPath.split('/').pop().length == template_name.length){
-
             var currentShot = getShotName(currentPath.slice(currentPath.length - shot_prefix_padding[1]))
             var temp_latest_time = new Time();
             var highestStepAchieved = false;
@@ -897,7 +895,6 @@ function importSequence(currentPath){
 
                                 for(var m = 0; m < effect.properties.numItems; m++){
                                     var property = effect.properties[m];
-                                    // alert(String(m) + ": " + String(property.displayName))
 
                                     if(m == 5){
                                         property.setValue("Shot length inconsistency")
@@ -929,7 +926,6 @@ function importSequence(currentPath){
 
                                 for(var m = 0; m < effect.properties.numItems; m++){
                                     var property = effect.properties[m];
-                                    // alert(String(m) + ": " + String(property.displayName))
 
                                     if(property.displayName === "Green Slope"){
                                         property.setValue(0)
@@ -968,7 +964,7 @@ function importSequence(currentPath){
                     }
                 }
             }
-
+            
             if(cutToSoundCheck == true){
                 var sound_end = current_shots_end_times[current_shots_end_times.length-1];
                 if(clips.length > 0){
@@ -980,13 +976,14 @@ function importSequence(currentPath){
                 }
             }
             
-
-            latest_time = temp_latest_time
+            latest_time = temp_latest_time;
         }
     }
 
     var placeholderBin = findBin('Placeholders');
-    placeholderBin.deleteBin();
+    if(placeholderBin != null){
+        placeholderBin.deleteBin();
+    }
 }
 
 function createSequence(name){
