@@ -333,7 +333,13 @@ class PreviewPython_UI(QDialog):
         else:
             stream = ffmpeg.output(stream,output_path)
 
-        _string = ' '.join(ffmpeg.compile(stream, overwrite_output=True))
+        # _string = ' '.join(ffmpeg.compile(stream, overwrite_output=True))
+        _string = ""
+        for s in ffmpeg.compile(stream, overwrite_output=True):
+            if s == "ffmpeg" or s.startswith("-"):
+                _string = _string + " " + s
+            else:
+                _string = _string + ' "' +s + '"'
         try:
             log('::::>> RUNNING:\n' + _string)
             ffmpeg.run(stream, overwrite_output=True)
