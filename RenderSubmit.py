@@ -99,7 +99,7 @@ class MainWindow(QtWidgets.QWidget):
         # self.preset_config = self.LoadSettings(self.preset_config_file)
         self.preset_config = file_util.load_json(self.preset_config_file)
         # self.user_dict = self.LoadSettings(self.user_save_file)
-        self.user_dict = self.load_json(self.user_save_file)
+        self.user_dict = file_util.load_json(self.user_save_file)
         # self.signals = Signals.Signals()
         self.thread_pool = ThreadPool.ThreadPool()
         # self.thread_pool.signals.result.connect(self.printThreadResult)
@@ -827,7 +827,8 @@ class MainWindow(QtWidgets.QWidget):
         self.render_settings_dd.clear()
         self.preset_dd.setDisabled(True)
         self.preset_dd.clear()
-        self.preset_dd.addItems(sorted(self.preset_config.keys()))
+        if self.preset_config:
+            self.preset_dd.addItems(sorted(self.preset_config.keys()))
         self.preset_dd.setEnabled(True)
         aov_list = list(self.aov_dict.keys())
         if render_type == 'arnold':
