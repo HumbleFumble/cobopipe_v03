@@ -121,7 +121,7 @@
     }
   },
   "regex_strings": {
-    "episode_regex": "^(e)\\d{2}",
+    "episode_regex": "^(s)\\d{3}",
     "seq_regex": "(_sq)\\d{3}",
     "shot_regex": "(_sh)\\d{3}"
   },

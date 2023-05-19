@@ -74,7 +74,7 @@ class ConfigClass():
         self.YetiAlembicCache="<asset_ref_folder>/YetiGroom/<asset_name>_<yeti_node>_AlembicCache.abc"
         self.AnimScene="<shot_path>/04_Publish/<episode_name>_<seq_name>_<shot_name>_AnimRef.mb"
         
-        self.episode_regex="^(e)\d{2}"
+        self.episode_regex="^(s)\d{3}"
         self.seq_regex="(_sq)\d{3}"
         self.shot_regex="(_sh)\d{3}"
         
