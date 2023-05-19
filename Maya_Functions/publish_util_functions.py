@@ -10,7 +10,8 @@ import sys
 try:
     import maya.cmds as cmds
     from Maya_Functions.set_util_functions import FindObjectsFromSet
-    from Maya_Functions.file_util_functions import saveJson, makeFolder, loadJson
+    from Maya_Functions.file_util_functions import makeFolder
+    from file_util import save_json, load_json
     in_maya = True
 except:
     in_maya =False
@@ -105,14 +106,15 @@ def savePublishReport(info_dict=None, content={}, filepath=None):
             filepath = CC.get_asset_publish_report_file(**info_dict)
         if "shot_name" in info_dict:
             filepath = CC.get_shot_publish_report_file(**info_dict)
-    from Maya_Functions.file_util_functions import saveJson, makeFolder,loadJson
+    from file_util import save_json, load_json
+    from Maya_Functions.file_util_functions import makeFolder
     makeFolder(cur_path=filepath)
-    old_content = loadJson(save_location=filepath)
+    old_content = load_json(save_location=filepath)
     if not old_content:
         old_content = {}
     for cur_key in content.keys():
         old_content[cur_key] = content[cur_key]
-    saveJson(save_location=filepath,save_info=old_content)
+    save_json(save_location=filepath,save_info=old_content)
 
 
 def updatePublishReport_MayaPyCmd(info_dict=None,scene_path=None,report_name="AnimScene"):
@@ -259,7 +261,8 @@ def recursiveReport(report_dict=None):
 
 
 def returnPublishReport(asset_info=None,filepath=None,filters=None):
-    from Maya_Functions.file_util_functions import saveJson, makeFolder, loadJson
+    from file_util import save_json, load_json
+    from Maya_Functions.file_util_functions import makeFolder
     return_dict = {}
     if not "asset_publish_report_file" in CC.__dict__.keys():
         return False
@@ -268,7 +271,7 @@ def returnPublishReport(asset_info=None,filepath=None,filters=None):
     if "episode_name" in asset_info and not filepath:
         filepath = CC.get_shot_publish_report_file(**asset_info)
     if filepath:
-        old_content = loadJson(save_location=filepath)
+        old_content = load_json(save_location=filepath)
         if filters and old_content:
             for cur_key in old_content.keys():
                 for cur_filter in filters:
@@ -283,7 +286,7 @@ def getDependency(asset_info=None,filter_key=None):
     """
     get asset dict from file or as arg
     get publish report from CC.asset_publish_report_file(**asset_info)
-    return_dict = loadJson(save_location="")
+    return_dict = load_json(save_location="")
     ref_paths = []
     texture_paths = []
     filter_key = None
