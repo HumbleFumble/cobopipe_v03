@@ -267,6 +267,7 @@ function ImportAllSequence(E, SQ){
         shot_obj.import_list = []
         shot_obj.full_footage_list = []
         shot_obj.info = ""
+        skip_footage = false
         for(var p=0;p<pick_list.length;p++){
             pick = pick_list[p]
             shot_obj[pick] = []
@@ -281,7 +282,15 @@ function ImportAllSequence(E, SQ){
                 }
                 shot_obj.full_footage_list.push([pick,temp_path])
             }
-        }
+            }
+
+       if(cur_win.grp.only_sound_on_footage_check.value){
+            if(shot_obj.import_list.length == 1){
+               if(shot_obj.import_list[0][0] == "sound"){
+                    shot_obj.import_list = []
+                    }
+                }
+            }
 
         var cur_duration = 0;
         var done = false;
@@ -754,6 +763,7 @@ var cur_win = (function(thisObj){
     dialog.grp.button_group = dialog.grp.add("Group {orientation: 'row', ep_button: Button{text:'Import Episode'}, sq_button: Button{text: 'Import Sequence'}}")
     dialog.grp.only_highest_check = dialog.grp.add("Checkbox {text: 'Import Highest Step Only',value: true}")
     dialog.grp.sound_length_check = dialog.grp.add("Checkbox {text: 'Base Shot Length On Sound',value: true}")
+    dialog.grp.only_sound_on_footage_check = dialog.grp.add("Checkbox {text: 'Only Add Sound if Footage',value: false}")
     dialog.grp.create_timecode_check = dialog.grp.add("Checkbox {text: 'Create TimeCode',value: true}")
     dialog.grp.error_bttn = dialog.grp.add("Button{text: 'Show Error Log'}")
 
