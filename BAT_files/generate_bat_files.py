@@ -24,6 +24,8 @@ EXIT /B 0""",
 
 'Launch_aftereffects.bat': r'python "' + repository_directory + r'/launchHandler.py" "aftereffects" ' + str(local),
 
+'Launch_MountDriveInterface.bat': r'python "' + repository_directory + '/MountDriveInterface.py"',
+
 'New P-drive.bat': r"""net use P: /delete
 net use P: \\dumpap3\production""",
 
