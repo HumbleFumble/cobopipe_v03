@@ -52,6 +52,12 @@ class Startup:
                     "callback": "idleVeryLow",
                     "function": self.firstIdle
                 },
+
+                {
+                    "name": "NewSceneOpened",
+                    "callback": "NewSceneOpened",
+                    "function": self.newSceneOpened
+                }
             ]
 
             self.callbacks = {}
@@ -102,6 +108,14 @@ class Startup:
 
         # Add functions here
         cryptoAttributes.cryptoAttrCheck()
+
+
+    def newSceneOpened(self, *args):
+        logger.debug('New scene opened callback')
+        # Add functions here
+        if self.maya_interactive:
+            import userSetup
+            userSetup.setProjectSettings()
 
 
     def exit(self, *args): # Runs right before Maya closes

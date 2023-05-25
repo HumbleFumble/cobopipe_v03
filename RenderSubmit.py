@@ -702,11 +702,12 @@ class MainWindow(QtWidgets.QWidget):
             return False
         # Check against name case-insensitive
         check_list = []
-        for check in self.preset_config.keys():
-            check_list.append(check.lower())
-        if name.lower() in check_list:
-            logger.info("This name: %s Already exists as a preset" % name)
-            return False
+        if self.preset_config:
+            for check in self.preset_config.keys():
+                check_list.append(check.lower())
+            if name.lower() in check_list:
+                logger.info("This name: %s Already exists as a preset" % name)
+                return False
         # add new preset to dropdown and then save it out
         self.preset_dd.addItem(name)
         name_index = self.preset_dd.findText(name)
@@ -1000,8 +1001,9 @@ class MainWindow(QtWidgets.QWidget):
 
     def SubmitRenderCall(self):
         if in_maya:
-            if self.render_settings["ENV Override OFF"]['checkbox'].isChecked(): #remove BG Texture in override env.
-                self.rf.CheckOffBGOverride()
+            if self.render_settings["ENV Override OFF"] and 'checkbox' in self.render_settings["ENV Override OFF"].keys():
+                if self.render_settings["ENV Override OFF"]['checkbox'].isChecked(): #remove BG Texture in override env.
+                    self.rf.CheckOffBGOverride()
             self.submitInsideOfMayaCall()
         else:
             self.submitOutsideOfMayaCall()
@@ -1018,16 +1020,19 @@ class MainWindow(QtWidgets.QWidget):
                 self.info_dict["publish_report_name"] = 'LightScene'
                 readyPublishReport(info_dict=self.info_dict, current_dict=content_dict, ref=True, texture=False)
                 savePublishReport(info_dict=self.info_dict, content=content_dict)
-                if self.render_settings["Create CryptoMatte"]['checkbox'].isChecked():
-                    self.rf.buildCryptoAttr()
+                if self.render_settings["Create CryptoMatte"] and "checkbox" in self.render_settings["Create CryptoMatte"].keys():
+                    if self.render_settings["Create CryptoMatte"]['checkbox'].isChecked():
+                        self.rf.buildCryptoAttr()
                 cmd_list = []
 
                 #Check if we need to render only a single frame or a full length render of BG
-                if not self.render_settings["Full-Length BG"]['checkbox'].isChecked() or self.render_settings["Single Frame"]['checkbox'].isChecked():
-                    only_bg_single = True
-                else:
-                    only_bg_single = False
+                only_bg_single = False
+                if self.render_settings["Full-Length BG"] and "checkbox" in self.render_settings["Full-Length BG"].keys():
+                    if self.render_settings["Single Frame"] and "checkbox" in self.render_settings["Single Frame"].keys():
+                        if not self.render_settings["Full-Length BG"]['checkbox'].isChecked() or self.render_settings["Single Frame"]['checkbox'].isChecked():
+                            only_bg_single = True
                 #### BG RENDER SUBMIT ####
+                
                 if self.render_settings["Add BG Render"]['checkbox'].isChecked() or self.render_settings["Render ONLY BG"]['checkbox'].isChecked():
                     # bg_only_cmd = self.rf.RenderSubmitInfo(c_prefix=self.preset_dd.currentText(),
                                                         #    onlybg=True,

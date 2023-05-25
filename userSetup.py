@@ -16,6 +16,7 @@ def setProjectSettings():
             if settings['fps']:
                 cmds.currentUnit(time=settings['fps'], updateAnimation=True)
                 logger.info('FPS set to ' + settings['fps'])
+                
         if 'cmEnabled' in settings.keys():
             if settings['cmEnabled'] == True or settings['cmEnabled'] == False:
                 if settings['cmEnabled'] == True:
@@ -25,17 +26,20 @@ def setProjectSettings():
                 else:
                     cmds.colorManagementPrefs(edit=True, cmEnabled=settings['cmEnabled'])
                     logger.info('Color Management has been disabled')
-        if 'cmViewTransform' in settings.keys():
-            if settings['cmViewTransform']:
-                if settings['cmViewTransform'] in cmds.colorManagementPrefs(q=True, viewNames=True):
-                    cmds.colorManagementPrefs(edit=True, viewTransformName=settings['cmViewTransform'])
-                    logger.info('Color Management View Transform has been set to ' + settings['cmViewTransform'])
 
         if 'cmRenderingSpaceName' in settings.keys():
             if settings['cmRenderingSpaceName']:
                 if settings['cmRenderingSpaceName'] in cmds.colorManagementPrefs(q=True, renderingSpaceNames=True):
                     cmds.colorManagementPrefs(edit=True, renderingSpaceName=settings['cmRenderingSpaceName'])
                     logger.info('Color Management RenderSpace has been set to ' + settings['cmRenderingSpaceName'])
+        
+        if 'cmViewTransform' in settings.keys():
+            if settings['cmViewTransform']:
+                viewNamesList = cmds.colorManagementPrefs(q=True, viewNames=True)
+                viewNamesList.append('Un-tone-mapped (sRGB)')
+                if settings['cmViewTransform'] in viewNamesList:
+                    cmds.colorManagementPrefs(edit=True, viewTransformName=settings['cmViewTransform'])
+                    logger.info('Color Management View Transform has been set to ' + settings['cmViewTransform'])
 
         if 'colorManagementEnabledByDefault' in settings.keys():
             cmds.optionVar(iv=['colorManagementEnabledByDefault', settings["colorManagementEnabledByDefault"]])
