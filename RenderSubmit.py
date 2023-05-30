@@ -837,8 +837,6 @@ class MainWindow(QtWidgets.QWidget):
         aov_list = list(self.aov_dict.keys())
         if render_type == 'arnold':
             imager_list = list(self.imager_dict.keys())
-        # aov_list.append("None")
-        if render_type == 'arnold':
             self.imager_settings_dd.addItems(sorted(imager_list))
         self.aov_dd.addItems(sorted(aov_list))
         self.render_settings_dd.addItems(sorted(self.preset_dict.keys()))
@@ -874,6 +872,10 @@ class MainWindow(QtWidgets.QWidget):
             self.aov_dd.setCurrentIndex(aov_index)
         if rs_index >= 0:
             self.render_settings_dd.setCurrentIndex(rs_index)
+        if render_type == "arnold":
+            imager_index = self.imager_settings_dd.findText(self.preset_config[cur_preset]["IMAGER"])
+            if imager_index >= 0:
+                self.imager_settings_dd.setCurrentIndex(imager_index)
 
     def SavePresetCall(self):
         self.preset_config[self.preset_dd.currentText()] = {}
@@ -893,6 +895,7 @@ class MainWindow(QtWidgets.QWidget):
         settings_dict["RS"] = self.render_settings_dd.currentText()
         settings_dict["AOV"] = self.aov_dd.currentText()
         settings_dict["OVERWRITE"] = self.overwrite_checkbox.isChecked()
+        settings_dict["IMAGER"] = self.imager_settings_dd.currentText()
 
         settings_dict["PRIO"] = self.priority_int.text()
         settings_dict["STEPPED"] = self.stepped_int.text()
@@ -965,6 +968,7 @@ class MainWindow(QtWidgets.QWidget):
                 if render_type == 'arnold':
                     import Maya_Functions.arnold_util_functions as arnold_util
                     self.rf.ImportAOVsArnold(self.aov_dict[self.aov_dd.currentText()])
+                    arnold_util.import_aov_shaders("%s/AOV_Shaders/" % CC.get_render_presets())
                     arnold_util.add_aovs_to_noice()
                 else:
                     cryptoAttributes.addOID(overwrite=False)
