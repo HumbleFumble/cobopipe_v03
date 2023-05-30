@@ -25,6 +25,7 @@
     "shot_render_path": "<shot_path>/04_Publish/<episode_name>_<seq_name>_<shot_name>_<render_prefix>_Render.ma",
     "shot_crypto_render_file": "<shot_path>/04_Publish/<episode_name>_<seq_name>_<shot_name>_<render_prefix>_Crypto_Render.ma",
     "shot_passes_folder": "<shot_path>/passes/<render_prefix>/<episode_name>_<seq_name>_<shot_name>_<render_prefix>",
+    "shot_default_render_stack": "<shot_path>/passes/Light_test/<episode_name>_<seq_name>_<shot_name>_ColorA_0001.exr",
     "shot_2D_passes_folder": "<shot_path>/passes/",
     "shot_comp_folder": "<shot_path>/03_Comp/",
     "shot_comp_output_folder": "<shot_path>/05_CompOutput",
@@ -160,6 +161,11 @@
     "YetiGroom": "<asset_ref_folder>/YetiGroom/<asset_name>_<yeti_node>_Groom.grm",
     "YetiAlembicCache": "<asset_ref_folder>/YetiGroom/<asset_name>_<yeti_node>_AlembicCache.abc",
     "AnimScene": "<shot_path>/04_Publish/<episode_name>_<seq_name>_<shot_name>_AnimRef.mb"
+  },
+  "preview_dict": {"comp": ["shot_comp_output_file_mov"],
+               "render":["shot_default_render_stack"],
+               "anim": ["shot_anim_preview_file"],
+               "animatic": ["shot_animatic_file"]
   },
   "project_style": {
     "animation_style": [
