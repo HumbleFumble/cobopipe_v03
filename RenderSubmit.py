@@ -1517,9 +1517,9 @@ class RenderSubmitFunctions():
                 render_folder,render_filename = os.path.split(CC.get_shot_passes_folder(**info_dict)) #cfg_util.CreatePathFromDict(cfg.project_paths["shot_passes_folder"],info_dict)
             
                 if render_layer:
-                    destination = "%s/<layer>/%s<layer>#" % (render_folder,render_filename)
+                    destination = "%s/<layer>/%s<layer>" % (render_folder,render_filename)
                 else:
-                    destination = "%s#" % CC.get_shot_passes_folder(**info_dict)
+                    destination = "%s" % CC.get_shot_passes_folder(**info_dict)
                 
                 cmds.setAttr("defaultRenderGlobals.imageFilePrefix", destination, type="string")
                 logger.info("Render path set to: %s" % destination)
