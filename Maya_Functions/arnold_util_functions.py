@@ -118,6 +118,21 @@ def add_aovs_to_noice():
     noice_nodes = cmds.ls(type="aiImagerDenoiserNoice")
     for node in noice_nodes:
         cmds.setAttr(node + ".layerSelection", layerSelection_string, type='string')
+def import_aov_shaders(folder_path="P:/930435_Liva_og_De_Uperfekte/Teaser/Pipeline/RenderSettings_Presets/AOV_Shaders/"):
+    aov_list = ["ao", "uv", "falloff"]
+    for aov_name in aov_list:
+        aov = cmds.ls("aiAOV_%s" % aov_name, type="aiAOV")
+        if aov:
+            aov_shader = cmds.ls("aov_%s_Shader" % aov_name)
+
+            if not cmds.listConnections("%s.defaultValue" % aov[0]):
+
+                if not aov_shader:
+                    i_file = cmds.file("%s%s.ma" % (folder_path, aov_name), i=True, ignoreVersion=True,
+                                       ra=False, mergeNamespacesOnClash=True, options="v=0;")
+                    aov_shader = cmds.ls("aov_%s_Shader" % aov_name)
+
+                    cmds.connectAttr("%s.outColor" % aov_shader[0], "%s.defaultValue" % aov[0], f=True)
 
 
 # save_imager_preset("C:/Users/mha/Desktop/imager_test.json")
