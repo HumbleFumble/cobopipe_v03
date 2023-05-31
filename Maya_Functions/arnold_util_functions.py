@@ -16,6 +16,25 @@ IMAGER_TYPES = (
 )
 
 
+def get_set_arnold_driver(set=False,driver_dict=None):
+    if not set:
+        driver_dict = {"halfPrecision":0,
+                       "exrCompression":0,
+                       "preserveLayerName":0,
+                       "exrTiled":0,
+                       "multipart":0,
+                       "autocrop":0,
+                       "append":0,
+                       "mergeAOVs":0}
+    for k in driver_dict:
+        if set:
+            cmds.setAttr("defaultArnoldDriver.%s" % k, driver_dict[k])
+        else:
+            driver_dict[k] = cmds.getAttr("defaultArnoldDriver.%s" % k)
+
+    return driver_dict
+
+
 def load_imager_preset(path):
     if not os.path.exists(path):
         return

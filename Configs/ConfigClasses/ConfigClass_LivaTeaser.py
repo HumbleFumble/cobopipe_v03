@@ -29,7 +29,7 @@ class ConfigClass():
         self.shot_render_path="<shot_path>/04_Publish/<episode_name>_<seq_name>_<shot_name>_<render_prefix>_Render.ma"
         self.shot_crypto_render_file="<shot_path>/04_Publish/<episode_name>_<seq_name>_<shot_name>_<render_prefix>_Crypto_Render.ma"
         self.shot_passes_folder="<shot_path>/passes/<render_prefix>/<episode_name>_<seq_name>_<shot_name>_<render_prefix>"
-        self.shot_default_render_stack="<shot_path>/passes/Light_test/<episode_name>_<seq_name>_<shot_name>.ColorA_0001.exr"
+        self.shot_default_render_stack="<shot_path>/passes/ColorB/<episode_name>_<seq_name>_<shot_name>_ColorB.0001.exr"
         self.shot_2D_passes_folder="<shot_path>/passes/"
         self.shot_comp_folder="<shot_path>/03_Comp/"
         self.shot_comp_output_folder="<shot_path>/05_CompOutput"
@@ -627,7 +627,7 @@ class ConfigClass():
             shot_name="<shot_name>"
             logger.debug("Building path to shot_default_render_stack: Argument Missing: shot_name")
 
-        to_return = "P:/930435_Liva_og_De_Uperfekte/Teaser/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_{shot_name}/passes/Light_test/{episode_name}_{seq_name}_{shot_name}.ColorA_0001.exr".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
+        to_return = "P:/930435_Liva_og_De_Uperfekte/Teaser/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_{shot_name}/passes/ColorB/{episode_name}_{seq_name}_{shot_name}_ColorB.0001.exr".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
         return to_return
 
 

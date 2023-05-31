@@ -940,7 +940,9 @@ class MainWindow(QtWidgets.QWidget):
                 settings = file_util.load_json(CC.get_render_presets() + self.render_settings_dd.currentText())
                 vray_util.applyRenderSettings(settings)
             elif render_type == 'arnold':
-                settings = file_util.load_json(CC.get_render_presets() + self.render_settings_dd.currentText())
+                # import maya.app.renderSetup.views.renderSetupPreferences as prefs
+                # prefs.loadUserPreset(str(self.render_settings_dd.currentText()).split(".json")[0])
+                settings = file_util.load_json(CC.get_render_presets() + "/" + self.render_settings_dd.currentText())
                 arnold_renderSettings.decode(settings)
                 
 
@@ -967,7 +969,9 @@ class MainWindow(QtWidgets.QWidget):
             if not self.aov_dd.currentText() == "None":
                 if render_type == 'arnold':
                     import Maya_Functions.arnold_util_functions as arnold_util
+                    driver_info = arnold_util.get_set_arnold_driver(set=False)
                     self.rf.ImportAOVsArnold(self.aov_dict[self.aov_dd.currentText()])
+                    arnold_util.get_set_arnold_driver(set=True,driver_dict=driver_info)
                     arnold_util.import_aov_shaders("%s/AOV_Shaders/" % CC.get_render_presets())
                     arnold_util.add_aovs_to_noice()
                 else:
@@ -1524,9 +1528,9 @@ class RenderSubmitFunctions():
                 cmds.setAttr("defaultRenderGlobals.imageFilePrefix", destination, type="string")
                 logger.info("Render path set to: %s" % destination)
                 
-                cmds.setAttr("defaultArnoldDriver.multipart", 1)
-                cmds.setAttr("defaultArnoldDriver.mergeAOVs", 1)
-                cmds.setAttr("defaultArnoldDriver.preserveLayerName", 1)
+                # cmds.setAttr("defaultArnoldDriver.multipart", 1)
+                # cmds.setAttr("defaultArnoldDriver.mergeAOVs", 1)
+                # cmds.setAttr("defaultArnoldDriver.preserveLayerName", 1)
                 
     def SetRenderCam(self, shot):
         if shot != "":
