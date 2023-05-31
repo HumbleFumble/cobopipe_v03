@@ -1525,9 +1525,11 @@ class RenderSubmitFunctions():
                 else:
                     destination = "%s" % CC.get_shot_passes_folder(**info_dict)
                 
-                cmds.setAttr("defaultRenderGlobals.imageFilePrefix", destination, type="string")
+
+                if cmds.getAttr("defaultArnoldDriver.mergeAOVs") == 1: #Added to allow for cryptomatte getting out for Liva
+                    destination = destination + "_<RenderPass>"
                 logger.info("Render path set to: %s" % destination)
-                
+                cmds.setAttr("defaultRenderGlobals.imageFilePrefix", destination, type="string")
                 # cmds.setAttr("defaultArnoldDriver.multipart", 1)
                 # cmds.setAttr("defaultArnoldDriver.mergeAOVs", 1)
                 # cmds.setAttr("defaultArnoldDriver.preserveLayerName", 1)
