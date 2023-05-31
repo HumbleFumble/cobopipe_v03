@@ -1526,7 +1526,7 @@ class RenderSubmitFunctions():
                     destination = "%s" % CC.get_shot_passes_folder(**info_dict)
                 
 
-                if cmds.getAttr("defaultArnoldDriver.mergeAOVs") == 1: #Added to allow for cryptomatte getting out for Liva
+                if cmds.getAttr("defaultArnoldDriver.mergeAOVs") == 0: #Added to allow for cryptomatte getting out for Liva
                     destination = destination + "_<RenderPass>"
                 logger.info("Render path set to: %s" % destination)
                 cmds.setAttr("defaultRenderGlobals.imageFilePrefix", destination, type="string")
