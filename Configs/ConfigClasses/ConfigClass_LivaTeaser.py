@@ -93,7 +93,7 @@ class ConfigClass():
         
         self.project_style={'animation_style': ['Maya', 'Toonboom'], 'comp_style': ['Fusion', 'AE'], 'default_animation_style': 'Maya', 'default_comp_style': 'Fusion'}
         
-        self.preview_dict={'comp': ['shot_comp_output_file_mov'], 'render': ['shot_default_render_stack'], 'anim': ['shot_anim_preview_file'], 'animatic': ['shot_animatic_file']}
+        self.preview_dict={'comp': ['shot_comp_preview_file', 'shot_comp_output_file_mov'], 'render': ['shot_default_render_stack'], 'anim': ['shot_anim_preview_file'], 'animatic': ['shot_animatic_file']}
         
         import getConfig
         self.old = None
