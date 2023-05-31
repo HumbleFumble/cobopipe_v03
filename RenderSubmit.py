@@ -978,9 +978,6 @@ class MainWindow(QtWidgets.QWidget):
                     cryptoAttributes.addOID(overwrite=False)
                     # print('ImportRenderSettings("%s")' % (self.aov_dict[self.aov_dd.currentText()]))
                     self.rf.ImportAOVs(self.aov_dict[self.aov_dd.currentText()])
-
-                
-
             else:
                 # print('ImportRenderSettings("None")')
                 self.rf.ImportAOVs("None")
@@ -1384,7 +1381,8 @@ class RenderSubmitFunctions():
         self.ui_widget = ui_widget
         if in_maya:
             #initialize vray
-            vray_util.setCurrentRenderer(renderer=render_type)
+            if render_type == "vray":
+                vray_util.setCurrentRenderer(renderer=render_type)
 
 
     def renderableCallback(self, message_type, plug, other_plug, client_data):
@@ -2134,47 +2132,50 @@ class RenderSubmitFunctions():
                               info_dict, overscan, sphere_render, render_layer, crypto_render, project_name, user_name, stepped,
                               r_prio,overwrite,single_frame, submitCallID,bubbles):
         cmds.file(current_file, open=True,f=True, lrd='all')
+
+
         self.ImportRenderSettings()
-        self.ApplyRenderSettings(rs_name, exr_multi, bg_off,overscan,sphere_render)
-        if bg_off:
-            self.CheckOffBGOverride()
-        self.SetRenderRange()
-        self.CreatePropOIDSet() 
-        import cryptoAttributes
-        cryptoAttributes.addOID(overwrite=False)
-        self.ImportAOVs(aov_name)
-        self.SetRenderPath(info_dict, prefix_name, only_bg)
-        self.SetRenderCam(info_dict['shot_name'])
-        if crypto_render:
-            self.buildCryptoAttr()
-        if phys_cam:
-            self.SetPhysicalAttrOnCam(info_dict['shot_name'])
-        render_file = CC.get_shot_render_path(**info_dict)
-        self.SaveRenderFileFunc(render_file=render_file, only_bg=only_bg, render_layer=render_layer,bubbles=bubbles)
-        cmds.file(save=True)
-        logger.info("Render file ready: %s" % render_file)
-        shotName = info_dict['episode_name'] + '_' + info_dict['seq_name'] + '_' + info_dict['shot_name']
-        if render_layer and not only_bg:
-            for current_layer in self.getActiveRenderLayers():
-                layer_cmd = self.RenderSubmitInfo(prefix_name, only_bg, user_name, stepped, r_prio, overwrite,info_dict, project_name, current_layer, single_frame)
-                self.saveCmdInFile(cmd=layer_cmd, submitCallID=submitCallID, shotName=shotName, suffix=prefix_name)
-                logger.info("For Render-Layer: %s" % current_layer)
-                logger.info(layer_cmd)
-                only_bg = False
-        else:
-            my_cmd = self.RenderSubmitInfo(prefix_name, only_bg, user_name, stepped, r_prio, overwrite, info_dict,project_name, False, single_frame)
-            self.saveCmdInFile(cmd=my_cmd, submitCallID=submitCallID, shotName=shotName, suffix=prefix_name)
+        if render_type == "vray":
+            self.ApplyRenderSettings(rs_name, exr_multi, bg_off,overscan,sphere_render)
+            if bg_off:
+                self.CheckOffBGOverride()
+            self.SetRenderRange()
+            self.CreatePropOIDSet()
+            import cryptoAttributes
+            cryptoAttributes.addOID(overwrite=False)
+            self.ImportAOVs(aov_name)
+            self.SetRenderPath(info_dict, prefix_name, only_bg)
+            self.SetRenderCam(info_dict['shot_name'])
+            if crypto_render:
+                self.buildCryptoAttr()
+            if phys_cam:
+                self.SetPhysicalAttrOnCam(info_dict['shot_name'])
+            render_file = CC.get_shot_render_path(**info_dict)
+            self.SaveRenderFileFunc(render_file=render_file, only_bg=only_bg, render_layer=render_layer,bubbles=bubbles)
+            cmds.file(save=True)
+            logger.info("Render file ready: %s" % render_file)
+            shotName = info_dict['episode_name'] + '_' + info_dict['seq_name'] + '_' + info_dict['shot_name']
+            if render_layer and not only_bg:
+                for current_layer in self.getActiveRenderLayers():
+                    layer_cmd = self.RenderSubmitInfo(prefix_name, only_bg, user_name, stepped, r_prio, overwrite,info_dict, project_name, current_layer, single_frame)
+                    self.saveCmdInFile(cmd=layer_cmd, submitCallID=submitCallID, shotName=shotName, suffix=prefix_name)
+                    logger.info("For Render-Layer: %s" % current_layer)
+                    logger.info(layer_cmd)
+                    only_bg = False
+            else:
+                my_cmd = self.RenderSubmitInfo(prefix_name, only_bg, user_name, stepped, r_prio, overwrite, info_dict,project_name, False, single_frame)
+                self.saveCmdInFile(cmd=my_cmd, submitCallID=submitCallID, shotName=shotName, suffix=prefix_name)
             logger.info(my_cmd)
 
-        if crypto_render and not only_bg:
-            logger.info("Creating CryptoMatte Render scene")
-            #Set all the info for render scene and return prefix name
-            crypto_prefix_name = self.runCryptoMatteSetupOutsideMaya(prefix_name, info_dict)
-            cmds.file(save=True)
-            crypto_cmd = self.RenderSubmitInfo(crypto_prefix_name, only_bg, user_name, stepped, r_prio, overwrite, info_dict,
-                                           project_name, False, single_frame,0)
-            logger.info("Saving Cmd: %s" % crypto_cmd)
-            self.saveCmdInFile(cmd=crypto_cmd, submitCallID=submitCallID, shotName=shotName, suffix=crypto_prefix_name)
+            if crypto_render and not only_bg:
+                logger.info("Creating CryptoMatte Render scene")
+                #Set all the info for render scene and return prefix name
+                crypto_prefix_name = self.runCryptoMatteSetupOutsideMaya(prefix_name, info_dict)
+                cmds.file(save=True)
+                crypto_cmd = self.RenderSubmitInfo(crypto_prefix_name, only_bg, user_name, stepped, r_prio, overwrite, info_dict,
+                                               project_name, False, single_frame,0)
+                logger.info("Saving Cmd: %s" % crypto_cmd)
+                self.saveCmdInFile(cmd=crypto_cmd, submitCallID=submitCallID, shotName=shotName, suffix=crypto_prefix_name)
 
         cmds.quit(f=True)
 
