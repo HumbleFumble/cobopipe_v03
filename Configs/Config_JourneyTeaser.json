@@ -31,6 +31,7 @@
     "shot_comp_output_file": "<shot_comp_output_folder>/<episode_name>_<seq_name>_<shot_name>_0001.exr",
     "shot_comp_output_file_mov": "<shot_comp_output_folder>/<episode_name>_<seq_name>_<shot_name>_CompOutput.mov",
     "shot_comp_preview_file": "<sequence_preview_folder>/<episode_name>_<seq_name>_<shot_name>_Comp.mov",
+    "shot_default_render_stack": "<shot_path>/passes/ColorB/<episode_name>_<seq_name>_<shot_name>_ColorA.0001.exr",
     "shot_ae_precomp_file": "<shot_comp_folder>/<episode_name>_<seq_name>_<shot_name>_Precomp.aep",
     "shot_yeti_cache_path": "<shot_path>/04_Publish/YetiCache/",
     "template_path": "<base_path>/Pipeline/Template",
@@ -73,6 +74,11 @@
     "shot_anim_thumbnail_path": "<shot_path>/Thumbnails/<episode_name>_<seq_name>_<shot_name>_anim_thumbnail.jpg",
     "shot_render_thumbnail_path": "<shot_path>/Thumbnails/<episode_name>_<seq_name>_<shot_name>_render_thumbnail.jpg",
     "shot_comp_thumbnail_path": "<shot_path>/Thumbnails/<episode_name>_<seq_name>_<shot_name>_comp_thumbnail.jpg"
+  },
+  "preview_dict": {"comp": ["shot_comp_output_file_mov","shot_comp_preview_file"],
+               "render":["shot_default_render_stack"],
+               "anim": ["shot_anim_preview_file"],
+               "animatic": ["shot_animatic_file"]
   },
   "ref_steps": {"Prop": {
       "Base": [
@@ -207,7 +213,8 @@
     "tb_height": 1080,
     "tb_size_multi": 1.1,
     "tb_output_format": "PNG4",
-    "tb_number_padding": "3"
+    "tb_number_padding": "3",
+    "deadline_pool": "liva-journey"
   }
 }
 
