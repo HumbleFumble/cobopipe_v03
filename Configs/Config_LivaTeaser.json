@@ -162,7 +162,7 @@
     "YetiAlembicCache": "<asset_ref_folder>/YetiGroom/<asset_name>_<yeti_node>_AlembicCache.abc",
     "AnimScene": "<shot_path>/04_Publish/<episode_name>_<seq_name>_<shot_name>_AnimRef.mb"
   },
-  "preview_dict": {"comp": ["shot_comp_preview_file","shot_comp_output_file_mov"],
+  "preview_dict": {"comp": ["shot_comp_output_file_mov","shot_comp_preview_file"],
                "render":["shot_default_render_stack"],
                "anim": ["shot_anim_preview_file"],
                "animatic": ["shot_animatic_file"]
