@@ -63,7 +63,7 @@ class ConfigClass():
         self.users_json="<base_path>/Pipeline/users.json"
         
         
-        self.episode_regex="^(s)\d{3}"
+        self.episode_regex="^(e)\d{2}"
         self.seq_regex="(_sq)\d{3}"
         self.shot_regex="(_sh)\d{3}"
         
