@@ -94,7 +94,7 @@
              "FX":{"Base":["Anim", "Render"]}
              },
 
-"regex_strings":{"episode_regex": "^(s)\\d{3}", "seq_regex": "(_sq)\\d{3}", "shot_regex": "(_sh)\\d{3}"},
+"regex_strings":{"episode_regex": "^(e)\\d{2}", "seq_regex": "(_sq)\\d{3}", "shot_regex": "(_sh)\\d{3}"},
 
 "ref_order":{},
 
