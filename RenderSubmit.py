@@ -120,7 +120,7 @@ class MainWindow(QtWidgets.QWidget):
         self.GetPresetsAndAOVs()
         self.thread_pool.signals.progressbar_init.connect(self.progressBar.setMaximum)
         self.thread_pool.signals.progressbar_value.connect(self.progressBar.setValue)
-        self.thread_pool.signals.progressbar_value.connect(self.checkIfReadyToSubmit)
+        # self.thread_pool.signals.progressbar_value.connect(self.checkIfReadyToSubmit)
 
         if in_maya:
             self.fileCheck(auto=True)
@@ -1123,9 +1123,10 @@ class MainWindow(QtWidgets.QWidget):
                     submit_render_options[self.render_settings[c_k]["arg_name"]] = checked
             submit_render_options["current_file"] = current_file
             submit_render_options["c_prefix"] = self.preset_dd.currentText()
-            submit_render_options["info_dic"] = self.info_dict
+            submit_render_options["info_dic"] = shot_dict
             submit_render_options["aov_name"] = self.aov_dict[self.aov_dd.currentText()]
             submit_render_options["func"] = self.rf.submitDeadlineOutsideMaya
+            submit_render_options["rs_name"] = self.render_settings_dd.currentText()
             cmd_threads.append(ThreadPool.Worker(**submit_render_options))
             # if self.check_render_dict("Add BG Render") or self.check_render_dict("Render ONLY BG"): #BG ONLY RENDER
             #     cmd_threads.append(ThreadPool.Worker(func=self.rf.submitRROutsideMaya,
@@ -1178,45 +1179,45 @@ class MainWindow(QtWidgets.QWidget):
             #                        )
 
         logger.info('Number of Threads: %s' % len(cmd_threads))
-
+        self.thread_pool.startBatch(cmd_threads)
         #self.thread_pool.signals.finished.connect(submitCmdsFromFile)
         print("<<<<<<<<<<<<<< FINISHED WITH SUBMITTING >>>>>>>>>>>>>>>>>")
 
-    def checkIfReadyToSubmit(self, add=True, total=None):
-        if total:
-            self.total = total
-            self.current_count = 0
-        if add:
-            self.current_count = self.current_count + 1
-        if self.total == self.current_count:
-            self.total = -1
-            self.current_count = 0
-            self.submitCmdsFromFile()
-
-
-    def submitCmdsFromFile(self):
-        import Maya_Functions.file_util_functions as fileUtil
-
-        folder = "C:/Temp/{project_name}/RenderSubmit/{submitCallID}".format(project_name=CC.project_name, submitCallID=self.submit_call_id) #{shotName}___{submitCallID}".format(project_name=CC.project_name,shotName=shotName,submitCallID=submitCallID)
-        if os.path.exists(folder):
-            for file in os.listdir(folder):
-                filePath = os.path.join(folder, file).replace(os.sep, '/')
-                cmd = file_util.load_json(filePath)
-                if cmd:
-                    if cmd.startswith('"' + os.path.abspath(os.path.join(os.environ["RR_Root"], 'bin/win64/rrSubmitterconsole.exe')).replace(os.sep, '/').replace('//', os.sep + os.sep) + '"'):
-                        self.rf.runRoyalRenderCmd(cmd)
-                        os.remove(filePath)
-                else:
-                    logger.error("GOT ERROR! in %s" % filePath)
-            os.rmdir(folder)
-        else:
-            logger.error("Submit folder does not exist: %s" % folder)
-        # #cmd_file = "C:/Temp/{project_name}/{project_name}_SubmitCmds.txt".format(project_name=CC.project_name)
-        # if os.path.isfile(cmd_file):
-        #     with open(cmd_file, 'r') as open_file:
-        #         for l in open_file.readlines():
-        #             if l and l.startswith("%RR_Root%/bin/win64/rrSubmitterconsole.exe"):
-        #                 self.rf.runRoyalRenderCmd(l)
+    # def checkIfReadyToSubmit(self, add=True, total=None):
+    #     if total:
+    #         self.total = total
+    #         self.current_count = 0
+    #     if add:
+    #         self.current_count = self.current_count + 1
+    #     if self.total == self.current_count:
+    #         self.total = -1
+    #         self.current_count = 0
+    #         self.submitCmdsFromFile()
+    #
+    #
+    # def submitCmdsFromFile(self):
+    #     import Maya_Functions.file_util_functions as fileUtil
+    #
+    #     folder = "C:/Temp/{project_name}/RenderSubmit/{submitCallID}".format(project_name=CC.project_name, submitCallID=self.submit_call_id) #{shotName}___{submitCallID}".format(project_name=CC.project_name,shotName=shotName,submitCallID=submitCallID)
+    #     if os.path.exists(folder):
+    #         for file in os.listdir(folder):
+    #             filePath = os.path.join(folder, file).replace(os.sep, '/')
+    #             cmd = file_util.load_json(filePath)
+    #             if cmd:
+    #                 if cmd.startswith('"' + os.path.abspath(os.path.join(os.environ["RR_Root"], 'bin/win64/rrSubmitterconsole.exe')).replace(os.sep, '/').replace('//', os.sep + os.sep) + '"'):
+    #                     self.rf.runRoyalRenderCmd(cmd)
+    #                     os.remove(filePath)
+    #             else:
+    #                 logger.error("GOT ERROR! in %s" % filePath)
+    #         os.rmdir(folder)
+    #     else:
+    #         logger.error("Submit folder does not exist: %s" % folder)
+    #     # #cmd_file = "C:/Temp/{project_name}/{project_name}_SubmitCmds.txt".format(project_name=CC.project_name)
+    #     # if os.path.isfile(cmd_file):
+    #     #     with open(cmd_file, 'r') as open_file:
+    #     #         for l in open_file.readlines():
+    #     #             if l and l.startswith("%RR_Root%/bin/win64/rrSubmitterconsole.exe"):
+    #     #                 self.rf.runRoyalRenderCmd(l)
 
 
     def SetShotFromList(self, shot): #setting info dict and shot specific variables
@@ -2161,24 +2162,24 @@ class RenderSubmitFunctions():
 
         cmds.quit(f=True)
 
-    def submitDeadlineOutsideMaya(self, current_file="", rs_name="", exr_multi=None, only_bg=None, aov_name="", prefix_name="",
-                            bg_off=None, phys_cam=None, info_dict=None, overscan=None, sphere_render=None, render_layer=None, crypto_render=None,
-                            user_name="", single_frame=None, bubbles=None,job_prio=50):
+    def submitDeadlineOutsideMaya(self, current_file="", rs_name="", multipart_exr=None, only_bg=None, aov_name="", prefix_name="",
+                            env_override_off=None, phys_cam=None, info_dict=None, overscan=None, sphere_render=None, render_layer=None, crypto_render=None,
+                            user_name="", single_frame=None, bubbles=None,job_prio=50,**kwargs):
         script_content = """import maya.standalone
         maya.standalone.initialize('python')
         import maya.cmds as cmds
         from RenderSubmit import RenderSubmitFunctions
         RSF = RenderSubmitFunctions()
-        RSF.submitDeadlineOutsideMayaFunc(current_file='{current_file}', rs_name='{rs_name}', exr_multi={exr_multi}, only_bg={only_bg}, aov_name='{aov_name}', prefix_name='{prefix_name}', bg_off={bg_off}, phys_cam={phys_cam}, info_dict={info_dict}, overscan={overscan}, sphere_render={sphere_render}, render_layer={render_layer}, crypto_render={crypto_render}, user_name='{user_name}', single_frame={single_frame},bubbles={bubbles}, job_prio={job_prio})
+        RSF.submitDeadlineOutsideMayaFunc(current_file='{current_file}', rs_name='{rs_name}', multipart_exr={multipart_exr}, only_bg={only_bg}, aov_name='{aov_name}', prefix_name='{prefix_name}', env_override_off={env_override_off}, phys_cam={phys_cam}, info_dict={info_dict}, overscan={overscan}, sphere_render={sphere_render}, render_layer={render_layer}, crypto_render={crypto_render}, user_name='{user_name}', single_frame={single_frame},bubbles={bubbles}, job_prio={job_prio})
         """.format(current_file=current_file,
                    rs_name=rs_name,
-                   exr_multi=exr_multi,
+                   multipart_exr=multipart_exr,
                    only_bg=only_bg,
                    aov_name=aov_name,
                    prefix_name=prefix_name,
                    info_dict=info_dict,
                    user_name=user_name,
-                   bg_off=bg_off,
+                   env_override_off=env_override_off,
                    overscan=overscan,
                    sphere_render=sphere_render,
                    phys_cam=phys_cam,
@@ -2195,14 +2196,14 @@ class RenderSubmitFunctions():
         print(c_p.communicate()[0])
         return True
 
-    def submitDeadlineOutsideMayaFunc(self, current_file, rs_name, exr_multi, only_bg, aov_name, prefix_name, bg_off,
+    def submitDeadlineOutsideMayaFunc(self, current_file, rs_name, multipart_exr, only_bg, aov_name, prefix_name, env_override_off,
                                 phys_cam,info_dict, overscan, sphere_render, render_layer, crypto_render,
                                 user_name, single_frame, bubbles,job_prio):
         cmds.file(current_file, open=True, f=True, lrd='all')
 
         self.ImportRenderSettings()
         if render_type == "arnold":
-            self.ApplyArnoldRenderSettings(rs_name=rs_name,multi_exr=exr_multi)
+            self.ApplyArnoldRenderSettings(rs_name=rs_name,multi_exr=multipart_exr)
             self.SetRenderRange()
             self.SetRenderPath(info_dict, prefix_name, only_bg)
             self.SetRenderCam(info_dict['shot_name'])
@@ -2215,8 +2216,8 @@ class RenderSubmitFunctions():
             submit(priority=job_prio)
 
         if render_type == "vray":
-            self.ApplyVrayRenderSettings(rs_name, exr_multi, bg_off, overscan, sphere_render)
-            if bg_off:
+            self.ApplyVrayRenderSettings(rs_name, multipart_exr, env_override_off, overscan, sphere_render)
+            if env_override_off:
                 self.CheckOffBGOverride()
             self.SetRenderRange()
             self.CreatePropOIDSet()
