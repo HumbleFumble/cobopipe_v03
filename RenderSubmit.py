@@ -268,55 +268,68 @@ class MainWindow(QtWidgets.QWidget):
         self.render_settings =  {"Add BG Render":   {"tooltip": "Add a OnlyBg render along with the picked preset. Renders only 1 frame and only Set and SetDress showing",
                                                     "default_state": False, 
                                                     "render_engine": ["vray"], 
-                                                    "menu": "render settings"},
+                                                    "menu": "render settings",
+                                                     "arg_name":"add_bg"},
                             "Sphere Volume Render": {"tooltip": "Uses the vray volumetric override to only render the inside of volume shapes",
                                                     "default_state": False,
                                                     "render_engine": ["vray"], 
-                                                    "menu": "render settings"}, 
+                                                    "menu": "render settings",
+                                                     "arg_name":"sphere_render"},
                             "Render Layers":        {"tooltip": "Enables rendering of render layers",
                                                     "default_state": False,
                                                     "render_engine": ["vray"], 
-                                                    "menu": "render settings"},
+                                                    "menu": "render settings",
+                                                     "arg_name":"render_layers"},
                             "Single Frame":         {"tooltip": "Render only the first frame",
                                                     "default_state": False,
                                                     "render_engine": ["vray","arnold"],
-                                                    "menu": "render settings"}, 
+                                                    "menu": "render settings",
+                                                     "arg_name":"single_frame"},
                             "Render ONLY BG":       {"tooltip": "Only submits the OnlyBG Render, solo with no color render",
                                                     "default_state": False,
                                                     "render_engine": ["vray"], 
-                                                    "menu": "render settings"},
+                                                    "menu": "render settings",
+                                                     "arg_name":"only_bg"},
                             "Full-Length BG":       {"tooltip": "Render OnlyBG for the full length of the shot",
                                                     "default_state": False,
                                                     "render_engine": ["vray"], 
-                                                    "menu": "render settings"},
+                                                    "menu": "render settings",
+                                                     "arg_name":"full_length_bg"},
                             "EXR MultiPart":                                {"tooltip": "EXR MultiPart", 
                                                                                 "default_state": True,
                                                                                 "render_engine": ["vray"], 
-                                                                                "menu": "render options"}, 
+                                                                                "menu": "render options",
+                                                                             "arg_name":"multipart_exr"},
                             "ENV Override OFF":                                 {"tooltip": "Sets ENV override in Overrides tab, to off, when applying the render setting", 
                                                                                 "default_state": False,
                                                                                 "render_engine": ["vray"], 
-                                                                                "menu": "render options"}, 
+                                                                                "menu": "render options",
+                                                                                 "arg_name":"env_override_off"},
                             "Auto Create PropID Set":                           {"tooltip": "Auto Create PropID Set",
                                                                                 "default_state": True,
                                                                                 "render_engine": ["vray"], 
-                                                                                "menu": "render options"}, 
+                                                                                "menu": "render options",
+                                                                                 "arg_name":"auto_create_propid"},
                             "Set Physical Camera Attr":                         {"tooltip": "Set Physical Camera Attr",
                                                                                 "default_state": False,
                                                                                 "render_engine": ["vray"], 
-                                                                                "menu": "render options"}, 
-                            "Render 10% extra to use for slight camera tracks": {"tooltip": "Render 10% extra to use for slight camera tracks", 
+                                                                                "menu": "render options",
+                                                                                 "arg_name":"set_physical_camera"},
+                            "Render 10% extra":                                 {"tooltip": "Render 10% extra to use for slight camera tracks",
                                                                                 "default_state": False,
                                                                                 "render_engine": ["vray"], 
-                                                                                "menu": "render options"}, 
+                                                                                "menu": "render options",
+                                                                                 "arg_name":"render_10_extra"},
                             "Create CryptoMatte":                               {"tooltip": "Creates a seperate scene with cryptomatte IDs and render it in a seperate stack", 
                                                                                 "default_state": False,
                                                                                 "render_engine": ["vray"], 
-                                                                                "menu": "render options"},
+                                                                                "menu": "render options",
+                                                                                 "arg_name":"create_crypto_matte"},
                             "Bubble VFX":                                       {"tooltip": "Makes a bubble render based on the Bubble_FX set in the scene", 
                                                                                 "default_state": False,
                                                                                 "render_engine": ["vray"], 
-                                                                                "menu": "render options"}
+                                                                                "menu": "render options",
+                                                                                 "arg_name":"bubble_vfx"}
                             }
 
 
@@ -1042,12 +1055,17 @@ class MainWindow(QtWidgets.QWidget):
                 readyPublishReport(info_dict=self.info_dict, current_dict=content_dict, ref=True, texture=False)
                 savePublishReport(info_dict=self.info_dict, content=content_dict)
 
+                submit_render_options = {}
+                for c_k in self.render_settings.keys():
+                    checked = self.check_render_dict(c_k)
+                    if not checked == None:
+                        submit_render_options[self.render_settings[c_k]["arg_name"]] = checked
+
                 ##################################################
 
 
-                if self.check_render_dict("Create CryptoMatte"):
+                if self.check_render_dict("Create CryptoMatte") and render_type == "vray":
                     self.rf.buildCryptoAttr()
-                cmd_list = []
 
                 #Check if we need to render only a single frame or a full length render of BG
                 only_bg_single = False
@@ -1057,19 +1075,8 @@ class MainWindow(QtWidgets.QWidget):
                 #### BG RENDER SUBMIT ####
                 
                 if self.check_render_dict("Add BG Render") or self.check_render_dict("Render ONLY BG"):
-                    # bg_only_cmd = self.rf.RenderSubmitInfo(c_prefix=self.preset_dd.currentText(),
-                                                        #    onlybg=True,
-                                                        #    user_name=self.user_dd.currentText(),
-                                                        #    stepped=self.stepped_int.text(),
-                                                        #    r_priority=self.priority_int.text(),
-                                                        #    overwrite=self.overwrite_checkbox.isChecked(),
-                                                        #    info_dict=self.info_dict,
-                                                        #    render_layer=None,
-                                                        #    single_frame=only_bg_single
-                                                        #    )
+                    self.rf.SaveAndSubmitRenderFile(onlybg=True, c_prefix=self.preset_dd.currentText(), current_file=current_file, info_dict=self.info_dict, render_layer=False, bubbles=self.check_render_dict("Bubble VFX"))
 
-                    self.rf.SaveAndSubmitRenderFile(True, self.preset_dd.currentText(), current_file, self.info_dict, False, self.check_render_dict("Bubble VFX"))
-                    # cmd_list.append(bg_only_cmd)
 
                 #### BEAUTY RENDER SUBMIT ####
                 if not self.check_render_dict("Render ONLY BG"):
@@ -1159,7 +1166,7 @@ class MainWindow(QtWidgets.QWidget):
                     only_bg_single = True
                 else:
                     only_bg_single = False
-                cmd_threads.append(ThreadPool.Worker(func=self.rf.submitOutsideMaya,
+                cmd_threads.append(ThreadPool.Worker(func=self.rf.submitRROutsideMaya,
                                                      current_file=current_file,
                                                      rs_name=self.render_settings_dd.currentText(),
                                                      exr_multi=self.check_render_dict("EXR MultiPart"),
@@ -1184,7 +1191,7 @@ class MainWindow(QtWidgets.QWidget):
                                    )
 
             if not self.render_settings["Render ONLY BG"]['checkbox'].isChecked(): #NORMAL RENDER
-                cmd_threads.append(ThreadPool.Worker(func=self.rf.submitOutsideMaya,
+                cmd_threads.append(ThreadPool.Worker(func=self.rf.submitRROutsideMaya,
                                                      current_file=current_file,
                                                      rs_name=self.render_settings_dd.currentText(),
                                                      exr_multi=self.check_render_dict("EXR MultiPart"),
@@ -1888,7 +1895,7 @@ class RenderSubmitFunctions():
         return info_dict["render_prefix"]
 
 
-    def SaveAndSubmitRenderFile(self, onlybg=False, c_prefix=None, current_file=None, info_dict={}, render_layer=None, bubbles=False):
+    def SaveAndSubmitRenderFile(self, onlybg=False, c_prefix=None, current_file=None, info_dict={}, render_layer=None, bubbles=False,**kwargs):
         if not current_file:
             current_file = CC.get_shot_light_file(**info_dict) #cfg_util.CreatePathFromDict(cfg.project_paths["shot_light_file"],info_dict)
         if onlybg:  # Check if we need to run OnlyBg in cleanup.
@@ -2076,9 +2083,9 @@ class RenderSubmitFunctions():
     #                            overscan=False,sphere_render=True,project_name="KiwiStrit3",
     #                            render_layer=None,user_name="Christian",stepped=1,r_prio=50,overwrite=False)
 
-    def submitOutsideMaya(self, current_file, rs_name, exr_multi, only_bg, aov_name, prefix_name,
-                          bg_off, phys_cam, info_dict, overscan, sphere_render, render_layer, crypto_render,
-                          project_name, user_name, stepped, r_prio, overwrite, single_frame, submitCallID,bubbles):
+    def submitRROutsideMaya(self, current_file, rs_name, exr_multi, only_bg, aov_name, prefix_name,
+                            bg_off, phys_cam, info_dict, overscan, sphere_render, render_layer, crypto_render,
+                            project_name, user_name, stepped, r_prio, overwrite, single_frame, submitCallID, bubbles):
         script_content = """import maya.standalone
         maya.standalone.initialize('python')
         import maya.cmds as cmds
@@ -2198,72 +2205,6 @@ class RenderSubmitFunctions():
         # my_cmd = self.RenderSubmitInfo(prefix_name, only_bg,user_name, stepped,r_prio, overwrite,info_dict,project_name,render_layer)
         # print('FINISHED With saving file')
         # self.runRoyalRenderCmd(my_cmd)
-
-#TODO Fix when using render layers
-#OLD AND MAYBE OUTDATED
-def SubmitOutsideMaya(current_file, rs_name, exr_multi, only_bg, aov_name, prefix_name,
-                      user_name, stepped, r_prio, overwrite,bg_off,phys_cam,info_dict,overscan,sphere_render,project_name,render_layer):
-
-    if phys_cam:
-        phys_cam = "rf.SetAttrOnCam(info_dict['shot_name'])"
-    else:
-        phys_cam = "print('Not applying Physical Camera Attr')"
-
-    script_content = """import maya.standalone
-maya.standalone.initialize('python')
-import maya.cmds as cmds
-import RenderSubmit
-cmds.file('{current_file}', open=True,f=True, lrd='all')
-rs_name = '{rs_name}'
-exr_multi = {exr_multi}
-only_bg = {only_bg}
-aov_name = '{aov_name}'
-prefix_name = '{prefix_name}'
-info_dict = {brackets}
-info_dict['episode_name'] = '{episode_name}'
-info_dict['seq_name'] = '{seq_name}'
-info_dict['shot_name'] = '{shot_name}'
-user_name = '{user_name}'
-stepped = '{stepped}'
-r_prio = '{r_prio}'
-overwrite = {overwrite}
-bg_off = {bg_off}
-overscan = {overscan}
-sphere_render = {sphere_render}
-render_layer = {render_layer}
-project_name = '{project_name}'
-rf = RenderSubmit.RenderSubmitFunctions()
-rf.ImportRenderSettings()
-rf.ApplyRenderSettings(rs_name, exr_multi, bg_off,overscan,sphere_render)
-rf.SetRenderRange()
-rf.ImportAOVs(aov_name)
-rf.SetRenderPath(info_dict, prefix_name, only_bg)
-rf.SetRenderCam(info_dict['shot_name'])
-rf.CreatePropOIDSet()
-{phys_cam}
-cmds.file(save=True)
-cmds.quit(f=True)
-my_cmd = rf.RenderSubmitInfo(prefix_name, only_bg,user_name, stepped,r_prio, overwrite,info_dict,project_name,render_layer)
-rf.SaveAndSubmitRenderFile(only_bg, prefix_name,None,info_dict,render_layer)
-print('FINISHED With saving file')
-rf.runRoyalRenderCmd(my_cmd)""".format(current_file=current_file, rs_name=rs_name, exr_multi=exr_multi, only_bg=only_bg, aov_name=aov_name,
-                                                                         prefix_name=prefix_name, episode_name=info_dict["episode_name"],seq_name=info_dict["seq_name"],shot_name=info_dict["shot_name"],
-                                                                         user_name=user_name, stepped=stepped, r_prio=r_prio, overwrite=overwrite, bg_off=bg_off,overscan=overscan,
-                                                                         sphere_render=sphere_render,phys_cam=phys_cam,brackets="{}",render_layer=render_layer,project_name=project_name)
-    script_content = ";".join(script_content.split("\n"))
-    base_command = 'mayapy.exe -c "%s"' % (script_content)
-    # print(base_command)
-    # subprocess.Popen(base_command, shell=False, universal_newlines=True)
-    logger.debug("Submitting File:\n")
-
-    print(base_command)
-    c_p = subprocess.Popen(base_command, shell=False, universal_newlines=True, stdout=subprocess.PIPE,env=runtime.getRuntimeEnvFromConfig(CC))
-    stdout = c_p.communicate()[0]
-    logger.debug("%s" % stdout)
-    print("-------------Submitting DONE--------------")
-    job_id = stdout.splitlines()[-2].split(" ")[-4]
-    # print(job_id)
-    return job_id
 
 def _maya_main_window():
     # Return Maya's main window
