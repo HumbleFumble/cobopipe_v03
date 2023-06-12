@@ -1103,7 +1103,7 @@ class MainWindow(QtWidgets.QWidget):
         # self.current_count = 0
         # import Maya_Functions.file_util_functions as fileUtil
         # self.submit_call_id = fileUtil.generateID()
-
+        cmd_threads = []
         for shot in self.shot_list.selectedItems():
             self.SetShotFromList(shot)
             shot_dict = {}
@@ -1125,56 +1125,57 @@ class MainWindow(QtWidgets.QWidget):
             submit_render_options["c_prefix"] = self.preset_dd.currentText()
             submit_render_options["info_dic"] = self.info_dict
             submit_render_options["aov_name"] = self.aov_dict[self.aov_dd.currentText()]
-
-            if self.check_render_dict("Add BG Render") or self.check_render_dict("Render ONLY BG"): #BG ONLY RENDER
-                cmd_threads.append(ThreadPool.Worker(func=self.rf.submitRROutsideMaya,
-                                                     current_file=current_file,
-                                                     rs_name=self.render_settings_dd.currentText(),
-                                                     exr_multi=self.check_render_dict("EXR MultiPart"),
-                                                     only_bg=True,
-                                                     aov_name=self.aov_dict[self.aov_dd.currentText()],
-                                                     prefix_name=self.preset_dd.currentText(),
-                                                     bg_off=self.check_render_dict("ENV Override OFF"),
-                                                     phys_cam=self.check_render_dict("Set Physical Camera Attr"),
-                                                     info_dict=shot_dict,
-                                                     overscan=self.check_render_dict("Render 10% extra to use for slight camera tracks"),
-                                                     sphere_render=self.check_render_dict("Sphere Volume Render"),
-                                                     render_layer=self.check_render_dict("Render Layers"),
-                                                     crypto_render=self.check_render_dict("Create CryptoMatte"),
-                                                     overwrite=self.overwrite_checkbox.isChecked(),
-                                                     project_name=CC.project_name,
-                                                     r_prio=self.priority_int.text(),
-                                                     stepped=self.stepped_int.text(),
-                                                     user_name=self.user_dd.currentText(),
-                                                     single_frame=only_bg_single,
-                                                     submitCallID=self.submit_call_id,
-                                                     bubbles=self.check_render_dict("Bubble VFX"))
-                                   )
-
-            if not self.render_settings["Render ONLY BG"]['checkbox'].isChecked(): #NORMAL RENDER
-                cmd_threads.append(ThreadPool.Worker(func=self.rf.submitRROutsideMaya,
-                                                     current_file=current_file,
-                                                     rs_name=self.render_settings_dd.currentText(),
-                                                     exr_multi=self.check_render_dict("EXR MultiPart"),
-                                                     only_bg=False,
-                                                     aov_name=self.aov_dict[self.aov_dd.currentText()],
-                                                     prefix_name=self.preset_dd.currentText(),
-                                                     bg_off=self.check_render_dict("ENV Override OFF"),
-                                                     phys_cam=self.check_render_dict("Set Physical Camera Attr"),
-                                                     info_dict=shot_dict,
-                                                     overscan=self.check_render_dict("Render 10% extra to use for slight camera tracks"),
-                                                     sphere_render=self.check_render_dict("Sphere Volume Render"),
-                                                     render_layer=self.check_render_dict("Render Layers"),
-                                                     crypto_render=self.check_render_dict("Create CryptoMatte"),
-                                                     overwrite=self.overwrite_checkbox.isChecked(),
-                                                     project_name=CC.project_name,
-                                                     r_prio=self.priority_int.text(),
-                                                     stepped=self.stepped_int.text(),
-                                                     user_name=self.user_dd.currentText(),
-                                                     single_frame=self.check_render_dict("Single Frame"),
-                                                     submitCallID=self.submit_call_id,
-                                                     bubbles=self.check_render_dict("Bubble VFX"))
-                                   )
+            submit_render_options["func"] = self.rf.submitDeadlineOutsideMaya
+            cmd_threads.append(ThreadPool.Worker(**submit_render_options))
+            # if self.check_render_dict("Add BG Render") or self.check_render_dict("Render ONLY BG"): #BG ONLY RENDER
+            #     cmd_threads.append(ThreadPool.Worker(func=self.rf.submitRROutsideMaya,
+            #                                          current_file=current_file,
+            #                                          rs_name=self.render_settings_dd.currentText(),
+            #                                          exr_multi=self.check_render_dict("EXR MultiPart"),
+            #                                          only_bg=True,
+            #                                          aov_name=self.aov_dict[self.aov_dd.currentText()],
+            #                                          prefix_name=self.preset_dd.currentText(),
+            #                                          bg_off=self.check_render_dict("ENV Override OFF"),
+            #                                          phys_cam=self.check_render_dict("Set Physical Camera Attr"),
+            #                                          info_dict=shot_dict,
+            #                                          overscan=self.check_render_dict("Render 10% extra to use for slight camera tracks"),
+            #                                          sphere_render=self.check_render_dict("Sphere Volume Render"),
+            #                                          render_layer=self.check_render_dict("Render Layers"),
+            #                                          crypto_render=self.check_render_dict("Create CryptoMatte"),
+            #                                          overwrite=self.overwrite_checkbox.isChecked(),
+            #                                          project_name=CC.project_name,
+            #                                          r_prio=self.priority_int.text(),
+            #                                          stepped=self.stepped_int.text(),
+            #                                          user_name=self.user_dd.currentText(),
+            #                                          single_frame=only_bg_single,
+            #                                          submitCallID=self.submit_call_id,
+            #                                          bubbles=self.check_render_dict("Bubble VFX"))
+            #                        )
+            #
+            # if not self.render_settings["Render ONLY BG"]['checkbox'].isChecked(): #NORMAL RENDER
+            #     cmd_threads.append(ThreadPool.Worker(func=self.rf.submitRROutsideMaya,
+            #                                          current_file=current_file,
+            #                                          rs_name=self.render_settings_dd.currentText(),
+            #                                          exr_multi=self.check_render_dict("EXR MultiPart"),
+            #                                          only_bg=False,
+            #                                          aov_name=self.aov_dict[self.aov_dd.currentText()],
+            #                                          prefix_name=self.preset_dd.currentText(),
+            #                                          bg_off=self.check_render_dict("ENV Override OFF"),
+            #                                          phys_cam=self.check_render_dict("Set Physical Camera Attr"),
+            #                                          info_dict=shot_dict,
+            #                                          overscan=self.check_render_dict("Render 10% extra to use for slight camera tracks"),
+            #                                          sphere_render=self.check_render_dict("Sphere Volume Render"),
+            #                                          render_layer=self.check_render_dict("Render Layers"),
+            #                                          crypto_render=self.check_render_dict("Create CryptoMatte"),
+            #                                          overwrite=self.overwrite_checkbox.isChecked(),
+            #                                          project_name=CC.project_name,
+            #                                          r_prio=self.priority_int.text(),
+            #                                          stepped=self.stepped_int.text(),
+            #                                          user_name=self.user_dd.currentText(),
+            #                                          single_frame=self.check_render_dict("Single Frame"),
+            #                                          submitCallID=self.submit_call_id,
+            #                                          bubbles=self.check_render_dict("Bubble VFX"))
+            #                        )
 
         logger.info('Number of Threads: %s' % len(cmd_threads))
 
@@ -1700,7 +1701,7 @@ class RenderSubmitFunctions():
         # print("Saving Render File:\n%s" % stdout)
         # print("-------------SAVING DONE--------------")
 
-    def ApplyRenderSettings(self, rs_name=None, exr_check=True, bg_off=False, overscan=False,sphere_render=False,shot=None):
+    def ApplyVrayRenderSettings(self, rs_name=None, exr_check=True, bg_off=False, overscan=False, sphere_render=False, shot=None):
         logger.debug("Apply Render Settings from render-submit")
         orr_dict = {}
         self.OverrideConnectionsOnOff(False, orr_dict)
@@ -1722,6 +1723,9 @@ class RenderSubmitFunctions():
         self.RenderOverscan(overscan=overscan,shot=shot)
         if sphere_render:
             self.SphereRenderSetup()
+    def ApplyArnoldRenderSettings(self, rs_name=None, multi_exr=True):
+        settings = file_util.load_json(CC.get_render_presets() + "/" + rs_name)
+        arnold_renderSettings.decode(settings)
 
     def SphereRenderSetup(self):
         """
@@ -2051,7 +2055,7 @@ class RenderSubmitFunctions():
         import maya.cmds as cmds
         from RenderSubmit import RenderSubmitFunctions
         RSF = RenderSubmitFunctions()
-        RSF.submitOutsideMayaFunc(current_file='{current_file}', rs_name='{rs_name}', exr_multi={exr_multi}, only_bg={only_bg}, aov_name='{aov_name}', prefix_name='{prefix_name}', bg_off={bg_off}, phys_cam={phys_cam}, info_dict={info_dict}, overscan={overscan}, sphere_render={sphere_render}, render_layer={render_layer}, crypto_render={crypto_render}, project_name='{project_name}', user_name='{user_name}', stepped={stepped}, r_prio={r_prio}, overwrite={overwrite}, single_frame={single_frame}, submitCallID='{submitCallID}',bubbles={bubbles})
+        RSF.submitRROutsideMayaFunc(current_file='{current_file}', rs_name='{rs_name}', exr_multi={exr_multi}, only_bg={only_bg}, aov_name='{aov_name}', prefix_name='{prefix_name}', bg_off={bg_off}, phys_cam={phys_cam}, info_dict={info_dict}, overscan={overscan}, sphere_render={sphere_render}, render_layer={render_layer}, crypto_render={crypto_render}, project_name='{project_name}', user_name='{user_name}', stepped={stepped}, r_prio={r_prio}, overwrite={overwrite}, single_frame={single_frame}, submitCallID='{submitCallID}',bubbles={bubbles})
         """.format(current_file=current_file,
                    rs_name=rs_name,
                    exr_multi=exr_multi,
@@ -2106,7 +2110,7 @@ class RenderSubmitFunctions():
             #file_util.saveFile(save_location=cmd_file,save_info=cmd,overwrite=False)
 
 
-    def submitOutsideMayaFunc(self, current_file, rs_name, exr_multi, only_bg, aov_name, prefix_name, bg_off, phys_cam,
+    def submitRROutsideMayaFunc(self, current_file, rs_name, exr_multi, only_bg, aov_name, prefix_name, bg_off, phys_cam,
                               info_dict, overscan, sphere_render, render_layer, crypto_render, project_name, user_name, stepped,
                               r_prio,overwrite,single_frame, submitCallID,bubbles):
         cmds.file(current_file, open=True,f=True, lrd='all')
@@ -2114,7 +2118,7 @@ class RenderSubmitFunctions():
 
         self.ImportRenderSettings()
         if render_type == "vray":
-            self.ApplyRenderSettings(rs_name, exr_multi, bg_off,overscan,sphere_render)
+            self.ApplyVrayRenderSettings(rs_name, exr_multi, bg_off, overscan, sphere_render)
             if bg_off:
                 self.CheckOffBGOverride()
             self.SetRenderRange()
@@ -2157,14 +2161,109 @@ class RenderSubmitFunctions():
 
         cmds.quit(f=True)
 
+    def submitDeadlineOutsideMaya(self, current_file="", rs_name="", exr_multi=None, only_bg=None, aov_name="", prefix_name="",
+                            bg_off=None, phys_cam=None, info_dict=None, overscan=None, sphere_render=None, render_layer=None, crypto_render=None,
+                            user_name="", single_frame=None, bubbles=None,job_prio=50):
+        script_content = """import maya.standalone
+        maya.standalone.initialize('python')
+        import maya.cmds as cmds
+        from RenderSubmit import RenderSubmitFunctions
+        RSF = RenderSubmitFunctions()
+        RSF.submitDeadlineOutsideMayaFunc(current_file='{current_file}', rs_name='{rs_name}', exr_multi={exr_multi}, only_bg={only_bg}, aov_name='{aov_name}', prefix_name='{prefix_name}', bg_off={bg_off}, phys_cam={phys_cam}, info_dict={info_dict}, overscan={overscan}, sphere_render={sphere_render}, render_layer={render_layer}, crypto_render={crypto_render}, user_name='{user_name}', single_frame={single_frame},bubbles={bubbles}, job_prio={job_prio})
+        """.format(current_file=current_file,
+                   rs_name=rs_name,
+                   exr_multi=exr_multi,
+                   only_bg=only_bg,
+                   aov_name=aov_name,
+                   prefix_name=prefix_name,
+                   info_dict=info_dict,
+                   user_name=user_name,
+                   bg_off=bg_off,
+                   overscan=overscan,
+                   sphere_render=sphere_render,
+                   phys_cam=phys_cam,
+                   render_layer=render_layer,
+                   crypto_render=crypto_render,
+                   single_frame=single_frame,
+                   bubbles=bubbles,
+                   job_prio=job_prio)
+        script_content = ";".join(script_content.split("\n"))
+        base_command = 'mayapy.exe -c "%s"' % (script_content)
+        logger.info(base_command)
+        c_p = subprocess.Popen(base_command, shell=False, universal_newlines=True, stdout=subprocess.PIPE,
+                               stderr=subprocess.PIPE, env=runtime.getRuntimeEnvFromConfig(CC))
+        print(c_p.communicate()[0])
+        return True
 
+    def submitDeadlineOutsideMayaFunc(self, current_file, rs_name, exr_multi, only_bg, aov_name, prefix_name, bg_off,
+                                phys_cam,info_dict, overscan, sphere_render, render_layer, crypto_render,
+                                user_name, single_frame, bubbles,job_prio):
+        cmds.file(current_file, open=True, f=True, lrd='all')
 
-        # return my_cmd
+        self.ImportRenderSettings()
+        if render_type == "arnold":
+            self.ApplyArnoldRenderSettings(rs_name=rs_name,multi_exr=exr_multi)
+            self.SetRenderRange()
+            self.SetRenderPath(info_dict, prefix_name, only_bg)
+            self.SetRenderCam(info_dict['shot_name'])
+            render_file = CC.get_shot_render_path(**info_dict)
+            self.SaveRenderFileFunc(render_file=render_file, only_bg=only_bg, render_layer=render_layer,
+                                    bubbles=bubbles)
+            cmds.file(save=True)
+            logger.info("Render file ready: %s" % render_file)
+            from Maya_Functions.submit_to_deadline import submit
+            submit(priority=job_prio)
 
+        if render_type == "vray":
+            self.ApplyVrayRenderSettings(rs_name, exr_multi, bg_off, overscan, sphere_render)
+            if bg_off:
+                self.CheckOffBGOverride()
+            self.SetRenderRange()
+            self.CreatePropOIDSet()
+            import cryptoAttributes
+            cryptoAttributes.addOID(overwrite=False)
+            self.ImportAOVs(aov_name)
+            self.SetRenderPath(info_dict, prefix_name, only_bg)
+            self.SetRenderCam(info_dict['shot_name'])
+            if crypto_render:
+                self.buildCryptoAttr()
+            if phys_cam:
+                self.SetPhysicalAttrOnCam(info_dict['shot_name'])
+            render_file = CC.get_shot_render_path(**info_dict)
+            self.SaveRenderFileFunc(render_file=render_file, only_bg=only_bg, render_layer=render_layer,
+                                    bubbles=bubbles)
+            cmds.file(save=True)
+            logger.info("Render file ready: %s" % render_file)
+            shotName = info_dict['episode_name'] + '_' + info_dict['seq_name'] + '_' + info_dict['shot_name']
+            if render_layer and not only_bg:
+                for current_layer in self.getActiveRenderLayers():
+                    layer_cmd = self.RR_RenderSubmitInfo(prefix_name, only_bg, user_name, stepped, r_prio,
+                                                         overwrite, info_dict, project_name, current_layer,
+                                                         single_frame)
+                    self.saveCmdInFile(cmd=layer_cmd, submitCallID=submitCallID, shotName=shotName,
+                                       suffix=prefix_name)
+                    logger.info("For Render-Layer: %s" % current_layer)
+                    logger.info(layer_cmd)
+                    only_bg = False
+            else:
+                my_cmd = self.RR_RenderSubmitInfo(prefix_name, only_bg, user_name, stepped, r_prio, overwrite,
+                                                  info_dict, project_name, False, single_frame)
+                self.saveCmdInFile(cmd=my_cmd, submitCallID=submitCallID, shotName=shotName, suffix=prefix_name)
+            logger.info(my_cmd)
 
-        # my_cmd = self.RR_RenderSubmitInfo(prefix_name, only_bg,user_name, stepped,r_prio, overwrite,info_dict,project_name,render_layer)
-        # print('FINISHED With saving file')
-        # self.runRoyalRenderCmd(my_cmd)
+            if crypto_render and not only_bg:
+                logger.info("Creating CryptoMatte Render scene")
+                # Set all the info for render scene and return prefix name
+                crypto_prefix_name = self.runCryptoMatteSetupOutsideMaya(prefix_name, info_dict)
+                cmds.file(save=True)
+                crypto_cmd = self.RR_RenderSubmitInfo(crypto_prefix_name, only_bg, user_name, stepped, r_prio,
+                                                      overwrite, info_dict,
+                                                      project_name, False, single_frame, 0)
+                logger.info("Saving Cmd: %s" % crypto_cmd)
+                self.saveCmdInFile(cmd=crypto_cmd, submitCallID=submitCallID, shotName=shotName,
+                                   suffix=crypto_prefix_name)
+
+        cmds.quit(f=True)
 
 def _maya_main_window():
     # Return Maya's main window
