@@ -2,6 +2,12 @@
 ### need PyQt5 and Python 3+ to work as bat file ###
 ### Needs to have env path set for Maya to work as bat file ### (C:\Program Files\Autodesk\Maya2019\bin)
 
+#TODO change render submit to take dynamic keywords args? To allow for a wider range of options, without having to deal with every single arg manually
+#TODO change the render submit naming scheme to include:
+# 1: a base name, either from drop-down or text field.
+# 2. a checkbox for incrementally increasing the pass number by adding a letter at the end of the base name
+# 3. a checkbox for overwriting?
+
 from Log.CoboLoggers import getLogger,setFileLevel,setConsoleLevel
 
 
@@ -64,7 +70,6 @@ else:
 	render_type = "vray"
 
 
-# Todo make a file for users instead of hardcoding. In config file? Or seperate?
 class MainWindow(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
@@ -119,7 +124,8 @@ class MainWindow(QtWidgets.QWidget):
 
         if in_maya:
             self.fileCheck(auto=True)
-            self.doubleSkyCheck()
+            if render_type == "vray":
+                self.doubleSkyCheck()
             self.checkDefaultRenderLayerError()
     
     def set_palette(self):
@@ -1028,12 +1034,16 @@ class MainWindow(QtWidgets.QWidget):
             current_file = cmds.file(q=True, sn=True)
 
             if self.CheckSceneAgainstDict(): #Check that the UI is holding info from THIS scene and not old info.
-                #Make a publish report of what is added in the light-file.
+
+                #Make a publish report of what is added in the light-file. #####################
                 from Maya_Functions.publish_util_functions import readyPublishReport, savePublishReport
                 content_dict = {}
                 self.info_dict["publish_report_name"] = 'LightScene'
                 readyPublishReport(info_dict=self.info_dict, current_dict=content_dict, ref=True, texture=False)
                 savePublishReport(info_dict=self.info_dict, content=content_dict)
+
+                ##################################################
+
 
                 if self.check_render_dict("Create CryptoMatte"):
                     self.rf.buildCryptoAttr()
@@ -1043,6 +1053,7 @@ class MainWindow(QtWidgets.QWidget):
                 only_bg_single = False
                 if not self.check_render_dict("Full-Length BG") or self.check_render_dict("Single Frame"):
                     only_bg_single = True
+
                 #### BG RENDER SUBMIT ####
                 
                 if self.check_render_dict("Add BG Render") or self.check_render_dict("Render ONLY BG"):
@@ -1057,7 +1068,7 @@ class MainWindow(QtWidgets.QWidget):
                                                         #    single_frame=only_bg_single
                                                         #    )
 
-                    self.rf.SaveRenderFile(True, self.preset_dd.currentText(),current_file, self.info_dict,False, self.check_render_dict("Bubble VFX"))
+                    self.rf.SaveAndSubmitRenderFile(True, self.preset_dd.currentText(), current_file, self.info_dict, False, self.check_render_dict("Bubble VFX"))
                     # cmd_list.append(bg_only_cmd)
 
                 #### BEAUTY RENDER SUBMIT ####
@@ -1075,10 +1086,10 @@ class MainWindow(QtWidgets.QWidget):
                                                                 #  render_layer=current_layer,
                                                                 #  single_frame=self.render_settings_dict["Single Frame"].isChecked())
                             # cmd_list.append(layer_cmd)
-                        self.rf.SaveRenderFile(self.check_render_dict("Add BG Render"),
-                                               self.preset_dd.currentText(),
-                                               current_file, self.info_dict,
-                                               True,self.check_render_dict("Bubble VFX"))
+                        self.rf.SaveAndSubmitRenderFile(self.check_render_dict("Add BG Render"),
+                                                        self.preset_dd.currentText(),
+                                                        current_file, self.info_dict,
+                                                        True, self.check_render_dict("Bubble VFX"))
                     else:
                         # preset_cmd = self.rf.RenderSubmitInfo(c_prefix=self.preset_dd.currentText(),
                                                             #   onlybg=False,
@@ -1091,10 +1102,10 @@ class MainWindow(QtWidgets.QWidget):
                                                             #   single_frame=self.render_settings_dict["Single Frame"].isChecked()
                                                             #   )
                         # cmd_list.append(preset_cmd)
-                        self.rf.SaveRenderFile(False,
-                                               self.preset_dd.currentText(),
-                                               current_file,
-                                               self.info_dict,False, self.check_render_dict("Bubble VFX"))
+                        self.rf.SaveAndSubmitRenderFile(False,
+                                                        self.preset_dd.currentText(),
+                                                        current_file,
+                                                        self.info_dict, False, self.check_render_dict("Bubble VFX"))
 
                 #### CRYPTO RENDER SUBMIT ####
                 if self.check_render_dict("Create CryptoMatte"):
@@ -1112,7 +1123,7 @@ class MainWindow(QtWidgets.QWidget):
                                                             #   crop_exr=0,
                                                             #   render_file=CC.get_shot_crypto_render_file(**self.info_dict)
                                                             #   )
-                        self.rf.SaveRenderFile(False, self.preset_dd.currentText(),current_file, self.info_dict)
+                        self.rf.SaveAndSubmitRenderFile(False, self.preset_dd.currentText(), current_file, self.info_dict)
                         # cmd_list.append(crypto_cmd)
                 # for cur_cmd in cmd_list:
                     # self.rf.runRoyalRenderCmd(cur_cmd)
@@ -1877,7 +1888,7 @@ class RenderSubmitFunctions():
         return info_dict["render_prefix"]
 
 
-    def SaveRenderFile(self, onlybg=False, c_prefix=None, current_file=None, info_dict={}, render_layer=None, bubbles=False):
+    def SaveAndSubmitRenderFile(self, onlybg=False, c_prefix=None, current_file=None, info_dict={}, render_layer=None, bubbles=False):
         if not current_file:
             current_file = CC.get_shot_light_file(**info_dict) #cfg_util.CreatePathFromDict(cfg.project_paths["shot_light_file"],info_dict)
         if onlybg:  # Check if we need to run OnlyBg in cleanup.
@@ -1923,7 +1934,7 @@ class RenderSubmitFunctions():
         import Maya_Functions.ref_util_functions as ref_util
         import Maya_Functions.publish_util_functions as publish_util
         import Maya_Functions.general_util_functions as general_util
-        logger.info("Running SaveRenderFile: %s" %(render_file))
+        logger.info("Running SaveAndSubmitRenderFile: %s" %(render_file))
         del_util.DeleteUnknown()
         fileUtil.PrepareForSave(render_file, ma=True)
         ref_util.ImportRefs()
@@ -2233,7 +2244,7 @@ rf.CreatePropOIDSet()
 cmds.file(save=True)
 cmds.quit(f=True)
 my_cmd = rf.RenderSubmitInfo(prefix_name, only_bg,user_name, stepped,r_prio, overwrite,info_dict,project_name,render_layer)
-rf.SaveRenderFile(only_bg, prefix_name,None,info_dict,render_layer)
+rf.SaveAndSubmitRenderFile(only_bg, prefix_name,None,info_dict,render_layer)
 print('FINISHED With saving file')
 rf.runRoyalRenderCmd(my_cmd)""".format(current_file=current_file, rs_name=rs_name, exr_multi=exr_multi, only_bg=only_bg, aov_name=aov_name,
                                                                          prefix_name=prefix_name, episode_name=info_dict["episode_name"],seq_name=info_dict["seq_name"],shot_name=info_dict["shot_name"],
