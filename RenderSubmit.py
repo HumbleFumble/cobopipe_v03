@@ -1122,8 +1122,8 @@ class MainWindow(QtWidgets.QWidget):
                 if not checked == None and c_k not in [""]:
                     submit_render_options[self.render_settings[c_k]["arg_name"]] = checked
             submit_render_options["current_file"] = current_file
-            submit_render_options["c_prefix"] = self.preset_dd.currentText()
-            submit_render_options["info_dic"] = shot_dict
+            submit_render_options["prefix_name"] = self.preset_dd.currentText()
+            submit_render_options["info_dict"] = shot_dict
             submit_render_options["aov_name"] = self.aov_dict[self.aov_dd.currentText()]
             submit_render_options["func"] = self.rf.submitDeadlineOutsideMaya
             submit_render_options["rs_name"] = self.render_settings_dd.currentText()
@@ -1543,12 +1543,18 @@ class RenderSubmitFunctions():
         
 
     def ClearAOVs(self):
-        aovs = cmds.ls(type="VRayRenderElement")
-        for a in aovs:
-            cmds.delete(a)
-        aov_sets = cmds.ls(type="VRayRenderElementSet")
-        for a in aov_sets:
-            cmds.delete(a)
+        if render_type == "vray":
+            aovs = cmds.ls(type="VRayRenderElement")
+            for a in aovs:
+                cmds.delete(a)
+            aov_sets = cmds.ls(type="VRayRenderElementSet")
+            for a in aov_sets:
+                cmds.delete(a)
+        if render_type == "arnold":
+            aovs = cmds.ls(type="aiAOV")
+            for a in aovs:
+                cmds.delete(a)
+
 
     def ImportAOVs(self, aov_file): #Clear old aovs and import new ones
         self.ClearAOVs()
@@ -1564,12 +1570,22 @@ class RenderSubmitFunctions():
             # self.CheckForMissingOIDAOV()
             
     def ImportAOVsArnold(self, aov_file):
-        aovs = cmds.ls(type="aiAOV")
-        cmds.delete(aovs)
-        data = file_util.load_json(aov_file)
-        for key in ('drivers', 'filters'):
-            data['arnold'][key] = []
-        arnold_aovs.decode(data, 0)
+        self.ClearAOVs()
+        import Maya_Functions.arnold_util_functions as arnold_util
+        if not aov_file == "None":
+            driver_info = arnold_util.get_set_arnold_driver(set=False)
+
+            aovs = cmds.ls(type="aiAOV")
+            cmds.delete(aovs)
+            data = file_util.load_json(aov_file)
+            for key in ('drivers', 'filters'):
+                data['arnold'][key] = []
+            arnold_aovs.decode(data, 0)
+
+            arnold_util.get_set_arnold_driver(set=True, driver_dict=driver_info)
+            arnold_util.import_aov_shaders("%s/AOV_Shaders/" % CC.get_render_presets())
+            arnold_util.add_aovs_to_noice()
+
 
     def CreateVRayDirt(self, AOV_name): # Create DirtTexture and connect it to AO if possible.
         if not cmds.objExists("AO_VRayDirt"):
@@ -2204,6 +2220,7 @@ class RenderSubmitFunctions():
         self.ImportRenderSettings()
         if render_type == "arnold":
             self.ApplyArnoldRenderSettings(rs_name=rs_name,multi_exr=multipart_exr)
+            self.ImportAOVsArnold(aov_file=aov_name)
             self.SetRenderRange()
             self.SetRenderPath(info_dict, prefix_name, only_bg)
             self.SetRenderCam(info_dict['shot_name'])
