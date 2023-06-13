@@ -925,6 +925,8 @@ class FrontController(QtCore.QObject):
 		ep_info_file = CC.get_episode_info_file(**info_dict)
 		# old_dict = self.loadSettings(ep_info_file)
 		old_dict = file_util.load_json(ep_info_file)
+		if not old_dict:
+			old_dict = {}
 		if not clear:
 			save_content = {}
 			for cur_key in info_keys:

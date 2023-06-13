@@ -4,6 +4,19 @@ class UtilityClass(object):
         self.__fusion = fusion
         self.__comp = self.__fusion.GetCurrentComp()
 
+    def FindLoaders(self, pass_name="ColorB"):
+        loaders = self.__comp.GetToolList(False, "Loader").values()
+        selection_set = []
+        for cur_loader in loaders:
+            cur_loader_path = (cur_loader.GetAttrs("TOOLST_Clip_Name")[1]).replace("\\", "/")
+            # print(cur_loader_path)
+            if pass_name in cur_loader_path:
+                selection_set.append(cur_loader)
+        # print(selection_set)
+        self.__comp.SetActiveTool(selection_set[0])
+
+
+
     def renderSelection(self, selected_savers=None):
         all_savers = self.__comp.GetToolList(False,"Saver").values()
         if not selected_savers:

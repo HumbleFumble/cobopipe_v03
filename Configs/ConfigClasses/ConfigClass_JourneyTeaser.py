@@ -35,6 +35,7 @@ class ConfigClass():
         self.shot_comp_output_file="<shot_comp_output_folder>/<episode_name>_<seq_name>_<shot_name>_0001.exr"
         self.shot_comp_output_file_mov="<shot_comp_output_folder>/<episode_name>_<seq_name>_<shot_name>_CompOutput.mov"
         self.shot_comp_preview_file="<sequence_preview_folder>/<episode_name>_<seq_name>_<shot_name>_Comp.mov"
+        self.shot_default_render_stack="<shot_path>/passes/ColorB/<episode_name>_<seq_name>_<shot_name>_ColorA.0001.exr"
         self.shot_ae_precomp_file="<shot_comp_folder>/<episode_name>_<seq_name>_<shot_name>_Precomp.aep"
         self.shot_yeti_cache_path="<shot_path>/04_Publish/YetiCache/"
         self.template_path="<base_path>/Pipeline/Template"
@@ -92,6 +93,7 @@ class ConfigClass():
         
         self.project_style={'animation_style': ['Maya', 'Toonboom'], 'comp_style': ['Fusion', 'AE'], 'default_animation_style': 'Maya', 'default_comp_style': 'Fusion'}
         
+        self.preview_dict={'comp': ['shot_comp_output_file_mov', 'shot_comp_preview_file'], 'render': ['shot_default_render_stack'], 'anim': ['shot_anim_preview_file'], 'animatic': ['shot_animatic_file']}
         
         import getConfig
         self.old = None
@@ -611,6 +613,21 @@ class ConfigClass():
             logger.debug("Building path to shot_crypto_render_file: Argument Missing: render_prefix")
 
         to_return = "W:/930510_The_Journey/TeaserProduction/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_{shot_name}/04_Publish/{episode_name}_{seq_name}_{shot_name}_{render_prefix}_Crypto_Render.ma".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,render_prefix=render_prefix,)
+        return to_return
+
+
+    def get_shot_default_render_stack(self,episode_name=None,seq_name=None,shot_name=None,**kwargs):
+        if episode_name==None:
+            episode_name="<episode_name>"
+            logger.debug("Building path to shot_default_render_stack: Argument Missing: episode_name")
+        if seq_name==None:
+            seq_name="<seq_name>"
+            logger.debug("Building path to shot_default_render_stack: Argument Missing: seq_name")
+        if shot_name==None:
+            shot_name="<shot_name>"
+            logger.debug("Building path to shot_default_render_stack: Argument Missing: shot_name")
+
+        to_return = "W:/930510_The_Journey/TeaserProduction/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_{shot_name}/passes/ColorB/{episode_name}_{seq_name}_{shot_name}_ColorA.0001.exr".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
         return to_return
 
 

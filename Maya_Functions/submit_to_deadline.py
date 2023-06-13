@@ -10,7 +10,8 @@ CC = getConfigClass()
 
 def submit(jobName="", pool='', priority=50, output_file_path=""):
     scene_file = cmds.file(query=True, sceneName=True)
-    jobName = os.path.basename(scene_file).replace(".ma", "").replace(".mb", "")
+    if jobName == "":
+        jobName = os.path.basename(scene_file).replace(".ma", "").replace(".mb", "")
     if not output_file_path:
         output_file_path = get_output_directory()
     output_directory = os.path.dirname(output_file_path)
@@ -18,7 +19,7 @@ def submit(jobName="", pool='', priority=50, output_file_path=""):
     output_file_prefix = os.path.splitext(output_filename)[0]
     workspace = cmds.workspace(query=True, fullName=True)
 
-    group = renderer = cmds.getAttr("defaultRenderGlobals.currentRenderer")
+    group = cmds.getAttr("defaultRenderGlobals.currentRenderer")
     if not pool:
         pool = CC.project_settings.get("deadline_pool")
     is_animated_on = cmds.getAttr("defaultRenderGlobals.animation")

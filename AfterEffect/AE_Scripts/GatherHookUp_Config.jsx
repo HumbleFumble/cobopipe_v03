@@ -273,6 +273,7 @@ function ImportAllSequence(E, SQ){
             shot_obj[pick] = []
             for(var x = (preview_dict[pick].length-1);x>=0;x--){
                  var temp_path = process_path(preview_dict[pick][x],shot_obj)
+                 log(temp_path);
                   if(temp_path.indexOf("*")>-1){
                     temp_path = temp_path.replace("*","0001.tga")
                     }
