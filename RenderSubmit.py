@@ -27,6 +27,7 @@ try:
     from maya import OpenMaya as om
     import Maya_Functions.file_util_functions as fileUtil
     import Maya_Functions.vray_util_functions as vray_util
+    import Maya_Functions.arnold_util_functions as arnold_util
     import Maya_Functions.submit_to_deadline as deadline
     import cryptoAttributes
     import maya.app.renderSetup.model.aovs as arnold_aovs
@@ -737,14 +738,12 @@ class MainWindow(QtWidgets.QWidget):
         self.SavePresetCall()
 
     def save_imager(self):
-        import Maya_Functions.arnold_util_functions as arnold_util
         name = self.GetPresetInput()
         path = os.path.abspath(os.path.join(CC.get_render_presets(), f"Imager_{name}.json")).replace(os.sep, '/')
         arnold_util.save_imager_preset(path)
         self.GetPresetsAndAOVs()
 
     def import_imager(self):
-        import Maya_Functions.arnold_util_functions as arnold_util
         path = os.path.abspath(os.path.join(CC.get_render_presets(), f"{self.imager_settings_dd.currentText()}")).replace(os.sep, '/')
         arnold_util.load_imager_preset(path)
 
@@ -987,7 +986,6 @@ class MainWindow(QtWidgets.QWidget):
         if in_maya:
             if not self.aov_dd.currentText() == "None":
                 if render_type == 'arnold':
-                    import Maya_Functions.arnold_util_functions as arnold_util
                     driver_info = arnold_util.get_set_arnold_driver(set=False)
                     self.rf.ImportAOVsArnold(self.aov_dict[self.aov_dd.currentText()])
                     arnold_util.get_set_arnold_driver(set=True,driver_dict=driver_info)
@@ -1063,7 +1061,7 @@ class MainWindow(QtWidgets.QWidget):
                         submit_render_options[self.render_settings[c_k]["arg_name"]] = checked
                 submit_render_options["current_file"] = current_file
                 submit_render_options["c_prefix"] = self.preset_dd.currentText()
-                submit_render_options["info_dic"] = self.info_dict
+                submit_render_options["info_dict"] = self.info_dict
 
                 if self.check_render_dict("Create CryptoMatte") and render_type == "vray":
                     self.rf.buildCryptoAttr()
@@ -1535,8 +1533,8 @@ class RenderSubmitFunctions():
             cmds.setAttr("vraySettings.animType", 1)
             cmds.setAttr("vraySettings.animBatchOnly", 1)
             cmds.setAttr("vraySettings.animFrames", "", type="string")
-        elif render_type == 'arnold':
-            mel.eval('setMayaSoftwareFrameExt(3,0)') # Choose naming convention (set "Frame/Animation ext")
+        # elif render_type == 'arnold':
+        #     mel.eval('setMayaSoftwareFrameExt(3,0)') # Choose naming convention (set "Frame/Animation ext")
         
         cmds.setAttr("defaultRenderGlobals.startFrame", range_start)
         cmds.setAttr("defaultRenderGlobals.endFrame", range_end)
@@ -1571,7 +1569,6 @@ class RenderSubmitFunctions():
             
     def ImportAOVsArnold(self, aov_file):
         self.ClearAOVs()
-        import Maya_Functions.arnold_util_functions as arnold_util
         if not aov_file == "None":
             driver_info = arnold_util.get_set_arnold_driver(set=False)
 
@@ -2297,7 +2294,11 @@ def Run():
         reloadModules.clearModules(["Configs.ConfigUtil_Json",
                                     "OIDManager",
                                     "LightHelper",
-                                    "Maya_Functions.ref_util_functions","Maya_Functions.vray_util_functions","getConfig"])
+                                    "Maya_Functions.ref_util_functions",
+                                    "Maya_Functions.vray_util_functions",
+                                    "getConfig",
+                                    "Maya_Functions.submit_to_deadline",
+                                    "Maya_Functions.arnold_util_functions"])
         MayaDockable.runDockable(objectName, 'Render Submit', MainWindow())
 
     # mainWin = MainWindow(parent=_maya_main_window())

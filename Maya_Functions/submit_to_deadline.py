@@ -15,8 +15,10 @@ def submit(jobName="", pool='', priority=50, output_file_path=""):
     if not output_file_path:
         output_file_path = get_output_directory()
     output_directory = os.path.dirname(output_file_path)
-    output_filename = os.path.basename(output_file_path)
-    output_file_prefix = os.path.splitext(output_filename)[0]
+    extension = cmds.getAttr( 'defaultArnoldDriver.ai_translator')
+    padding = cmds.getAttr("defaultRenderGlobals.extensionPadding")
+    output_filename = f'{os.path.basename(output_file_path)}.{"#"*padding}.{extension}'
+    output_file_prefix = os.path.splitext(os.path.basename(output_file_path))[0]
     workspace = cmds.workspace(query=True, fullName=True)
 
     group = cmds.getAttr("defaultRenderGlobals.currentRenderer")
