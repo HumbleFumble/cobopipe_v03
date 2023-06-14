@@ -6,28 +6,40 @@ from getConfig import getConfigClass
 
 CC = getConfigClass()
 
-def submit():
+def submit(fusion):
 
-    job_name = ""
+	# COMPS_Name = QuickSubmitTest.comp
+	# COMPN_GlobalStart = 1
+	# COMPN_RenderStartTime = 1
+	# COMPN_RenderEndTime = 35
+    cur_comp = fusion.GetCurrentComp()
+
+    render_start = cur_comp.GetAttrs("COMPN_RenderStart")     # COMPN_RenderStart = 1
+    render_end = cur_comp.GetAttrs("COMPN_RenderEnd")     # COMPN_RenderEnd = 35
+    pool = CC.project_settings.get("deadline_pool")
+
     output_directory=""
     output_filename = ""
     group = ""
     pool= ""
     priority=50
-    frame_range = ""
+    frame_range = f"{render_start}-{render_end}"
     userName = ""
-    comp_path = ""
+    comp_path = (cur_comp.GetAttrs("COMPS_FileName")).replace("\\", "/")
+
 
     tempFolder = deadutil.callDeadlineCommand("-GetCurrentUserHomeDirectory")
     tempFolder = trim(tempFolder)
     tempFolder = os.path.join(tempFolder, "temp")
     random_string = ''.join(random.choice(string.ascii_lowercase + '0123456789') for i in range(6))
 
-    jobInfoFilePath = jobInfoFile(tempFolder=tempFolder,random_string=random_string,jobName=job_name,output_directory=output_directory,output_filename=output_filename,
-                                  group=group,pool=pool,priority=priority,frame_range=frame_range,userName=userName)
-    pluginInfoFilePath = pluginInfoFile(tempFolder=tempFolder,random_string=random_string,comp_path=comp_path)
+    print("running")
 
-    deadutil.callDeadlineCommand(jobInfoFilePath, pluginInfoFilePath)
+    # jobInfoFilePath = jobInfoFile(tempFolder=tempFolder,random_string=random_string,jobName=job_name,output_directory=output_directory,output_filename=output_filename,
+    # pool=pool,priority=priority,frame_range=frame_range,userName=userName)
+    # pluginInfoFilePath = pluginInfoFile(tempFolder=tempFolder,random_string=random_string,comp_path=comp_path)
+
+    # deadutil.callDeadlineCommand(jobInfoFilePath, pluginInfoFilePath)
 
 def jobInfoFile(
     tempFolder,
@@ -35,7 +47,6 @@ def jobInfoFile(
     jobName,
     output_directory,
     output_filename,
-    group,
     pool,
     priority,
     frame_range,
@@ -47,7 +58,7 @@ def jobInfoFile(
         f"Name={jobName}", #Name=QuickSubmitTest.comp
         f"Frames={frame_range}", # Frames=1-35
         f"Pool={pool}",
-        f"Group={group}",
+        f"Group=fusion",
         f"Priority={priority}",
         f"OutputDirectory0={output_directory}", # OutputDirectory0=P:\930435_Liva_og_De_Uperfekte\Teaser\Film\S101\S101_SQ010\_Preview
         f"OutputFilename0={output_filename}", # OutputFilename0=S101_SQ010_SH070_Comp????.png / # OutputFilename1=S101_SQ010_SH070_Comp.mov
