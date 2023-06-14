@@ -13,6 +13,8 @@ def submit(fusion):
 	# COMPN_RenderStartTime = 1
 	# COMPN_RenderEndTime = 35
 
+
+
     cur_comp = fusion.GetCurrentComp()
 
     job_name = cur_comp.GetAttrs("COMPS_Name").split(".")[0]
@@ -21,8 +23,6 @@ def submit(fusion):
     pool = CC.project_settings.get("deadline_pool")
 
 
-    output_directory=""
-    output_filename = ""
     priority=50
     frame_range = f"{render_start}-{render_end}"
     comp_path = (cur_comp.GetAttrs("COMPS_FileName")).replace("\\", "/")
@@ -30,19 +30,71 @@ def submit(fusion):
     # userName = ""
 
 
+
+
+    job_lines = [
+        f"Name={job_name}", #Name=QuickSubmitTest.comp
+        f"Frames={frame_range}", # Frames=1-35
+        f"Pool={pool}",
+        f"Group=fusion",
+        f"Priority={priority}",
+        f"OverrideTaskExtraInfoNames=False",
+        f"Plugin=Fusion"
+        # f"UserName={userName}"
+    ]
+    # ChunkSize=10
+    # MachineLimit=1 #Only use for movs?
+
+    # f"OutputDirectory0={output_directory}",  # OutputDirectory0=P:\930435_Liva_og_De_Uperfekte\Teaser\Film\S101\S101_SQ010\_Preview
+    # f"OutputFilename0={output_filename}",  # OutputFilename0=S101_SQ010_SH070_Comp????.png / # OutputFilename1=S101_SQ010_SH070_Comp.mov
+    current_outputs = findActiveSavers(cur_comp)
+    single =False
+    for number,out in enumerate(current_outputs):
+        if checkSingleOutput(out):
+            single = True
+
+        out_dir = f"OutputDirectory{number}={os.path.dirname(out)}"
+        try:
+            int(out.split(".")[0][-4:])
+        except:
+            pass #ADD FRAME PADDING WITH "?"
+
+        out_path = f"OutputFilename{number}={out}"
+        job_lines.append(out_dir)
+        job_lines.append(out_path)
+
+    if single:
+        job_lines.append(f"MachineLimit=1")
+        job_lines.append(f"ChunkSize={render_end}")
+
+
+
+
+
+
+
     tempFolder = deadutil.callDeadlineCommand("-GetCurrentUserHomeDirectory")
     tempFolder = trim(tempFolder)
     tempFolder = os.path.join(tempFolder, "temp")
     random_string = ''.join(random.choice(string.ascii_lowercase + '0123456789') for i in range(6))
-    current_outputs = findActiveSavers(cur_comp)
 
-    print("running")
-
-    # jobInfoFilePath = jobInfoFile(tempFolder=tempFolder,random_string=random_string,jobName=job_name,output_directory=output_directory,output_filename=output_filename,
-    # pool=pool,priority=priority,frame_range=frame_range)
     # pluginInfoFilePath = pluginInfoFile(tempFolder=tempFolder,random_string=random_string,comp_path=comp_path)
 
+    jobInfoFilePath = os.path.join(tempFolder, f"fusion_submit_info_{random_string}.job")
+    for f in job_lines:
+        print(f)
+
+    # with open(jobInfoFilePath, "w") as f:
+    #     for line in job_lines:
+    #         f.write(f"{line}\n")
+
     # deadutil.callDeadlineCommand(jobInfoFilePath, pluginInfoFilePath)
+def checkSingleOutput(output):
+    ext = output.split(".")
+    if ext in ["jpg","png","exr","tiff","tga"]:
+        return True
+    else:
+        return False
 
 def findActiveSavers(cur_comp):
     all_savers = cur_comp.GetToolList(False, "Saver").values()
@@ -56,38 +108,7 @@ def findActiveSavers(cur_comp):
 
 
 
-def jobInfoFile(
-    tempFolder,
-    random_string,
-    jobName,
-    output_directory,
-    output_filename,
-    pool,
-    priority,
-    frame_range,
-):
-    jobInfoFilePath = os.path.join(tempFolder, f"maya_submit_info_{random_string}.job")
 
-    lines = [
-        f"Name={jobName}", #Name=QuickSubmitTest.comp
-        f"Frames={frame_range}", # Frames=1-35
-        f"Pool={pool}",
-        f"Group=fusion",
-        f"Priority={priority}",
-        f"OutputDirectory0={output_directory}", # OutputDirectory0=P:\930435_Liva_og_De_Uperfekte\Teaser\Film\S101\S101_SQ010\_Preview
-        f"OutputFilename0={output_filename}", # OutputFilename0=S101_SQ010_SH070_Comp????.png / # OutputFilename1=S101_SQ010_SH070_Comp.mov
-        f"OverrideTaskExtraInfoNames=False",
-        f"Plugin=Fusion"
-        # f"UserName={userName}"
-    ]
-    # ChunkSize=10
-    # MachineLimit=1 #Only use for movs?
-
-    with open(jobInfoFilePath, "w") as f:
-        for line in lines:
-            f.write(f"{line}\n")
-
-    return jobInfoFilePath
 
 
 def pluginInfoFile(
