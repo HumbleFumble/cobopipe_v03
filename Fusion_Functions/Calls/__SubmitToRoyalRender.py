@@ -2,7 +2,7 @@
 
 # Python 3.6 Imports access to Fusion directory on drive
 import site
-site.addsitedir("T:/_Pipeline/cobopipe_v02-001/AfterEffect/AE_Scripts/")
+site.addsitedir("T:/_Pipeline/cobopipe_v02-001/")
 
 # Python 2.7 Imports access to Fusion directory on drive
 # import sys

@@ -1,0 +1,164 @@
+import os
+import Deadline.util as deadutil
+import random
+import string
+from getConfig import getConfigClass
+
+CC = getConfigClass()
+
+def submit():
+
+    job_name = ""
+    output_directory=""
+    output_filename = ""
+    group = ""
+    pool= ""
+    priority=50
+    frame_range = ""
+    userName = ""
+    comp_path = ""
+
+    tempFolder = deadutil.callDeadlineCommand("-GetCurrentUserHomeDirectory")
+    tempFolder = trim(tempFolder)
+    tempFolder = os.path.join(tempFolder, "temp")
+    random_string = ''.join(random.choice(string.ascii_lowercase + '0123456789') for i in range(6))
+
+    jobInfoFilePath = jobInfoFile(tempFolder=tempFolder,random_string=random_string,jobName=job_name,output_directory=output_directory,output_filename=output_filename,
+                                  group=group,pool=pool,priority=priority,frame_range=frame_range,userName=userName)
+    pluginInfoFilePath = pluginInfoFile(tempFolder=tempFolder,random_string=random_string,comp_path=comp_path)
+
+    deadutil.callDeadlineCommand(jobInfoFilePath, pluginInfoFilePath)
+
+def jobInfoFile(
+    tempFolder,
+    random_string,
+    jobName,
+    output_directory,
+    output_filename,
+    group,
+    pool,
+    priority,
+    frame_range,
+    userName
+):
+    jobInfoFilePath = os.path.join(tempFolder, f"maya_submit_info_{random_string}.job")
+
+    lines = [
+        f"Name={jobName}", #Name=QuickSubmitTest.comp
+        f"Frames={frame_range}", # Frames=1-35
+        f"Pool={pool}",
+        f"Group={group}",
+        f"Priority={priority}",
+        f"OutputDirectory0={output_directory}", # OutputDirectory0=P:\930435_Liva_og_De_Uperfekte\Teaser\Film\S101\S101_SQ010\_Preview
+        f"OutputFilename0={output_filename}", # OutputFilename0=S101_SQ010_SH070_Comp????.png / # OutputFilename1=S101_SQ010_SH070_Comp.mov
+        f"OverrideTaskExtraInfoNames=False",
+        f"Plugin=Fusion",
+        f"UserName={userName}"
+    ]
+    # ChunkSize=10
+    # MachineLimit=1 #Only use for movs?
+
+    with open(jobInfoFilePath, "w") as f:
+        for line in lines:
+            f.write(f"{line}\n")
+
+    return jobInfoFilePath
+
+
+def pluginInfoFile(
+    tempFolder,
+    random_string,
+    comp_path,
+):
+    pluginInfoFilePath = os.path.join(tempFolder, f"maya_plugin_info_{random_string}.job")
+
+    lines = [
+        f"Build=None",
+        f"CheckOutput=False",
+        f"FlowFile={comp_path}",
+        f"HighQuality=False",
+        f"Proxy=1",
+        f"Version=18"
+    ]
+
+    with open(pluginInfoFilePath, "w") as f:
+        for line in lines:
+            f.write(f"{line}\n")
+
+    return pluginInfoFilePath
+
+def trim(_string):
+    return _string.replace("\n", "").replace("\r", "")
+
+# JOB_INFO Both types
+# Denylist=
+# EventOptIns=
+# Frames=1-35
+# Group=fusion
+# MachineName=WSX12
+# Name=QuickSubmitTest.comp
+# OutputDirectory0=P:\930435_Liva_og_De_Uperfekte\Teaser\Film\S101\S101_SQ010\_Preview
+# OutputDirectory1=P:\930435_Liva_og_De_Uperfekte\Teaser\Film\S101\S101_SQ010\_Preview
+# OutputFilename0=S101_SQ010_SH070_Comp????.png
+# OutputFilename1=S101_SQ010_SH070_Comp.mov
+# OverrideTaskExtraInfoNames=False
+# Plugin=Fusion
+# Pool=liva-journey
+# Region=
+# ScheduledStartDateTime=14/06/2023 12:17
+# UserName=cg
+
+# PLUGIN_INFO
+# Build=None
+# CheckOutput=False
+# FlowFile=P:\930435_Liva_og_De_Uperfekte\Teaser\Film\S101\S101_SQ010\S101_SQ010_SH070\03_Comp\QuickSubmitTest.comp
+# HighQuality=False
+# Proxy=1
+# Version=18
+
+
+
+#Stack option
+# Denylist=
+# EventOptIns=
+# Frames=1-35
+# Group=fusion
+# MachineName=WSX12
+# Name=QuickSubmitTest_stack.comp
+# OutputDirectory0=P:\930435_Liva_og_De_Uperfekte\Teaser\Film\S101\S101_SQ010\_Preview
+# OutputFilename0=S101_SQ010_SH070_Comp????.jpg
+# OverrideTaskExtraInfoNames=False
+# Plugin=Fusion
+# Pool=liva-journey
+# Region=
+# ScheduledStartDateTime=14/06/2023 12:43
+# UserName=cg
+
+
+#EXTRA DRAFT MOV?
+# BatchName=QuickSubmitTest.comp
+# Denylist=
+# EventOptIns=
+# ExtraInfoKeyValue0=SubmitQuickDraft=True
+# ExtraInfoKeyValue1=DraftExtension=mov
+# ExtraInfoKeyValue2=DraftType=movie
+# ExtraInfoKeyValue3=DraftResolution=1
+# ExtraInfoKeyValue4=DraftCodec=h264
+# ExtraInfoKeyValue5=DraftQuality=85
+# ExtraInfoKeyValue6=DraftFrameRate=25
+# ExtraInfoKeyValue7=DraftColorSpaceIn=Identity
+# ExtraInfoKeyValue8=DraftColorSpaceOut=Identity
+# Frames=1-35
+# Group=fusion
+# MachineName=WSX12
+# Name=QuickSubmitTest.comp
+# OutputDirectory0=P:\930435_Liva_og_De_Uperfekte\Teaser\Film\S101\S101_SQ010\_Preview
+# OutputFilename0=S101_SQ010_SH070_Comp????.jpg
+# OverrideTaskExtraInfoNames=False
+# Plugin=Fusion
+# Pool=liva-journey
+# Region=
+# ScheduledStartDateTime=14/06/2023 12:48
+# UserName=cg
+# ChunkSize=10
+# MachineLimit=1 #Only use for movs?
