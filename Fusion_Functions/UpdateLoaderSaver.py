@@ -4,8 +4,31 @@ import os
 
 #TODO change so we use project config instead of hardcoded.
 #TODO change to see if we can avoid using pyperclip
+import re
 
-class Tool(object):
+class GeneralTool(object):
+    def __init__(self,fusion, cur_comp):
+        self.fusion = fusion
+        self.comp = cur_comp
+        self.comp_name = ""
+
+    def updateSavers(self):
+        savers = self.comp.GetToolList(False, "Saver").values()
+
+    def updateLoaders(self):
+        loaders = self.comp.GetToolList(False, "Loader").values()
+    def findSceneName(self):
+        file_path = (self.comp.GetAttrs("COMPS_FileName")).replace("\\", "/")
+        comp_name = self.comp.GetAttrs("COMPS_Name")
+        res = re.search(r'(_v\d{4}\.)', comp_name.lower())
+        print(res)
+        if res:
+            self.scene_name = comp_name.split(res)[0]
+        else:
+            self.scene_name = comp_name
+
+
+class MIA_Tool(object):
 
     __fusion = None
     __cur_comp = None
@@ -266,7 +289,7 @@ def run(fusion):
     #print('cur_comp: ' + str(cur_comp))
     cur_comp.Lock()
     #print('>> 2')
-    tool = Tool(fusion=fusion, cur_comp=cur_comp)
+    tool = MIA_Tool(fusion=fusion, cur_comp=cur_comp)
     #print('tool: ' + str(tool))
     #print('fusion: ' + str(fusion))
     tool.ChangeLoaderPaths()
