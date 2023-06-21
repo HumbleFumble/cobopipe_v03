@@ -776,19 +776,21 @@ class MainWindow(QtWidgets.QWidget):
 			mel.eval('vray vfbControl -saveimage "%s"' % render_dir)
 		if CC.project_settings['maya_render'] == "arnold":
 			attr_list = {"defaultArnoldDriver.aiTranslator":None,"defaultRenderGlobals.imageFilePrefix":None,"defaultResolution.width":None
-				,"defaultResolution.height":None}
+				,"defaultResolution.height":None,"defaultRenderGlobals.animation":None}
 			for a in attr_list.keys():
 				attr_list[a] = cmds.getAttr(a)
 			#TODO Set frame to be single
 			cmds.setAttr("defaultArnoldDriver.aiTranslator", "png", type="string")
 			cmds.setAttr('defaultRenderGlobals.imageFilePrefix', render_dir, type="string")
-
+			mel.eval('setMayaSoftwareFrameExt(1,0)') #set to single picture
+			# cmds.setAttr("defaultRenderGlobals.animation", 0)
 			# Set resolution
 			cmds.setAttr("defaultResolution.width", width)
 			cmds.setAttr("defaultResolution.height", height)
 			render_cam = self.getRenderCamera()
 			if render_cam:
 				# cmds.setAttr("defaultArnoldDriver.colorManagement", 1)
+
 				cmds.arnoldRender(cam=render_cam, width=width, height=height, seq=None)
 
 				old_name = cmds.getAttr('defaultRenderGlobals.imageFilePrefix') + '_1' + ".png"
