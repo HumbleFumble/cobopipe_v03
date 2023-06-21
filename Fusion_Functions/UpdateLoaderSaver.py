@@ -5,6 +5,9 @@ import os
 #TODO change so we use project config instead of hardcoded.
 #TODO change to see if we can avoid using pyperclip
 import re
+from getConfig import getConfigClass
+CC = getConfigClass()
+
 
 class GeneralTool(object):
     def __init__(self,fusion, cur_comp):
@@ -26,6 +29,35 @@ class GeneralTool(object):
             self.scene_name = comp_name.split(res)[0]
         else:
             self.scene_name = comp_name
+
+    def ReplaceEpisode(self, content, replace_content):
+        # low_case = content.lower()
+        e_compile = "(/%s/)" % (CC.episode_regex[1:])
+        print(e_compile)
+        # result = re.split(re_compile,content, flags=re.IGNORECASE)
+        # replace_content = "/S101/"
+        result = re.subn(e_compile, replace_content, content, flags=re.IGNORECASE)
+        print(result)
+        return result[0]
+
+    def ReplaceSQ(self,content,replace_content):
+        # low_case = content.lower()
+        sq_compile = "(/%s%s/)" % (CC.episode_regex[1:], CC.seq_regex)
+        print(sq_compile)
+        # result = re.split(re_compile,content, flags=re.IGNORECASE)
+        # replace_content = "/S101_SQ020/"
+        result = re.subn(sq_compile,replace_content,content,flags=re.IGNORECASE)
+        print(result)
+        return result[0]
+    def ReplaceShot(self,content,replace_content):
+        # low_case = content.lower()
+        shot_compile = "(%s%s%s)" % (CC.episode_regex[1:], CC.seq_regex, CC.shot_regex)
+        print(shot_compile)
+        # result = re.split(re_compile,content, flags=re.IGNORECASE)
+        # replace_content = "S101_SQ020_SH040"
+        result = re.subn(shot_compile,replace_content,content,flags=re.IGNORECASE)
+        print(result)
+        return result[0]
 
 
 class MIA_Tool(object):
@@ -286,14 +318,34 @@ class MIA_Tool(object):
 def run(fusion):
     #print('>> 1')
     cur_comp = fusion.GetCurrentComp()
-    #print('cur_comp: ' + str(cur_comp))
     cur_comp.Lock()
-    #print('>> 2')
     tool = MIA_Tool(fusion=fusion, cur_comp=cur_comp)
-    #print('tool: ' + str(tool))
-    #print('fusion: ' + str(fusion))
     tool.ChangeLoaderPaths()
-    #print('>> 3')
     cur_comp.Unlock()
     # camera = composition.GetToolList(False, "Camera3D").values()[0]
     # camera.Import[1] = 0
+
+
+if __name__ == '__main__':
+    import sys
+    content = "P:/930435_Liva_og_De_Uperfekte/Teaser/Film/S101/S101_SQ010/S101_SQ010_SH050/passes/ColorB/S101_SQ010_SH050_ColorB.0001"
+    gt = GeneralTool(None,None)
+
+    episode = "S102"
+    sq = "%s_SQ020" % episode
+    shot = "%s_SH040" %(sq)
+
+    new_content = content
+    new_content = gt.ReplaceEpisode(new_content,f"/{episode}/")
+    new_content = gt.ReplaceSQ(new_content, f"/{sq}/")
+    new_content = gt.ReplaceShot(new_content, f"{shot}")
+
+    # gt.ReplaceSQ(content,"")
+    # if not QtWidgets.QApplication.instance():
+    #     app = QtWidgets.QApplication(sys.argv)
+    # else:
+    #     app = QtWidgets.QApplication.instance()
+    # mainWin = MainWindow()
+    # mainWin.show()
+
+    # app.exec_()
