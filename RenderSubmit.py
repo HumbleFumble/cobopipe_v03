@@ -280,7 +280,7 @@ class MainWindow(QtWidgets.QWidget):
                                                     "default_state": False,
                                                     "render_engine": ["vray","arnold"],
                                                     "menu": "render settings",
-                                                     "arg_name":"render_layers"},
+                                                     "arg_name":"render_layer"},
                             "Single Frame":         {"tooltip": "Render only the first frame",
                                                     "default_state": False,
                                                     "render_engine": ["vray","arnold"],
