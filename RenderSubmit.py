@@ -278,7 +278,7 @@ class MainWindow(QtWidgets.QWidget):
                                                      "arg_name":"sphere_render"},
                             "Render Layers":        {"tooltip": "Enables rendering of render layers",
                                                     "default_state": False,
-                                                    "render_engine": ["vray"], 
+                                                    "render_engine": ["vray","arnold"],
                                                     "menu": "render settings",
                                                      "arg_name":"render_layers"},
                             "Single Frame":         {"tooltip": "Render only the first frame",
@@ -2250,20 +2250,20 @@ class RenderSubmitFunctions():
             cmds.file(save=True)
             logger.info("Render file ready: %s" % render_file)
             shotName = info_dict['episode_name'] + '_' + info_dict['seq_name'] + '_' + info_dict['shot_name']
-            if render_layer and not only_bg:
-                for current_layer in self.getActiveRenderLayers():
-                    layer_cmd = self.RR_RenderSubmitInfo(prefix_name, only_bg, user_name, stepped, r_prio,
-                                                         overwrite, info_dict, project_name, current_layer,
-                                                         single_frame)
-                    self.saveCmdInFile(cmd=layer_cmd, submitCallID=submitCallID, shotName=shotName,
-                                       suffix=prefix_name)
-                    logger.info("For Render-Layer: %s" % current_layer)
-                    logger.info(layer_cmd)
-                    only_bg = False
-            else:
-                my_cmd = self.RR_RenderSubmitInfo(prefix_name, only_bg, user_name, stepped, r_prio, overwrite,
-                                                  info_dict, project_name, False, single_frame)
-                self.saveCmdInFile(cmd=my_cmd, submitCallID=submitCallID, shotName=shotName, suffix=prefix_name)
+            # if render_layer and not only_bg: TODO fix this later
+            #     for current_layer in self.getActiveRenderLayers():
+            #         layer_cmd = self.RR_RenderSubmitInfo(prefix_name, only_bg, user_name, stepped, r_prio,
+            #                                              overwrite, info_dict, project_name, current_layer,
+            #                                              single_frame)
+            #         self.saveCmdInFile(cmd=layer_cmd, submitCallID=submitCallID, shotName=shotName,
+            #                            suffix=prefix_name)
+            #         logger.info("For Render-Layer: %s" % current_layer)
+            #         logger.info(layer_cmd)
+            #         only_bg = False
+            # else:
+            my_cmd = self.RR_RenderSubmitInfo(prefix_name, only_bg, user_name, stepped, r_prio, overwrite,
+                                              info_dict, project_name, False, single_frame)
+            self.saveCmdInFile(cmd=my_cmd, submitCallID=submitCallID, shotName=shotName, suffix=prefix_name)
             logger.info(my_cmd)
 
             if crypto_render and not only_bg:
