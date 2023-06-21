@@ -1478,7 +1478,7 @@ class RenderSubmitFunctions():
                 render_folder,render_filename = os.path.split(CC.get_shot_passes_folder(**info_dict)) #cfg_util.CreatePathFromDict(cfg.project_paths["shot_passes_folder"],info_dict)
             
                 if render_layer:
-                    destination = "%s/<layer>/%s<layer>#" % (render_folder,render_filename)
+                    destination = "%s/<RenderLayer>/%s<RenderLayer>#" % (render_folder,render_filename)
                 else:
                     destination = "%s#" % CC.get_shot_passes_folder(**info_dict)
                 cmds.setAttr("vraySettings.fileNamePrefix", destination, type="string")
@@ -1497,7 +1497,7 @@ class RenderSubmitFunctions():
                 render_folder,render_filename = os.path.split(CC.get_shot_passes_folder(**info_dict)) #cfg_util.CreatePathFromDict(cfg.project_paths["shot_passes_folder"],info_dict)
             
                 if render_layer:
-                    destination = "%s/<layer>/%s<layer>" % (render_folder,render_filename)
+                    destination = "%s/<RenderLayer>/%s<RenderLayer>" % (render_folder,render_filename)
                 else:
                     destination = "%s" % CC.get_shot_passes_folder(**info_dict)
                 
@@ -1981,8 +1981,8 @@ class RenderSubmitFunctions():
         # output = "%s/passes/%s/%s_%s_####.exr" % (self.shot_path, self.preset_dd.currentText(), self.shot_name, self.preset_dd.currentText())
         output_folder,filename = os.path.split(CC.get_shot_passes_folder(**info_dict))  #"%s/passes/%s/" % (shot_path, c_prefix)
         if render_layer:
-            output_folder = "%s/<layer>/" % output_folder
-            filename = "%s<layer>" % filename
+            output_folder = "%s/<RenderLayer>/" % output_folder
+            filename = "%s<RenderLayer>" % filename
             #TODO Please fix the scene name if we start using layers.
         scene_name = filename
         filename = "%s####.exr" % filename
