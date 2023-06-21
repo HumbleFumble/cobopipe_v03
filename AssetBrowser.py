@@ -779,31 +779,37 @@ class MainWindow(QtWidgets.QWidget):
 				,"defaultResolution.height":None,"defaultRenderGlobals.animation":None}
 			for a in attr_list.keys():
 				attr_list[a] = cmds.getAttr(a)
-			#TODO Set frame to be single
+
+			cmds.setAttr("defaultRenderGlobals.animation", 0)
+
 			cmds.setAttr("defaultArnoldDriver.aiTranslator", "png", type="string")
-			cmds.setAttr('defaultRenderGlobals.imageFilePrefix', render_dir, type="string")
-			mel.eval('setMayaSoftwareFrameExt(1,0)') #set to single picture
-			# cmds.setAttr("defaultRenderGlobals.animation", 0)
+			cmds.setAttr('defaultRenderGlobals.imageFilePrefix', f"{render_dir}.png", type="string")
+
 			# Set resolution
 			cmds.setAttr("defaultResolution.width", width)
 			cmds.setAttr("defaultResolution.height", height)
 			render_cam = self.getRenderCamera()
 			if render_cam:
 				# cmds.setAttr("defaultArnoldDriver.colorManagement", 1)
-
+				if os.path.exists(f"{render_dir}.png"):
+					os.remove(f"{render_dir}.png")
 				cmds.arnoldRender(cam=render_cam, width=width, height=height, seq=None)
 
-				old_name = cmds.getAttr('defaultRenderGlobals.imageFilePrefix') + '_1' + ".png"
-				new_name = render_dir + ".png"
-				if os.path.exists(new_name):
-					os.remove(new_name)
-				os.rename(old_name, new_name)
+				# old_name = cmds.getAttr('defaultRenderGlobals.imageFilePrefix')
+				# new_name = render_dir + ".png"
+				# if os.path.exists(new_name):
+				# 	os.remove(new_name)
+				# os.rename(old_name, new_name)
 				# cmds.setAttr("defaultArnoldDriver.colorManagement", 2)
 			# Set resolution back to what it was before
 			# cmds.setAttr("defaultArnoldDriver.colorManagement", 2)
 			for k in attr_list.keys():
-				a_type = cmds.attributeQuery(k.split(".")[1],node=k.split(".")[0],attributeType=True)
-				cmds.setAttr(k, attr_list[k],type=a_type)
+				a_type = cmds.getAttr(k,type=True)
+				print(k,a_type)
+				if not a_type in ["long","bool"]:
+					cmds.setAttr(k, attr_list[k],type=a_type)
+				else:
+					cmds.setAttr(k, attr_list[k])
 			cmds.setAttr("defaultResolution.width", current_width)
 			cmds.setAttr("defaultResolution.height", current_height)
 
