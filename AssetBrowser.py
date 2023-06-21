@@ -774,7 +774,12 @@ class MainWindow(QtWidgets.QWidget):
 			cmds.setAttr("defaultRenderGlobals.currentRenderer", CC.project_settings['maya_render'], type="string")
 		if CC.project_settings['maya_render'] == "vray":
 			mel.eval('vray vfbControl -saveimage "%s"' % render_dir)
-		else:
+		if CC.project_settings['maya_render'] == "arnold":
+			attr_list = {"defaultArnoldDriver.aiTranslator":None,"defaultRenderGlobals.imageFilePrefix":None,"defaultResolution.width":None
+				,"defaultResolution.height":None}
+			for a in attr_list.keys():
+				attr_list[a] = cmds.getAttr(a)
+			#TODO Set frame to be single
 			cmds.setAttr("defaultArnoldDriver.aiTranslator", "png", type="string")
 			cmds.setAttr('defaultRenderGlobals.imageFilePrefix', render_dir, type="string")
 
@@ -783,6 +788,7 @@ class MainWindow(QtWidgets.QWidget):
 			cmds.setAttr("defaultResolution.height", height)
 			render_cam = self.getRenderCamera()
 			if render_cam:
+				# cmds.setAttr("defaultArnoldDriver.colorManagement", 1)
 				cmds.arnoldRender(cam=render_cam, width=width, height=height, seq=None)
 
 				old_name = cmds.getAttr('defaultRenderGlobals.imageFilePrefix') + '_1' + ".png"
@@ -790,10 +796,15 @@ class MainWindow(QtWidgets.QWidget):
 				if os.path.exists(new_name):
 					os.remove(new_name)
 				os.rename(old_name, new_name)
-
+				# cmds.setAttr("defaultArnoldDriver.colorManagement", 2)
 			# Set resolution back to what it was before
+			# cmds.setAttr("defaultArnoldDriver.colorManagement", 2)
+			for k in attr_list.keys():
+				a_type = cmds.attributeQuery(k.split(".")[1],node=k.split(".")[0],attributeType=True)
+				cmds.setAttr(k, attr_list[k],type=a_type)
 			cmds.setAttr("defaultResolution.width", current_width)
 			cmds.setAttr("defaultResolution.height", current_height)
+
 		# Set image name/location empty
 		cmds.setAttr('defaultRenderGlobals.imageFilePrefix', '', type="string")
   
