@@ -132,7 +132,7 @@ class CreateAsset():
             work_file = CC.get_asset_work_file(**self.asset_info)
             to_copy.append(work_file)
         work_path = CC.get_asset_work_folder(**self.asset_info)
-        history_path = "%s/_history/" % work_path
+        history_path = "%s/_History/" % work_path
         os.mkdir(history_path)
         for w in to_copy:
             w_folder,w_file = os.path.split(w)
