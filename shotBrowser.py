@@ -667,7 +667,7 @@ class FrontController(QtCore.QObject):
 		self.repository = RepositoryFactory(filmPath=CC.get_film_path()).create()
 		# self.saveNodeInfo()
 		self.loadNodeInfo()
-		self.__pixmapUtil = PixmapUtil()
+		self.__pixmapUtil = PixmapUtil(default_size="medium")
 		self.__threadPool = thread_pool.ThreadPool()
 		self.__ffmpeg = ffmpeg.FFMPEG()
 
@@ -2731,7 +2731,7 @@ class MainWindow(QtWidgets.QWidget):
 		self.radiobttn_thumb_small = QtWidgets.QRadioButton("Small")
 		self.radiobttn_thumb_medium = QtWidgets.QRadioButton("Medium")
 		self.radiobttn_thumb_big = QtWidgets.QRadioButton("Large")
-		self.radiobttn_thumb_big.setChecked(True)
+		self.radiobttn_thumb_medium.setChecked(True)
 		self.radiobttn_grp_thumbsize.addButton(self.radiobttn_thumb_small)
 		self.radiobttn_grp_thumbsize.addButton(self.radiobttn_thumb_medium)
 		self.radiobttn_grp_thumbsize.addButton(self.radiobttn_thumb_big)

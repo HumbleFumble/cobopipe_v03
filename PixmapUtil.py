@@ -18,13 +18,13 @@ CC = getConfigClass()
 
 
 class PixmapUtil(object):
-    def __init__(self, view_state="comp"):
+    def __init__(self, view_state="comp",default_size="large"):
         self.__view_state = view_state
         self.__small_thumbs = (80, 45)
         self.__medium_thumbs = (160, 90)
         self.__large_thumbs = (320, 180)
         self.__current_size = None
-        self.setSize(size="large")
+        self.setSize(size=default_size)
 
     def setSize(self, size="large"):
         if size == "large":
