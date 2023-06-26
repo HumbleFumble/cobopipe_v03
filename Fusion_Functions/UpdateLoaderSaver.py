@@ -40,10 +40,10 @@ class GeneralTool(object):
         print(result)
         return result[0]
 
-    def ReplaceSQ(self,content,replace_content):
+    def ReplaceSeq(self,content,replace_content):
         # low_case = content.lower()
         sq_compile = "(/%s%s/)" % (CC.episode_regex[1:], CC.seq_regex)
-        print(sq_compile)
+        # print(sq_compile)
         # result = re.split(re_compile,content, flags=re.IGNORECASE)
         # replace_content = "/S101_SQ020/"
         result = re.subn(sq_compile,replace_content,content,flags=re.IGNORECASE)
@@ -58,6 +58,19 @@ class GeneralTool(object):
         result = re.subn(shot_compile,replace_content,content,flags=re.IGNORECASE)
         print(result)
         return result[0]
+
+    def FindShot(self,content):
+        shot_compile = "(%s%s%s)" % (CC.episode_regex[1:], CC.seq_regex, CC.shot_regex)
+        result = re.search(shot_compile,content,re.IGNORECASE)
+        print(result)
+
+        if result:
+            # print(result.group())
+            # print(result)
+            return result.group()
+        else:
+            return False
+
 
 
 class MIA_Tool(object):
@@ -328,17 +341,36 @@ def run(fusion):
 
 if __name__ == '__main__':
     import sys
-    content = "P:/930435_Liva_og_De_Uperfekte/Teaser/Film/S101/S101_SQ010/S101_SQ010_SH050/passes/ColorB/S101_SQ010_SH050_ColorB.0001"
+    file_name = "S102_SQ020_SH060_Comp"
+    content = "P:/930435_Liva_og_De_Uperfekte/Teaser/Film/S101/S101_SQ010/S101_SQ010_SH050/passes/ColorB/S101_SQ010_SH050_ColorB.0001.exr"
+    # content = "Test"
+
     gt = GeneralTool(None,None)
 
-    episode = "S102"
-    sq = "%s_SQ020" % episode
-    shot = "%s_SH040" %(sq)
+    scene_shot = gt.FindShot(file_name)
+    if scene_shot:
+        scene_ep = scene_shot.split("_")[0]
+        scene_seq = "_".join(scene_shot.split("_")[0:2])
+        loader_shot = gt.FindShot(content)
 
-    new_content = content
-    new_content = gt.ReplaceEpisode(new_content,f"/{episode}/")
-    new_content = gt.ReplaceSQ(new_content, f"/{sq}/")
-    new_content = gt.ReplaceShot(new_content, f"{shot}")
+        if loader_shot:
+
+            new_content = gt.ReplaceShot(content,scene_shot)
+            new_content = gt.ReplaceSeq(new_content, f"/{scene_seq}/")
+            new_content = gt.ReplaceEpisode(new_content, f"/{scene_ep}/")
+            print(content)
+            print(new_content)
+
+
+
+    # episode = "S102"
+    # sq = "%s_SQ020" % episode
+    # shot = "%s_SH040" %(sq)
+
+    # new_content = content
+    # new_content = gt.ReplaceEpisode(new_content,f"/{episode}/")
+    # new_content = gt.ReplaceSQ(new_content, f"/{sq}/")
+    # new_content = gt.ReplaceShot(new_content, f"{shot}")
 
     # gt.ReplaceSQ(content,"")
     # if not QtWidgets.QApplication.instance():
