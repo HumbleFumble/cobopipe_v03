@@ -1497,7 +1497,7 @@ class RenderSubmitFunctions():
                 render_folder,render_filename = os.path.split(CC.get_shot_passes_folder(**info_dict)) #cfg_util.CreatePathFromDict(cfg.project_paths["shot_passes_folder"],info_dict)
             
                 if render_layer:
-                    destination = "%s/<RenderLayer>/%s<RenderLayer>" % (render_folder,render_filename)
+                    destination = "%s/<RenderLayer>/%s<RenderLayer>" % (render_folder,render_filename) #Remove folder name? Deadline doesn't change the folder render_layer for some reason
                 else:
                     destination = "%s" % CC.get_shot_passes_folder(**info_dict)
                 
