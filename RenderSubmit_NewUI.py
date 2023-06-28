@@ -16,8 +16,9 @@ class MainWindow(QtWidgets.QWidget):
         ##### NAME SECTION ####
         self.name_pick_layout = QtWidgets.QHBoxLayout()
         self.name_dd = QtWidgets.QComboBox()
-        self.name_pick_layout.addWidget(self.name_dd)
+        # self.name_pick_layout.addWidget(self.name_dd)
 
+        #Don't need a dropdown, just update the edit field along with preset
         self.name_custom_layout = QtWidgets.QHBoxLayout()
         self.name_edit = QtWidgets.QLineEdit("Custom name here")
         self.name_add_bttn = QtWidgets.QPushButton("+")
@@ -25,29 +26,32 @@ class MainWindow(QtWidgets.QWidget):
 
         self.name_remove_bttn = QtWidgets.QPushButton("-")
         self.name_remove_bttn.setToolTip("Click here to remove the current selection from the saved options")
-        self.name_custom_layout.addWidget(self.name_edit)
-        self.name_custom_layout.addWidget(self.name_add_bttn)
-        self.name_custom_layout.addWidget(self.name_remove_bttn)
+        # self.name_pick_layout.addWidget(self.name_inc_dd)
+        self.name_pick_layout.addWidget(self.name_edit)
+        # self.name_custom_layout.addWidget(self.name_add_bttn)
+        # self.name_custom_layout.addWidget(self.name_remove_bttn)
 
 
 
         self.name_inc_dd = QtWidgets.QComboBox()
+
+        #TODO Add a None option for versioning
         self.name_inc_dd.addItems(list(string.ascii_uppercase))
         self.name_pick_layout.addWidget(self.name_inc_dd)
 
         self.name_inc_layout = QtWidgets.QHBoxLayout()
-        self.name_inc_checkbox = QtWidgets.QCheckBox("Auto Increment")
+        self.name_inc_checkbox = QtWidgets.QCheckBox("Auto Increment") #TODO Update the version in the ui when clicked
         self.name_inc_checkbox.setToolTip("Auto Increment versions with a letter (A,B,C...)")
 
-        self.name_inc_bttn = QtWidgets.QPushButton("Update increment to the next available")
+        # self.name_inc_bttn = QtWidgets.QPushButton("Update increment to the next available")
         self.name_inc_layout.addWidget(self.name_inc_checkbox)
-        self.name_inc_layout.addWidget(self.name_inc_bttn)
+        # self.name_inc_layout.addWidget(self.name_inc_bttn)
 
         self.name_layout.addLayout(self.name_pick_layout)
-        self.name_layout.addLayout(self.name_custom_layout)
+        # self.name_layout.addLayout(self.name_custom_layout)
         self.name_layout.addLayout(self.name_inc_layout)
         # self.name_layout.addWidget()
-
+        #TODO ADD checkbox with overwrite latest, OR change into radio bttns with the options with inc+overwrite latest+manual + off
 
 
         self.main_layout.addLayout(self.name_layout)
