@@ -6,6 +6,6 @@
         "ftp_port": 2121,
         "ftp_username": "HOJ_FTP",
         "run_local": true,
-        "server_dir": "P:/930462_HOJ_Project/Production/Asset/Environment"
+        "server_dir": "\\\\dumpap3/Production/930462_HOJ_Project/Production/Asset/Environment"
     }
 ]
