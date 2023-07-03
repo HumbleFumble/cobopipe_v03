@@ -332,7 +332,7 @@ def maintain_ftp_mirror(
 
 def maintain_ftp_mirrors():
     for dictionary in load_json(
-        "C:/Users/mha/Projects/cobopipe_v02-001/ftp_mirrors.json"
+        "T:/_Pipeline/cobopipe_v02-001/ftp_mirrors.json"
     ):
         maintain_ftp_mirror(**dictionary)
 
