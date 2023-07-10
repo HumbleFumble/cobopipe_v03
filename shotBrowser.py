@@ -1873,7 +1873,7 @@ class FrontController(QtCore.QObject):
 							print(preview_level)
 							if preview_level == "comp":
 								# Check if we need to fix audio length or add new audio before creating hookup
-								if self.addAudioToComp(output_path=output_path, node=node):
+								if self.addAudioToComp( node=node,output_path=output_path):
 									break
 								else:
 									output_path=None
@@ -1886,10 +1886,15 @@ class FrontController(QtCore.QObject):
 		preview_util.concat(input_path_list=list_of_paths,output_path=output_path, force_h264=True)
 		os.startfile(output_path)
 
-	def addAudioToComp(self, output_path="",node=None):
+	def addAudioToComp(self,node=None,output_path=None):
 		import Preview.ffmpeg_util as preview_util
-		audio_check = preview_util.needAudioCheck(output_path)
 		shot_dict = node.getInfoDict()
+		if not output_path:
+			output_path = CC.get_shot_comp_preview_file(**shot_dict)
+
+		audio_check = preview_util.needAudioCheck(output_path)
+
+
 		if audio_check:
 			temp_path = Preview.file_util.makeTempFile(output_path)
 			try:  # Rename file to avoid permissions errors. When compOutput is render from deadline, ffmpeg can't overwrite it directly.
@@ -3067,6 +3072,7 @@ class MainWindow(QtWidgets.QWidget):
 					menu.addSeparator()
 					menu.addMenu(create_menu)
 					create_menu.addAction("Create HookUp")
+					create_menu.addAction("Add Sound to CompPreview")
 					create_menu.addAction("Compare AV")
 					create_menu.addAction("Create Comp Preview")
 					create_menu.addAction("Create Comp Preview (Force)")
@@ -3283,6 +3289,11 @@ class MainWindow(QtWidgets.QWidget):
 						self.ctrl.openPreview(node, "animatic")
 					if action.text() == "Open Comp Preview":
 						self.ctrl.openPreview(node, "comp")
+
+					if action.text() == "Add Sound to CompPreview":
+						for n in nodes:
+							if node.getType()=="shot":
+								self.ctrl.addAudioToComp(node=n)
 					if action.text() == "Create HookUp":
 						if len(nodes) == 1:
 							if node.getType() == "seq":
