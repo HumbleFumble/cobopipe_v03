@@ -61,6 +61,9 @@ def AddSoundToVideo(video_path, audio_path,output):
 def readySoundStream(video_path,audio_path):
     if video_path == audio_path:
         v_duration, a_duration = probeDurationMerged(video_path)
+    elif not audio_path:
+        v_duration = probeDuration(video_path)
+        a_duration = None
     else:
         v_duration = probeDuration(video_path)
         a_duration = probeDuration(audio_path)
@@ -77,6 +80,8 @@ def readySoundStream(video_path,audio_path):
         final_a_stream = final_a_stream.filter("atrim", duration=v_duration)
         final_a_stream = final_a_stream.filter('asetpts', expr='PTS-STARTPTS')
         # final_a_stream = ffmpeg.trim(final_a_stream,duration=v_duration)
+    elif not audio_path and silence_length==0:
+        final_a_stream = ProlongAudio(audio_path,v_duration)
     else:
         final_a_stream = ffmpeg.input(audio_path)
     return final_a_stream
@@ -84,8 +89,11 @@ def readySoundStream(video_path,audio_path):
 
 def ProlongAudio(audio_path, duration):
     silence = createSilenceStream(duration)
-    a_stream = ffmpeg.input(audio_path)
-    final_a_stream = ffmpeg.concat(a_stream,silence,n=2,v=0,a=1)
+    if audio_path:
+        a_stream = ffmpeg.input(audio_path)
+        final_a_stream = ffmpeg.concat(a_stream,silence,n=2,v=0,a=1)
+    else:
+        final_a_stream = silence
     return final_a_stream
 
 

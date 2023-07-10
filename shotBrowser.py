@@ -1870,39 +1870,15 @@ class FrontController(QtCore.QObject):
 						path = path_func(**shot_dict)
 						if os.path.exists(path):
 							output_path = path
-							break
-				#Check if we need to fix audio length or add new audio before creating hookup
-				audio_check = preview_util.needAudioCheck(output_path)
-				if audio_check:
-					temp_path = Preview.file_util.makeTempFile(output_path)
-					try: #Rename file to avoid permissions errors. When compOutput is render from deadline, ffmpeg can't overwrite it directly.
-						f_path, extension = output_path.split(".")
-						no_sound_path = "%s_no_sound_comp.%s" % (f_path, extension)
-						try:
-							os.rename(output_path,no_sound_path)
-							if audio_check == True:
-								print("Adding new sound to %s" % node.getName())
-								sound_wav = CC.get_shot_sound_file(**shot_dict)
-								# sound_wav = "%s/%s_Sound.wav" % (CC.get_shot_path(**node.getInfoDict()),node.getName())
-								if os.path.exists(sound_wav):
-									preview_util.AddSoundToVideo(temp_path, sound_wav, output_path)
+							print(preview_level)
+							if preview_level == "comp":
+								# Check if we need to fix audio length or add new audio before creating hookup
+								if self.addAudioToComp(output_path=output_path, node=node):
+									break
 								else:
-									print("Can't find sound file: %s" % sound_wav)
-									continue
+									output_path=None
 							else:
-								print("Sound not the correct duration for %s. Trying to trim or prolong it" % node.getName())
-								preview_util.AddSoundToVideo(temp_path, temp_path, output_path)
-							if os.path.exists(temp_path):
-								os.remove(temp_path)
-							if os.path.exists(no_sound_path):
-								os.remove(no_sound_path)
-						except Exception as e: #If failed rename the comp output back.
-							print(e)
-							os.rename(no_sound_path,output_path)
-					except Exception as e:
-						print(e)
-						if os.path.exists(temp_path):
-							os.remove(temp_path)
+								break
 				list_of_paths.append(output_path)
 
 		output_path = "%s/HOOKUP/%s.mov" % (CC.get_film_path(), hookup_name)
@@ -1910,6 +1886,47 @@ class FrontController(QtCore.QObject):
 		preview_util.concat(input_path_list=list_of_paths,output_path=output_path, force_h264=True)
 		os.startfile(output_path)
 
+	def addAudioToComp(self, output_path="",node=None):
+		import Preview.ffmpeg_util as preview_util
+		audio_check = preview_util.needAudioCheck(output_path)
+		shot_dict = node.getInfoDict()
+		if audio_check:
+			temp_path = Preview.file_util.makeTempFile(output_path)
+			try:  # Rename file to avoid permissions errors. When compOutput is render from deadline, ffmpeg can't overwrite it directly.
+
+				f_path, extension = output_path.split(".")
+				no_sound_path = "%s_OrigNoSound.%s" % (f_path, extension)
+				try:
+					if os.path.exists(no_sound_path):
+						os.remove(no_sound_path)
+					os.rename(output_path, no_sound_path)
+					if audio_check == True:
+						print("Adding new sound to %s" % node.getName())
+						sound_wav = CC.get_shot_sound_file(**shot_dict)
+						# sound_wav = "%s/%s_Sound.wav" % (CC.get_shot_path(**node.getInfoDict()),node.getName())
+						if os.path.exists(sound_wav):
+							preview_util.AddSoundToVideo(temp_path, sound_wav, output_path)
+						else:
+							print("Can't find sound file: %s" % sound_wav)
+							preview_util.AddSoundToVideo(temp_path, None, output_path)
+							# return True
+					else:
+						print("Sound not the correct duration for %s. Trying to trim or prolong it" % node.getName())
+						preview_util.AddSoundToVideo(temp_path, temp_path, output_path)
+					if os.path.exists(temp_path):
+						os.remove(temp_path)
+					if os.path.exists(no_sound_path):
+						os.remove(no_sound_path)
+				except Exception as e:  # If failed rename the comp output back.
+					print(e)
+					os.rename(no_sound_path, output_path)
+					return False
+			except Exception as e:
+				print(e)
+				if os.path.exists(temp_path):
+					os.remove(temp_path)
+					return False
+		return True
 	def makeHookUpFromNodesOLDandOUTDATED(self, list_of_nodes=[], hookup_name=None, level="anim"):
 		preview_paths = {"comp": CC.get_shot_comp_preview_file,  # "shot_comp_output_file",
 						 "anim": CC.get_shot_anim_preview_file,  # "shot_anim_preview_file",
