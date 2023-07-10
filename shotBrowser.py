@@ -1886,13 +1886,22 @@ class FrontController(QtCore.QObject):
 		preview_util.concat(input_path_list=list_of_paths,output_path=output_path, force_h264=True)
 		os.startfile(output_path)
 
-	def addAudioToComp(self,node=None,output_path=None):
+	def addAudioToComp(self,node=None,output_path=None,skip_check=False):
 		import Preview.ffmpeg_util as preview_util
 		shot_dict = node.getInfoDict()
 		if not output_path:
-			output_path = CC.get_shot_comp_preview_file(**shot_dict)
+			# output_path = CC.get_shot_comp_output_file(**shot_dict)
+			path_func = getattr(CC, "get_{func_name}".format(func_name=CC.preview_dict["comp"][0]))
+			output_path = path_func(**shot_dict)
 
-		audio_check = preview_util.needAudioCheck(output_path)
+		if not os.path.exists(output_path):
+			print(f"Can't find {output_path}")
+			return False
+
+		if skip_check: #added check in case we want to overwrite the sound with a new one
+			audio_check = True
+		else:
+			audio_check = preview_util.needAudioCheck(output_path)
 
 
 		if audio_check:
