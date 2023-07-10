@@ -1,0 +1,11 @@
+[
+    {
+        "ftp_dir": "\\\\192.168.0.227/ftpprod/HOJ_FTP/_LAYOUT_and_BACKGROUND/Background_Hand_in",
+        "ftp_local_host": "178.249.49.18",
+        "ftp_password": "valhalla",
+        "ftp_port": 2121,
+        "ftp_username": "HOJ_FTP",
+        "run_local": true,
+        "server_dir": "\\\\dumpap3/Production/930462_HOJ_Project/Production/Asset/Environment"
+    }
+]
