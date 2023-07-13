@@ -47,4 +47,4 @@ def generate_signature(body):
 
 
 if __name__ == "__main__":
-    send_webhook({'Dope': 'shit'})
+    send_webhook({'Test': 'This is a test string'})
