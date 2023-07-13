@@ -18,8 +18,8 @@ def send_webhook(data, vpn=False):
     try:
         requests.post(url, json=data, headers=headers)
     except WindowsError as e:
-        if '[WinError 10060]' in str(e):
-            print(f"Exception: {e}\n\n>> Check if Listener is closed on Application Server. <<\n\n")
+        if any(error in str(e) for error in ['[WinError 10060]', '[WinError 10061]']):
+            raise WindowsError(f"Exception: {e}\n\n>> Check if Listener is closed on Application Server. <<\n\n")
     except Exception as e:
         print(f'Exception: {e}')
 
