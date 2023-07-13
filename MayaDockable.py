@@ -1,8 +1,8 @@
-from maya.OpenMayaUI import MQtUtil
-from shiboken2 import wrapInstance
-from PySide2.QtWidgets import QMainWindow, QWidget
-from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
 import maya.cmds as cmds
+from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
+from maya.OpenMayaUI import MQtUtil
+from PySide2.QtWidgets import QMainWindow, QWidget
+from shiboken2 import wrapInstance
 from Log.CoboLoggers import getLogger
 
 logger = getLogger()
@@ -55,7 +55,16 @@ class MayaDockable(MayaQWidgetDockableMixin, QMainWindow):
         MayaQWidgetDockableMixin (object): Instance of maya.app.general.mayaMixin.MayaQWidgetDockableMixin class.
         QMainWindow (object): Instance of PySide2.QtWidgets.QMainWindow class.
     """
+
     def __init__(self, objectName, title, centralWidget, parent=getMayaWindow()):
+        """Initializing instance of MayaDockable.
+
+        Args:
+            objectName (str): Object name.
+            title (str): Window title.
+            centralWidget (str): QWidget to set as central widget.
+            parent (object, optional): Class instance of QWidget. Defaults to getMayaWindow().
+        """
         super(MayaDockable, self).__init__(parent)
         self.setObjectName(objectName)
         self.setWindowTitle(title)
@@ -63,16 +72,21 @@ class MayaDockable(MayaQWidgetDockableMixin, QMainWindow):
         self.beenClosed = False
 
     def dockCloseEventTriggered(self):
+        """Attempting to close all children on close event."""
         for c in self.children():
             try:
                 c.close()
             except Exception as e:
                 pass
-                # logger.debug("Tried to close a child of %s" % self.objectName())
         self.beenClosed = True
 
 
 def clearDockable(objectName):
+    """Trying to delete all traces of the dockable.
+
+    Args:
+        objectName (str): Object name of QWidget.
+    """
     try:
         if dockableDictionary:
             if objectName in dockableDictionary.keys():
@@ -97,7 +111,16 @@ def clearDockable(objectName):
         print(e)
 
 
-def dockableExists(objectName):  # title, centralWidget
+def dockableExists(objectName):
+    """Trying to determine if the window exists.
+    If window does not exists, it will attempt to clear any remains left behind.
+
+    Args:
+        objectName (str): Object name of QWidget.
+
+    Returns:
+        bool: Returns True if window exists. Otherwise False.
+    """
     try:
         window = getWindowInMaya(objectName)
     except Exception as e:
@@ -135,13 +158,15 @@ def dockableExists(objectName):  # title, centralWidget
 
 
 def runDockable(objectName, title, centralWidget):
-    """
-    Creates Dockable QMainWindow containing passed central widget.
+    """Creates QMainWindow wrapped in DockableMixin and sets central widget.
 
-    :param objectName: The name of the QWidget object
-    :param title: The window title
-    :param centralWidget: The QWidget that will be set as centralWidget
-    :return: instance of MayaDock class
+    Args:
+        objectName (str): Object name of the QWidget object.
+        title (str): Window title.
+        centralWidget (object): Class instance of QWidget.
+
+    Returns:
+        object: Class instance of MayaDockable.
     """
     global dockableDictionary
 
