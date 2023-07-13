@@ -4,6 +4,7 @@ from PySide2.QtWidgets import QMainWindow, QWidget
 from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
 import maya.cmds as cmds
 from Log.CoboLoggers import getLogger
+
 logger = getLogger()
 import reloadModules as rm
 
@@ -18,18 +19,42 @@ import reloadModules as rm
 
 
 def getMayaWindow():
+    """Fetches memory pointer to current instance of Maya's main window
+    and wraps it in a QWidget instance.
+
+    Returns:
+        object: Returns pointer wrapped as QWidget instance.
+    """
     pointer = MQtUtil.mainWindow()
     if pointer:
+        # Converts memory pointer to type integer. This is Python 3 behavior.
+        # To run this in Python 2, convert pointer to type long.
         return wrapInstance(int(pointer), QWidget)
 
 
 def getWindowInMaya(name):
+    """Fetches memory pointer to current instance of specific Maya window based on object name.
+
+    Args:
+        name (str): Object name of window to get.
+
+    Returns:
+        object: Returns pointer wrapped as QWidget instance.
+    """
     pointer = MQtUtil.findWindow(name)
     if pointer:
+        # Converts memory pointer to type integer. This is Python 3 behavior.
+        # To run this in Python 2, convert pointer to type long.
         return wrapInstance(int(pointer), QWidget)
 
 
 class MayaDockable(MayaQWidgetDockableMixin, QMainWindow):
+    """Custom wrapper container for Qt Window inheriting docking abilities within Maya.
+
+    Args:
+        MayaQWidgetDockableMixin (object): Instance of maya.app.general.mayaMixin.MayaQWidgetDockableMixin class.
+        QMainWindow (object): Instance of PySide2.QtWidgets.QMainWindow class.
+    """
     def __init__(self, objectName, title, centralWidget, parent=getMayaWindow()):
         super(MayaDockable, self).__init__(parent)
         self.setObjectName(objectName)
@@ -67,11 +92,12 @@ def clearDockable(objectName):
         print(e)
 
     try:
-        cmds.deleteUI(objectName + 'WorkspaceControl')
+        cmds.deleteUI(objectName + "WorkspaceControl")
     except Exception as e:
         print(e)
 
-def dockableExists(objectName): # title, centralWidget
+
+def dockableExists(objectName):  # title, centralWidget
     try:
         window = getWindowInMaya(objectName)
     except Exception as e:
@@ -80,7 +106,6 @@ def dockableExists(objectName): # title, centralWidget
             clearDockable(objectName)
         except Exception as e:
             print(e)
-
 
     if window:
         try:
@@ -126,7 +151,6 @@ def runDockable(objectName, title, centralWidget):
             pass
     except:
         dockableDictionary = {}
-
 
     dockableDictionary[objectName] = MayaDockable(objectName, title, centralWidget)
     dockableDictionary[objectName].show(dockable=True)
