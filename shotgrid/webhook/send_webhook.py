@@ -15,7 +15,13 @@ def send_webhook(data, vpn=False):
     headers = {'content-type': 'application/json; charset=utf-8'}
     body = json.dumps(data)
     headers['signature'] = generate_signature(body)
-    requests.post(url, json=data, headers=headers)
+    try:
+        requests.post(url, json=data, headers=headers)
+    except WindowsError as e:
+        if '[WinError 10060]' in str(e):
+            print(f"Exception: {e}\n\n>> Check if Listener is closed on Application Server. <<\n\n")
+    except Exception as e:
+        print(f'Exception: {e}')
 
 
 def get_json(file_path):
@@ -41,4 +47,4 @@ def generate_signature(body):
 
 
 if __name__ == "__main__":
-    send_webhook()
+    send_webhook({'Dope': 'shit'})
