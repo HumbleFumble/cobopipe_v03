@@ -5,6 +5,7 @@ def findFiles(list_of_names=[],base_path=""):
     for name in list_of_names:
         for root,folder,files in os.walk(base_path):
             for cur_file in files:
+
                 if name in cur_file:
                     if "_V001" in cur_file:
                         print(cur_file)
@@ -13,5 +14,6 @@ def findFiles(list_of_names=[],base_path=""):
     return return_list
 
 if __name__ == '__main__':
-    base_path = ""
-    list_of_names = [""]
+    base_path = "P:/930462_HOJ_Project/Production/Asset/Environment/Nifleheim/FrostKingDomain/"
+    list_of_names = ["FenrisCostume_INT_0101_D"]
+    findFiles(list_of_names=list_of_names,base_path=base_path)
