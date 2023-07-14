@@ -413,7 +413,16 @@ class PublishReport:
     class Node:
         """PublishReport Node"""
         def __init__(self, parent, identity, path=None):
+            """Initializing instance of Node.
+
+            Args:
+                parent (object): Instance of PublishReport which the Node belongs to.
+                identity (str): Node identity as string. For example 'Char_Main_Mia' or 'E01_SQ010_SH010'.
+                path (str, optional): Path to the report file. Defaults to None.
+            """
             logger.debug("Initializing PublishReport.Node: " + identity)
+
+            # Creating Node variables.
             self.parent = parent
             self.identity = identity
             self.path = path
@@ -432,9 +441,16 @@ class PublishReport:
             self.mentions = {}
             self.filePaths = []
             self.info_dict = {}
+
+            # Updating Node data.
             self.update()
 
         def getInfoDict(self):
+            """Creates info_dict from instance variables to interface with Class Config.
+
+            Returns:
+                dict: Returns info_dict as dictionary.
+            """
             self.info_dict = {}
             if self.type == "Asset":
                 self.info_dict = {
@@ -451,6 +467,7 @@ class PublishReport:
             return self.info_dict
 
         def update(self):
+            """Updating Node data."""
             logger.debug("Updating PublishReport.Node: " + self.identity)
             if self.path:
                 if os.path.exists(self.path) and os.path.isfile(self.path):
@@ -462,6 +479,8 @@ class PublishReport:
                             self.unwrap()
 
         def setTypeFromDict(self, input_dict={}):
+            """TODO: Comment this.
+            """
             for k in input_dict.keys():
                 v = input_dict[k]
                 if k == "asset_type":
@@ -475,6 +494,7 @@ class PublishReport:
                         self.assetName = v
 
         def findType(self):
+            """Fiding the type of Node."""
             logger.debug("Finding type of PublishReport.Node: " + self.identity)
             if os.path.exists(self.parent.folderPath):
                 if self.parent.folderPath in self.path:
@@ -484,6 +504,7 @@ class PublishReport:
                         self.type = "Shot"
 
         def findAttributes(self):
+            """Finding attributes of Node."""
             logger.debug("Finding attributes of PublishReport.Node: " + self.identity)
             if self.type == "Asset":
                 if os.path.exists(self.parent.folderPath):
@@ -511,6 +532,11 @@ class PublishReport:
                             self.shot = _dictionary["shot_name"]
 
         def fetchJSON(self):
+            """Fetching data from report json file.
+
+            Returns:
+                dict: Returns dictionary of data.
+            """
             logger.debug("Loading JSON data of PublishReport.Node: " + self.identity)
             jsonData = file_util.load_json(save_location=self.path)
             if self.data != jsonData:
@@ -520,12 +546,14 @@ class PublishReport:
                 return False
 
         def unwrap(self):
+            """Unwrapping data from report file."""
             logger.debug("Unwrapping data of PublishReport.Node: " + self.identity)
             self.references = {}
             self.textures = {}
+
+            # Looping over all the data and handling each individual type.
             for key in self.data.keys():
                 value = self.data[key]
-                # if key not in scenePriorityList:
                 if "_ref_paths" in key:
                     key = key.split("_ref_paths")[0]
                     for item in value:  # item = ref_paths
@@ -557,57 +585,6 @@ class PublishReport:
                 elif "_MIDs" in key:
                     if key.split("_")[0] in ["Render", "Light"]:
                         self.MIDs = value
-
-
-# def cleanOIDList(shot_list, scope=None):
-#     list_of_sets = []
-#     for cur_shot in shot_list.values():
-#         list_of_sets.append(set(cur_shot))
-#     # all_assets = set()
-#     # for v in shot_list.values():
-#     #     all_assets |= set(v)
-#     flat_list = []
-#     for v in shot_list.values():
-#         flat_list.extend(v)
-#     all_assets = set(flat_list)
-
-#     # Make a dict of all the props in order of the most used one.
-#     counted = dict((i, flat_list.count(i)) for i in all_assets)
-#     most_use_list = list(reversed(sorted(counted.items(), key=lambda x: x[1])))
-
-#     # Make a dict of asset as keys, with a value thats a list of all other assets they don't share shots with.
-#     final_dict = {}
-#     for asset in all_assets:
-#         asset_set = {asset}
-#         for shot_set in list_of_sets:
-#             if asset in shot_set:
-#                 asset_set |= shot_set
-#         result = all_assets.difference(asset_set)
-#         final_dict[asset] = result
-
-#     # Go through and eliminate all the re-occurences of the assets, in lists.
-#     final_list = []
-#     clean_dict = final_dict.copy()
-#     ignore_list = []
-
-#     for k, v in most_use_list:
-#         if not k in ignore_list:
-#             temp_list = [k]
-#             clean_dict, ignore_list = updateDict(clean_dict, k, ignore_list)
-#             loop_list = []  # list(temp_dict[k])
-#             for in_p, in_u in most_use_list:
-#                 if in_p in clean_dict[k]:
-#                     loop_list.append(in_p)
-#             for i, asset in enumerate(loop_list):
-#                 if not asset in ignore_list:
-#                     clear = True
-#                     for item in temp_list[1:]:
-#                         if asset in final_dict[item]:
-#                             clear = False
-#                     if clear:
-#                         temp_list.append(asset)
-#                         clean_dict, ignore_list = updateDict(clean_dict, asset, ignore_list)
-#             final_list.append(temp_list)
 
 
 if __name__ == "__main__":
