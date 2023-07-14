@@ -11,18 +11,19 @@ class MainWindow(QtWidgets.QWidget):
 
     def createBaseUI(self):
         self.main_layout = QtWidgets.QVBoxLayout()
+        self.main_layout.addWidget(self.PresetUI())
+        self.main_layout.addWidget(self.NameUI())
         self.setLayout(self.main_layout)
+
     def NameUI(self):
-        self.name_group = QtWidgets.QGroupBox()
+        self.name_group = QtWidgets.QGroupBox("Name Settings")
         self.name_layout = QtWidgets.QVBoxLayout()
 
         ##### NAME SECTION ####
         self.name_pick_layout = QtWidgets.QHBoxLayout()
-        self.name_dd = QtWidgets.QComboBox()
         # self.name_pick_layout.addWidget(self.name_dd)
 
         #Don't need a dropdown, just update the edit field along with preset
-        self.name_custom_layout = QtWidgets.QHBoxLayout()
         self.name_edit = QtWidgets.QLineEdit("")
         self.name_edit.setPlaceholderText("Custom name here")
         self.name_add_bttn = QtWidgets.QPushButton("+")
@@ -32,19 +33,12 @@ class MainWindow(QtWidgets.QWidget):
         self.name_remove_bttn.setToolTip("Click here to remove the current selection from the saved options")
 
         self.name_pick_layout.addWidget(self.name_edit)
-        self.name_inc_dd = QtWidgets.QComboBox()
-
-        #TODO Add a None option for versioning
-        self.name_inc_dd.addItems(list(string.ascii_uppercase))
-        self.name_pick_layout.addWidget(self.name_inc_dd)
 
         self.name_inc_layout = QtWidgets.QHBoxLayout()
         self.name_inc_radio = QtWidgets.QRadioButton("Auto Increment")
         self.name_inc_radio.setToolTip("Auto Increment versions with a letter (A,B,C...)")
         self.no_verion_radio = QtWidgets.QRadioButton("Don't Add Letter")
         self.overwrite_latest_radio = QtWidgets.QRadioButton("Overwrite Latest")
-
-
 
         # self.name_inc_bttn = QtWidgets.QPushButton("Update increment to the next available")
 
@@ -63,11 +57,8 @@ class MainWindow(QtWidgets.QWidget):
         self.name_layout.addLayout(self.name_inc_layout)
 
         self.name_group.setLayout(self.name_layout)
+        return self.name_group
 
-        # self.main_layout.addLayout(self.name_layout)
-        #
-        # self.setLayout(self.main_layout)
-        # self.name_overwrite_checkbox = QtWidgets.QCheckBox("Overwrite Version")
     def PresetUI(self):
         # PRESET SETTINGS
         self.preset_group = QtWidgets.QGroupBox("Preset Settings")
@@ -76,20 +67,20 @@ class MainWindow(QtWidgets.QWidget):
 
         self.preset_dd = QtWidgets.QComboBox()
         self.preset_create_button = QtWidgets.QPushButton("+")
-        self.preset_create_button.clicked.connect(self.CreateNewPreset)
+        # self.preset_create_button.clicked.connect(self.CreateNewPreset)
         self.preset_create_button.setMaximumWidth(30)
         self.preset_delete_button = QtWidgets.QPushButton("-")
-        self.preset_delete_button.clicked.connect(self.DeleteCurrentPreset)
+        # self.preset_delete_button.clicked.connect(self.DeleteCurrentPreset)
         self.preset_delete_button.setMaximumWidth(30)
         self.preset_button_layout = QtWidgets.QHBoxLayout()
 
         self.pick_preset_buton = QtWidgets.QPushButton("Pick Preset")
-        self.pick_preset_buton.clicked.connect(self.PickPreset)
+        # self.pick_preset_buton.clicked.connect(self.PickPreset)
         self.appy_preset_button = QtWidgets.QPushButton("Apply Preset")
-        self.appy_preset_button.clicked.connect(self.ApplyPresetCall)
+        # self.appy_preset_button.clicked.connect(self.ApplyPresetCall)
 
         self.save_preset_button = QtWidgets.QPushButton("Save Preset")
-        self.save_preset_button.clicked.connect(self.SavePresetCall)
+        # self.save_preset_button.clicked.connect(self.SavePresetCall)
 
         self.preset_group.setLayout(self.preset_layout)
         self.preset_layout.addLayout(self.preset_dd_layout)
