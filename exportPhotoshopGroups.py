@@ -13,6 +13,10 @@ def findFiles(list_of_names=[],base_path=""):
                         return_list.append(os.path.join(root,cur_file))
     return return_list
 
+def createFolder():
+    """creates folder to place shot pngs in"""
+    pass
+
 if __name__ == '__main__':
     base_path = "P:/930462_HOJ_Project/Production/Asset/Environment/Nifleheim/FrostKingDomain/"
     list_of_names = ["FenrisCostume_INT_0101_D"]
