@@ -26,12 +26,12 @@ class MainWindow(QWidget):
 
         self.setLayout(self.main_layout)
 
-    #         # FOR TESTING PURPOSES
-    #         self.text_input.setText(
-    #             """ElfGarden_EXT_0100
-    # ElfGarden_EXT_0200
-    # ElfGarden_EXT_0300"""
-    #         )
+#         # FOR TESTING PURPOSES
+#         self.text_input.setText(
+#             """ElfGarden_EXT_0100
+# ElfGarden_EXT_0200
+# ElfGarden_EXT_0300"""
+#         )
 
         self.button.clicked.connect(self.run)
 
