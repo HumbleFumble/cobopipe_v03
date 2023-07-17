@@ -60,7 +60,7 @@ class ConfigClass():
         self.cryptomatte_list="<base_path>/Pipeline/cryptomatteList.json"
         self.episode_info_file="<episode_path>/<episode_name>_BrowserInfo.json"
         self.python3="T:/_Executables/python/Python310/python.exe"
-        self.ftp_path="\\\\archivesrv/ftpprod/BoersteOgBondegaarden/LarsKristian_BV"
+        self.ftp_path="\\\\192.168.0.227/ftpprod/BoersteOgBondegaarden/LarsKristian_BV"
         self.premiere_sqpreset="T:/_Pipeline/cobopipe_v02-001/PremierePro/sequencePresets/1920x1080-25fps.sqpreset"
         self.users_json="<base_path>/Pipeline/users.json"
         
@@ -73,7 +73,7 @@ class ConfigClass():
         
         self.local_vars=['TOONBOOM_GLOBAL_SCRIPT_LOCATION', 'TB_EXTERNAL_SCRIPT_PACKAGES_FOLDER', 'PYTHONPATH']
         
-        self.users={'Animation': ['Amalie', 'Emilie', 'Julie', 'Karla', 'Henrik', 'Kristjan', 'Marie', 'Christian', 'Bernardo', 'Ugo'], 'Render': []}
+        self.users={'Animation': ['Amalie', 'Emilie', 'Julie', 'Karla', 'Henrik', 'Kristjan', 'Marie', 'Christian', 'Bernardo', 'Ugo', 'Lars'], 'Render': []}
         
         self.ref_order={}
         
@@ -309,7 +309,7 @@ class ConfigClass():
 
 
     def get_ftp_path(self):
-        to_return = "\\\\archivesrv/ftpprod/BoersteOgBondegaarden/LarsKristian_BV"
+        to_return = "\\\\192.168.0.227/ftpprod/BoersteOgBondegaarden/LarsKristian_BV"
         return to_return
 
 
