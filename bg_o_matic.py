@@ -26,12 +26,12 @@ class MainWindow(QWidget):
 
         self.setLayout(self.main_layout)
 
-#         # FOR TESTING PURPOSES
-#         self.text_input.setText(
-#             """ElfGarden_EXT_0100
-# ElfGarden_EXT_0200
-# ElfGarden_EXT_0300"""
-#         )
+    #         # FOR TESTING PURPOSES
+    #         self.text_input.setText(
+    #             """ElfGarden_EXT_0100
+    # ElfGarden_EXT_0200
+    # ElfGarden_EXT_0300"""
+    #         )
 
         self.button.clicked.connect(self.run)
 
@@ -42,7 +42,7 @@ class MainWindow(QWidget):
             backgrounds, base_path="P:\930462_HOJ_Project\Production\Asset\Environment"
         )
         for file in files:
-            filename = file.split('/')[-1].replace('.psd', '')
+            filename = file.split("/")[-1].replace(".psd", "")
             _dict[filename] = []
             psd = PSDImage.open(file)
             for layer in psd:
@@ -50,13 +50,12 @@ class MainWindow(QWidget):
                     if re.match("(S)\\d{3}(_SQ)\\d{3}(_SH)\\d{3}", layer.name, re.I):
                         _dict[filename].append(layer.name)
 
-        _string = ''
+        _string = ""
         for filename, groups in _dict.items():
-            _string = _string + f'{filename}\t{groups[0]}\r\n'
+            _string = _string + f"{filename}\t{groups[0]}\r\n"
             for group in groups[1:]:
-                _string = _string + f'\t{group}\r\n'
+                _string = _string + f"\t{group}\r\n"
         pyperclip.copy(_string)
-
 
 
 def find_files(names=[], base_path=""):
