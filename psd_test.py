@@ -2,6 +2,7 @@ import os
 import re
 import sys
 
+import pyperclip
 from psd_tools import PSDImage
 from PySide6.QtWidgets import QApplication, QPushButton, QTextEdit, QVBoxLayout, QWidget
 
@@ -25,28 +26,37 @@ class MainWindow(QWidget):
 
         self.setLayout(self.main_layout)
 
-        # FOR TESTING PURPOSES
-        self.text_input.setText(
-            """ElfGarden_EXT_0100
-ElfGarden_EXT_0200
-ElfGarden_EXT_0300"""
-        )
+#         # FOR TESTING PURPOSES
+#         self.text_input.setText(
+#             """ElfGarden_EXT_0100
+# ElfGarden_EXT_0200
+# ElfGarden_EXT_0300"""
+#         )
 
         self.button.clicked.connect(self.run)
 
     def run(self):
         backgrounds = self.text_input.toPlainText().split("\n")
+        _dict = {}
         files = find_files(
             backgrounds, base_path="P:\930462_HOJ_Project\Production\Asset\Environment"
         )
         for file in files:
+            filename = file.split('/')[-1].replace('.psd', '')
+            _dict[filename] = []
             psd = PSDImage.open(file)
-            groups = []
             for layer in psd:
                 if layer.kind == "group":
                     if re.match("(S)\\d{3}(_SQ)\\d{3}(_SH)\\d{3}", layer.name, re.I):
-                        groups.append(layer.name)
-            print(groups)
+                        _dict[filename].append(layer.name)
+
+        _string = ''
+        for filename, groups in _dict.items():
+            _string = _string + f'{filename}\t{groups[0]}\r\n'
+            for group in groups[1:]:
+                _string = _string + f'\t{group}\r\n'
+        pyperclip.copy(_string)
+
 
 
 def find_files(names=[], base_path=""):
@@ -62,16 +72,6 @@ def find_files(names=[], base_path=""):
                     )
                     return_list.append(file_path)
     return return_list
-
-
-# psd = PSDImage.open(test_file)
-# for layer in psd:
-#     if layer.name == 'STB':
-#         layer.visible = True
-#         comp = layer.composite()
-#         size = 124, 124
-#         comp.thumbnail(size)
-#         comp.save('C:/Users/mha/Desktop/STB_thumbnail.png')
 
 
 if __name__ == "__main__":
