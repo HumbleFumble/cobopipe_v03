@@ -60,7 +60,7 @@ class ConfigClass():
         self.cryptomatte_list="<base_path>/Pipeline/cryptomatteList.json"
         self.episode_info_file="<episode_path>/<episode_name>_BrowserInfo.json"
         self.python3="T:/_Executables/python/Python310/python.exe"
-        self.ftp_path="\\\\192.168.0.227/ftpprod/BoersteOgBondegaarden/LarsKristian_BV"
+        self.ftp_path="\\\\192.168.0.227/ftpprod/BoersteOgBondegaarden"
         self.premiere_sqpreset="T:/_Pipeline/cobopipe_v02-001/PremierePro/sequencePresets/1920x1080-25fps.sqpreset"
         self.users_json="<base_path>/Pipeline/users.json"
         
@@ -309,7 +309,7 @@ class ConfigClass():
 
 
     def get_ftp_path(self):
-        to_return = "\\\\192.168.0.227/ftpprod/BoersteOgBondegaarden/LarsKristian_BV"
+        to_return = "\\\\192.168.0.227/ftpprod/BoersteOgBondegaarden"
         return to_return
 
 
