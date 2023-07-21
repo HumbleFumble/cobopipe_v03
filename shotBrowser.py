@@ -1013,7 +1013,7 @@ class FrontController(QtCore.QObject):
 		QtGui.QPixmapCache.clear()
 		self.__threadPool.cancelBatch()
 
-	def createCompCompare(self, nodes):
+	def createCompCompare(self, nodes):		
 		from comp_compare import create_comp_compare
 
 		shots = []
@@ -1038,7 +1038,7 @@ class FrontController(QtCore.QObject):
 			anim_file =  f"{shot_passes}/BaseFile_%4d.tga"
 			comp_file = CC.get_shot_comp_output_file(**info_dict)
 			shot_path = CC.get_shot_path(**info_dict)
-			shot_name = os.path.basename(comp_file.replace('CompOutput', 'CompCompare')
+			shot_name = os.path.basename(comp_file).replace('CompOutput', 'CompCompare')
 			output_folder = f"{shot_path}/CompCompare"
 			output_file = f"{output_folder}/{shot_name}"
 			if os.path.exists(comp_file):

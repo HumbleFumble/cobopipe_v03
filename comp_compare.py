@@ -1,6 +1,7 @@
 import os
 import ffmpeg
-import subprocess
+from subprocess import Popen, PIPE
+import time
 
 def create_comp_compare(anim_file, comp_file, output_file):
     comp_stream = ffmpeg.input(comp_file)
@@ -14,5 +15,6 @@ def create_comp_compare(anim_file, comp_file, output_file):
     
     out = ffmpeg.output(combined, output_file, pix_fmt='yuv420p')
     cmd = ffmpeg.compile(out, overwrite_output=True)
-    subprocess.check_output(cmd)
-    return
+    process = Popen(cmd, stdout=PIPE, stderr=PIPE)
+    stdout, stderr = process.communicate()
+    return output_file
