@@ -24,14 +24,12 @@ function Run(){
 
 
 	// SUBMIT TO DEADLINE
-	alert('1')
 	var deadlineBin = $.getenv( "DEADLINE_PATH" );
 	var deadline_exe = "\"" + deadlineBin + "\\deadlinecommand.exe\"";
 	var commandLine = deadline_exe + " GetCurrentUserHomeDirectory";
 	var deadline_home = system.callSystem(commandLine).replace("\r","").replace("\n","");
 	var temp_folder = deadline_home + "\\temp\\";
 	Folder( temp_folder ).create();
-	alert('2')
 	renderQueueItem = app.project.renderQueue.item( 1 );
 	var frameDuration = renderQueueItem.comp.frameDuration;
 	var frameOffset = app.project.displayStartFrame;
@@ -41,7 +39,6 @@ function Run(){
 	var output_file = app.project.renderQueue.item(1).outputModule(1).file
 	var jobname = app.project.file.fsName.split('\\')[app.project.file.fsName.split('\\').length-1].replace('.aep', '')
 	var pool = null;
-	alert('3')
 	var config_pool = config.project_settings.deadline_pool;
 	if(config_pool != undefined){
 		pool = config_pool
@@ -49,9 +46,7 @@ function Run(){
 	var submit_file = create_submit_job_file(temp_folder, jobname, pool, start_frame, end_frame, output_file);
 	var plugin_file = create_plugin_job_file(temp_folder);
 	commandLine = deadline_exe + " \"" + submit_file + "\" \"" + plugin_file +  "\" \"" + app.project.file.fsName + "\""
-	alert(commandLine)
 	result = system.callSystem(commandLine)
-	alert('4')
 	alert(result)
 }
 
