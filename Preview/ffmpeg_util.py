@@ -27,14 +27,16 @@ if not os.path.exists(ffplay_exe) or remote:
 
 def CropIn(path, stream, width=1920, height=1080):
     current_width, current_height = probeResolution(path)
-    if current_width:
-        x = (current_width - width) / 2
-        y = (current_height - height) / 2
-    # else:
-    #
-    #     x = width/2
-    #     y = height/2
-    return ffmpeg.filter(stream, "crop", w=width, h=height, x=str(x), y=str(y))
+    if not  current_width and not current_height:
+        return stream
+
+    if not current_width > width or not current_height > height:
+        return stream
+
+    x = (current_width - width) / 2
+    y = (current_height - height) / 2
+
+    return stream.crop(width=width, height=height, x=int(x), y=int(y))
 
 
 def probeResolution(path):

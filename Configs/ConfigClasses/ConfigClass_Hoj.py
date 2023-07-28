@@ -61,6 +61,7 @@ class ConfigClass():
         self.episode_info_file="<episode_path>/<episode_name>_BrowserInfo.json"
         self.python3="T:/_Executables/python/Python310/python.exe"
         self.ftp_path="\\\\192.168.0.227/ftpprod/HOJ_FTP"
+        self.ftp_anim_path="<ftp_path>/_ANIMATION"
         self.premiere_sqpreset="T:/_Pipeline/cobopipe_v02-001/PremierePro/sequencePresets/1920x1080-25fps.sqpreset"
         self.users_json="<base_path>/Pipeline/users.json"
         
@@ -305,6 +306,11 @@ class ConfigClass():
 
     def get_film_path(self):
         to_return = "P:/930462_HOJ_Project/Production/Film"
+        return to_return
+
+
+    def get_ftp_anim_path(self):
+        to_return = "\\\\192.168.0.227/ftpprod/HOJ_FTP/_ANIMATION"
         return to_return
 
 
