@@ -167,12 +167,18 @@ class ReturnAnim(QtWidgets.QWidget):
         from getConfig import getConfigClass
 
         CC = getConfigClass(project_name=self.project_input.text())
+        ftp_root = CC.get_ftp_path()
+        ftp_anim = CC.get_ftp_anim_path()
+        ftp_path = ftp_anim.replace(ftp_root, '')
+        while ftp_path.startswith('/'):
+            ftp_path = ftp_path[1:]
+            
         import ftpUtil
 
         files_objects = [
             {
                 "file": zip_file,
-                "destination": f"_ANIMATION/{self.user_input.text()}/TO_CB/",
+                "destination": f"{ftp_path}/{self.user_input.text()}/TO_CB/",
             }
         ]
         try:
