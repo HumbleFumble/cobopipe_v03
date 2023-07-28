@@ -1,9 +1,11 @@
 from PySide6 import QtWidgets, QtCore, QtGui
 import os
 import sys
+
 # import json
 import file_util
 import subprocess
+
 
 class ReturnAnim(QtWidgets.QWidget):
     def __init__(self, parent=None):
@@ -132,21 +134,23 @@ class ReturnAnim(QtWidgets.QWidget):
         command = (
             f'python "{script_path}" "{harmony_python_packages}" "{selected_file}"'
         )
-        
+
         process = subprocess.Popen(
             command, stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
-        
+
         stdout, stderr = process.communicate()
         stdout = stdout.decode("UTF-8").replace("\r", "")
         stderr = stderr.decode("UTF-8").replace("\r", "")
 
         file = stdout.split("\n")[-2]
         if not os.path.exists(file):
-            msg.setText('Error: Failed to increment version.\nCheck for naming issues or contact a TD.')
+            msg.setText(
+                "Error: Failed to increment version.\nCheck for naming issues or contact a TD."
+            )
             QtWidgets.QApplication.processEvents()
             return False
-        
+
         folder = os.path.dirname(file)
         zip_file = f"{folder}.zip"
 
@@ -163,12 +167,18 @@ class ReturnAnim(QtWidgets.QWidget):
         from getConfig import getConfigClass
 
         CC = getConfigClass(project_name=self.project_input.text())
+        ftp_root = CC.get_ftp_path()
+        ftp_anim = CC.get_ftp_anim_path()
+        ftp_path = ftp_anim.replace(ftp_root, '')
+        while ftp_path.startswith('/'):
+            ftp_path = ftp_path[1:]
+            
         import ftpUtil
 
         files_objects = [
             {
                 "file": zip_file,
-                "destination": f"_ANIMATION/{self.user_input.text()}/TO_CB/",
+                "destination": f"{ftp_path}/{self.user_input.text()}/TO_CB/",
             }
         ]
         try:
