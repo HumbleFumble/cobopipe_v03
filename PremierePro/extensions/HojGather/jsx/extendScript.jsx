@@ -1255,6 +1255,7 @@ function importFootage(paths, bin, isSequence){
     return app.project.importFiles(paths, true, bin, isSequence);
 }
 
+// TODO: Fix this garbage
 function decipher_regex(regex){
     var _string = regex.replace('^', '')
     var _items = _string.split('\\')

@@ -1013,6 +1013,47 @@ class FrontController(QtCore.QObject):
 		QtGui.QPixmapCache.clear()
 		self.__threadPool.cancelBatch()
 
+	def createCompCompare(self, nodes):		
+		from comp_compare import create_comp_compare
+
+		shots = []
+		for node in nodes:
+			if node.getType() == 'episode':
+				for sequence in node.getChildren():
+					for shot in sequence.getChildren():
+						shots.append(shot)
+			elif node.getType() == 'seq':
+				for shot in node.getChildren():
+					shots.append(shot)
+			else:
+				shots.append(node)
+
+		pool = ThreadPool2.ThreadPool()
+		pool.setMaxThreads(12)
+		workers = []
+
+		for shot in shots:
+			info_dict = shot.getInfoDict()
+			shot_passes = CC.get_shot_2D_passes_folder(**info_dict)
+			anim_file =  f"{shot_passes}/BaseFile_%4d.tga"
+			comp_file = CC.get_shot_comp_output_file(**info_dict)
+			shot_path = CC.get_shot_path(**info_dict)
+			shot_name = os.path.basename(comp_file).replace('CompOutput', 'CompCompare')
+			output_folder = f"{shot_path}/CompCompare"
+			output_file = f"{output_folder}/{shot_name}"
+			if os.path.exists(comp_file):
+				if not os.path.exists(output_folder):
+					os.makedirs(output_folder)
+				worker = None
+				worker = ThreadPool2.Worker(create_comp_compare, anim_file, comp_file, output_file)
+				if worker:
+					pool.addWorker(worker)
+					workers.append(worker)
+
+		if workers:
+			pool.run()
+			
+
 	def zipFolders(self, nodes, destination=None, user_name="zip", local=False, unc=None):
 		if local:
 			import zipUtil
@@ -3147,6 +3188,7 @@ class MainWindow(QtWidgets.QWidget):
 						file_menu.addAction("Unpack Anim Folder (Local)")
 					create_menu.addAction("Rebuild Anim Publish Report")
 					create_menu.addSeparator()
+					create_menu.addAction("Create Comp Compare")
 					create_menu.addAction("Rebuild Thumbnails")
 					create_menu.addAction("Check Files for Virus")
 
@@ -3214,6 +3256,8 @@ class MainWindow(QtWidgets.QWidget):
 						for cur_node in nodes:
 							self.ctrl.refreshThumbs(cur_nodes=self.ctrl.findShotsInParent(cur_node=cur_node),
 													  overwrite=True, overwrite_cache=True, use_threads=True)
+					if action.text() == "Create Comp Compare":
+						self.ctrl.createCompCompare(nodes)
 					if action.text() == "Zip Anim Folder":
 						self.ctrl.zipFolders(nodes,user_name=self.user_combobox.currentText(), local=False)
 					if action.text() == "Zip Anim Folder to FTP":

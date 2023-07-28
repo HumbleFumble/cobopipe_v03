@@ -60,7 +60,7 @@ class ConfigClass():
         self.cryptomatte_list="<base_path>/Pipeline/cryptomatteList.json"
         self.episode_info_file="<episode_path>/<episode_name>_BrowserInfo.json"
         self.python3="T:/_Executables/python/Python310/python.exe"
-        self.ftp_path="\\\\archivesrv/ftpprod/HOJ_FTP"
+        self.ftp_path="\\\\192.168.0.227/ftpprod/BoersteOgBondegaarden"
         self.premiere_sqpreset="T:/_Pipeline/cobopipe_v02-001/PremierePro/sequencePresets/1920x1080-25fps.sqpreset"
         self.users_json="<base_path>/Pipeline/users.json"
         
@@ -73,13 +73,13 @@ class ConfigClass():
         
         self.local_vars=['TOONBOOM_GLOBAL_SCRIPT_LOCATION', 'TB_EXTERNAL_SCRIPT_PACKAGES_FOLDER', 'PYTHONPATH']
         
-        self.users={'Animation': ['Amalie', 'Emilie', 'Julie', 'Karla', 'Henrik', 'Kristjan', 'Marie', 'Christian', 'Bernardo', 'Ugo'], 'Render': []}
+        self.users={'Animation': ['Amalie', 'Emilie', 'Julie', 'Karla', 'Henrik', 'Kristjan', 'Marie', 'Christian', 'Bernardo', 'Ugo', 'Lars'], 'Render': []}
         
         self.ref_order={}
         
         self.ref_steps={'Prop': {'Base': ['Anim', 'Render']}, 'Char': {'Model': ['Model'], 'Blendshape': ['Blendshape'], 'Rig': ['Anim', 'Rig'], 'Shading': ['Render']}, 'Setdress': {'Base': ['Proxy', 'Ingest', 'Render']}, 'Set': {'Base': ['Anim', 'Render']}, 'RigModule': {'Base': ['Rig']}, 'FX': {'Base': ['Anim', 'Render']}}
         
-        self.project_settings={'fps': '25fps', 'tb_width': 1920, 'tb_height': 1080, 'tb_size_multi': 1.1, 'tb_output_format': 'TGA4', 'tb_number_padding': '3', 'deadline_pool': 'boerste'}
+        self.project_settings={'fps': '25fps', 'tb_width': 1920, 'tb_height': 1080, 'tb_size_multi': 1.1, 'tb_output_format': 'TGA4', 'tb_number_padding': '3', 'deadline_pool': 'boerste', 'ftp_host': '178.249.49.18', 'ftp_local_host': '192.168.0.6', 'ftp_username': 'BoersteOgBondegaarden', 'ftp_password': 'bomboerste2021', 'ftp_port': 2121}
         
         self.project_style={'animation_style': ['AE', 'Toonboom'], 'comp_style': ['AE'], 'default_animation_style': 'Toonboom', 'default_comp_style': 'AE'}
         
@@ -309,7 +309,7 @@ class ConfigClass():
 
 
     def get_ftp_path(self):
-        to_return = "\\\\archivesrv/ftpprod/HOJ_FTP"
+        to_return = "\\\\192.168.0.227/ftpprod/BoersteOgBondegaarden"
         return to_return
 
 

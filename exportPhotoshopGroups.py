@@ -1,6 +1,6 @@
 import os
 
-def findFiles(list_of_names=[],base_path=""):
+def findFiles(list_of_names=[], base_path=""):
     return_list = []
     for name in list_of_names:
         for root,folder,files in os.walk(base_path):
