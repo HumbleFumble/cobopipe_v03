@@ -115,7 +115,7 @@
     "tb_size_multi": 1.1,
     "tb_output_format":"TGA4",
     "tb_number_padding": "3",
-    "deadline_pool": "KDH2",
+    "deadline_pool": "kdh2",
     "ftp_host": "178.249.49.18",
     "ftp_local_host": "192.168.0.6",
     "ftp_username": "KDH2",
