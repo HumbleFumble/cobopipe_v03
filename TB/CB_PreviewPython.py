@@ -356,7 +356,7 @@ class PreviewPython_UI(QDialog):
 
     def create_slate_locally(self,video, title=None, frameCount=True, timecode=False, date=True,user=None):
         import datetime
-        font = '/Windows/Fonts/Arial.ttf'
+        font = 'C:\\/Windows/Fonts/Arial.ttf'
 
         if title:
             video = ffmpeg.drawtext(video, text=title, fontfile=font, x='w-(text_w+20)', y='20', fontsize='24',
