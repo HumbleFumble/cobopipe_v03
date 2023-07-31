@@ -60,7 +60,8 @@ class ConfigClass():
         self.cryptomatte_list="<base_path>/Pipeline/cryptomatteList.json"
         self.episode_info_file="<episode_path>/<episode_name>_BrowserInfo.json"
         self.python3="T:/_Executables/python/Python310/python.exe"
-        self.ftp_path="\\\\archivesrv/ftpprod/HOJ_FTP"
+        self.ftp_path="\\\\archivesrv/ftpprod/KDH2_FTP"
+        self.ftp_anim_path="<ftp_path>/_ANIMATION"
         self.premiere_sqpreset="T:/_Pipeline/cobopipe_v02-001/PremierePro/sequencePresets/1920x1080-25fps.sqpreset"
         self.users_json="<base_path>/Pipeline/users.json"
         
@@ -79,7 +80,7 @@ class ConfigClass():
         
         self.ref_steps={'Prop': {'Base': ['Anim', 'Render']}, 'Char': {'Model': ['Model'], 'Blendshape': ['Blendshape'], 'Rig': ['Anim', 'Rig'], 'Shading': ['Render']}, 'Setdress': {'Base': ['Proxy', 'Ingest', 'Render']}, 'Set': {'Base': ['Anim', 'Render']}, 'RigModule': {'Base': ['Rig']}, 'FX': {'Base': ['Anim', 'Render']}}
         
-        self.project_settings={'fps': '25fps', 'tb_width': 1920, 'tb_height': 1080, 'tb_size_multi': 1.1, 'tb_output_format': 'TGA4', 'tb_number_padding': '3', 'deadline_pool': 'KDH2'}
+        self.project_settings={'fps': '25fps', 'tb_width': 1920, 'tb_height': 1080, 'tb_size_multi': 1.1, 'tb_output_format': 'TGA4', 'tb_number_padding': '3', 'deadline_pool': 'kdh2', 'ftp_host': '178.249.49.18', 'ftp_local_host': '192.168.0.6', 'ftp_username': 'KDH2_FTP', 'ftp_password': 'karenblixen', 'ftp_port': 2121}
         
         self.project_style={'animation_style': ['AE', 'Toonboom'], 'comp_style': ['AE'], 'default_animation_style': 'Toonboom', 'default_comp_style': 'AE'}
         
@@ -308,8 +309,13 @@ class ConfigClass():
         return to_return
 
 
+    def get_ftp_anim_path(self):
+        to_return = "\\\\archivesrv/ftpprod/KDH2_FTP/_ANIMATION"
+        return to_return
+
+
     def get_ftp_path(self):
-        to_return = "\\\\archivesrv/ftpprod/HOJ_FTP"
+        to_return = "\\\\archivesrv/ftpprod/KDH2_FTP"
         return to_return
 
 
