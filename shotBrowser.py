@@ -1055,6 +1055,14 @@ class FrontController(QtCore.QObject):
 			
 
 	def zipFolders(self, nodes, destination=None, user_name="zip", local=False, unc=None):
+		"""
+		nodes: the shots affected
+		destination: where to go
+		user_name: the name of the job on deadline //Not used
+		local: If the job should be run on the local machine or put over on deadline
+		unc: If the zipped shot should include all the folder structure leading up to the shot folder itself.
+		"""
+
 		if local:
 			import zipUtil
 		
@@ -1119,7 +1127,9 @@ class FrontController(QtCore.QObject):
 						for unc_path in [r'\\192.168.0.225\production', r'\\192.168.0.225\WFH']:
 							if source.startswith(unc_path):
 								unc = unc_path
-        
+								source = source.split(unc_path)[-1][1:]
+								sound_file = sound_file.split(unc_path)[-1][1:]
+
 						arguments = f'"{CC.get_python_path()}zipUtil.py" "zip_7z_with_unc" "{source}" "{sound_file}" "{dest}" "{unc}"'
 
 					else:

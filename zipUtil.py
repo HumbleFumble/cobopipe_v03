@@ -52,7 +52,7 @@ def zip_7z(source, destination, unc=None):
         cmd = f'"{path_7z}" a -tzip "{destination}" {source_as_string}'
     else:
         cmd = f'pushd {unc} & "{path_7z}" a -tzip "{destination}" -spf2 {source_as_string}'
-
+    print(f"Zip cmd: {cmd}")
     process = subprocess.Popen(
         cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
     )

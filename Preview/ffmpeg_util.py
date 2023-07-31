@@ -133,7 +133,7 @@ def concat(input_path_list,output_path,w=1920,h=1080, force_h264=False):
 
 
 def createSlate(video, title=None, frameCount=True, timecode=False, date=True,user=None):
-    font = '/Windows/Fonts/Arial.ttf'
+    font = 'C:\\/Windows/Fonts/Arial.ttf'
     
     if title:
         video = ffmpeg.drawtext(video, text=title, fontfile=font, x='w-(text_w+20)', y='20', fontsize='24', fontcolor='white', shadowcolor='black', shadowx=2, shadowy=2)
