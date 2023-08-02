@@ -53,10 +53,14 @@ def findLatestAfterEffectsFolder():
 def CopyToAEFolder():
 
     ae_dir = findLatestAfterEffectsFolder()
+
+    user_path = os.path.expanduser('~').replace('\\', '/')
+
     if ae_dir:
         ae_panel_folder = f"{ae_dir}/Support Files/Scripts/ScriptUI Panels"
+        ae_temp_panel =f"{user_path}/Desktop/AE_UI_Panel"
         ae_plugin_folder = f"{ae_dir}/Support Files/Plug-ins"
-        ae_test = f"{ae_dir}/TEST"
+        ae_temp_plug = f"{user_path}/Desktop/AE_Plugin"
     else:
         return False
 
@@ -64,10 +68,16 @@ def CopyToAEFolder():
     plugin_folders = ["T:/_Software/Adobe/After Effects/plugin_packages/HOJ_Production_Collection","T:/_Software/Adobe/After Effects/plugin_packages/FXConsole_Plugin_Part"]
 
     for panel_folder in ui_panel_folder:
-        copy_directory(panel_folder,ae_panel_folder,overwrite=True)
+        copy_directory(panel_folder,ae_temp_panel,overwrite=True)
+        copy_directory(ae_temp_panel,ae_panel_folder,overwrite=True)
+
     for plug_folder in plugin_folders:
-        copy_directory(plug_folder,ae_plugin_folder,overwrite=True)
+        copy_directory(plug_folder, ae_temp_plug, overwrite=True)
+        copy_directory(ae_temp_plug,ae_plugin_folder,overwrite=True)
+
+    shutil.rmtree(ae_temp_panel)
+    shutil.rmtree(ae_temp_plug)
+
 
 if __name__ == "__main__":
     CopyToAEFolder()
-
