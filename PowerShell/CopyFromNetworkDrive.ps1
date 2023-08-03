@@ -36,6 +36,6 @@ $SourceFolders = @("T:\_Software\Adobe\After Effects\plugin_packages\HOJ_Product
 $DestinationFolder = "C:\Program Files\Adobe\Adobe After Effects 2023\Support Files\Plug-ins\"
 CopyFromNetworkDrive -NetworkPath $NetworkPath -DriveLetter $DriveLetter -SourceFolders $SourceFolders  -DestinationFolder $DestinationFolder
 
-$SourceFolders = @("T:\_Pipeline\cobopipe_v02-001\AfterEffect\AE_UI_Panel_Calls\*","T:\_Software\Adobe\After Effects\plugin_packages\FXConsole_ScriptFolder_Part\*")
-$DestinationFolder = "C:\Program Files\Adobe\Adobe After Effects 2023\Support Files\Scripts\ScriptUI Panels\"
-CopyFromNetworkDrive -NetworkPath $NetworkPath -DriveLetter $DriveLetter -SourceFolders $SourceFolders  -DestinationFolder $DestinationFolder
+$ui_SourceFolders = @("T:\_Pipeline\cobopipe_v02-001\AfterEffect\AE_UI_Panel_Calls\*","T:\_Software\Adobe\After Effects\plugin_packages\FXConsole_ScriptFolder_Part\*")
+$ui_DestinationFolder = "C:\Program Files\Adobe\Adobe After Effects 2023\Support Files\Scripts\ScriptUI Panels\"
+CopyFromNetworkDrive -NetworkPath $NetworkPath -DriveLetter $DriveLetter -SourceFolders $ui_SourceFolders  -DestinationFolder $ui_DestinationFolder
