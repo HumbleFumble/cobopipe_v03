@@ -56,10 +56,7 @@ def render_prop():
                 setRenderNodePaths(node, passes_dir)
             else:
                 setRenderNodePaths(node=node, passes_folder=passes_dir,set_name=scene_name)
-    current_session.actions.perform("onActionComposite()");
-    # render_handler = project.create_render_handler()  #The new render handler that has been generated; will not have any changes from other handlers.
-    # render_handler.blocking = True
-    # render_handler.resolution = (3840, 2160)
+    current_session.actions.perform("onActionComposite()")
 
 
 def setRenderNodePaths(node,passes_folder,set_name=None):
