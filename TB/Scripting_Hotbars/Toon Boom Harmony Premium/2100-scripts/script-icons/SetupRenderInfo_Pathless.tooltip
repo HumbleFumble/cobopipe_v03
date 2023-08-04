@@ -1,0 +1,1 @@
+Rendering setup for animation scene. Goes through and finds all Write nodes with "RENDER_" in the name. It then uses whats after the RENDER_ in the name, to set as the stack name.
