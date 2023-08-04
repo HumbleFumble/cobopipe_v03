@@ -21,9 +21,9 @@ function CopyFromNetworkDrive {
         #//$DriveLetter + ":\\" + $SourceFolder
 
         # Check if the source folder exists
-        if (Test-Path -Path $fullSourcePath) {
+        if (Test-Path -Path $fullSourcePath ) {
             # Copy the folder to the local destination
-            Copy-Item -Path $fullSourcePath -Destination $DestinationPath  -Recurse -force
+            Copy-Item -Path $fullSourcePath -Destination $DestinationPath  -Recurse -Force
             Write-Host $fullSourcePath "copied successfully to " $DestinationPath
         } else {
             Write-Host $fullSourcePath + " does not exist!"
@@ -36,15 +36,15 @@ function CopyFromNetworkDrive {
 #$NetworkPath = "\\192.168.0.225\tools\"
 #$DriveLetter = "T"
 
-$arg_map = @{
-    NetworkPath = "\\192.168.0.225\tools\"
-    DriveLetter = "T"
-    CopyMap = @{
-        "T:\_Software\Adobe\After Effects\plugin_packages\HOJ_Production_Collection\*" = "%programfiles%\Adobe\Adobe After Effects 2023\Support Files\Plug-ins\";
-        "T:\_Software\Adobe\After Effects\plugin_packages\FXConsole_Plugin_Part\*" = "%programfiles%\Adobe\Adobe After Effects 2023\Support Files\Plug-ins\";
-        "T:\_Pipeline\cobopipe_v02-001\AfterEffect\AE_UI_Panel_Calls\*" = "%programfiles%\Adobe\Adobe After Effects 2023\Support Files\Scripts\ScriptUI Panels\";
-        "T:\_Software\Adobe\After Effects\plugin_packages\FXConsole_ScriptFolder_Part\*" = "%programfiles%\Adobe\Adobe After Effects 2023\Support Files\Scripts\ScriptUI Panels\"
-    }
-}
-
-CopyFromNetworkDrive -NetworkPath $arg_map.NetworkPath -DriveLetter $arg_map.DriveLetter -FolderMap $arg_map.CopyMap
+#$arg_map = @{
+#    NetworkPath = "\\192.168.0.225\tools\"
+#    DriveLetter = "T"
+#    CopyMap = @{
+#        "T:\_Software\Adobe\After Effects\plugin_packages\HOJ_Production_Collection\*" = "%programfiles%\Adobe\Adobe After Effects 2023\Support Files\Plug-ins\";
+#        "T:\_Software\Adobe\After Effects\plugin_packages\FXConsole_Plugin_Part\*" = "%programfiles%\Adobe\Adobe After Effects 2023\Support Files\Plug-ins\";
+#        "T:\_Pipeline\cobopipe_v02-001\AfterEffect\AE_UI_Panel_Calls\*" = "%programfiles%\Adobe\Adobe After Effects 2023\Support Files\Scripts\ScriptUI Panels\";
+#        "T:\_Software\Adobe\After Effects\plugin_packages\FXConsole_ScriptFolder_Part\*" = "%programfiles%\Adobe\Adobe After Effects 2023\Support Files\Scripts\ScriptUI Panels\"
+#    }
+#}
+#
+#CopyFromNetworkDrive -NetworkPath $arg_map.NetworkPath -DriveLetter $arg_map.DriveLetter -FolderMap $arg_map.CopyMap

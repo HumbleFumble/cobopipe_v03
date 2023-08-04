@@ -26,7 +26,7 @@ param (
         }
             Set-ExecutionPolicy Bypass
             New-PSDrive -Name "T" -PSProvider FileSystem -Root "\\dumpap3\tools" -Persist -Credential $using:creds
-            . $ScriptPath
+            . $using:ScriptPath
 #            & $using:ScriptPath -AtTime $using:AtTime
             CopyFromNetworkDrive -NetworkPath $script_args.NetworkPath -DriveLetter $script_args.DriveLetter -FolderMap $script_args.CopyMap
     } -Args $script_args
@@ -47,7 +47,7 @@ $arg_map = @{
 
 $creds = Get-Credential -UserName cphbom\deadline
 #$machine_list = 1..33
-$machine_list = @("15")
+$machine_list = @("33")
 
 
 foreach($u in $machine_list)
