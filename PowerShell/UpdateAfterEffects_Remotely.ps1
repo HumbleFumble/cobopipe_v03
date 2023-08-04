@@ -88,7 +88,7 @@ $arg_map = @{
 
 $creds = Get-Credential -UserName cphbom\deadline
 #$machine_list = 1..33 #Use this variable for all the machines
-$machine_list = @("15")
+$machine_list = @("2","11","15","21","22","23","24")
 
 
 foreach($u in $machine_list)

@@ -28,10 +28,46 @@ def run():
         if(node.type == "WRITE" and "RENDER_" in node.name):
             setRenderNodePaths(node,passes_folder)
 
+def render_prop():
+    log("Trying to render out for props")
+    current_session = harmony.session()  # Fetch the currently active session of Harmony
+    project = current_session.project
+    resolution = project.resolution
+    resolution.x = 3840
+    resolution.y = 2160
+    log("Setting Resolution to: %s x %s" % (resolution.x, resolution.y))
+    scene = project.scene
+    scene_name = project.version_name
 
-def setRenderNodePaths(node,passes_folder):
+    if("_V" in scene_name):
+        scene_name = scene_name.split("_V")[0]
+
+    allnodes = scene.nodes
+
+    scene_dir = project.project_path
+    passes_dir = "%s/_Renders/" % "/".join(scene_dir.split("/")[0:-1])
+
+    if not(os.path.exists(passes_dir)):
+        os.mkdir(passes_dir)
+
+    for node in allnodes:
+        if (node.type == "WRITE"):
+            if ("RENDER_" in node.name):
+                setRenderNodePaths(node, passes_dir)
+            else:
+                setRenderNodePaths(node=node, passes_folder=passes_dir,set_name=scene_name)
+    current_session.actions.perform("onActionComposite()");
+    # render_handler = project.create_render_handler()  #The new render handler that has been generated; will not have any changes from other handlers.
+    # render_handler.blocking = True
+    # render_handler.resolution = (3840, 2160)
+
+
+def setRenderNodePaths(node,passes_folder,set_name=None):
     print("setting path for %s" % node.name)
-    subfix = node.name.split("RENDER_")[1]
+    if not set_name:
+        subfix = node.name.split("RENDER_")[1]
+    else:
+        subfix = set_name
     full_name = "%s/%s_" % (passes_folder,subfix)
     node.attributes["DRAWING_NAME"].set_text_value(1,full_name)
     if "tb_number_padding" in CC.project_settings:

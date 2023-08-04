@@ -26,7 +26,6 @@ def findMisNamed(scene_file, rename=True):
     project = session.project
     scene = project.scene
     allnodes = scene.nodes
-
     # Save new version with consecutive number
     path = os.path.splitext(os.path.basename(scene_file))
     if 'V' not in path[0]:
