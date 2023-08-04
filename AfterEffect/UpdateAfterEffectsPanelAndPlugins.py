@@ -3,6 +3,7 @@ import re
 
 import shutil
 
+#This script doesn't' work because it needs admin rights to copy things from the network to the c drive. The functions work but the rights are stopping it
 def copy_directory(src_dir, dst_dir, overwrite=False):
     print(f"Copy from {src_dir} to {dst_dir}")
     if not os.path.exists(dst_dir):
