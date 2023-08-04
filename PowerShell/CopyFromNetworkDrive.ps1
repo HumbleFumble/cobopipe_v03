@@ -1,3 +1,4 @@
+#This function needs to be run in a powershell started as admin or as a scheduled command. Look at UpdateAfterEffects_Remotely.ps1 to see how its done there.
 
 function CopyFromNetworkDrive {
     param (
@@ -8,7 +9,7 @@ function CopyFromNetworkDrive {
 
     # Mount the network drive
     $pathExists = Test-Path -Path $Networkpath
-    Write-Host "Path check: " $pathExists
+    Write-Host "Network Path check: " $pathExists
     If (-not ($pathExists)) {
         New-PSDrive -Name $DriveLetter -PSProvider FileSystem -Root $NetworkPath -Persist
     }
@@ -33,6 +34,10 @@ function CopyFromNetworkDrive {
     # Remove the network drive after the copy
     #Remove-PSDrive -Name $DriveLetter
 }
+
+#### EXAMPLE OF RUNNING IT WITH ARGS: ####
+#### The CopyMap hashtable, is source-folder = destination-folder. The * at the end of the folder path, makes sure its the content inside the folder being copied, not the folder itself.
+
 #$NetworkPath = "\\192.168.0.225\tools\"
 #$DriveLetter = "T"
 
