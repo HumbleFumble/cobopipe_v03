@@ -39,7 +39,7 @@ function call_CB_SelectionPreset(){
 
     if(server_script_path){
         MessageLog.trace("Found script at global path. Running now: " + script_name)
-        var myPythonObject = PythonManager.createPyObject(server_script_path +"/TB/" + script_name);
+        var myPythonObject = PythonManager.createPyObject(server_script_path +"/TB/ToonBoom_Global_Python/" + script_name);
     }else{
         var local_folder = specialFolders.userScripts
         var script_path = local_folder + "/" + script_name

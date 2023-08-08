@@ -3,7 +3,7 @@ import sys
 #Extend the environment's path, in order to find the installed Harmony Python module
 #we should be able to use os.environ["HarmonyPremium"] + "/python-packages"
 sys.path.append( r"C:\Program Files (x86)\Toon Boom Animation\Toon Boom Harmony 22 Premium\win64\bin\python-packages" )
-import TB.CB_SetupRenderInfo_Python as rs
+import TB.ToonBoom_Global_Python.CB_SetupRenderInfo_Python as rs
 
 def externalRendering(scene_file):
     from ToonBoom import harmony

@@ -3,9 +3,9 @@ from Log.CoboLoggers import getLogger
 logger = getLogger()
 #This is the tales of woe 123
 import Preview.file_util
-import TB.updatePalettes
-import TB.exportSceneData
-import TB.FindRename
+import TB
+import TB.ToonBoom_Global_Python.exportSceneData
+import TB.ToonBoom_Global_Python.FindRename
 
 try:
 	import maya.cmds as cmds
@@ -38,7 +38,6 @@ import ffmpeg_wrapper as ffmpeg
 from Multiplicity import ThreadPool as thread_pool
 from Multiplicity import ThreadPool2 as ThreadPool2
 from Multiplicity.Signals import Signals
-import CheckAudioVisual
 from PixmapUtil import PixmapUtil
 from CategoryHandler import CategoryHandler
 import users
@@ -50,8 +49,8 @@ import subprocess
 # import json
 import file_util
 
-import TB.Harmony_RR_RenderSubmit as SubmitTB
-import TB.HarmonySceneSetup as SetupTB
+import TB as SubmitTB
+import TB as SetupTB
 import AfterEffectFunctions as SetupAE
 
 if in_maya:
@@ -1067,6 +1066,7 @@ class FrontController(QtCore.QObject):
 			import zipUtil
 		
 		shots = []
+		#gather all shots
 		for node in nodes:
 			if node.getType() == 'episode':
 				for sequence in node.getChildren():
@@ -1079,6 +1079,7 @@ class FrontController(QtCore.QObject):
 				shots.append(node)
 
 		print('')
+		#find the correct folders or files to add
 		for shot in shots:
 			if shot.getCompStyle() == 'AE':
 				info = shot.getInfoDict()
@@ -1109,6 +1110,10 @@ class FrontController(QtCore.QObject):
 						zipUtil.zip([source, sound_file], dest)
 					print(' >> Done zipping ' + source + '\n')
 				else:
+					#If it should be done remotely (on deadline) then we need to send it to the webhook running on the application server
+					#There is a listener there. First we go through and replace the drive letter with the absoulute path.
+					#Then for the "start" path, we remove the part that was usually the included with the drive letter.
+					# That way the zip with structure doesn't have extra folders, that the user normally wouldn't see, with it.
 					from shotgrid.webhook.send_webhook import send_webhook
 					replace_dictionary = {
 						r'P:': r'\\192.168.0.225\production',
@@ -1498,7 +1503,7 @@ class FrontController(QtCore.QObject):
 					workers.append(worker)
 
 		if workers:
-			pool.signals.finished.connect(TB.FindRename.renameDone)
+			pool.signals.finished.connect(TB.ToonBoom_Global_Python.FindRename.renameDone)
 			pool.run()
 			pool.wait()
 			print('\n >> Done renaming nodes <<')
@@ -2125,7 +2130,7 @@ class FrontController(QtCore.QObject):
 			scene_path = self.findToonboomAnimationFile(shot)
 			if scene_path:
 				worker = None
-				worker = ThreadPool2.Worker(TB.updatePalettes.process, scene_path)
+				worker = ThreadPool2.Worker(TB.ToonBoom_Global_Python.updatePalettes.process, scene_path)
 				if worker:
 					pool.addWorker(worker)
 					workers.append(worker)
@@ -2161,7 +2166,7 @@ class FrontController(QtCore.QObject):
 			scene_path = self.findToonboomAnimationFile(shot)
 			if scene_path:
 				worker = None
-				worker = ThreadPool2.Worker(TB.exportSceneData.process, scene_path, run_env)
+				worker = ThreadPool2.Worker(TB.ToonBoom_Global_Python.exportSceneData.process, scene_path, run_env)
 				if worker:
 					pool.addWorker(worker)
 					workers.append(worker)
@@ -2551,7 +2556,6 @@ class FrontController(QtCore.QObject):
 				print("NAME EXISTS! Pick another")
 
 	def createEmptyMayaScene(self,node):
-		import Maya_Functions.file_util_functions as file_util
 		import Maya_Functions.file_util_functions as file_util
 		info_dict = node.getInfoDict()
 		my_input = QtWidgets.QInputDialog()

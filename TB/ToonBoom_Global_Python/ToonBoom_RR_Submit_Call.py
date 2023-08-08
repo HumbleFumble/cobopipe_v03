@@ -1,5 +1,5 @@
 import sys
-from TB.Harmony_RR_RenderSubmit import RenderSubmitInfo
+from TB.ToonBoom_Global_Python.Harmony_RR_RenderSubmit import RenderSubmitInfo
 
 """
 A catcher script to redirect a call from toonboom to the right script -> ToonBoom_RR_Submit
