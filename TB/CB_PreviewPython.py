@@ -11,17 +11,17 @@ import json
 # import file_util
 
 try:
-	from ToonBoom import harmony
-	in_toonboom = True
+    from ToonBoom import harmony
+    in_toonboom = True
 except Exception as e:
-	in_toonboom = False
+    in_toonboom = False
 
 def log(message):
-	if in_toonboom:
-		sess = harmony.session()
-		sess.log(str(message))
-	else:
-		print(message)
+    if in_toonboom:
+        sess = harmony.session()
+        sess.log(str(message))
+    else:
+        print(message)
 
 import sys
 
