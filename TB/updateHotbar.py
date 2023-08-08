@@ -100,7 +100,7 @@ def run(username):
 
 
 if __name__ == '__main__':
-    _users = ['freelance', 'mmcb', 'hojprod', 'borsteprod', 'mha']
+    _users = ['freelance', 'mmcb', 'hojprod', 'borsteprod', 'kdhprod', 'mha']
     print(sys.argv[1:])
     if len(sys.argv) > 1:
         if 'all' in sys.argv[1:]:
@@ -117,7 +117,7 @@ if __name__ == '__main__':
                 except Exception as e:
                     print(e)
     else:
-        if os.getlogin().lower() == 'royalrender':
+        if os.getlogin().lower() == 'royalrender': #this is for when it ran as a scriptjob on RR
             for username in _users:
                 try:
                     run(username.lower())
