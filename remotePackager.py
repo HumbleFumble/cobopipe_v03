@@ -6,15 +6,17 @@ from PySide2 import QtCore, QtWidgets
 
 package_dict = {
     "ffmpeg":["T:/_Executables/ffmpeg/"],
-    "python39":["T:/_Software/Python/python-3.9.1-amd64.exe"],
-    "python_requirements":["T:/_Pipeline/cobopipe_v02-001/requirements.txt"],
+    "python39":["T:/_Software/Python/python-3.9.1-amd64.exe",
+                "T:/_Pipeline/cobopipe_v02-001/requirements.txt"],
     "harmony22": ["T:/_Software/Toonboom/HAR22-PRM-win-21617.exe"],
-        "harmony-scripts":["T:/_Pipeline/cobopipe_v02-001/TB/Scripting_Hotbars/Toon Boom Harmony Premium/2100-scripts/",
+    "harmony-scripts":["T:/_Pipeline/cobopipe_v02-001/TB/Scripting_Hotbars/Toon Boom Harmony Premium/2100-scripts/",
+                       "T:/_Pipeline/cobopipe_v02-001/TB/ToonBoom_Global_Scripts/",
                        "T:/_Pipeline/cobopipe_v02-001/TB/ToonBoom_Global_Python/",
                        "T:/_Pipeline/cobopipe_v02-001/Preview/ffmpeg_util.py",
                        "T:/_Pipeline/cobopipe_v02-001/icon/"],
     "mountDriveInterface":["T:/_Pipeline/cobopipe_v02-001/MountDriveInterface.py"],
-    "shotBrowser_bat":["T:/_Pipeline/cobopipe_v02-001/BAT_files/ShotBrowser.bat"]
+    "shotBrowser_bat":["T:/_Pipeline/cobopipe_v02-001/BAT_files/ShotBrowser.bat"],
+    "space_sniffer":["T:/_Software/SpaceSniffer/spacesniffer_1_3_0_2/"]
 }
 
 
@@ -31,6 +33,7 @@ class CustomWidget(QtWidgets.QWidget):
 
         # Checkbox
         self.checkbox = QtWidgets.QCheckBox()
+        self.checkbox.stateChanged.connect(self.on_checkbox_state_changed)
         layout.addWidget(self.checkbox)
 
         # Label
@@ -39,16 +42,27 @@ class CustomWidget(QtWidgets.QWidget):
         layout.addWidget(self.label)
         # self.setStyleSheet("border-bottom: 1px solid gray;")
 
+    def on_checkbox_state_changed(self, state):
+        # If this checkbox is clicked, check if there are other selected items and update their checkboxes
+        parent_list_widget = self.parent().parent()
+        selected_items = parent_list_widget.selectedItems()
+        for item in selected_items:
+            widget = parent_list_widget.itemWidget(item)
+            widget.checkbox.setChecked(state)
+
 
 class remotePackager(QtWidgets.QWidget):
     def __init__(self):
         super(remotePackager, self).__init__()
-        self.createUI()
+        self.start_path = "T:/_Resources/Remote_SoftwarePackages/"
         self.data_dict = package_dict
+        self.createUI()
         self.updateList()
+
+
     def createUI(self):
         self.setWindowTitle("Remote Packager")
-        self.setGeometry(100, 100, 300, 400)
+        self.setGeometry(100, 100, 400, 400)
 
         # Main layout
         layout = QtWidgets.QVBoxLayout(self)
@@ -56,6 +70,7 @@ class remotePackager(QtWidgets.QWidget):
         # List widget
         self.list_widget = QtWidgets.QListWidget()
         layout.addWidget(self.list_widget)
+        self.list_widget.setSelectionMode(QtWidgets.QListWidget.ExtendedSelection)
 
         self.list_widget.setAlternatingRowColors(True)
         self.list_widget.setStyleSheet("alternate-background-color: #f10f10f10;")
@@ -64,7 +79,7 @@ class remotePackager(QtWidgets.QWidget):
         h_layout = QtWidgets.QHBoxLayout()
 
         # Line edit to display and edit the chosen file path
-        self.path_edit = QtWidgets.QLineEdit()
+        self.path_edit = QtWidgets.QLineEdit(self.start_path)
         h_layout.addWidget(self.path_edit)
 
         # Button to open the file dialog
@@ -95,6 +110,8 @@ class remotePackager(QtWidgets.QWidget):
             for c_path in content:
                 if os.path.exists(c_path):
                     source_list.append(c_path)
+                else:
+                    print(f"In {key} -> Can't find {c_path}. Skipping it.")
         if source_list:
             print(source_list)
             return source_list
@@ -110,8 +127,7 @@ class remotePackager(QtWidgets.QWidget):
         source_list = self.gather_file_list(checked_items)
 
         if source_list:
-            pass
-            # zipUtil.zip_7z(source_list, output_path)
+            zipUtil.zip_7z(source_list, output_path)
 
 
     def gather_checked_items(self):
@@ -126,9 +142,11 @@ class remotePackager(QtWidgets.QWidget):
         return checked_items
     def open_save_dialog(self):
         options = QtWidgets.QFileDialog.Options()
-        file_name, _ = QtWidgets.QFileDialog.getSaveFileName(self, "Save ZIP File", "", "ZIP Files (*.zip);;All Files (*)",
+        my_file_dialog = QtWidgets.QFileDialog()
+        my_file_dialog.setDirectory(self.start_path)
+        file_name, _ = my_file_dialog.getSaveFileName(self, "Save ZIP File", "", "ZIP Files (*.zip);;All Files (*)",
                                                    options=options)
-        print(file_name)
+        # print(file_name)
         if file_name:
             # If the chosen file name doesn't end with .zip, append it
             if not file_name.endswith('.zip'):
@@ -145,10 +163,3 @@ if __name__ == "__main__":
     window.show()
 
     sys.exit(app.exec_())
-
-
-# class RemotePackager():
-#     def __init__(self):
-#         pass
-
-
