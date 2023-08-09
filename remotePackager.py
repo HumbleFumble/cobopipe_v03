@@ -16,7 +16,9 @@ package_dict = {
                        "T:/_Pipeline/cobopipe_v02-001/icon/"],
     "mountDriveInterface":["T:/_Pipeline/cobopipe_v02-001/MountDriveInterface.py"],
     "shotBrowser_bat":["T:/_Pipeline/cobopipe_v02-001/BAT_files/ShotBrowser.bat"],
-    "space_sniffer":["T:/_Software/SpaceSniffer/spacesniffer_1_3_0_2/"]
+    "space_sniffer":["T:/_Software/SpaceSniffer/spacesniffer_1_3_0_2/"],
+    "VPN_Setup":["T:/_Resources/Guides/VPN/EN/",
+                 "T:/_Resources/Guides/VPN/EN/Guide Connect to Network Drive.pdf"]
 }
 
 
