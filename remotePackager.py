@@ -69,7 +69,7 @@ class remotePackager(QtWidgets.QWidget):
         # Button to gather checked items
         self.gather_button = QtWidgets.QPushButton("Gather Checked Items")
         layout.addWidget(self.gather_button)
-        self.gather_button.clicked.connect(self.gather_checked_items)
+        self.gather_button.clicked.connect(self.run_button)
     def updateList(self):
         # Populate the list widget with items from the dictionary
         self.list_widget.clear()
@@ -79,6 +79,34 @@ class remotePackager(QtWidgets.QWidget):
             item.setSizeHint(custom_widget.sizeHint())
             self.list_widget.addItem(item)
             self.list_widget.setItemWidget(item, custom_widget)
+    def gather_file_list(self, list_of_keys=[]):
+
+        source_list = []
+        for key in list_of_keys:
+            content = self.data_dict[key]
+            print(content)
+            for c_path in content:
+                if os.path.exists(c_path):
+                    source_list.append(c_path)
+        if source_list:
+            print(source_list)
+            return source_list
+        else:
+            return None
+
+    def run_button(self):
+        output_path = self.path_edit.text()
+        if not os.path.exists(os.path.split(output_path)[0]):
+            print("Folder doesn't exist, please pick an output path that does exist")
+            return None
+        checked_items = self.gather_checked_items()
+        source_list = self.gather_file_list(checked_items)
+
+        if source_list:
+            pass
+            # zipUtil.zip_7z(source_list, output_path)
+
+
     def gather_checked_items(self):
         checked_items = []
         for index in range(self.list_widget.count()):
@@ -105,13 +133,6 @@ class remotePackager(QtWidgets.QWidget):
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-
-    data_dict = {
-        "Item1": "Value1",
-        "Item2": "Value2",
-        "Item3": "Value3",
-        "Item4": "Value4",
-    }
 
     window = remotePackager()
     window.show()
