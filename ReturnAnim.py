@@ -130,7 +130,7 @@ class ReturnAnim(QtWidgets.QWidget):
 
         popup, msg = alert(self, message="Wait.. Saving new version in a folder.")
         QtWidgets.QApplication.processEvents()
-        script_path = r"\\192.168.0.225\tools\_Pipeline\cobopipe_v02-001\TB\CB_increment_folder.py"
+        script_path = r"\\192.168.0.225\tools\_Pipeline\cobopipe_v02-001\TB\ToonBoom_Global_Python\CB_increment_folder.py"
         command = (
             f'python "{script_path}" "{harmony_python_packages}" "{selected_file}"'
         )
