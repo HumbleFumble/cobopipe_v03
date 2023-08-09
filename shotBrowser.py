@@ -1509,7 +1509,7 @@ class FrontController(QtCore.QObject):
 			print('\n >> Done renaming nodes <<')
 
 	def checkTBRenderNodes_process(self, scene_path, rename=True):
-		cmd = f"Python T:/_Pipeline/cobopipe_v02-001/TB/FindRename.py {scene_path} {rename}"
+		cmd = f"Python T:/_Pipeline/cobopipe_v02-001/TB/ToonBoom_Global_Python/FindRename.py {scene_path} {rename}"
 		process = subprocess.Popen(cmd, shell=True, universal_newlines=True, env=run_env, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 		stdout, stderr = process.communicate()
 		result = stdout.split('<RESULT_START>')[-1].split('<RESULT_END>')[0]
