@@ -39,6 +39,12 @@ def zip(source, destination):
 
 
 def zip_7z(source, destination, unc=None):
+    """
+    source:list of folders or files
+    destination: the path where the zip will be saved
+    unc:The network path and the working directory, from where we start. We add this if we are submitting the job via deadline
+    so that we are sure the drives are mounted.
+    """
     if type(source) == str:
         source = [source]
 
