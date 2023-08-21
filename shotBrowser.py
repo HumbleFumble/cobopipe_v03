@@ -49,8 +49,8 @@ import subprocess
 # import json
 import file_util
 
-import TB as SubmitTB
-import TB as SetupTB
+import TB.ToonBoom_Global_Python.Harmony_RR_RenderSubmit as SubmitTB
+import TB.ToonBoom_Global_Python.HarmonySceneSetup as SetupTB
 import AfterEffectFunctions as SetupAE
 
 if in_maya:
