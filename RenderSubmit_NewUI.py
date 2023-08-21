@@ -1,6 +1,11 @@
 from PySide2 import QtWidgets, QtCore, QtGui
 import string
 
+## Back up old renders instead of renaming new ones??
+## Could Rename Pass folder, with date.
+
+## Only move and rename after render is done?
+
 class MainWindow(QtWidgets.QWidget):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
