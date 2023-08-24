@@ -81,10 +81,10 @@ function SetWrite(cur_write, render_obj){
 
 	if(write_name.search("RENDER_")>-1){
 	    //check that its unique
-	    var new_name = incrementName(cur_write,render_obj)
+	    var write_name = incrementName(cur_write,render_obj)
 	    //get the name again in case we changed it
-	    write_name = node.getName(cur_write);
-	    MessageLog.trace("Node name: " + write_name);
+//	    write_name = node.getName(cur_write);
+//	    MessageLog.trace("Node name: " + write_name);
 		var filename = write_name.split("RENDER_")[1];
 		var final_path = render_obj.scene_path + filename + "_";
 		var project_settings = GetProjectSettings();
