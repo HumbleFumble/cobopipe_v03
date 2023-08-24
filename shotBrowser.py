@@ -1142,7 +1142,7 @@ class FrontController(QtCore.QObject):
 						print(arguments)
 						for x, y in replace_dictionary.items():
 							arguments = arguments.replace(x, y)
-
+					# Change the zip deadling call to be using a general pool, instead of a project specific one. Orig: 'pool': CC.project_settings.get('deadline_pool'),
 					send_webhook(
 						{
 							'hook': 'submit_zip',
@@ -1150,7 +1150,7 @@ class FrontController(QtCore.QObject):
 							'kwargs': {
 								'executable': r'\\192.168.0.225\tools\_Executables\python\Python310\python.exe',
 								'arguments': arguments,
-								'pool': CC.project_settings.get('deadline_pool'),
+								'pool': 'general',
 								'group': 'python',
 								'priority': 50,
 								'name': f'Zipping {folder}.zip'
@@ -1197,12 +1197,14 @@ class FrontController(QtCore.QObject):
 							r'\\dumpap3': r'\\192.168.0.225',
 							r'\\archivesrv': r'\\192.168.0.227'
 						}
-						pool = CC.project_settings.get('deadline_pool')
+
 						arguments = f'"{CC.get_python_path()}zipUtil.py" "unzip_7z" "{source}" "{destination}"'
 						for x, y in replace_dictionary.items():
 							arguments = arguments.replace(x, y)
 						print(arguments)
 						zip_file = os.path.basename(source)
+						# Change the zip deadling call to be using a general pool, instead of a project specific one. Orig: 'pool': CC.project_settings.get('deadline_pool')
+						# pool = CC.project_settings.get('deadline_pool')
 						send_webhook(
 							{
 								'hook': 'submit_zip_unpack',
@@ -1210,7 +1212,7 @@ class FrontController(QtCore.QObject):
 								'kwargs': {
 									'executable': r'\\192.168.0.225\tools\_Executables\python\Python310\python.exe',
 									'arguments': arguments,
-									'pool': pool,
+									'pool': 'general',
 									'group': 'python',
 									'priority': 50,
 									'name': f'Unpacking {zip_file}'
