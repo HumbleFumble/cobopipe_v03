@@ -2,6 +2,11 @@ import sys
 import os
 import re
 
+"""
+This script is used for making a incremental save of a toonboom harmony file, using harmonys own python api. From outside harmony.
+when called from a bat file, it needs 2 arguments. 1st is the path to the python module for toonboom, 2nd is the path to the .xstage file that should be saved. 
+"""
+
 def increment_tb_folder(file):
     if not os.path.exists(file):
         return False

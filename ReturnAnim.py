@@ -6,6 +6,9 @@ import sys
 import file_util
 import subprocess
 
+"""
+This script requires a vpn connection to the Bombay network 
+"""
 
 class ReturnAnim(QtWidgets.QWidget):
     def __init__(self, parent=None):
