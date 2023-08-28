@@ -55,4 +55,3 @@ function Edit-EnvironmentVariable {
     }
 
 }
-Edit-EnvironmentVariable -Variable "C:\Temp\" -VaribleKey "TEST"
