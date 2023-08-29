@@ -74,7 +74,7 @@ class ConfigClass():
         
         self.local_vars=['TOONBOOM_GLOBAL_SCRIPT_LOCATION', 'TB_EXTERNAL_SCRIPT_PACKAGES_FOLDER', 'PYTHONPATH']
         
-        self.users={'Animation': ['Anna', 'Bernardo', 'Christian', 'Conor', 'Daniel', 'Elliot', 'Fanny', 'Gustavo', 'James', 'Jamie', 'Julia', 'Julie', 'Kristoffer', 'Lho', 'Louise', 'Malene', 'Mads', 'Maya', 'Mik', 'Mikkel', 'Otto', 'Paula', 'Petra', 'Sabrina', 'Teo', 'Tue', 'Vedel'], 'Render': ['Alexandre', 'James', 'Bernardo', 'Christian', 'Mads']}
+        self.users={'Animation': ['Anna', 'Bernardo', 'Christian', 'Conor', 'Daniel', 'Elias', 'Elliot', 'Fanny', 'Gustavo', 'James', 'Jamie', 'Julia', 'Julie', 'Kristoffer', 'Lho', 'Louise', 'Malene', 'Mads', 'Maya', 'Mik', 'Mikkel', 'Otto', 'Paula', 'Petra', 'Sabrina', 'Teo', 'Tue', 'Vedel'], 'Render': ['Alexandre', 'James', 'Bernardo', 'Christian', 'Mads']}
         
         self.ref_order={}
         
