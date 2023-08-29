@@ -11,6 +11,7 @@ function Edit-EnvironmentVariable {
          $envmachine = [Environment]::GetEnvironmentVariable($VaribleKey, [EnvironmentVariableTarget]::Machine)
          Write-Host "HERE is current env: " $envmachine
          if($envmachine)
+
          {
              if ($true -eq $ReplaceKey)
              {
