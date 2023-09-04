@@ -22,7 +22,8 @@ if (-Not $RemoveVarible){
              if (-Not $envmachine.Contains($Variable))
              {
                  Write-Host "Adding: " $envmachine
-                 [Environment]::SetEnvironmentVariable($VariableKey, $( ($Variable + ";") + $envmachine ), [EnvironmentVariableTarget]::Machine)
+                 #[Environment]::SetEnvironmentVariable($VariableKey, $( ($Variable + ";") + $envmachine ), [EnvironmentVariableTarget]::Machine)
+                 [Environment]::SetEnvironmentVariable($VariableKey, ($env:Path += $Variable), [EnvironmentVariableTarget]::Machine)
              }
 
          }
