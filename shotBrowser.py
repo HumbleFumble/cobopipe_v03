@@ -1153,7 +1153,7 @@ class FrontController(QtCore.QObject):
 								'pool': 'general',
 								'group': 'python',
 								'priority': 50,
-								'name': f'Zipping {folder}.zip'
+								'name': f'Zip {folder}.zip for {user_name}',
 							}
 						},
 						vpn = True
