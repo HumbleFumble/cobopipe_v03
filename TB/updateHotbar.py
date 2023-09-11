@@ -62,7 +62,7 @@ def extendButtonlist(source, target):
 def run(username):
     blacklist = ['bomadm']
 
-    sourcePath = os.path.abspath(os.path.join(__file__, '../Scripting_Hotbars/Toon Boom Harmony Premium/2100-scripts'))
+    sourcePath = os.path.abspath(os.path.join(__file__, 'Scripting_Hotbars/Toon Boom Harmony Premium/2100-scripts'))
 
     proc = Popen("HarmonyPremium -v", stdout=PIPE, stderr=PIPE)
     stdout, stderr = proc.communicate()
