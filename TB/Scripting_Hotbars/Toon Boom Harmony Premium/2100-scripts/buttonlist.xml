@@ -19,5 +19,8 @@
  <Script file="CB_SliderUI.js" function="runQuickSlider" icon="runQuickSlider"/>
  <Script file="CB_import_background.js" function="import_background" icon="import_background"/>
  <Script file="CB_SetLineThickness_Call.js" function="SetLineThickness" icon="SetLineThickness"/>
+ <Script file="TB_EditLineThicknessOvertime.js" function="TB_Edit_Line_Thickness_Overtime" icon="TB_Edit_Line_Thickness_Overtime"/>
+ <Script file="CC_AlignNodes.js" function="CC_AlignNodes_Vertical" icon="CC_AlignNodes_Vertical"/>
+ <Script file="PAL_Remove_Unused_Colors.js" function="PAL_Remove_All_Unused_Colors_And_Palettes" icon="PAL_Remove_All_Unused_Colors_And_Palettes"/>
  <Script file="CB_RenderProp_Call.js" function="run_setupRenderInfo_Python_render_prop" icon="run_setupRenderInfo_Python_render_prop"/>
 </Scripts>
