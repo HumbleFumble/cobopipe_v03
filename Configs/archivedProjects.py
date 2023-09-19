@@ -14,7 +14,10 @@ list_of_archived_projects = [
     "KiwiStrit3",
     "MiniSjang-MinSang",
     "DenSaerligeMester",
-    "MiasMagic2"
+    "MiasMagic2",
+    "LegoFriends",
+    "Boerste-Season2",
+    "TV2-AlleBorn"
 ]
 
 if __name__ == '__main__':
