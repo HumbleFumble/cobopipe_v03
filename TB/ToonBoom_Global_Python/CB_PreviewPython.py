@@ -237,9 +237,6 @@ class PreviewPython_UI(QDialog):
         self.findSceneInfo()
         if self.checkLength():
             if not self.checkIfLocked(self.preview_final):
-                log(self.height)
-                log(self.width)
-                log(self.crop_edit.text())
 
                 self.render_height = float(self.crop_edit.text())*self.height
                 self.render_width = float(self.crop_edit.text()) * self.width

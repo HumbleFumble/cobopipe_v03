@@ -106,7 +106,13 @@ def createPreview_2D(shot, inputPath='', outputPath='', audioPath='', crop=False
     ffmpeg_exe = 'T:/_Executables/ffmpeg/bin/ffmpeg.exe'
     if not os.path.exists(ffmpeg_exe):
         ffmpeg_exe = "ffmpeg"
-    _string = ' '.join(ffmpeg.compile(stream, cmd=ffmpeg_exe, overwrite_output=True))
+    # _string = ' '.join(ffmpeg.compile(stream, cmd=ffmpeg_exe, overwrite_output=True))
+    _string = ""
+    for s in ffmpeg.compile(stream,cmd=ffmpeg_exe, overwrite_output=True):
+        if s == "ffmpeg" or s.startswith("-"):
+            _string = _string + " " + s
+        else:
+            _string = _string + ' "' + s + '"'
     logger.info(_string)
     if runCmd:
         try:
