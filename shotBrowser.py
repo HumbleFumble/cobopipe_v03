@@ -1861,15 +1861,15 @@ class FrontController(QtCore.QObject):
 		for cur_key in file_list.keys():
 			if os.path.exists(file_list[cur_key]["path"]):
 				file_list[cur_key]["duration"] = ffmpeg_util.probeDuration(file_list[cur_key]["path"],codec_type="video")
+				# print(file_list[cur_key]["duration"])
 				if(duration != 0 and duration != file_list[cur_key]["duration"] and file_list[cur_key]["duration"] != 0):
 					to_return = True
 				if not file_list[cur_key]["duration"] == 0:
 					duration = file_list[cur_key]["duration"]
-
 		if to_return:
 			to_return_list = f'Issue found in {info_dict["episode_name"]}_{info_dict["seq_name"]}_{info_dict["shot_name"]}, durations in frames:\n'
 			for d in file_list.keys():
-				to_return_list = to_return_list + f'{d}:{(int(float(file_list[d]["duration"])*25))}\n'
+				to_return_list = to_return_list + f'{d}:{(round(float(file_list[d]["duration"])*25))}\n'
 			return to_return_list
 		else:
 			return None
@@ -1886,9 +1886,10 @@ class FrontController(QtCore.QObject):
 			cur_info = self.__compareLengthsMsg(node=cur_node)
 			if cur_info:
 				error_print = error_print + "\n" + cur_info
-
-		logger.error(error_print)
-
+		if error_print:
+			logger.error(error_print)
+		else:
+			error_print = "Everything match"
 		msg_box.setText(error_print)
 
 		msg_box.exec_()

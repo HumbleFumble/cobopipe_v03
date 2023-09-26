@@ -190,8 +190,8 @@ def probeDuration(path,index=0,codec_type=None):
     :return:
     """
     probe_streams = ffmpeg.probe(path, cmd=ffprobe_exe)
-
     to_return = probe_streams["streams"][index]["duration"]
+    # print(to_return)
     if codec_type:
         for i in probe_streams["streams"]:
             if i["codec_type"] == codec_type:
@@ -255,12 +255,21 @@ def createMultiStreamOverlay(patha,pathb,output_path):
     print(_string)
 
 if __name__ == '__main__':
-    video_a = "C:/Users/chris/Documents/ToonboomLocal/_Preview/S104_SQ070_SH060.mov"
-    video_a_new = "C:/Users/chris/Documents/ToonboomLocal/_Preview/S104_SQ070_SH060_user.mov"
-    stream = ffmpeg.input(video_a)
-    stream = createSlate(stream,user="TEST",frameCount=False,timecode=False,date=False)
-    stream = ffmpeg.output(stream, video_a_new, pix_fmt='yuv420p', acodec='copy')
-    ffmpeg.run(stream, cmd=ffmpeg_exe, overwrite_output=True)
+    fps= [r"P:\930462_HOJ_Project\Production\Film\S115\S115_SQ020\_Preview\S115_SQ020_SH130.mov",
+          "P:/930462_HOJ_Project/Production/Film/S115/S115_SQ020/S115_SQ020_SH130/S115_SQ020_SH130_Animatic.mov",
+          "P:/930462_HOJ_Project/Production/Film/S115/S115_SQ020/S115_SQ020_SH130/S115_SQ020_SH130_Sound.wav",
+          "P:/930462_HOJ_Project/Production/Film/S115/S115_SQ020/S115_SQ020_SH130/_CompOutput/S115_SQ020_SH130_CompOutput.mov"
+          ]
+    for f in fps:
+    # f = "P:/930462_HOJ_Project/Production/Film/S115/S115_SQ020/S115_SQ020_SH130/S115_SQ020_SH130_Sound.wav"
+        print(probeDuration(f, codec_type="video"))
+
+    # video_a = "C:/Users/chris/Documents/ToonboomLocal/_Preview/S104_SQ070_SH060.mov"
+    # video_a_new = "C:/Users/chris/Documents/ToonboomLocal/_Preview/S104_SQ070_SH060_user.mov"
+    # stream = ffmpeg.input(video_a)
+    # stream = createSlate(stream,user="TEST",frameCount=False,timecode=False,date=False)
+    # stream = ffmpeg.output(stream, video_a_new, pix_fmt='yuv420p', acodec='copy')
+    # ffmpeg.run(stream, cmd=ffmpeg_exe, overwrite_output=True)
 
     # video_test = "P:/930499_Borste_02/Production/Film/S205/S205_SQ010/_Preview/S205_SQ010_SH070_Test.mov"
     # sound_a = "P:/930499_Borste_02/Production/Film/S205/S205_SQ010/S205_SQ010_SH070/S205_SQ010_SH070_Sound.wav"

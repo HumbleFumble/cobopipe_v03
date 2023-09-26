@@ -237,9 +237,14 @@ class PreviewPython_UI(QDialog):
         self.findSceneInfo()
         if self.checkLength():
             if not self.checkIfLocked(self.preview_final):
+                log(self.height)
+                log(self.width)
+                log(self.crop_edit.text())
+
                 self.render_height = float(self.crop_edit.text())*self.height
                 self.render_width = float(self.crop_edit.text()) * self.width
-
+                log(self.render_width)
+                log(self.render_height)
 
                 if self.render_check.isChecked():
                     js_exporter.exportToQuicktime("", -1, -1, True, self.render_width, self.render_height, self.temp_path, "", False,1)
@@ -287,7 +292,7 @@ class PreviewPython_UI(QDialog):
         scene_length = project.scene.frame_count
         if self.sound_file:
             audio_length = ffmpeg_util.probeDuration(self.sound_file, codec_type="audio")
-            audio_frames = int(float(audio_length) * float(project.scene.framerate))
+            audio_frames = round(float(audio_length) * float(project.scene.framerate))
             if scene_length !=audio_frames:
                 log("ISSUE!: not the same length!")
                 log("%s -> %s" % (audio_frames,scene_length))
