@@ -240,8 +240,6 @@ class PreviewPython_UI(QDialog):
 
                 self.render_height = float(self.crop_edit.text())*self.height
                 self.render_width = float(self.crop_edit.text()) * self.width
-                log(self.render_width)
-                log(self.render_height)
 
                 if self.render_check.isChecked():
                     js_exporter.exportToQuicktime("", -1, -1, True, self.render_width, self.render_height, self.temp_path, "", False,1)
