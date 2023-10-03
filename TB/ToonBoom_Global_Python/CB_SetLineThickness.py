@@ -85,7 +85,18 @@ class FrontController(QObject):
                 node.attributes["ZOOM_INDEPENDENT_LINE_ART_THICKNESS"].set_value(-1,1)
             else:
                 node.attributes["ZOOM_INDEPENDENT_LINE_ART_THICKNESS"].set_value(-1, 0)
+            log(value)
             node.attributes["MULT_LINE_ART_THICKNESS"].set_localvalue(value)
+    def setLinePreserve(self,node,on_off,set_fixed_value):
+        # PENCIL_LINE_DEFORMATION_PRESERVE_THICKNESS - - BOOL
+        # PENCIL_LINE_DEFORMATION_QUALITY - - GENERIC_ENUM
+        # PENCIL_LINE_DEFORMATION_SMOOTH - - INT
+        # PENCIL_LINE_DEFORMATION_FIT_ERROR - - DOUBLE
+
+        node.attributes["PENCIL_LINE_DEFORMATION_PRESERVE_THICKNESS"].set_value(-1, on_off)
+        log(set_fixed_value)
+        node.attributes["PENCIL_LINE_DEFORMATION_FIT_ERROR"].set_value(-1,float(set_fixed_value))
+
 
 
 class SetLineThickness_UI(QDialog):
@@ -133,16 +144,43 @@ class SetLineThickness_UI(QDialog):
         self.turn_on_off_bttn.clicked.connect(self.turn_on_off)
         self.scale_check = QCheckBox("Scale Independent")
 
+        self.preserve_lay = QVBoxLayout()
+        self.fixed_lay = QHBoxLayout()
+        self.preserve_checkbox = QCheckBox("Preserve Line")
+        self.fixed_label = QLabel("Value: ")
+        self.fixed_float = QLineEdit("1")
+
+        self.set_button = QPushButton("Set Preserve")
+        self.set_button.clicked.connect(self.setPreserveCall)
+        self.preserve_lay.addWidget(self.preserve_checkbox)
+
+        self.fixed_lay.addWidget(self.fixed_label)
+        self.fixed_lay.addWidget(self.fixed_float)
+
+        self.preserve_lay.addLayout(self.fixed_lay)
+        self.preserve_lay.addWidget(self.set_button)
+
+        # self.debug_buton = QPushButton("Debug")
+        # self.debug_buton.clicked.connect(self.debug)
+        # self.main_lay.addWidget(self.debug_buton)
+
         self.main_lay.addWidget(self.pick_selection_bttn)
         self.main_lay.addWidget(self.set_selection_bttn)
         self.main_lay.addLayout(self.slider_lay)
         self.main_lay.addWidget(self.scale_check)
         self.main_lay.addLayout(self.bttn_lay)
+        self.main_lay.addWidget(QLabel("________________________________________________"))
+        self.main_lay.addLayout(self.preserve_lay)
         self.scale_check.setChecked(True)
         self.setLayout(self.main_lay)
 
         
-
+    def debug(self):
+        self.FC.checkAttributes(self.node_list[0])
+    def setPreserveCall(self):
+        for n in self.node_list:
+            self.FC.setLinePreserve(n,self.preserve_checkbox.isChecked(),str(self.fixed_float.text()))
+            #ISSUE WITH Fixed float. maybe needs just an int
     def pickSelection(self):
         self.node_list = []
         self.node_list = self.FC.findReadNodes()
