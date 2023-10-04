@@ -12,7 +12,7 @@
  <Script file="CB_submitToRoyalRender.js" function="submitSceneToRoyalRender" icon="submitSceneToRoyalRender"/>
  <Script file="CB_ExportSceneData.js" function="ExportSceneData" icon="ExportSceneData"/>
  <Script file="CB_ANM_Set_Layer_Pivots_At_Center_Of_Drawings.js" function="ANM_Set_Layer_Pivots_At_Center_Of_Drawings" icon="ANM_Set_Layer_Pivots_At_Center_Of_Drawings"/>
- <Script file="CB_CF_CopyPastePivots_1.0.1.js" function="CF_CopyPastePivots" icon="CF_CopyPastePivots"/>
+ <Script file="CB_CopyPastePivots_1.0.1.js" function="CF_CopyPastePivots" icon="CF_CopyPastePivots"/>
  <Script file="CB_SelectionPreset_Call.js" function="call_CB_SelectionPreset" icon="call_CB_SelectionPreset"/>
  <Script file="CB_TB_RemoveUnusedColors.js" function="TB_RemoveUnusedColors" icon="TB_RemoveUnusedColors"/>
  <Script file="CB_TB_Pose_Copier.js" function="TB_Pose_Copier" icon="TB_Pose_Copier"/>
