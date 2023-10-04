@@ -16,5 +16,7 @@ function CreateAnimPreview(){
 	var dis_name = node.getName(dis_module);
 	//exporter.exportToQuicktime(dis_name, "-1","-1",true,"1920","1080",final_path,dis_module,false,"1");
 	*/
-	exporter.exportToQuicktime("", "-1","-1",true,"1280","720",final_path,"",false,"1");
+	//exporter.exportToQuicktime("", "-1","-1",true,"1280","720",final_path,"",false,"1");
+	//exporter.exportToQuicktime("", "-1","-1",true,"1280","720",final_path,"",false,"1");
+exporter.exportOGLToQuicktime("Test_Temp","C:/Temp/temp_previews/","-1","-1","1280","720");
 }
