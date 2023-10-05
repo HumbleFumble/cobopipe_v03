@@ -777,7 +777,7 @@ class MainWindow(QtWidgets.QWidget): ### Main UI and Functions
 
 
                 new_start = prev_end + 25
-                self.CreateShotNode(orig_shot,e_shot_duration,new_start,new_start,self.ep, self.seq,None)
+                anim_util.CreateShotNode(orig_shot,e_shot_duration,new_start,new_start,self.ep, self.seq,None)
                 logger.info("New Shot: %s" % edit_shot)
 
 
