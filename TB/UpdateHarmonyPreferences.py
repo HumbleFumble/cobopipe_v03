@@ -1,5 +1,3 @@
-#TODO Make a script that goes in and changes the settings of the local harmony preferences
-
 import os
 
 import xml.etree.ElementTree as ET
