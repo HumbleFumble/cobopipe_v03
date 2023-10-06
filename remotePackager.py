@@ -6,6 +6,7 @@ from PySide2 import QtCore, QtWidgets
 
 package_dict = {
     "ffmpeg":["T:/_Executables/ffmpeg/"],
+    "fileZilla":["T:/_Software/FileZilla/FileZilla_3.65.0_win64-setup.exe"],
     "python39":["T:/_Software/Python/python-3.9.1-amd64.exe",
                 "T:/_Pipeline/cobopipe_v02-001/requirements.txt"],
     "harmony22": ["T:/_Software/Toonboom/HAR22-PRM-win-21617.exe"],
@@ -56,7 +57,7 @@ class CustomWidget(QtWidgets.QWidget):
 class remotePackager(QtWidgets.QWidget):
     def __init__(self):
         super(remotePackager, self).__init__()
-        self.start_path = "T:/_Resources/Remote_SoftwarePackages/"
+        self.start_path = "T:/_Resources/Remote_SoftwarePackages/DefaultPackage.zip"
         self.data_dict = package_dict
         self.createUI()
         self.updateList()
@@ -93,6 +94,8 @@ class remotePackager(QtWidgets.QWidget):
         # Button to gather checked items
         self.gather_button = QtWidgets.QPushButton("Gather Checked Items")
         layout.addWidget(self.gather_button)
+        self.overwrite_checkbox = QtWidgets.QCheckBox("Overwrite existing zip")
+        layout.addWidget(self.overwrite_checkbox)
         self.gather_button.clicked.connect(self.run_button)
     def updateList(self):
         # Populate the list widget with items from the dictionary
@@ -122,13 +125,15 @@ class remotePackager(QtWidgets.QWidget):
 
     def run_button(self):
         output_path = self.path_edit.text()
-        if not os.path.exists(os.path.split(output_path)[0]):
+        if not os.path.exists(os.path.split(output_path)[0]) or not os.path.isfile(output_path):
             print("Folder doesn't exist, please pick an output path that does exist")
             return None
         checked_items = self.gather_checked_items()
         source_list = self.gather_file_list(checked_items)
 
         if source_list:
+            if self.overwrite_checkbox.isChecked():
+                os.remove(output_path)
             zipUtil.zip_7z(source_list, output_path)
 
 
