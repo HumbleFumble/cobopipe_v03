@@ -19,6 +19,7 @@ function import_background(){
     var number_string = pad(biggest_number, 2, '0');
     var group_name = 'BACKGROUND_' + number_string;
 
+    //Insert python script here:
     var file_path = FileDialog.getOpenFileName("*.psd", "Please select the background to import");
     // var file_path = 'P:/930462_HOJ_Project/Production/Asset/Environment/Nidavellir/HollowMountain/MagnusOffice/Anim/MagnusOffice_INT_0100_Anim.psd'; // For testing
     

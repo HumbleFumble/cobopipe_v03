@@ -1,36 +1,55 @@
-# THIS FILE NEVER AMOUNTED TO ANYTHING BECAUSE THE FUNCTIONALITY WAS MISSING IN THE HARMONY PYTHON API
+#TODO changed this file to instead of trying to do the import operation, just deals with finding the correct file
 
-import sys
+from PySide6.QtWidgets import *
+from PySide6.QtCore import *
+from PySide6.QtGui import *
+
 import os
-from Log.CoboLoggers import getLogger
-logger = getLogger()
+try:
+    from ToonBoom import harmony
+    in_toonboom = True
+except Exception as e:
+    in_toonboom = False
 
-#Extend the environment's path, in order to find the installed Harmony Python module
-#we should be able to use os.environ["HarmonyPremium"] + "/python-packages"
-sys.path.append( r"C:\Program Files (x86)\Toon Boom Animation\Toon Boom Harmony 22 Premium\win64\bin\python-packages" )
-from ToonBoom import harmony
+def log(message):
+    if in_toonboom:
+        sess = harmony.session()
+        sess.log(str(message))
+    else:
+        print(message)
 
-def main():
-    scene_path = r'P:\930462_HOJ_Project\Production\Film\S901\S901_SQ010\S901_SQ010_SH070\S901_SQ010_SH070\S901_SQ010_SH070.xstage'
-    session, project, scene = load_scene(scene_path)
-    print('Halløj')
-    print_actions(session)
-    print(scene)
+if os.environ.get("BOM_PIPE_PATH"):
+    sys.path.append(os.environ["BOM_PIPE_PATH"])
+    from getConfig import getConfigClass
+    CC = getConfigClass()
+    use_config = True
+else:
+    script_path = os.path.expandvars("%APPDATA%/Toon Boom Animation/Toon Boom Harmony Premium/2200-scripts/")
+    sys.path.append(script_path) #Same dir as this script
+    use_config = False
 
-def print_actions(session):
-    actions = session.actions                                       #Get actions handler.
-    for responder in actions.responders:
-        print( responder )
-        action_list = actions.actions(responder)
-        for action in action_list:
-            print( "   %s"%(action) )
+class ImportBackgroundDialog(QDialog):
+    def __init__(self, parent=None):
+        super(ImportBackgroundDialog, self).__init__(parent)
+        self.start_folder = ""
 
-def load_scene(path):
-    harmony.open_project(path)                                    #Open an offline Harmony project
-    session = harmony.session()                                   #Fetch the currently active session of Harmony
-    project = session.project
-    scene = project.scene
-    return session, project, scene
+    def browseDialog(self):
+        find_file = QInputDialog()
+        return None
+    def FindFileBasedOnName(self,name):
+        pass
+    def getSearchName(self):
+        ok = bool()
+        # my_input = QInputDialog()
+        text = QInputDialog.getText(self, "Find Background Dir:", "Name of Background: ", QLineEdit.Normal,
+        QDir.home().dirName(), ok)
+        if (ok and not text.isEmpty()):
+            log("New " + text)
+def run():
+    to_run = ImportBackgroundDialog()
+    result = to_run.browseDialog()
+    return result
 
 if __name__ == "__main__":
-    main()
+    to_run = ImportBackgroundDialog()
+    to_run.getSearchName()
