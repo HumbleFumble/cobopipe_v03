@@ -25,10 +25,11 @@ function import_background_dialog(){
     }
 
     my_dia = myPythonObject.py.run();
-    file_path = my_dia.exec()
-    if(file_path){
-        MessageLog.trace(file_path)
-//        import_background(file_path)
+    MessageLog.trace("result " + my_dia)
+    if(my_dia){
+//        file_path = my_dia.return_path();
+//        MessageLog.trace(file_path)
+        import_background(my_dia)
     }
     else{
         MessageLog.trace('File Dialog was cancelled.')

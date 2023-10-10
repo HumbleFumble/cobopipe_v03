@@ -41,6 +41,7 @@ class ImportBackgroundDialog(QDialog):
 
 
     def dialogWindow(self):
+        # global search_dir_bttn
         self.main_layout = QVBoxLayout()
         dir_layout = QHBoxLayout()
         dir_layout.addWidget(QLabel("Search from this Folder: "))
@@ -75,13 +76,22 @@ class ImportBackgroundDialog(QDialog):
         self.setLayout(self.main_layout)
 
         self.resize(700,150)
-        self.show()
+        # self.show()
 
-    def accept(self):
-        if self.final_path_text.text():
-            if os.path.exists(self.final_path_text.text()):
-                return self.final_path_text.text()
+    def return_path(self):
+        cur_text = self.final_path_text.text()
+        # print("current: " + cur_text)
+        if cur_text:
+            if os.path.exists(cur_text):
+                return cur_text
         return False
+
+    # def accept(self):
+    #     return 1
+    #     # if self.final_path_text.text():
+    #     #     if os.path.exists(self.final_path_text.text()):
+    #     #         return self.final_path_text.text()
+    #     super(ImportBackgroundDialog, self).accept()
 
 
 
@@ -133,7 +143,7 @@ class ImportBackgroundDialog(QDialog):
 
     def browse_folder(self):
         fdia = QFileDialog.getExistingDirectory(parent=self, caption="Pick Folder",dir=self.search_dir_text.text())
-        print(fdia)
+        # print(fdia)
         if fdia:
             self.search_dir_text.setText(fdia)
     def find_files(self, names=[], base_path=""):
@@ -150,11 +160,22 @@ class ImportBackgroundDialog(QDialog):
                         return_list.append(file_path)
         return return_list
 
+def getParentWidget():
+    topWidgets = QApplication.topLevelWidgets()
+    for tw in topWidgets:
+        if isinstance(tw, QMainWindow) and not tw.parentWidget():
+            return tw
+    return None
 
 def run():
-    to_run = ImportBackgroundDialog()
 
-    return to_run
+    global import_bg_dia
+    import_bg_dia = ImportBackgroundDialog(parent=getParentWidget())
+    result = import_bg_dia.exec()
+    if result:
+        return import_bg_dia.return_path()
+    else:
+        return False
 
 if __name__ == '__main__':
     import sys
@@ -165,8 +186,9 @@ if __name__ == '__main__':
     # t = PreviewPython_UI()
     # t.show()
     # app.exec()
-    to_run = ImportBackgroundDialog()
-    to_run.exec_()
+    print(run())
+    # to_run = ImportBackgroundDialog()
+    # print(to_run.exec())
     # to_run.dialogWindow()
-    app.exec()
+    # app.exec()
     # to_run.getSearchName()
