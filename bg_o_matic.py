@@ -56,7 +56,6 @@ ElfGarden_EXT_0300"""
                 _string = _string + f"\t{group}\r\n"
         pyperclip.copy(_string)
 
-
 def find_files(names=[], base_path=""):
     return_list = []
     for root, folder, files in os.walk(base_path):
