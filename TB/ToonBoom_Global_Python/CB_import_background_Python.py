@@ -35,6 +35,7 @@ class ImportBackgroundDialog(QDialog):
         self.start_folder = "P:/930462_HOJ_Project/Production/Asset/Environment/"
         self.file_folder = self.start_folder
         self.setWindowTitle("Import Background")
+        self.dialogWindow()
 
 
 
@@ -66,6 +67,7 @@ class ImportBackgroundDialog(QDialog):
         self.final_path_bttn.clicked.connect(self.final_path_bttn_call)
 
         self.import_button = QPushButton("Import Background")
+        self.import_button.clicked.connect(self.accept)
         self.main_layout.addLayout(dir_layout)
         self.main_layout.addLayout(file_layout)
         self.main_layout.addLayout(final_layout)
@@ -74,6 +76,13 @@ class ImportBackgroundDialog(QDialog):
 
         self.resize(700,150)
         self.show()
+
+    def accept(self):
+        if self.final_path_text.text():
+            if os.path.exists(self.final_path_text.text()):
+                return self.final_path_text.text()
+        return False
+
 
 
     # def browseDialog(self):
@@ -144,8 +153,8 @@ class ImportBackgroundDialog(QDialog):
 
 def run():
     to_run = ImportBackgroundDialog()
-    result = to_run.dialogWindow()
-    return result
+
+    return to_run
 
 if __name__ == '__main__':
     import sys
@@ -157,6 +166,7 @@ if __name__ == '__main__':
     # t.show()
     # app.exec()
     to_run = ImportBackgroundDialog()
-    to_run.dialogWindow()
+    to_run.exec_()
+    # to_run.dialogWindow()
     app.exec()
     # to_run.getSearchName()

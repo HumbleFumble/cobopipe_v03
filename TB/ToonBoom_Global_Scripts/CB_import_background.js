@@ -2,7 +2,41 @@ var Utils = require("CB_VectorizeUtils.js");
 var GetInfo = require("CB_GetInfo.js")
 
 
-function import_background(){
+function import_background_dialog(){
+    var script_name = "CB_import_background_Python.py";
+
+    var server_script_path = System.getenv("BOM_PIPE_PATH")
+
+    if(server_script_path){
+        MessageLog.trace("Found script at global path. Running now: " + script_name)
+        var myPythonObject = PythonManager.createPyObject(server_script_path +"/TB/ToonBoom_Global_Python/" + script_name);
+    }else{
+        var local_folder = specialFolders.userScripts
+        var script_path = local_folder + "/" + script_name
+        MessageLog.trace("Checking local path: " + script_path)
+        var file = new File( script_path );
+        if ( file.exists ){
+            MessageLog.trace("Found script at local path. Running now: " + script_path)
+            var myPythonObject = PythonManager.createPyObject(script_path);
+            }else{
+                MessageLog.trace("Can't find python file to load. Stopping Execution of: " + script_name)
+                return null
+            }
+    }
+
+    my_dia = myPythonObject.py.run();
+    file_path = my_dia.exec()
+    if(file_path){
+        MessageLog.trace(file_path)
+//        import_background(file_path)
+    }
+    else{
+        MessageLog.trace('File Dialog was cancelled.')
+        return
+        }
+}
+
+function import_background(file_path){
     var all_nodes = node.subNodes('Top')
     var biggest_number = 0;
     for(var i=0; i<all_nodes.length; i++){
@@ -20,13 +54,13 @@ function import_background(){
     var group_name = 'BACKGROUND_' + number_string;
 
     //Insert python script here:
-    var file_path = FileDialog.getOpenFileName("*.psd", "Please select the background to import");
-    // var file_path = 'P:/930462_HOJ_Project/Production/Asset/Environment/Nidavellir/HollowMountain/MagnusOffice/Anim/MagnusOffice_INT_0100_Anim.psd'; // For testing
-    
-    if  (file_path === undefined){
-        MessageLog.trace('File Dialog was cancelled.')
-        return;
-    }
+//    var file_path = FileDialog.getOpenFileName("*.psd", "Please select the background to import");
+//    // var file_path = 'P:/930462_HOJ_Project/Production/Asset/Environment/Nidavellir/HollowMountain/MagnusOffice/Anim/MagnusOffice_INT_0100_Anim.psd'; // For testing
+//
+//    if  (file_path === undefined){
+//        MessageLog.trace('File Dialog was cancelled.')
+//        return;
+//    }
     
     var object = import_psd(file_path)
     var nodes = []
