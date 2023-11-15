@@ -21,6 +21,10 @@ package_dict = {
     "VPN_Setup":["T:/_Resources/Guides/VPN/EN/",
                  "T:/_Resources/Guides/VPN/EN/Guide Connect to Network Drive.pdf"]
 }
+new_package_dict = {
+    "python310":{"files":["O:/Global/Software/Code/Python/Python310"],"installation_bat":{}
+                 }
+}
 
 
 
