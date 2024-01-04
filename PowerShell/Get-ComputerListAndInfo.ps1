@@ -33,6 +33,7 @@ foreach ($computer in $computers) {
 }
 
 # Print to screen
+
 $results | Format-Table -AutoSize
 
 # Save to CSV file

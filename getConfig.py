@@ -13,19 +13,26 @@ def getConfigFromPath(path):
     """
     pass
 
-def rebuildConfigClasses():
+def rebuildConfigClasses(name=None):
     """
     Quick way to rebuilding/updating all config classes
     :return:
     """
     config_path = "%s/Configs/" % os.path.dirname(os.path.realpath(__file__))
     configs = os.listdir(config_path)
-    for con in configs:
-        if "Config_" in con and not ".pyc" in con:
-            # temp_config = ConfigUtil.ConfigUtilClass(base_config=import_module("Configs.%s" %con.split(".")[0]))
-            # print("%s%s" % (config_path,con.split(".")[0]))
-            temp_config = ConfigUtil_Json.JsonConfigUtilClass(base_config="%s%s.json" % (config_path,con.split(".")[0]))
+    if not name:
+        for con in configs:
+            if "Config_" in con and not ".pyc" in con:
+                # temp_config = ConfigUtil.ConfigUtilClass(base_config=import_module("Configs.%s" %con.split(".")[0]))
+                # print("%s%s" % (config_path,con.split(".")[0]))
+                temp_config = ConfigUtil_Json.JsonConfigUtilClass(base_config="%s%s.json" % (config_path,con.split(".")[0]))
+                temp_config.updateConfigClass()
+    else:
+        if os.path.exists(f"{config_path}/Config_{name}.json"):
+            temp_config = ConfigUtil_Json.JsonConfigUtilClass(base_config="%s%s.json" % (config_path, f"Config_{name}"))
             temp_config.updateConfigClass()
+        else:
+            print("Can't find it")
 
 #OLD ORIGINAL
 # def getConfig(project_name):
@@ -102,7 +109,7 @@ def getConfigClass(project_name=None, set_env=True, pick_project=False):
 
 
 if __name__ == "__main__":
-    rebuildConfigClasses()
+    rebuildConfigClasses(name="Afilm-SuperCharlie")
     # setConsoleLevel(logger,10)
     # rebuildConfigClasses()
     # getConfigClass()
