@@ -89,7 +89,7 @@ class PixmapUtil(object):
     def createPixMap(self, cur_node=None, overwrite=False, overwrite_cache=False):
         """Be aware, pixmap creation actually occur in self.convertPathToPixmap()"""
 
-        shot_name = cur_node.getName()
+        shot_name = f"{cur_node.getParent().getName()}_{cur_node.getName()}"
         if overwrite_cache:
             pixmap = None
         else:
@@ -108,8 +108,17 @@ class PixmapUtil(object):
 
     def __findThumbs(self, cur_node=None, overwrite=False):
         shot_name = cur_node.getName()
-        shot_dict = {}
-        shot_dict["episode_name"], shot_dict["seq_name"], shot_dict["shot_name"] = shot_name.split("_")
+        shot_dict = cur_node.getInfoDict()
+        # print(shot_dict)
+        # shot_dict = {}
+        # shot_dict["episode_name"], shot_dict["seq_name"], shot_dict["shot_name"] = shot_name.split("_")
+        thumb_path = CC.getByKey_thumbnail_paths("shot_animatic_thumbnail_path",**shot_dict)
+        #Added this to make it work for review on afilm
+        if os.path.exists(thumb_path):
+            return thumb_path
+        else:
+            return None
+
         shot_dict["render_prefix"] = "FastA"
         if not "preview_dict" in CC.__dict__.keys():
             thumb_paths = {"comp": ["shot_comp_output_file"],
@@ -122,7 +131,10 @@ class PixmapUtil(object):
         thumb_order = thumb_order[thumb_order.index(self.__view_state):]  # Remove elements by index to make a shorter list
         for cur_thumb_level in thumb_order:
             for cur_thumb in thumb_paths[cur_thumb_level]:
+                # print(cur_thumb)
                 thumb_path = "%s/Thumbnails/%s_thumbnail.jpg" % (CC.get_shot_path(**shot_dict),shot_name)
+                # thumb_path = CC.getByKey_thumbnail_paths(cur_thumb,**shot_dict)
+                # print(thumb_path)
                 if os.path.exists(thumb_path) and not overwrite:
                     return thumb_path
 
@@ -135,7 +147,7 @@ class PixmapUtil(object):
 
                 if os.path.exists(thumb_base):
                     logger.info("Creating thumb for %s : %s" % (shot_name, cur_thumb))
-                    self.__saveAsSmallThumb(thumb_base, thumb_path,cur_thumb_level)
+                    # self.__saveAsSmallThumb(thumb_base, thumb_path,cur_thumb_level)
                     return thumb_path
 
     def __saveAsSmallThumb(self, from_image_path, to_image_path,thumb_type):

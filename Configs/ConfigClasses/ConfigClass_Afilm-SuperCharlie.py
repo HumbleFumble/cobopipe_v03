@@ -4,7 +4,7 @@ logger = getLogger()
 class ConfigClass():
     def __init__(self):
         self.project_name="Afilm-SuperCharlie"
-        self.base_path="O:/Feature/TernetNinja3"
+        self.base_path="O:/Feature/SuperCharlie"
         self.asset_top_path="<base_path>/Asset/"
         self.asset_base_path="<asset_top_path>/<asset_type>/<asset_category>/<asset_name>"
         self.asset_work_folder="<asset_base_path>/01_Work/Maya"
@@ -16,8 +16,8 @@ class ConfigClass():
         self.maya_env=""
         self.film_path="<base_path>/Film"
         self.episode_path="<film_path>/<episode_name>"
-        self.seq_path="<episode_path>/<episode_name>_<seq_name>"
-        self.shot_path="<seq_path>/<episode_name>_<seq_name>_<shot_name>"
+        self.seq_path="<episode_path>/<seq_name>"
+        self.shot_path="<seq_path>/<shot_name>"
         self.shot_anim_folder="<shot_path>"
         self.shot_anim_path="<shot_anim_folder>/<episode_name>_<seq_name>_<shot_name>_Animation.ma"
         self.shot_tb_anim_path="<shot_path>/<episode_name>_<seq_name>_<shot_name>"
@@ -66,9 +66,9 @@ class ConfigClass():
         self.users_json="<base_path>/Pipeline/users.json"
         
         
-        self.episode_regex="^(e)\(d{4})"
-        self.seq_regex="(q)\d{4}"
-        self.shot_regex="(s)\d{4}"
+        self.episode_regex="^(e)\d{4}"
+        self.seq_regex="^(q)(\d{4})"
+        self.shot_regex="^(s)\d{4}$"
         
         self.environment_vars={'PYTHONPATH': '<python_path>', 'TOONBOOM_GLOBAL_SCRIPT_LOCATION': '<python_path>/TB/ToonBoom_Global_Scripts', 'TB_EXTERNAL_SCRIPT_PACKAGES_FOLDER ': '<python_path>/TB/ToonBoom_Global_Packages', 'BOM_USER': ''}
         
@@ -131,15 +131,9 @@ class ConfigClass():
             return self.get_folder_icon_path(**kwords)
         if call_key == 'no_thumb_icon_path':
             return self.get_no_thumb_icon_path(**kwords)
-        if call_key == 'shot_anim_thumbnail_path':
-            return self.get_shot_anim_thumbnail_path(**kwords)
         if call_key == 'shot_animatic_thumbnail_path':
             return self.get_shot_animatic_thumbnail_path(**kwords)
-        if call_key == 'shot_comp_thumbnail_path':
-            return self.get_shot_comp_thumbnail_path(**kwords)
-        if call_key == 'shot_render_thumbnail_path':
-            return self.get_shot_render_thumbnail_path(**kwords)
-        logger.debug("No such key found! This function only takes: ['asset_thumbnail_path', 'folder_icon_path', 'no_thumb_icon_path', 'shot_animatic_thumbnail_path', 'shot_anim_thumbnail_path', 'shot_render_thumbnail_path', 'shot_comp_thumbnail_path']")
+        logger.debug("No such key found! This function only takes: ['asset_thumbnail_path', 'folder_icon_path', 'no_thumb_icon_path', 'shot_animatic_thumbnail_path']")
         return False
         
 
@@ -149,7 +143,7 @@ class ConfigClass():
 
 
     def get_ae_precomp_template_file(self):
-        to_return = "O:/Feature/TernetNinja3/Pipeline/Template/_AECompTemplate/ae_precomp_template.aep"
+        to_return = "O:/Feature/SuperCharlie/Pipeline/Template/_AECompTemplate/ae_precomp_template.aep"
         return to_return
 
 
@@ -164,7 +158,7 @@ class ConfigClass():
             asset_name="<asset_name>"
             logger.debug("Building path to asset_base_path: Argument Missing: asset_name")
 
-        to_return = "O:/Feature/TernetNinja3/Asset//{asset_type}/{asset_category}/{asset_name}".format(asset_type=asset_type,asset_category=asset_category,asset_name=asset_name,)
+        to_return = "O:/Feature/SuperCharlie/Asset//{asset_type}/{asset_category}/{asset_name}".format(asset_type=asset_type,asset_category=asset_category,asset_name=asset_name,)
         return to_return
 
 
@@ -179,12 +173,12 @@ class ConfigClass():
             asset_name="<asset_name>"
             logger.debug("Building path to asset_design_folder: Argument Missing: asset_name")
 
-        to_return = "O:/Feature/TernetNinja3/Asset//{asset_type}/{asset_category}/{asset_name}/04_Design".format(asset_type=asset_type,asset_category=asset_category,asset_name=asset_name,)
+        to_return = "O:/Feature/SuperCharlie/Asset//{asset_type}/{asset_category}/{asset_name}/04_Design".format(asset_type=asset_type,asset_category=asset_category,asset_name=asset_name,)
         return to_return
 
 
     def get_asset_publish_path(self):
-        to_return = "O:/Feature/TernetNinja3/Pipeline/PublishReports/Assets"
+        to_return = "O:/Feature/SuperCharlie/Pipeline/PublishReports/Assets"
         return to_return
 
 
@@ -199,7 +193,7 @@ class ConfigClass():
             asset_name="<asset_name>"
             logger.debug("Building path to asset_publish_report_file: Argument Missing: asset_name")
 
-        to_return = "O:/Feature/TernetNinja3/Pipeline/PublishReports/Assets/{asset_type}/{asset_category}/{asset_name}.json".format(asset_type=asset_type,asset_category=asset_category,asset_name=asset_name,)
+        to_return = "O:/Feature/SuperCharlie/Pipeline/PublishReports/Assets/{asset_type}/{asset_category}/{asset_name}.json".format(asset_type=asset_type,asset_category=asset_category,asset_name=asset_name,)
         return to_return
 
 
@@ -214,7 +208,7 @@ class ConfigClass():
             asset_name="<asset_name>"
             logger.debug("Building path to asset_ref_folder: Argument Missing: asset_name")
 
-        to_return = "O:/Feature/TernetNinja3/Asset//{asset_type}/{asset_category}/{asset_name}/02_Ref".format(asset_type=asset_type,asset_category=asset_category,asset_name=asset_name,)
+        to_return = "O:/Feature/SuperCharlie/Asset//{asset_type}/{asset_category}/{asset_name}/02_Ref".format(asset_type=asset_type,asset_category=asset_category,asset_name=asset_name,)
         return to_return
 
 
@@ -229,12 +223,12 @@ class ConfigClass():
             asset_name="<asset_name>"
             logger.debug("Building path to asset_texture_folder: Argument Missing: asset_name")
 
-        to_return = "O:/Feature/TernetNinja3/Asset//{asset_type}/{asset_category}/{asset_name}/03_Texture".format(asset_type=asset_type,asset_category=asset_category,asset_name=asset_name,)
+        to_return = "O:/Feature/SuperCharlie/Asset//{asset_type}/{asset_category}/{asset_name}/03_Texture".format(asset_type=asset_type,asset_category=asset_category,asset_name=asset_name,)
         return to_return
 
 
     def get_asset_top_path(self):
-        to_return = "O:/Feature/TernetNinja3/Asset/"
+        to_return = "O:/Feature/SuperCharlie/Asset/"
         return to_return
 
 
@@ -252,7 +246,7 @@ class ConfigClass():
             asset_step="<asset_step>"
             logger.debug("Building path to asset_work_file: Argument Missing: asset_step")
 
-        to_return = "O:/Feature/TernetNinja3/Asset//{asset_type}/{asset_category}/{asset_name}/01_Work/Maya/{asset_name}_{asset_step}.ma".format(asset_type=asset_type,asset_category=asset_category,asset_name=asset_name,asset_step=asset_step,)
+        to_return = "O:/Feature/SuperCharlie/Asset//{asset_type}/{asset_category}/{asset_name}/01_Work/Maya/{asset_name}_{asset_step}.ma".format(asset_type=asset_type,asset_category=asset_category,asset_name=asset_name,asset_step=asset_step,)
         return to_return
 
 
@@ -267,22 +261,22 @@ class ConfigClass():
             asset_name="<asset_name>"
             logger.debug("Building path to asset_work_folder: Argument Missing: asset_name")
 
-        to_return = "O:/Feature/TernetNinja3/Asset//{asset_type}/{asset_category}/{asset_name}/01_Work/Maya".format(asset_type=asset_type,asset_category=asset_category,asset_name=asset_name,)
+        to_return = "O:/Feature/SuperCharlie/Asset//{asset_type}/{asset_category}/{asset_name}/01_Work/Maya".format(asset_type=asset_type,asset_category=asset_category,asset_name=asset_name,)
         return to_return
 
 
     def get_base_path(self):
-        to_return = "O:/Feature/TernetNinja3"
+        to_return = "O:/Feature/SuperCharlie"
         return to_return
 
 
     def get_contact_sheet_category_file(self):
-        to_return = "O:/Feature/TernetNinja3/Pipeline/contact_sheet_category.json"
+        to_return = "O:/Feature/SuperCharlie/Pipeline/contact_sheet_category.json"
         return to_return
 
 
     def get_cryptomatte_list(self):
-        to_return = "O:/Feature/TernetNinja3/Pipeline/cryptomatteList.json"
+        to_return = "O:/Feature/SuperCharlie/Pipeline/cryptomatteList.json"
         return to_return
 
 
@@ -291,7 +285,7 @@ class ConfigClass():
             episode_name="<episode_name>"
             logger.debug("Building path to episode_info_file: Argument Missing: episode_name")
 
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}/{episode_name}_BrowserInfo.json".format(episode_name=episode_name,)
+        to_return = "O:/Feature/SuperCharlie/Film/{episode_name}/{episode_name}_BrowserInfo.json".format(episode_name=episode_name,)
         return to_return
 
 
@@ -300,12 +294,12 @@ class ConfigClass():
             episode_name="<episode_name>"
             logger.debug("Building path to episode_path: Argument Missing: episode_name")
 
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}".format(episode_name=episode_name,)
+        to_return = "O:/Feature/SuperCharlie/Film/{episode_name}".format(episode_name=episode_name,)
         return to_return
 
 
     def get_film_path(self):
-        to_return = "O:/Feature/TernetNinja3/Film"
+        to_return = "O:/Feature/SuperCharlie/Film"
         return to_return
 
 
@@ -324,7 +318,7 @@ class ConfigClass():
 
 
     def get_light_export_folder(self):
-        to_return = "O:/Feature/TernetNinja3/Assets/Light_Setups/Light_Export_Groups/"
+        to_return = "O:/Feature/SuperCharlie/Assets/Light_Setups/Light_Export_Groups/"
         return to_return
 
 
@@ -344,12 +338,12 @@ class ConfigClass():
 
 
     def get_project_shelf_json(self):
-        to_return = "O:/Feature/TernetNinja3/Pipeline/Maya_Shelves/build_shelf_dict.json"
+        to_return = "O:/Feature/SuperCharlie/Pipeline/Maya_Shelves/build_shelf_dict.json"
         return to_return
 
 
     def get_publish_report_folder(self):
-        to_return = "O:/Feature/TernetNinja3/Pipeline/PublishReports"
+        to_return = "O:/Feature/SuperCharlie/Pipeline/PublishReports"
         return to_return
 
 
@@ -364,12 +358,12 @@ class ConfigClass():
 
 
     def get_render_preset_config(self):
-        to_return = "O:/Feature/TernetNinja3/Pipeline/render_preset_config.json"
+        to_return = "O:/Feature/SuperCharlie/Pipeline/render_preset_config.json"
         return to_return
 
 
     def get_render_presets(self):
-        to_return = "O:/Feature/TernetNinja3/Pipeline/RenderSettings_Presets/"
+        to_return = "O:/Feature/SuperCharlie/Pipeline/RenderSettings_Presets/"
         return to_return
 
 
@@ -381,7 +375,7 @@ class ConfigClass():
             seq_name="<seq_name>"
             logger.debug("Building path to seq_path: Argument Missing: seq_name")
 
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}/{episode_name}_{seq_name}".format(episode_name=episode_name,seq_name=seq_name,)
+        to_return = "O:/Feature/SuperCharlie/Film/{episode_name}/{seq_name}".format(episode_name=episode_name,seq_name=seq_name,)
         return to_return
 
 
@@ -393,7 +387,7 @@ class ConfigClass():
             seq_name="<seq_name>"
             logger.debug("Building path to sequence_preview_folder: Argument Missing: seq_name")
 
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}/{episode_name}_{seq_name}/_Preview".format(episode_name=episode_name,seq_name=seq_name,)
+        to_return = "O:/Feature/SuperCharlie/Film/{episode_name}/{seq_name}/_Preview".format(episode_name=episode_name,seq_name=seq_name,)
         return to_return
 
 
@@ -405,7 +399,7 @@ class ConfigClass():
             seq_name="<seq_name>"
             logger.debug("Building path to sequence_previs_file: Argument Missing: seq_name")
 
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_PREVIS/01_Maya/{episode_name}_{seq_name}_PREVIS.ma".format(episode_name=episode_name,seq_name=seq_name,)
+        to_return = "O:/Feature/SuperCharlie/Film/{episode_name}/{seq_name}/{episode_name}_{seq_name}_PREVIS/01_Maya/{episode_name}_{seq_name}_PREVIS.ma".format(episode_name=episode_name,seq_name=seq_name,)
         return to_return
 
 
@@ -420,7 +414,7 @@ class ConfigClass():
             shot_name="<shot_name>"
             logger.debug("Building path to shot_2D_passes_folder: Argument Missing: shot_name")
 
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_{shot_name}/Passes".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
+        to_return = "O:/Feature/SuperCharlie/Film/{episode_name}/{seq_name}/{shot_name}/Passes".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
         return to_return
 
 
@@ -435,7 +429,7 @@ class ConfigClass():
             shot_name="<shot_name>"
             logger.debug("Building path to shot_ae_precomp_file: Argument Missing: shot_name")
 
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_{shot_name}/Comp/{episode_name}_{seq_name}_{shot_name}_Precomp.aep".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
+        to_return = "O:/Feature/SuperCharlie/Film/{episode_name}/{seq_name}/{shot_name}/Comp/{episode_name}_{seq_name}_{shot_name}_Precomp.aep".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
         return to_return
 
 
@@ -450,7 +444,7 @@ class ConfigClass():
             shot_name="<shot_name>"
             logger.debug("Building path to shot_anim_folder: Argument Missing: shot_name")
 
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_{shot_name}".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
+        to_return = "O:/Feature/SuperCharlie/Film/{episode_name}/{seq_name}/{shot_name}".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
         return to_return
 
 
@@ -465,7 +459,7 @@ class ConfigClass():
             shot_name="<shot_name>"
             logger.debug("Building path to shot_anim_path: Argument Missing: shot_name")
 
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_{shot_name}/{episode_name}_{seq_name}_{shot_name}_Animation.ma".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
+        to_return = "O:/Feature/SuperCharlie/Film/{episode_name}/{seq_name}/{shot_name}/{episode_name}_{seq_name}_{shot_name}_Animation.ma".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
         return to_return
 
 
@@ -480,7 +474,7 @@ class ConfigClass():
             shot_name="<shot_name>"
             logger.debug("Building path to shot_anim_preview_file: Argument Missing: shot_name")
 
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}/{episode_name}_{seq_name}/_Preview/{episode_name}_{seq_name}_{shot_name}.mov".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
+        to_return = "O:/Feature/SuperCharlie/Film/{episode_name}/{seq_name}/_Preview/{episode_name}_{seq_name}_{shot_name}.mov".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
         return to_return
 
 
@@ -495,7 +489,7 @@ class ConfigClass():
             shot_name="<shot_name>"
             logger.debug("Building path to shot_animatic_file: Argument Missing: shot_name")
 
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_{shot_name}/{episode_name}_{seq_name}_{shot_name}_Animatic.mov".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
+        to_return = "O:/Feature/SuperCharlie/Film/{episode_name}/{seq_name}/{shot_name}/{episode_name}_{seq_name}_{shot_name}_Animatic.mov".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
         return to_return
 
 
@@ -510,7 +504,7 @@ class ConfigClass():
             shot_name="<shot_name>"
             logger.debug("Building path to shot_blocking_preview_file: Argument Missing: shot_name")
 
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}/{episode_name}_{seq_name}/_Preview/Blocking/{episode_name}_{seq_name}_{shot_name}_Blocking.mov".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
+        to_return = "O:/Feature/SuperCharlie/Film/{episode_name}/{seq_name}/_Preview/Blocking/{episode_name}_{seq_name}_{shot_name}_Blocking.mov".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
         return to_return
 
 
@@ -525,7 +519,7 @@ class ConfigClass():
             shot_name="<shot_name>"
             logger.debug("Building path to shot_comp_folder: Argument Missing: shot_name")
 
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_{shot_name}/Comp".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
+        to_return = "O:/Feature/SuperCharlie/Film/{episode_name}/{seq_name}/{shot_name}/Comp".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
         return to_return
 
 
@@ -540,7 +534,7 @@ class ConfigClass():
             shot_name="<shot_name>"
             logger.debug("Building path to shot_comp_output_file: Argument Missing: shot_name")
 
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_{shot_name}/_CompOutput/{episode_name}_{seq_name}_{shot_name}_CompOutput.mov".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
+        to_return = "O:/Feature/SuperCharlie/Film/{episode_name}/{seq_name}/{shot_name}/_CompOutput/{episode_name}_{seq_name}_{shot_name}_CompOutput.mov".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
         return to_return
 
 
@@ -555,7 +549,7 @@ class ConfigClass():
             shot_name="<shot_name>"
             logger.debug("Building path to shot_comp_output_file_mov: Argument Missing: shot_name")
 
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_{shot_name}/_CompOutput/{episode_name}_{seq_name}_{shot_name}_CompOutput.mov".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
+        to_return = "O:/Feature/SuperCharlie/Film/{episode_name}/{seq_name}/{shot_name}/_CompOutput/{episode_name}_{seq_name}_{shot_name}_CompOutput.mov".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
         return to_return
 
 
@@ -570,7 +564,7 @@ class ConfigClass():
             shot_name="<shot_name>"
             logger.debug("Building path to shot_comp_output_folder: Argument Missing: shot_name")
 
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_{shot_name}/_CompOutput".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
+        to_return = "O:/Feature/SuperCharlie/Film/{episode_name}/{seq_name}/{shot_name}/_CompOutput".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
         return to_return
 
 
@@ -585,7 +579,7 @@ class ConfigClass():
             shot_name="<shot_name>"
             logger.debug("Building path to shot_comp_preview_file: Argument Missing: shot_name")
 
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}/{episode_name}_{seq_name}/_Preview/{episode_name}_{seq_name}_{shot_name}_Comp.mov".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
+        to_return = "O:/Feature/SuperCharlie/Film/{episode_name}/{seq_name}/_Preview/{episode_name}_{seq_name}_{shot_name}_Comp.mov".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
         return to_return
 
 
@@ -603,7 +597,7 @@ class ConfigClass():
             render_prefix="<render_prefix>"
             logger.debug("Building path to shot_crypto_render_file: Argument Missing: render_prefix")
 
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_{shot_name}/04_Publish/{episode_name}_{seq_name}_{shot_name}_{render_prefix}_Crypto_Render.ma".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,render_prefix=render_prefix,)
+        to_return = "O:/Feature/SuperCharlie/Film/{episode_name}/{seq_name}/{shot_name}/04_Publish/{episode_name}_{seq_name}_{shot_name}_{render_prefix}_Crypto_Render.ma".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,render_prefix=render_prefix,)
         return to_return
 
 
@@ -618,7 +612,7 @@ class ConfigClass():
             shot_name="<shot_name>"
             logger.debug("Building path to shot_light_file: Argument Missing: shot_name")
 
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_{shot_name}/02_Light/{episode_name}_{seq_name}_{shot_name}_Light.ma".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
+        to_return = "O:/Feature/SuperCharlie/Film/{episode_name}/{seq_name}/{shot_name}/02_Light/{episode_name}_{seq_name}_{shot_name}_Light.ma".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
         return to_return
 
 
@@ -636,7 +630,7 @@ class ConfigClass():
             render_prefix="<render_prefix>"
             logger.debug("Building path to shot_passes_folder: Argument Missing: render_prefix")
 
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_{shot_name}/passes/{render_prefix}/{episode_name}_{seq_name}_{shot_name}_{render_prefix}".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,render_prefix=render_prefix,)
+        to_return = "O:/Feature/SuperCharlie/Film/{episode_name}/{seq_name}/{shot_name}/passes/{render_prefix}/{episode_name}_{seq_name}_{shot_name}_{render_prefix}".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,render_prefix=render_prefix,)
         return to_return
 
 
@@ -651,12 +645,12 @@ class ConfigClass():
             shot_name="<shot_name>"
             logger.debug("Building path to shot_path: Argument Missing: shot_name")
 
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_{shot_name}".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
+        to_return = "O:/Feature/SuperCharlie/Film/{episode_name}/{seq_name}/{shot_name}".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
         return to_return
 
 
     def get_shot_publish_path(self):
-        to_return = "O:/Feature/TernetNinja3/Pipeline/PublishReports/Film"
+        to_return = "O:/Feature/SuperCharlie/Pipeline/PublishReports/Film"
         return to_return
 
 
@@ -671,7 +665,7 @@ class ConfigClass():
             shot_name="<shot_name>"
             logger.debug("Building path to shot_publish_report_file: Argument Missing: shot_name")
 
-        to_return = "O:/Feature/TernetNinja3/Pipeline/PublishReports/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_{shot_name}.json".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
+        to_return = "O:/Feature/SuperCharlie/Pipeline/PublishReports/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_{shot_name}.json".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
         return to_return
 
 
@@ -689,7 +683,7 @@ class ConfigClass():
             render_prefix="<render_prefix>"
             logger.debug("Building path to shot_render_path: Argument Missing: render_prefix")
 
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_{shot_name}/04_Publish/{episode_name}_{seq_name}_{shot_name}_{render_prefix}_Render.ma".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,render_prefix=render_prefix,)
+        to_return = "O:/Feature/SuperCharlie/Film/{episode_name}/{seq_name}/{shot_name}/04_Publish/{episode_name}_{seq_name}_{shot_name}_{render_prefix}_Render.ma".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,render_prefix=render_prefix,)
         return to_return
 
 
@@ -704,7 +698,7 @@ class ConfigClass():
             shot_name="<shot_name>"
             logger.debug("Building path to shot_sound_file: Argument Missing: shot_name")
 
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_{shot_name}/{episode_name}_{seq_name}_{shot_name}_Sound.wav".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
+        to_return = "O:/Feature/SuperCharlie/Film/{episode_name}/{seq_name}/{shot_name}/{episode_name}_{seq_name}_{shot_name}_Sound.wav".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
         return to_return
 
 
@@ -719,7 +713,7 @@ class ConfigClass():
             shot_name="<shot_name>"
             logger.debug("Building path to shot_tb_anim_path: Argument Missing: shot_name")
 
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_{shot_name}/{episode_name}_{seq_name}_{shot_name}".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
+        to_return = "O:/Feature/SuperCharlie/Film/{episode_name}/{seq_name}/{shot_name}/{episode_name}_{seq_name}_{shot_name}".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
         return to_return
 
 
@@ -734,7 +728,7 @@ class ConfigClass():
             shot_name="<shot_name>"
             logger.debug("Building path to shot_tb_render_scene_stack: Argument Missing: shot_name")
 
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_{shot_name}/Passes/{episode_name}_{seq_name}_{shot_name}_*".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
+        to_return = "O:/Feature/SuperCharlie/Film/{episode_name}/{seq_name}/{shot_name}/Passes/{episode_name}_{seq_name}_{shot_name}_*".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
         return to_return
 
 
@@ -749,12 +743,12 @@ class ConfigClass():
             shot_name="<shot_name>"
             logger.debug("Building path to shot_yeti_cache_path: Argument Missing: shot_name")
 
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_{shot_name}/04_Publish/YetiCache/".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
+        to_return = "O:/Feature/SuperCharlie/Film/{episode_name}/{seq_name}/{shot_name}/04_Publish/YetiCache/".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
         return to_return
 
 
     def get_tb_scene_template_file(self):
-        to_return = "O:/Feature/TernetNinja3/Pipeline/Template/_TBSceneTemplate/BaseFile/BaseFile.xstage"
+        to_return = "O:/Feature/SuperCharlie/Pipeline/Template/_TBSceneTemplate/BaseFile/BaseFile.xstage"
         return to_return
 
 
@@ -763,12 +757,12 @@ class ConfigClass():
             asset_type="<asset_type>"
             logger.debug("Building path to template_asset_path: Argument Missing: asset_type")
 
-        to_return = "O:/Feature/TernetNinja3/Pipeline/Template/{asset_type}_Template_Folder/".format(asset_type=asset_type,)
+        to_return = "O:/Feature/SuperCharlie/Pipeline/Template/{asset_type}_Template_Folder/".format(asset_type=asset_type,)
         return to_return
 
 
     def get_template_path(self):
-        to_return = "O:/Feature/TernetNinja3/Pipeline/Template"
+        to_return = "O:/Feature/SuperCharlie/Pipeline/Template"
         return to_return
 
 
@@ -778,7 +772,7 @@ class ConfigClass():
 
 
     def get_users_json(self):
-        to_return = "O:/Feature/TernetNinja3/Pipeline/users.json"
+        to_return = "O:/Feature/SuperCharlie/Pipeline/users.json"
         return to_return
 
 
@@ -793,32 +787,17 @@ class ConfigClass():
             asset_name="<asset_name>"
             logger.debug("Building path to asset_thumbnail_path: Argument Missing: asset_name")
 
-        to_return = "O:/Feature/TernetNinja3/Asset//{asset_type}/{asset_category}/{asset_name}/04_Design/Thumbnail/{asset_name}_thumbnail.png".format(asset_type=asset_type,asset_category=asset_category,asset_name=asset_name,)
+        to_return = "O:/Feature/SuperCharlie/Asset//{asset_type}/{asset_category}/{asset_name}/04_Design/Thumbnail/{asset_name}_thumbnail.png".format(asset_type=asset_type,asset_category=asset_category,asset_name=asset_name,)
         return to_return
 
 
     def get_folder_icon_path(self):
-        to_return = "O:/Feature/TernetNinja3/Pipeline/Resource/icon/folder.png"
+        to_return = "O:/Feature/SuperCharlie/Pipeline/Resource/icon/folder.png"
         return to_return
 
 
     def get_no_thumb_icon_path(self):
-        to_return = "O:/Feature/TernetNinja3/Pipeline/Resource/icon/No_Thumbnail.png"
-        return to_return
-
-
-    def get_shot_anim_thumbnail_path(self,episode_name=None,seq_name=None,shot_name=None,**kwargs):
-        if episode_name==None:
-            episode_name="<episode_name>"
-            logger.debug("Building path to shot_anim_thumbnail_path: Argument Missing: episode_name")
-        if seq_name==None:
-            seq_name="<seq_name>"
-            logger.debug("Building path to shot_anim_thumbnail_path: Argument Missing: seq_name")
-        if shot_name==None:
-            shot_name="<shot_name>"
-            logger.debug("Building path to shot_anim_thumbnail_path: Argument Missing: shot_name")
-
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_{shot_name}/Thumbnails/{episode_name}_{seq_name}_{shot_name}_anim_thumbnail.jpg".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
+        to_return = "O:/Feature/SuperCharlie/Pipeline/Resource/icon/No_Thumbnail.png"
         return to_return
 
 
@@ -833,36 +812,6 @@ class ConfigClass():
             shot_name="<shot_name>"
             logger.debug("Building path to shot_animatic_thumbnail_path: Argument Missing: shot_name")
 
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_{shot_name}/Thumbnails/{episode_name}_{seq_name}_{shot_name}_animatic_thumbnail.jpg".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
-        return to_return
-
-
-    def get_shot_comp_thumbnail_path(self,episode_name=None,seq_name=None,shot_name=None,**kwargs):
-        if episode_name==None:
-            episode_name="<episode_name>"
-            logger.debug("Building path to shot_comp_thumbnail_path: Argument Missing: episode_name")
-        if seq_name==None:
-            seq_name="<seq_name>"
-            logger.debug("Building path to shot_comp_thumbnail_path: Argument Missing: seq_name")
-        if shot_name==None:
-            shot_name="<shot_name>"
-            logger.debug("Building path to shot_comp_thumbnail_path: Argument Missing: shot_name")
-
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_{shot_name}/Thumbnails/{episode_name}_{seq_name}_{shot_name}_comp_thumbnail.jpg".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
-        return to_return
-
-
-    def get_shot_render_thumbnail_path(self,episode_name=None,seq_name=None,shot_name=None,**kwargs):
-        if episode_name==None:
-            episode_name="<episode_name>"
-            logger.debug("Building path to shot_render_thumbnail_path: Argument Missing: episode_name")
-        if seq_name==None:
-            seq_name="<seq_name>"
-            logger.debug("Building path to shot_render_thumbnail_path: Argument Missing: seq_name")
-        if shot_name==None:
-            shot_name="<shot_name>"
-            logger.debug("Building path to shot_render_thumbnail_path: Argument Missing: shot_name")
-
-        to_return = "O:/Feature/TernetNinja3/Film/{episode_name}/{episode_name}_{seq_name}/{episode_name}_{seq_name}_{shot_name}/Thumbnails/{episode_name}_{seq_name}_{shot_name}_render_thumbnail.jpg".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
+        to_return = "O:/Feature/SuperCharlie/Film/{episode_name}/{seq_name}/{shot_name}/.icon/{shot_name}.png".format(episode_name=episode_name,seq_name=seq_name,shot_name=shot_name,)
         return to_return
 
