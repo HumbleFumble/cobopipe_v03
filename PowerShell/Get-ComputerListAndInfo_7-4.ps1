@@ -6,49 +6,77 @@ Then in powershell (admin) run: Add-WindowsCapability -Online -Name Rsat.ActiveD
 #>
 
 #"CPHAFID1-LT001"
+#TEST CASE:
+
+$admin_user = "CPHAFID1\afirender"
+$PASSWORD     = ConvertTo-SecureString "royalrender" -AsPlainText -Force
+$UNPASSWORD   = New-Object System.Management.Automation.PsCredential $admin_user, $PASSWORD
+
+$computer = "CPHAFID1-RN501"
+$CimSession = New-CimSession -ComputerName $computer -Credential $UNPASSWORD
+$computer_proces =  Get-CimInstance Win32_Processor -CimSession $CimSession
+
+$computer_proces
+
+
+
+#
+
+
+
+
 $results = @()
 $Date = [DateTime]::Today.AddDays(-200)
-$computers = Get-ADComputer -Filter 'Name -like "*CPHAFID1-WS090*" -and LastLogonDate -ge $Date' | Sort-Object -Property Name | Select-Object -ExpandProperty Name
+$computers = Get-ADComputer -Filter 'Name -like "*CPHAFID1-RN50*" -and LastLogonDate -ge $Date' | Sort-Object -Property Name | Select-Object -ExpandProperty Name
+
+$admin_user = "CPHAFID1\afirender"
+$PASSWORD     = ConvertTo-SecureString "royalrender" -AsPlainText -Force
+$UNPASSWORD   = New-Object System.Management.Automation.PsCredential $admin_user, $PASSWORD
 
 
 foreach ($computer in $computers) {
     # Check if the computer is online
     $last_logon = Get-ADComputer -Filter 'Name -like $computer' -Properties LastLogonDate
-    if (Test-Connection -TargetName $computer -Count 1 -Quiet) {
-        try {
-            $cpu = Get-CimInstance -Class Win32_Processor -ComputerName $computer -OperationTimeoutSec 2 -ErrorAction Stop| Select-Object -ExpandProperty Name
-            $ram = Get-CimInstance -Class Win32_PhysicalMemory -ComputerName $computer | Measure-Object -Property Capacity -Sum | % { $_.Sum / 1GB }
-            $gpu = Get-CimInstance -Class Win32_VideoController -ComputerName $computer | Select-Object -ExpandProperty Name
-            $ip = (Get-CimInstance -Class Win32_NetworkAdapterConfiguration -ComputerName $computer | Where-Object { $_.IPAddress -ne $null }).IPAddress
-            $results += [PSCustomObject]@{
-                ComputerName = $computer
-                CPU = $cpu
-                RAM = "${ram} GB"
-                GPU = $gpu
-                IP = $ip -join ', '
-                LASTLOGON = $last_logon.LastLogonDate.ToString("dd/MM/yyyy")
-            }
-        } catch {
-            Write-Warning "Failed to get info for $computer"
-            Write-Host $_
-            $results += [PSCustomObject]@{
-                ComputerName = $computer
-                LASTLOGON = $last_logon.LastLogonDate.ToString("dd/MM/yyyy")
-                }
-        }
-    } else {
-        Write-Warning "$computer is not reachable"
+    #if (Test-Connection -TargetName $computer -Count 1 -Quiet) {
+    try {
+        $CimSession = New-CimSession -ComputerName $computer -Credential $UNPASSWORD
+        $cpu = Get-CimInstance -Class Win32_Processor -CimSession $CimSession -ErrorAction Stop| Select-Object -ExpandProperty Name
+        $ram = Get-CimInstance -Class Win32_PhysicalMemory -CimSession $CimSession | Measure-Object -Property Capacity -Sum | % { $_.Sum / 1GB }
+        $gpu = Get-CimInstance -Class Win32_VideoController -CimSession $CimSession | Select-Object -ExpandProperty Name
+        $ip = (Get-CimInstance -Class Win32_NetworkAdapterConfiguration -CimSession $CimSession | Where-Object { $_.IPAddress -ne $null }).IPAddress
         $results += [PSCustomObject]@{
             ComputerName = $computer
+            CPU = $cpu
+            RAM = "${ram} GB"
+            GPU = $gpu
+            IP = $ip -join ', '
+            LASTLOGON = $last_logon.LastLogonDate.ToString("dd/MM/yyyy")
+        }
+    } catch {
+        Write-Warning "Failed to get info for $computer"
+        Write-Host $_
+        $results += [PSCustomObject]@{
+            ComputerName = $computer
+            CPU = ""
+            GPU = ""
+            IP = ""
             LASTLOGON = $last_logon.LastLogonDate.ToString("dd/MM/yyyy")
             }
     }
+#    } else {
+#        Write-Warning "$computer is not reachable"
+#        $results += [PSCustomObject]@{
+#            ComputerName = $computer
+#            LASTLOGON = $last_logon.LastLogonDate.ToString("dd/MM/yyyy")
+#            }
+#    }
 
 }
 
 # Print to screen
 
 $results | Format-Table -AutoSize
+Write-Host "Results saved to $filePath"
 
 # Save to CSV file
 $filePath = "C:\Temp\Workstation_List.csv"  # Specify your desired file path

@@ -1,8 +1,8 @@
 $username = "CPHAFID1\afirender"
 $credential = Get-Credential -UserName $username -Message "Enter password for $username"
 
-$simple_computers = Get-Content -Path "C:\Temp\NetworkSpeed_ComputerList.txt"
-#$simple_computers = @('WS091', 'WS114', 'WS130')
+#$simple_computers = Get-Content -Path "C:\Temp\NetworkSpeed_ComputerList.txt"
+$simple_computers = @('RN501')
 $prefix = 'CPHAFID1-'
 $computers = $simple_computers | ForEach-Object { $prefix + $_ }
 
@@ -14,6 +14,7 @@ Invoke-Command -ComputerName $computers -ScriptBlock {
         [PSCustomObject]@{
             ComputerName = $computerName
             SpeedMbps = $speedMbps
+            Adapter = $adapter.Name
         }
     }
-} -Credential $credential | Format-Table -Property ComputerName, SpeedMbps -AutoSize
+} -Credential $credential | Format-Table -Property ComputerName, Adapter, SpeedMbps -AutoSize
