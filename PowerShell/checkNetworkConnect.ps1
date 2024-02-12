@@ -1,7 +1,10 @@
 $username = "CPHAFID1\afirender"
 $credential = Get-Credential -UserName $username -Message "Enter password for $username"
 
-$computers = @('CPHAFID1-WS090', 'CPHAFID1-WS114', 'CPHAFID1-WS130')
+$simple_computers = Get-Content -Path "C:\Temp\NetworkSpeed_ComputerList.txt"
+#$simple_computers = @('WS091', 'WS114', 'WS130')
+$prefix = 'CPHAFID1-'
+$computers = $simple_computers | ForEach-Object { $prefix + $_ }
 
 Invoke-Command -ComputerName $computers -ScriptBlock {
     $computerName = $env:COMPUTERNAME
